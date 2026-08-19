@@ -879,7 +879,7 @@ git commit -m "Add on-page endorse and add-a-meetup forms"
 
 **Interfaces:**
 - Consumes: `data/endorsements.json`, `data/meetups.json` from Tasks 3–4
-- Produces: `extract_block(body) -> dict`, `validate(record) -> list[str]`, `next_id(records, prefix) -> str`, `append_record(path, record) -> dict`
+- Produces: `extract_block(body) -> dict`, `apply_label_override(record, env) -> dict`, `validate(record) -> list[str]`, `next_id(records, prefix) -> str`, `append_record(path, record) -> dict`
 
 The Apps Script writes a hidden JSON block into the issue; this script is the only thing that writes the public data files. **Email is dropped here as well as upstream** — defence in depth, because this is the last gate before a public commit.
 
@@ -945,6 +945,25 @@ class TestWrite(unittest.TestCase):
         rec["publish_comment"] = False
         ar.append_record(self.path, rec)
         self.assertNotIn("comment", json.loads(self.path.read_text())[0])
+
+    def test_publish_comment_label_overrides_the_block(self):
+        rec = ar.extract_block(ISSUE)          # block says nothing
+        rec["publish_comment"] = True          # ...or even says publish
+        ar.apply_label_override(rec, {"PUBLISH_COMMENT": "false"})
+        ar.append_record(self.path, rec)
+        self.assertNotIn("comment", json.loads(self.path.read_text())[0])
+
+    def test_publish_comment_label_present_publishes(self):
+        rec = ar.apply_label_override(ar.extract_block(ISSUE),
+                                      {"PUBLISH_COMMENT": "true"})
+        ar.append_record(self.path, rec)
+        self.assertEqual(json.loads(self.path.read_text())[0]["comment"],
+                         "Count me in.")
+
+    def test_absent_env_leaves_the_record_alone(self):
+        rec = {"kind": "endorsement", "publish_comment": False}
+        ar.apply_label_override(rec, {})
+        self.assertIs(rec["publish_comment"], False)
 
     def test_ids_increment(self):
         ar.append_record(self.path, ar.extract_block(ISSUE))
@@ -1038,8 +1057,20 @@ def append_record(path, record):
     return out
 
 
+def apply_label_override(record, env):
+    """Spec §8.3: the publish-comment decision is a LABEL on the issue, not a
+    field an editor hand-edits into the JSON block. The workflow reads the
+    issue's label set and passes it in; it overrides whatever the block said.
+    Absent env (e.g. a local run) leaves the record untouched.
+    """
+    if "PUBLISH_COMMENT" in env:
+        record["publish_comment"] = env["PUBLISH_COMMENT"] == "true"
+    return record
+
+
 def main():
-    record = extract_block(os.environ.get("ISSUE_BODY", ""))
+    record = apply_label_override(
+        extract_block(os.environ.get("ISSUE_BODY", "")), os.environ)
     errors = validate(record)
     if errors:
         print(f"invalid record, missing or bad: {', '.join(errors)}", file=sys.stderr)
@@ -1078,6 +1109,9 @@ jobs:
       - name: Write the record
         env:
           ISSUE_BODY: ${{ github.event.issue.body }}
+          # Spec §8.3: both labels are required for a comment to be published.
+          # `approved` gates the job; `publish-comment` gates the comment text.
+          PUBLISH_COMMENT: ${{ contains(github.event.issue.labels.*.name, 'publish-comment') }}
         run: python3 scripts/approve_request.py
       - name: Commit
         run: |
