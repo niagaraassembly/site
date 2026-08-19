@@ -1162,12 +1162,15 @@ function buildIssueBody(r) {
   var data = {
     kind: 'endorsement',
     name: r.name, trade: r.trade, location: r.location,
-    comment: (r.comment || '').slice(0, MAX_COMMENT),
-    publish_comment: true
+    comment: (r.comment || '').slice(0, MAX_COMMENT)
   };
+  // Two labels, per spec §8.3. The workflow reads the issue's label set and
+  // passes the comment decision to approve_request.py, so nothing in this
+  // block controls publication — an editor never hand-edits the JSON.
   return 'Endorsement from ' + r.name + ' — ' + r.trade + ', ' + r.location +
-         '\n\nAdd the `approved` label to publish. Remove `publish_comment` from the ' +
-         'block below to keep them on the roster without the comment.\n\n' +
+         '\n\n**`approved`** — add this label to put them on the roster.\n' +
+         '**`publish-comment`** — add this one too to publish their comment.\n' +
+         'Adding `approved` alone keeps them on the roster with the comment withheld.\n\n' +
          '<!--DATA\n' + JSON.stringify(data, null, 1) + '\nDATA-->';
 }
 
@@ -1213,6 +1216,7 @@ function runSelfTest() {
   if (parsed.kind !== 'endorsement') throw new Error('FAIL: wrong kind');
   if (parsed.name !== 'Rosa Silva') throw new Error('FAIL: name not carried');
   if ('email' in parsed) throw new Error('FAIL: email must never enter the issue');
+  if ('publish_comment' in parsed) throw new Error('FAIL: publication is a label, not a field');
   Logger.log('RESULT: all checks passed');
 }
 ```
