@@ -117,7 +117,7 @@ These are already documented in the Atlas's own notes and are not negotiable in 
 
 ## 9. Open items
 
-1. Whether the Atlas sits at `niagaraassembly.com/atlas` or its own subdomain.
+1. ~~Whether the Atlas sits at `niagaraassembly.com/atlas` or its own subdomain.~~ **Decided 2026-08-19: `niagaraassembly.com/atlas`**, served from `atlas/` in this repo — the same arrangement it had in the Paton Hall repo, so nothing about its build or deployment changes in the fork.
 2. Whether the curated Reuse layer's submission form is a fourth Google Form or a mode of the meetup form.
 3. Whether "Reuse" is the right public label — candidates: *Brought back*, *In use again*, *Reopened*.
 4. Retirement plan, if any, for the `patonhall/site` copy. Default: leave it entirely alone.

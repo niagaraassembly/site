@@ -237,6 +237,10 @@ Bot filters run **before** the commit, because a public repo keeps anything publ
 
 Fields: **Title · Date & time · Venue · Contact · Calendar link (optional)**. Same transport, same `approved` gate, no Kit side effect.
 
+**On-page, not a new tab.** `＋ ADD` opens the form in place — a panel below the band, or the band expanding into one — and it posts to the Google Form in the background, exactly as the endorse form does. Rationale: the whole design intent of the band is that posting a meetup is a low-ceremony act an informal organizer will actually complete. Bouncing them to a Google-branded page in a new tab is the single highest-friction moment in the flow and the one most likely to lose them.
+
+Both forms therefore share one submission module: build the POST body from named fields, fire it, handle the opaque response, show status inline. Write it once.
+
 ## 9. Stack
 
 Static HTML/CSS with minimal JS. New markup and new design — the *mechanism* is borrowed from Paton Hall, the look is not (§2).
@@ -258,8 +262,8 @@ Static HTML/CSS with minimal JS. New markup and new design — the *mechanism* i
 
 1. **Verify before publishing.** The Bell Aircraft jet-design claim comes from the Tri-Main Center's own history page and should be independently checked — NA's posture requires it. Same for the exact Hamilton & Gore 1839 detail.
 2. Kit tag names for endorsers.
-3. Whether `＋ ADD` opens a Google Form in a new tab or an on-page form that posts to it.
-4. Whether the statement carries a dateline and a version marker (Clark's "DRAFT v2 / 2026-06" pattern), and whether corrections are published in place.
+3. ~~Whether `＋ ADD` opens a Google Form in a new tab or an on-page form that posts to it.~~ **Decided 2026-08-19: on-page.** See §8.4.
+4. ~~Whether the statement carries a dateline and a version marker.~~ **Deferred 2026-08-19** — no dateline, no version marker, no published-corrections mechanic at launch. Revisitable; nothing in the build depends on it.
 5. The Otis-Fensom resonance — the Cotton Factory still runs a working 1944 Otis-Fensom freight elevator, and the Otis-Fensom head office anchors the Hamilton lots story. True and checkable, one step from too cute. Use only if it lands in drafting.
 
 ## 12. Sources
