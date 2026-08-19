@@ -18,6 +18,16 @@
 
 <div id="band" class="band"><!-- Task 3 --></div>
 <div id="band-drawer" class="drawer" hidden></div>
+<form id="meetup-form" class="addform" hidden>
+  <label>What <input name="title" required placeholder="Open bench night"></label>
+  <label>When <input name="starts" type="datetime-local" required></label>
+  <label>Where <input name="venue" required placeholder="Welland Fabrication, 12 Ross St"></label>
+  <label>Contact <input name="contact" required placeholder="email or phone"></label>
+  <label>Calendar link <span class="opt">optional</span>
+    <input name="calendar_url" type="url" placeholder="paste any calendar link"></label>
+  <button type="submit">Post it</button>
+  <p class="status" id="meetup-status" role="status"></p>
+</form>
 
 <main>
   <section id="face-statement">
@@ -60,6 +70,24 @@
   <p>What this is and is not, plainly. Niagara Assembly is not incorporated. It has raised nothing and holds nothing. There is no institution behind it, no staff, no office, and nobody is being paid. Nothing here is a promise, because we are in no position to make one. What exists is this statement, a roster of people who have put their names beside it, and some dates. If it ever grows into something that needs a legal form, that will happen in the open and it will be argued over first.</p>
 
   <p>Kingman had the arithmetic and lost the argument anyway, because Dart had a machinist, a harbour, and a willingness to be wrong in public. We still have the harbour. We still have the shops on both shores and the people inside them. What we have lost is the habit of talking across the water, which is strange, because the nearest person who understands your problem is almost never in a capital city and is very often on the other side of the river. Start there. Add your name.</p>
+
+  <section class="endorse">
+    <h2>Endorse this</h2>
+    <form id="endorse-form">
+      <label>Name <input name="name" required autocomplete="name"></label>
+      <label>Email <input name="email" type="email" required autocomplete="email"></label>
+      <label>City / Town / Township <input name="location" required></label>
+      <label>Trade / Expertise <input name="trade" required></label>
+      <label class="endorse__comment">Your comment
+        <textarea name="comment" rows="10" maxlength="2500"></textarea>
+        <span class="counter" id="endorse-counter">0 / 2500</span>
+      </label>
+      <p class="notice">Comments are posted as written — we don't edit them. Please avoid defamatory or foul language.</p>
+      <p class="fineprint">Your name, trade, town and comment are published. Your email is not — it is only used to reach you.</p>
+      <button type="submit">Endorse</button>
+      <p class="status" id="endorse-status" role="status"></p>
+    </form>
+  </section>
   </section>
   <section id="face-endorsements" hidden><!-- Task 4 --></section>
 </main>
@@ -78,6 +106,53 @@
   import { mountEndorsements } from './assets/js/endorsements.js';
   const endorsements = await fetch('data/endorsements.json').then(r => r.json());
   mountEndorsements(endorsements);
+
+  import { buildFormBody, validateEndorsement, validateMeetup, submitTo, MAX_COMMENT } from './assets/js/submit.js';
+
+  const ENDORSE_ACTION = 'FORM_URL_ENDORSE';
+  const ENDORSE_MAP = { name:'entry.0', email:'entry.0', location:'entry.0', trade:'entry.0', comment:'entry.0' };
+  const MEETUP_ACTION = 'FORM_URL_MEETUP';
+  const MEETUP_MAP = { title:'entry.0', starts:'entry.0', venue:'entry.0', contact:'entry.0', calendar_url:'entry.0' };
+
+  function wire(formId, statusId, map, action, validate, done) {
+    const form = document.getElementById(formId);
+    const status = document.getElementById(statusId);
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const values = Object.fromEntries(new FormData(form).entries());
+      const errors = validate(values);
+      if (errors.length) {
+        status.textContent = errors.includes('comment-too-long')
+          ? `Your comment is over the ${MAX_COMMENT}-character limit.`
+          : 'Please fill in every required field.';
+        return;
+      }
+      status.textContent = 'Sending…';
+      try {
+        await submitTo(action, buildFormBody(values, map));
+        form.reset();
+        status.textContent = done;
+      } catch {
+        status.textContent = 'That did not go through. Please try again.';
+      }
+    });
+  }
+
+  wire('endorse-form', 'endorse-status', ENDORSE_MAP, ENDORSE_ACTION, validateEndorsement,
+       'Thank you — your endorsement is in. It appears once reviewed.');
+  wire('meetup-form', 'meetup-status', MEETUP_MAP, MEETUP_ACTION, validateMeetup,
+       'Thank you — your meetup is in. It appears once reviewed.');
+
+  const counter = document.getElementById('endorse-counter');
+  const box = document.querySelector('#endorse-form [name=comment]');
+  box.addEventListener('input', () => { counter.textContent = `${box.value.length} / ${MAX_COMMENT}`; });
+
+  document.getElementById('band').addEventListener('click', (e) => {
+    if (!e.target.closest('#band-add')) return;
+    const f = document.getElementById('meetup-form');
+    f.hidden = !f.hidden;
+    if (!f.hidden) f.querySelector('input').focus();
+  });
 </script>
 </body>
 </html>

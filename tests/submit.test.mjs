@@ -17,6 +17,11 @@ test('omits empty and missing fields rather than sending blanks', () => {
   assert.equal(b.has('entry.3'), false);
 });
 
+test('omits whitespace-only values rather than sending blanks', () => {
+  const b = buildFormBody({ name: 'Rosa', comment: '   ' }, MAP);
+  assert.equal(b.has('entry.3'), false);
+});
+
 test('endorsement requires name, email, location and trade', () => {
   assert.deepEqual(validateEndorsement({}).sort(), ['email', 'location', 'name', 'trade']);
   assert.deepEqual(validateEndorsement({ name:'a', email:'b', location:'c', trade:'d' }), []);

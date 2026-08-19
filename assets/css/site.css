@@ -67,3 +67,22 @@ main { padding: 0 1.25rem 4rem; }
   .voice__who { margin-bottom: .5rem; }
   .everyone { display: block; }
 }
+
+.endorse { max-width: var(--measure); margin: 3rem auto 0;
+           border-top: 1px solid var(--rule); padding-top: 1.5rem; }
+.endorse h2 { font: 400 1.375rem/1.2 var(--serif); margin: 0 0 1rem; }
+form label { display: block; margin-bottom: .9rem; font: .6875rem/1.6 var(--sans);
+             letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); }
+form input, form textarea { display: block; width: 100%; margin-top: .3rem;
+  background: transparent; border: 1px solid var(--rule); color: var(--ink);
+  font: 1rem/1.5 var(--serif); padding: .5rem .6rem; text-transform: none; letter-spacing: 0; }
+.endorse__comment textarea { min-height: 12rem; resize: vertical; }
+.counter { display: block; text-align: right; font: .625rem/1.8 var(--sans); color: var(--ink-soft); }
+.notice { font: .75rem/1.5 var(--sans); color: var(--ink); margin: .25rem 0 .5rem; }
+.fineprint, .opt { font: .6875rem/1.5 var(--sans); color: var(--ink-soft); text-transform: none; letter-spacing: 0; }
+form button { background: var(--ink); color: var(--paper); border: 0; cursor: pointer;
+              font: 700 .6875rem/1 var(--sans); letter-spacing: .12em;
+              text-transform: uppercase; padding: .75rem 1.5rem; }
+.status { font: .75rem/1.5 var(--sans); color: var(--ink-soft); min-height: 1.2em; }
+.addform { max-width: var(--measure); margin: 1rem auto 0;
+           border-bottom: 1px solid var(--rule); padding-bottom: 1.25rem; }
