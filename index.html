@@ -17,6 +17,7 @@
 </header>
 
 <div id="band" class="band"><!-- Task 3 --></div>
+<div id="band-drawer" class="drawer" hidden></div>
 
 <main>
   <section id="face-statement">
@@ -69,6 +70,10 @@
   for (const b of document.querySelectorAll('[data-face-btn]')) {
     b.addEventListener('click', () => { location.hash = b.dataset.faceBtn; });
   }
+
+  import { mountBand } from './assets/js/meetups.js';
+  const meetups = await fetch('data/meetups.json').then(r => r.json());
+  mountBand(meetups);
 </script>
 </body>
 </html>
