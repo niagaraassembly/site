@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One neighbo(u)r to another — Niagara Assembly</title>
+<meta name="description" content="A statement on industrial renewal across the Niagara region, from Hamilton to Rochester.">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body>
+<header class="masthead">
+  <h1 class="masthead__title">One neighbo(u)r to another</h1>
+  <nav class="faces" aria-label="Sections">
+    <button type="button" data-face-btn="statement" aria-current="true">The Statement</button>
+    <button type="button" data-face-btn="endorsements" aria-current="false">Endorsements</button>
+  </nav>
+</header>
+
+<div id="band" class="band"><!-- Task 3 --></div>
+
+<main>
+  <section id="face-statement"><!-- STATEMENT --></section>
+  <section id="face-endorsements" hidden><!-- Task 4 --></section>
+</main>
+
+<script type="module">
+  import { mountFaces } from './assets/js/faces.js';
+  mountFaces();
+  for (const b of document.querySelectorAll('[data-face-btn]')) {
+    b.addEventListener('click', () => { location.hash = b.dataset.faceBtn; });
+  }
+</script>
+</body>
+</html>
