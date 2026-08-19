@@ -74,6 +74,10 @@
   import { mountBand } from './assets/js/meetups.js';
   const meetups = await fetch('data/meetups.json').then(r => r.json());
   mountBand(meetups);
+
+  import { mountEndorsements } from './assets/js/endorsements.js';
+  const endorsements = await fetch('data/endorsements.json').then(r => r.json());
+  mountEndorsements(endorsements);
 </script>
 </body>
 </html>

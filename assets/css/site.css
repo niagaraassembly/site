@@ -40,3 +40,30 @@ main { padding: 0 1.25rem 4rem; }
 .drawer__row { display: flex; justify-content: space-between; gap: 1rem;
                padding: .45rem .85rem; font: .8125rem/1.4 var(--sans);
                border-top: 1px dotted var(--rule); }
+
+#face-endorsements { max-width: 52rem; margin: 0 auto; }
+.subswitch { display: flex; gap: 1.25rem; align-items: baseline;
+             border-bottom: 1px solid var(--rule); padding: 1.5rem 0 .5rem; margin-bottom: 1.5rem; }
+.subswitch button { background: none; border: 0; padding: 0; cursor: pointer;
+                    color: var(--ink-soft); font: 700 .6875rem/1 var(--sans);
+                    letter-spacing: .12em; text-transform: uppercase; }
+.subswitch button[aria-current="true"] { color: var(--ink); }
+.subswitch__count { margin-left: auto; color: var(--ink-soft);
+                    font: .6875rem/1 var(--sans); letter-spacing: .06em; text-transform: uppercase; }
+.voice { display: flex; gap: 1.5rem; margin-bottom: 1.75rem; }
+.voice__who { flex: 0 0 34%; font: .75rem/1.55 var(--sans); }
+.voice__who span { color: var(--ink-soft); }
+.voice__body { flex: 1; }
+.voice__body p { margin: 0; }
+.voice__more { background: none; border: 0; padding: .35rem 0 0; cursor: pointer;
+               color: var(--ink-soft); font: .625rem/1 var(--sans);
+               letter-spacing: .1em; text-transform: uppercase; }
+.everyone { display: flex; gap: 2rem; }
+.everyone > div { flex: 1; }
+.everyone__row { font: .75rem/1.9 var(--sans); }
+.everyone__row span { color: var(--ink-soft); }
+@media (max-width: 34rem) {
+  .voice { display: block; }
+  .voice__who { margin-bottom: .5rem; }
+  .everyone { display: block; }
+}
