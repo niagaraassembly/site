@@ -139,12 +139,13 @@
   }
 
   wire('endorse-form', 'endorse-status', ENDORSE_MAP, ENDORSE_ACTION, validateEndorsement,
-       'Thank you — your endorsement is in. It appears once reviewed.');
+       'Thank you — that\'s been sent. Endorsements appear here once reviewed.');
   wire('meetup-form', 'meetup-status', MEETUP_MAP, MEETUP_ACTION, validateMeetup,
-       'Thank you — your meetup is in. It appears once reviewed.');
+       'Thank you — that\'s been sent. Meetups appear here once reviewed.');
 
   const counter = document.getElementById('endorse-counter');
   const box = document.querySelector('#endorse-form [name=comment]');
+  box.setAttribute('maxlength', String(MAX_COMMENT));
   box.addEventListener('input', () => { counter.textContent = `${box.value.length} / ${MAX_COMMENT}`; });
 
   document.getElementById('band').addEventListener('click', (e) => {
