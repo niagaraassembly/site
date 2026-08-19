@@ -1,3 +1,5 @@
+import { escapeHtml, safeHttpUrl } from './escape.js';
+
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 export const EMPTY_TEXT = 'No meetups yet — post the first one';
@@ -34,15 +36,18 @@ export function mountBand(meetups, doc = document, now = new Date()) {
     <button type="button" id="band-listing" class="band__btn"${state.listingEnabled ? '' : ' disabled'}
             aria-expanded="false" aria-controls="band-drawer">Meetup</button>
     <span class="band__div"></span>
-    <span class="band__ev">${state.text}</span>
+    <span class="band__ev">${escapeHtml(state.text)}</span>
     <span class="band__div"></span>
     <button type="button" id="band-add" class="band__btn">＋ Add</button>`;
   const drawer = doc.getElementById('band-drawer');
-  drawer.innerHTML = list.map(m => `
+  drawer.innerHTML = list.map(m => {
+    const href = safeHttpUrl(m.calendar_url);
+    return `
     <div class="drawer__row">
-      <span>${formatMeetupLine(m)}</span>
-      ${m.calendar_url ? `<a href="${m.calendar_url}" rel="noopener" target="_blank">cal ↗</a>` : ''}
-    </div>`).join('');
+      <span>${escapeHtml(formatMeetupLine(m))}</span>
+      ${href ? `<a href="${escapeHtml(href)}" rel="noopener noreferrer" target="_blank">cal ↗</a>` : ''}
+    </div>`;
+  }).join('');
   const btn = doc.getElementById('band-listing');
   btn.addEventListener('click', () => {
     const open = drawer.hidden;

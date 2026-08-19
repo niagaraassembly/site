@@ -23,6 +23,7 @@ Every task's requirements implicitly include these. Values are copied verbatim f
 - **Cited reuse examples are evidence, never partners.** No copy may imply agreement or affiliation.
 - **No Open Color palette, no Rough.js, no hand-drawn borders** — those are another project's identity.
 - **No dependencies.** No npm install, no pip install. Node built-ins and Python stdlib only.
+- **Every value rendered from `data/*.json` is untrusted and must be escaped at the point of interpolation**, using `escapeHtml` from `assets/js/escape.js`. URLs additionally pass through `safeHttpUrl`, which returns null for anything that is not `http(s)` — a `javascript:` href reaching the page is a Critical defect. The `approved` label is an *editorial* gate that catches defamation and spam; it is not a security control, and the content behind it arrives from a public form.
 - Copy must not specify the gender of a room.
 
 ---
@@ -522,7 +523,7 @@ Expected: PASS, 5 tests
 Append to `assets/js/endorsements.js`:
 
 ```js
-const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+import { escapeHtml as esc } from './escape.js';   // add at the top of the file
 
 function voiceRow(e) {
   const long = needsCollapse(e.comment);
