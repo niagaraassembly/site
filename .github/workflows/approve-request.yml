@@ -1,0 +1,31 @@
+name: Approve request
+on:
+  issues:
+    types: [labeled]
+permissions:
+  contents: write
+  issues: write
+jobs:
+  write:
+    if: github.event.label.name == 'approved'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Write the record
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          # Spec §8.3: both labels are required for a comment to be published.
+          # `approved` gates the job; `publish-comment` gates the comment text.
+          PUBLISH_COMMENT: ${{ contains(github.event.issue.labels.*.name, 'publish-comment') }}
+        run: python3 scripts/approve_request.py
+      - name: Commit
+        run: |
+          git config user.name "niagara-assembly-bot"
+          git config user.email "noreply@niagaraassembly.com"
+          git add data/
+          git diff --staged --quiet || git commit -m "Add record from #${{ github.event.issue.number }}"
+          git push
+      - name: Close the issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh issue close ${{ github.event.issue.number }} --repo ${{ github.repository }}
