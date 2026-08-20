@@ -20,7 +20,7 @@ export function validateEndorsement(v) {
 }
 
 export function validateMeetup(v) {
-  return missing(v, ['title', 'starts', 'venue']);
+  return missing(v, ['name', 'email', 'title', 'starts', 'venue', 'contact']);
 }
 
 export async function submitTo(action, body) {

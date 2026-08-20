@@ -19,12 +19,15 @@
 <div id="band" class="band"><!-- Task 3 --></div>
 <div id="band-drawer" class="drawer" hidden></div>
 <form id="meetup-form" class="addform" hidden>
+  <label>Name <input name="name" required autocomplete="name"></label>
+  <label>Email <input name="email" type="email" required autocomplete="email"></label>
   <label>What <input name="title" required placeholder="Open bench night"></label>
   <label>When <input name="starts" type="datetime-local" required></label>
   <label>Where <input name="venue" required placeholder="Welland Fabrication, 12 Ross St"></label>
-  <label>Contact <input name="contact" required placeholder="email or phone"></label>
+  <label>Contact <input name="contact" required placeholder="public email or phone"></label>
   <label>Calendar link <span class="opt">optional</span>
     <input name="calendar_url" type="url" placeholder="paste any calendar link"></label>
+  <p class="fineprint">Your meetup title, time, venue, contact and calendar link are published if approved. Your name and email are used for follow-up and Kit, not published.</p>
   <button type="submit">Post it</button>
   <p class="status" id="meetup-status" role="status"></p>
 </form>
@@ -112,7 +115,7 @@
   const ENDORSE_ACTION = 'FORM_URL_ENDORSE';
   const ENDORSE_MAP = { name:'entry.0', email:'entry.0', location:'entry.0', trade:'entry.0', comment:'entry.0' };
   const MEETUP_ACTION = 'FORM_URL_MEETUP';
-  const MEETUP_MAP = { title:'entry.0', starts:'entry.0', venue:'entry.0', contact:'entry.0', calendar_url:'entry.0' };
+  const MEETUP_MAP = { name:'entry.0', email:'entry.0', title:'entry.0', starts:'entry.0', venue:'entry.0', contact:'entry.0', calendar_url:'entry.0' };
 
   function wire(formId, statusId, map, action, validate, done) {
     const form = document.getElementById(formId);

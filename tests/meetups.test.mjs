@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { formatMeetupLine, upcoming, bandState } from '../assets/js/meetups.js';
+import { formatMeetupLine, meetupDrawerRow, upcoming, bandState } from '../assets/js/meetups.js';
 
 const A = { id:'m-1', title:'Open bench night', starts:'2026-09-04T19:00:00-04:00', venue:'Welland Fabrication, 12 Ross St' };
 const B = { id:'m-2', title:'Talk', starts:'2026-09-11T18:30:00-04:00', venue:'Hamilton' };
@@ -31,4 +31,10 @@ test('band state with nothing upcoming is an invitation, not an error', () => {
   assert.equal(s.empty, true);
   assert.equal(s.listingEnabled, false);
   assert.equal(s.text, 'No meetups yet — post the first one');
+});
+
+test('drawer row publishes organizer contact with escaping', () => {
+  const html = meetupDrawerRow({ ...A, contact:'organize@example.org <script>' });
+  assert.match(html, /Contact: organize@example\.org &lt;script&gt;/);
+  assert.doesNotMatch(html, /<script>/);
 });

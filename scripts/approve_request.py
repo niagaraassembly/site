@@ -12,7 +12,7 @@ MAX_COMMENT = 2500
 BLOCK = re.compile(r"<!--DATA\s*(\{.*?\})\s*DATA-->", re.S)
 REQUIRED = {
     "endorsement": ["name", "trade", "location"],
-    "meetup": ["title", "starts", "venue"],
+    "meetup": ["title", "starts", "venue", "contact"],
 }
 TARGET = {"endorsement": ("data/endorsements.json", "e"),
           "meetup": ("data/meetups.json", "m")}

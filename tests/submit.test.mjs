@@ -33,7 +33,9 @@ test('a comment over the cap is rejected', () => {
   assert.equal(MAX_COMMENT, 2500);
 });
 
-test('meetup requires title, start and venue; the calendar link is optional', () => {
-  assert.deepEqual(validateMeetup({}).sort(), ['starts', 'title', 'venue']);
-  assert.deepEqual(validateMeetup({ title:'a', starts:'2026-09-04T19:00', venue:'c' }), []);
+test('meetup requires private submitter info plus public event fields; the calendar link is optional', () => {
+  assert.deepEqual(validateMeetup({}).sort(), ['contact', 'email', 'name', 'starts', 'title', 'venue']);
+  assert.deepEqual(validateMeetup({
+    name:'a', email:'b', title:'c', starts:'2026-09-04T19:00', venue:'d', contact:'e'
+  }), []);
 });

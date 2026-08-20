@@ -34,7 +34,7 @@ class TestValidate(unittest.TestCase):
 
     def test_meetup_requires_its_fields(self):
         self.assertEqual(sorted(ar.validate({"kind": "meetup"})),
-                         ["starts", "title", "venue"])
+                         ["contact", "starts", "title", "venue"])
 
 class TestWrite(unittest.TestCase):
     def setUp(self):

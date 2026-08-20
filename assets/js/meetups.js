@@ -28,6 +28,16 @@ export function bandState(meetups, now) {
     : { empty: true, listingEnabled: false, text: EMPTY_TEXT, meetup: null };
 }
 
+export function meetupDrawerRow(m) {
+  const href = safeHttpUrl(m.calendar_url);
+  return `
+    <div class="drawer__row">
+      <span>${escapeHtml(formatMeetupLine(m))}</span>
+      ${m.contact ? `<span class="drawer__contact">Contact: ${escapeHtml(m.contact)}</span>` : ''}
+      ${href ? `<a href="${escapeHtml(href)}" rel="noopener noreferrer" target="_blank">cal ↗</a>` : ''}
+    </div>`;
+}
+
 export function mountBand(meetups, doc = document, now = new Date()) {
   const state = bandState(meetups, now);
   const list = upcoming(meetups, now);
@@ -40,14 +50,7 @@ export function mountBand(meetups, doc = document, now = new Date()) {
     <span class="band__div"></span>
     <button type="button" id="band-add" class="band__btn">＋ Add</button>`;
   const drawer = doc.getElementById('band-drawer');
-  drawer.innerHTML = list.map(m => {
-    const href = safeHttpUrl(m.calendar_url);
-    return `
-    <div class="drawer__row">
-      <span>${escapeHtml(formatMeetupLine(m))}</span>
-      ${href ? `<a href="${escapeHtml(href)}" rel="noopener noreferrer" target="_blank">cal ↗</a>` : ''}
-    </div>`;
-  }).join('');
+  drawer.innerHTML = list.map(meetupDrawerRow).join('');
   const btn = doc.getElementById('band-listing');
   btn.addEventListener('click', () => {
     const open = drawer.hidden;

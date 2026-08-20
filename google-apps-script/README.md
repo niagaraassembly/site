@@ -29,8 +29,17 @@ does not need to be re-created or re-authorized after a paste.
 Set these under Project Settings → Script Properties in each script's
 bound Apps Script project.
 
-- `endorse.gs` requires `GITHUB_TOKEN` and `KIT_API_KEY`.
-- `meetup.gs` requires `GITHUB_TOKEN` only — it makes no Kit call.
+- `endorse.gs` requires `GITHUB_TOKEN`, `KIT_API_KEY`, and `KIT_FORM_ID`.
+- `meetup.gs` requires `GITHUB_TOKEN`, `KIT_API_KEY`, and `KIT_FORM_ID`.
+
+`KIT_API_KEY` must be a Kit v4 API key. `KIT_FORM_ID` is the Kit form used
+for double opt-in/confirmation email; the public site never posts to Kit
+directly and never exposes either value.
+
+Create these Kit tags before deployment:
+
+- `niagara-endorsement`
+- `niagara-meetup`
 
 ## Placeholders
 
@@ -39,19 +48,20 @@ The `niagaraassembly` GitHub org and the `site` repo do not exist yet, so
 placeholder — update it once the real repo exists. Likewise the Google
 Forms themselves don't exist yet, so the form question names each script
 maps from (`Name`, `Email`, `City / Town / Township`, `Trade / Expertise`,
-`Comment` for Endorse; `What`, `When`, `Where`, `Contact`, `Calendar link`
-for Meetup) are placeholders — when the forms are built, either match the
-question wording to these names or update `mapResponse_` to match the
-forms.
+`Comment` for Endorse; `Name`, `Email`, `What`, `When`, `Where`, `Contact`,
+`Calendar link` for Meetup) are placeholders — when the forms are built,
+either match the question wording to these names or update `mapResponse_`
+to match the forms.
 
 ## Privacy and publication invariants
 
 Both scripts hold two properties that `runSelfTest` checks directly:
 
-- The endorsement form collects an email so Kit can reach the person, but
-  the issue body is a public artefact and its data block is what
-  eventually gets committed to a public repo. Email never enters the data
-  block.
+- Endorsement and meetup forms collect private name/email so Kit can reach
+  the person, but the issue body is a public artefact and its data block is
+  what eventually gets committed to a public repo. Private submitter email
+  never enters the data block. For meetups, the public `Contact` field is
+  still published once approved.
 - Publication is decided by a GitHub label, never by a field in the data
   block. Adding `approved` puts a submission on the roster; adding
   `publish-comment` as well additionally publishes the endorsement's
