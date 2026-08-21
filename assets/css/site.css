@@ -37,6 +37,7 @@
   --rule:     #c9c6bf;
 
   --measure: 46rem;
+  --edge:    0.5rem;   /* how far the nav and footer sit inside the box's lines */
   --board:   62rem;   /* the board is denser and earns more width */
 
   /* Prose is a system sans, per the reference's neutrality. The hand face
@@ -67,9 +68,9 @@ body {
 
 /* Top navigation ------------------------------------------------------ */
 /* Sits ABOVE the drawn box, sharing its max-width and centring so the two
-   line up at both edges. No horizontal padding: the brand's left edge and
-   the last link's right edge are meant to sit exactly on the drawn box's
-   left and right lines. */
+   line up at both edges, then inset by --edge so the brand and the last
+   icon sit just inside the drawn lines rather than on them. The footer
+   uses the same inset, so the three edges agree. */
 
 .topnav {
   display: flex;
@@ -77,7 +78,7 @@ body {
   gap: 1.5rem;
   max-width: var(--measure);
   margin: 0 auto .6rem;
-  padding: 0;
+  padding: 0 var(--edge);
 }
 .topnav--board { max-width: var(--board); }
 
@@ -102,6 +103,13 @@ body {
   color: var(--ink-soft);
 }
 .topnav__links a:hover { color: var(--ink); text-decoration: underline; }
+
+/* Pulled closer to each other than the words are, so the pair reads as one
+   group rather than as two more nav items. */
+.topnav__icon { display: flex; align-items: center; margin-left: -0.65rem; }
+.topnav__icon:first-of-type { margin-left: 0; }
+.topnav__icon:hover { color: var(--ink); }
+.topnav__links a.topnav__icon:hover { text-decoration: none; }
 .topnav__links a[aria-current="page"] { color: var(--ink); font-weight: 600; }
 
 @media (max-width: 34rem) {
@@ -292,6 +300,7 @@ button[type="submit"] {
   gap: .5rem;
   max-width: var(--measure);
   margin: 1.1rem auto 0;
+  padding: 0 var(--edge);
   font: .75rem/1.5 var(--sans);
   color: var(--ink-soft);
 }
