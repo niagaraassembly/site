@@ -6,7 +6,16 @@
     "url": "https://overpass-api.de/api/interpreter",
     "catalogue_url": "https://wiki.openstreetmap.org/wiki/Overpass_API",
     "format": "json",
-    "category": ["place", "building", "land", "rail", "road", "port", "waterway", "utility"],
+    "category": [
+      "place",
+      "building",
+      "land",
+      "rail",
+      "road",
+      "port",
+      "waterway",
+      "utility"
+    ],
     "coverage": "Hamilton, Halton, Niagara, cross-border",
     "update_frequency": "continuous",
     "freshness_state": "RECENT",
@@ -31,7 +40,13 @@
     "catalogue_url": "https://open.hamilton.ca/api/feed/dcat-us/1.1.json",
     "service_root": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services",
     "format": "geojson",
-    "category": ["land", "building", "rail", "road", "planning"],
+    "category": [
+      "land",
+      "building",
+      "rail",
+      "road",
+      "planning"
+    ],
     "coverage": "City of Hamilton",
     "update_frequency": "varies by layer",
     "freshness_state": "UPDATED ANNUALLY",
@@ -45,11 +60,37 @@
       "catalogue_size": 463,
       "datasets_under_open_licence": 391,
       "layers": [
-        { "name": "Employment Lands", "path": "Employment_Lands/FeatureServer/2", "records": 22, "category": "land", "modified": "2026-08-02" },
-        { "name": "Zoning By-law Boundary", "path": "Zoning_By_law_Boundary/FeatureServer/1", "records": 11931, "category": "land" },
-        { "name": "Buildings", "path": "Buildings/FeatureServer/8", "records": 214293, "category": "building" },
-        { "name": "Railways", "path": "Railways/FeatureServer/10", "records": 1692, "category": "rail" },
-        { "name": "Truck Route Network", "path": "Truck_Route_Network/FeatureServer/5", "records": 1250, "category": "road" }
+        {
+          "name": "Employment Lands",
+          "path": "Employment_Lands/FeatureServer/2",
+          "records": 22,
+          "category": "land",
+          "modified": "2026-08-02"
+        },
+        {
+          "name": "Zoning By-law Boundary",
+          "path": "Zoning_By_law_Boundary/FeatureServer/1",
+          "records": 11931,
+          "category": "land"
+        },
+        {
+          "name": "Buildings",
+          "path": "Buildings/FeatureServer/8",
+          "records": 214293,
+          "category": "building"
+        },
+        {
+          "name": "Railways",
+          "path": "Railways/FeatureServer/10",
+          "records": 1692,
+          "category": "rail"
+        },
+        {
+          "name": "Truck Route Network",
+          "path": "Truck_Route_Network/FeatureServer/5",
+          "records": 1250,
+          "category": "road"
+        }
       ]
     },
     "status": "active",
@@ -64,7 +105,9 @@
     "service_url": "https://services1.arcgis.com/WxiLK82TWf8W3O3f/arcgis/rest/services/OpenData_Consolidated_NEI_Opendata/FeatureServer/45",
     "download_url": "https://open.niagararegion.ca/api/download/v1/items/d23f4f781add4584904bc78b94c869b3/geojson?layers=45",
     "format": "geojson",
-    "category": ["company"],
+    "category": [
+      "company"
+    ],
     "coverage": "Niagara Region, twelve municipalities",
     "update_frequency": "annual survey; paused 2020-2021",
     "freshness_state": "UPDATED ANNUALLY",
@@ -77,11 +120,23 @@
       "records": 98065,
       "geometry": "point",
       "fields": [
-        "nei_id", "Year", "municipality", "businessname",
-        "businessstreetnumber", "businessstreetname", "businessunit",
-        "businesspobox", "businesspostalcode", "businesswebsite",
-        "primarynaics", "secondarynaics", "primarysector", "industry",
-        "yearopen", "indoorgfa", "sizerangeemployees"
+        "nei_id",
+        "Year",
+        "municipality",
+        "businessname",
+        "businessstreetnumber",
+        "businessstreetname",
+        "businessunit",
+        "businesspobox",
+        "businesspostalcode",
+        "businesswebsite",
+        "primarynaics",
+        "secondarynaics",
+        "primarysector",
+        "industry",
+        "yearopen",
+        "indoorgfa",
+        "sizerangeemployees"
       ]
     },
     "status": "active",
@@ -93,12 +148,59 @@
     "organization": "St. Lawrence Seaway Management Corporation",
     "url": "https://seaway-greatlakes.com/vessel-transit",
     "format": "html",
-    "category": ["activity", "port"],
+    "category": [
+      "activity",
+      "port"
+    ],
     "coverage": "Seaway system including Welland Canal",
     "freshness_state": "RECENT",
     "license": "unknown",
     "last_retrieved": "2026-08-18",
     "status": "excluded",
     "notes": "Publicly readable and server-rendered, but robots.txt is 'Disallow: /'. Do NOT build an automated collector against it. Link out only."
+  },
+  {
+    "id": "niagara-employment-inventory",
+    "name": "Niagara Region Employment Inventory",
+    "organization": "Niagara Region",
+    "url": "https://niagaraopendata.ca",
+    "catalogue_url": "https://niagaraopendata.ca/api/3/action/package_search?q=employment+inventory",
+    "format": "geojson",
+    "category": [
+      "company",
+      "land",
+      "activity"
+    ],
+    "coverage": "Niagara Region, all twelve municipalities",
+    "update_frequency": "roughly annual; editions 2017, 2018, 2019, 2022",
+    "freshness_state": "UPDATED ANNUALLY",
+    "license": "Open Government Licence 2.0 (Niagara Region)",
+    "license_url": "https://niagaraopendata.ca/pages/open-government-licence-niagara-region",
+    "attribution": "Contains information licensed under the Open Government Licence – Niagara Region",
+    "share_alike": false,
+    "last_retrieved": "2026-08-21",
+    "verified": {
+      "date": "2026-08-21",
+      "editions": {
+        "2017": 11198,
+        "2018": 11722,
+        "2019": 12017,
+        "2022": 13033
+      },
+      "geometry": "point",
+      "key_fields": [
+        "municipality",
+        "businessname",
+        "businessstreetnumber",
+        "businessstreetname",
+        "primarynaics",
+        "primarysector",
+        "industry",
+        "sizerangeemployees"
+      ],
+      "derived_layer": "68 industrial addresses occupied in 2017/18/19 and vacant by 2022"
+    },
+    "status": "active",
+    "notes": "Field names change case between editions — 2019 ships PrimaryNAICS, 2022 ships primarynaics. Compare on lower-cased keys or the diff silently returns nothing. This is the only Ontario source found that supports the industrial-underuse method; MPAC, the obvious candidate, is fee-based and withholds income data. A departure is not a listing: a site can be empty and not for sale, or sold and not yet reoccupied."
   }
 ]

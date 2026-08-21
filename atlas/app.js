@@ -108,6 +108,21 @@
       on: false,
     },
     {
+      /* Derived, not observed: addresses that held an industrial occupier in
+         2017/18/19 and hold nothing at all by 2022. The closest thing to an
+         availability signal that exists in Ontario without MLS — but a
+         departure is not a listing, and the popup says so. */
+      id: 'nei-departures',
+      region: 'ONT',
+      file: 'data/niagara-departures.geojson',
+      label: 'Industry departed',
+      group: 'PLACES',
+      source: 'Niagara Region Employment Inventory',
+      freshness: 'UPDATED ANNUALLY',
+      colour: '#f2c14e',
+      on: true,
+    },
+    {
       id: 'osm-places',
       region: 'BOTH',
       file: 'data/osm-places.geojson',
