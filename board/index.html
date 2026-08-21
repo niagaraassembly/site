@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Board — @NiagaraAssembly</title>
+<meta name="description" content="Events, news, spaces, tools and experts across the Niagara region.">
+<!-- One level down: every path here is ../-prefixed. A wrong path shows an
+     empty board rather than an error, so this page is checked over HTTP. -->
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body>
+
+<div class="frame frame--board" data-sketch="frame">
+
+  <nav class="nav" id="nav" data-sketch="box" aria-label="Board sections"></nav>
+  <nav class="subnav" id="subnav" data-sketch="box" aria-label="Subsections"></nav>
+
+  <form class="filters" id="filters" data-sketch="box" role="search">
+    <input type="search" name="q" id="f-q" placeholder="Search the board" aria-label="Search">
+    <select name="location" id="f-location" aria-label="Location">
+      <option value="">Anywhere</option>
+    </select>
+    <select name="since" id="f-since" aria-label="Posted">
+      <option value="">Any time</option>
+      <option value="7">Past 7 days</option>
+      <option value="30">Past 30 days</option>
+    </select>
+    <label class="check"><input type="checkbox" name="upcoming" id="f-upcoming"> Upcoming only</label>
+  </form>
+
+  <div id="board"><p class="board__empty">Loading…</p></div>
+
+  <p><a href="../#post">Post to the board</a></p>
+
+</div>
+
+<script src="../vendor/rough.min.js" defer></script>
+<script src="../assets/js/sketch.js" defer></script>
+<script type="module">
+  import { navHtml, subnavHtml, mountBoard, parseQuery } from '../assets/js/board.js';
+  import { LOCATIONS } from '../assets/js/nav.js';
+
+  const root = document.getElementById('board');
+  const nav = document.getElementById('nav');
+  const subnav = document.getElementById('subnav');
+  const filters = document.getElementById('filters');
+
+  for (const [slug, label] of Object.entries(LOCATIONS)) {
+    const option = document.createElement('option');
+    option.value = slug;
+    option.textContent = label;
+    document.getElementById('f-location').append(option);
+  }
+
+  let records = [];
+  let state = parseQuery(location.search);
+
+  /* "Past 7 days" is stored as a day count in the control but as an
+     absolute ISO date in the filter, so applyFilters stays a pure
+     comparison with no clock of its own. */
+  function sinceDate(days) {
+    if (!days) return '';
+    const d = new Date();
+    d.setDate(d.getDate() - Number(days));
+    return d.toISOString().slice(0, 10);
+  }
+
+  function render() {
+    nav.innerHTML = navHtml(state.category);
+    subnav.innerHTML = subnavHtml(state.category, state.kind);
+    mountBoard(records, state, root);
+    /* Cards and nav links are created here, after sketch.js built its
+       registry on DOMContentLoaded — so they must be registered, not just
+       redrawn. */
+    if (window.NASketch) window.NASketch.redraw();
+  }
+
+  /* Nav and subnav are real links, so they work without script and can be
+     copied and shared. Intercepted here only to avoid a reload. */
+  for (const bar of [nav, subnav]) {
+    bar.addEventListener('click', (e) => {
+      const link = e.target.closest('a');
+      if (!link) return;
+      e.preventDefault();
+      history.pushState(null, '', link.getAttribute('href'));
+      state = { ...parseQuery(location.search),
+                q: state.q, location: state.location, since: state.since,
+                upcoming: state.upcoming };
+      render();
+    });
+  }
+
+  filters.addEventListener('submit', (e) => e.preventDefault());
+  filters.addEventListener('input', () => {
+    state = {
+      ...state,
+      q: document.getElementById('f-q').value,
+      location: document.getElementById('f-location').value,
+      since: sinceDate(document.getElementById('f-since').value),
+      upcoming: document.getElementById('f-upcoming').checked
+    };
+    render();
+  });
+
+  addEventListener('popstate', () => { state = parseQuery(location.search); render(); });
+
+  try {
+    records = await fetch('../data/board.json').then((r) => {
+      if (!r.ok) throw new Error(`board.json: HTTP ${r.status}`);
+      return r.json();
+    });
+    render();
+  } catch (err) {
+    /* Say so rather than leaving "Loading…" up forever — a stuck spinner
+       is indistinguishable from an empty board. */
+    console.error(err);
+    nav.innerHTML = navHtml(state.category);
+    root.innerHTML = '<p class="board__empty">The board could not be loaded. Please reload.</p>';
+  }
+</script>
+</body>
+</html>

@@ -8,6 +8,293 @@
 <link rel="stylesheet" href="assets/css/site.css">
 </head>
 <body>
-<main><p>Under construction.</p></main>
+
+<div class="frame" data-sketch="frame">
+
+  <h1>@NiagaraAssembly</h1>
+
+  <p>@NiagaraAssembly is a growing group of technologists, tradesmen, engineers
+  and freighthoppers who believe the Niagara Peninsula is the best place in
+  Canada to strengthen old industries and bring to life the factories, products
+  and processes defining the future. Join the mailing list or become a Member.</p>
+
+  <p>NA connects industrial operators and entrepreneurs through stand-ups,
+  special events, certified training and peer-led workshops. As a members-led
+  company, our goal is to help Members pioneer the work spaces and digital tools
+  that lift all boats. The time has come to accelerate our industries.</p>
+
+  <p>As we grow the Membership and support self-organizing, we are testing out
+  product and service ideas that can make us profitable and have major impact
+  across the region and beyond — from mobile electronics specialist training, to
+  real estate and logistics visualization systems, to Integrated Production
+  Environments using Theia.</p>
+
+  <p>Got some space in old Hamilton where we can hang our hats?<br>
+  <a href="mailto:hello@niagaraassembly.com">hello@niagaraassembly.com</a></p>
+
+  <h2>How can you get involved?</h2>
+
+  <ul class="plain">
+    <li>Host a standup, a talk, a demo or a workshop.</li>
+    <li>Share news about new projects, hiring, expansions or investment.</li>
+    <li>Offer space — office, industrial, retail, yard or warehouse.</li>
+    <li>List tools others can use, or find the ones you need.</li>
+    <li>Register as an expert to lead training or workshops in the region.</li>
+  </ul>
+
+  <p><a href="board/">See what's on the board</a>.</p>
+
+  <!-- Join ------------------------------------------------------------ -->
+  <form id="join-form" novalidate>
+    <fieldset data-sketch="box">
+      <legend>Join</legend>
+      <label>Name <input name="name" required autocomplete="name"></label>
+      <label>Email <input name="email" type="email" required autocomplete="email"></label>
+      <label>I'd like to
+        <select name="level">
+          <option value="List">stay on the mailing list</option>
+          <option value="Regional">become a Regional Member</option>
+          <option value="Company">become a Company Member</option>
+          <option value="Champion">become a Champion Member</option>
+        </select>
+      </label>
+      <p class="fineprint">Membership beyond the mailing list is an expression of
+      interest — nothing is charged and no membership is conferred by this form.
+      Someone will be in touch.</p>
+      <button type="submit">Send</button>
+      <p class="status" id="join-status" role="status"></p>
+    </fieldset>
+  </form>
+
+  <!-- Post to the board ------------------------------------------------ -->
+  <form id="board-form" novalidate>
+    <fieldset data-sketch="box">
+      <legend id="post">Post to the board</legend>
+
+      <label>Section
+        <select name="category" id="board-category"></select></label>
+      <label>Which kind
+        <select name="kind" id="board-kind"></select></label>
+      <label>Location
+        <select name="location" id="board-location"></select></label>
+
+      <p class="fineprint" id="board-hint"></p>
+
+      <label>Your name <input name="name" required autocomplete="name"></label>
+      <label>Your email <input name="email" type="email" required autocomplete="email"></label>
+
+      <label data-field="title"><span data-label-for="title">Title</span>
+        <input name="title"></label>
+      <label data-field="presenter"><span data-label-for="presenter">Presenter</span>
+        <input name="presenter"></label>
+      <label data-field="when"><span data-label-for="when">When</span>
+        <input name="when" placeholder="2026-09-04, or 'Thursdays 7pm'"></label>
+      <label data-field="where"><span data-label-for="where">Where</span>
+        <input name="where"></label>
+      <label data-field="description"><span data-label-for="description">Description</span>
+        <textarea name="description"></textarea>
+        <span class="opt" id="board-counter"></span></label>
+      <label data-field="link"><span data-label-for="link">Link</span>
+        <input name="link" type="url" placeholder="https://"></label>
+      <label data-field="contact"><span data-label-for="contact">Public contact</span>
+        <input name="contact" placeholder="an email or phone you're happy to publish"></label>
+
+      <label data-field="visibility">How should this be handled?
+        <select name="visibility">
+          <option value="public">Publish me on the board</option>
+          <option value="private">Register me with NA only — staff follow-up</option>
+          <option value="both">Both</option>
+        </select></label>
+
+      <p class="fineprint">Your name and email are used for follow-up and are
+      never published. Everything else appears on the board once reviewed.</p>
+      <button type="submit">Send</button>
+      <p class="status" id="board-status" role="status"></p>
+    </fieldset>
+  </form>
+
+  <!-- Open source ------------------------------------------------------ -->
+  <form id="register-form" novalidate>
+    <fieldset data-sketch="box">
+      <legend>Help build the software</legend>
+      <input type="hidden" name="kind" value="opensource">
+      <label>Name <input name="name" required autocomplete="name"></label>
+      <label>Email <input name="email" type="email" required autocomplete="email"></label>
+      <label>GitHub username
+        <input name="github_username" placeholder="rosa-silva" autocapitalize="off" spellcheck="false"></label>
+      <label>What you'd like to work on <span class="opt">optional</span>
+        <textarea name="interest"></textarea></label>
+      <p class="fineprint">Nothing here is published. Approved registrations
+      receive an invitation to the niagaraassembly GitHub organization.</p>
+      <button type="submit">Send</button>
+      <p class="status" id="register-status" role="status"></p>
+    </fieldset>
+  </form>
+
+</div>
+
+<script src="vendor/rough.min.js" defer></script>
+<script src="assets/js/sketch.js" defer></script>
+<script type="module">
+  import { buildFormBody, submitTo, MAX_TEXT,
+           validateJoin, validateBoard, validateRegister } from './assets/js/submit.js';
+  import { CATEGORIES, CATEGORY_LABELS, KINDS, LOCATIONS,
+           REQUIRED, OPTIONAL } from './assets/js/nav.js';
+
+  /* Placeholders. docs/SETUP.md replaces these with real values read from
+     FB_PUBLIC_LOAD_DATA_ in each live form's page source — NOT from a
+     pre-filled link, which yields ids that look right and silently drop
+     values for some question types. */
+  const JOIN_ACTION = 'FORM_URL_JOIN';
+  const JOIN_MAP = { name: 'entry.0', email: 'entry.0', level: 'entry.0' };
+
+  const BOARD_ACTION = 'FORM_URL_BOARD';
+  const BOARD_MAP = { category: 'entry.0', kind: 'entry.0', location: 'entry.0',
+                      name: 'entry.0', email: 'entry.0', title: 'entry.0',
+                      presenter: 'entry.0', when: 'entry.0', where: 'entry.0',
+                      description: 'entry.0', link: 'entry.0', contact: 'entry.0',
+                      visibility: 'entry.0' };
+
+  const REGISTER_ACTION = 'FORM_URL_REGISTER';
+  const REGISTER_MAP = { kind: 'entry.0', name: 'entry.0', email: 'entry.0',
+                         github_username: 'entry.0', interest: 'entry.0' };
+
+  /* Per-category labelling. The `name` attributes never change; only what
+     the visitor reads does. Which fields SHOW is derived from nav.js
+     rather than restated here — one list, not two that can drift. */
+  const LABELS = {
+    events:  { title: 'Event title', when: 'When', where: 'Venue',
+               presenter: 'Speaker or host', contact: 'Public contact' },
+    news:    { title: 'Headline', description: 'Why it matters here',
+               link: 'Link to the story', where: 'Company or place' },
+    spaces:  { title: 'Name for the space', where: 'Where the space is',
+               description: 'Size, terms, what suits it', contact: 'Public contact' },
+    tools:   { title: 'What the tool is', where: 'Where it lives',
+               description: 'What it does, and how to get at it',
+               presenter: 'Who owns it', contact: 'Public contact' },
+    experts: { title: 'Your name as it should appear publicly',
+               description: 'Expertise and credentials',
+               when: 'Availability', where: 'Where you work',
+               contact: 'Public contact' }
+  };
+
+  /* A category that does not name a field falls back to these. Without a
+     fallback the span keeps the PREVIOUS category's text — which is how
+     "Link to the story" ended up on Spaces, Tools and Experts. */
+  const DEFAULT_LABELS = {
+    title: 'Title', presenter: 'Presenter', when: 'When', where: 'Where',
+    description: 'Description', link: 'Link', contact: 'Public contact'
+  };
+
+  const HINTS = {
+    events:  'Something happening on a date, at a place.',
+    news:    'A link and a few lines about what changed.',
+    spaces:  'Space someone else could use. Roughly what, roughly on what terms.',
+    tools:   'A machine or tool others could get at.',
+    experts: 'Offer training or workshops. You choose whether this is published.'
+  };
+
+  const boardForm = document.getElementById('board-form');
+  const categorySelect = document.getElementById('board-category');
+  const kindSelect = document.getElementById('board-kind');
+  const locationSelect = document.getElementById('board-location');
+  const boardHint = document.getElementById('board-hint');
+
+  const option = (value, label) => {
+    const o = document.createElement('option');
+    o.value = value; o.textContent = label;
+    return o;
+  };
+
+  for (const c of CATEGORIES) categorySelect.append(option(c, CATEGORY_LABELS[c]));
+  for (const [slug, label] of Object.entries(LOCATIONS)) locationSelect.append(option(slug, label));
+
+  function shapeBoardForm() {
+    const category = categorySelect.value;
+
+    kindSelect.replaceChildren();
+    for (const [slug, label] of Object.entries(KINDS[category])) {
+      kindSelect.append(option(slug, label));
+    }
+
+    boardHint.textContent = HINTS[category];
+
+    const shown = new Set([...REQUIRED[category], ...OPTIONAL[category]]);
+    if (category === 'experts') shown.add('visibility');
+
+    for (const label of boardForm.querySelectorAll('[data-field]')) {
+      const field = label.dataset.field;
+      const on = shown.has(field);
+      label.hidden = !on;
+      /* A hidden field must not carry a stale value into the submission —
+         switching Events to News would otherwise post a presenter. */
+      if (!on) for (const input of label.querySelectorAll('input, textarea, select')) {
+        input.value = input.tagName === 'SELECT' ? input.options[0].value : '';
+      }
+
+      const span = label.querySelector('[data-label-for]');
+      const text = LABELS[category]?.[field] ?? DEFAULT_LABELS[field];
+      if (span && text) {
+        span.textContent = text + (REQUIRED[category].includes(field) ? '' : ' (optional)');
+      }
+    }
+  }
+
+  categorySelect.addEventListener('change', shapeBoardForm);
+  shapeBoardForm();
+
+  const counter = document.getElementById('board-counter');
+  const description = boardForm.querySelector('[name=description]');
+  description.setAttribute('maxlength', String(MAX_TEXT));
+  description.addEventListener('input', () => {
+    counter.textContent = `${description.value.length} / ${MAX_TEXT}`;
+  });
+
+  const MESSAGES = {
+    'link-not-http': 'Links need to start with http:// or https://.',
+    'description-too-long': `That description is over the ${MAX_TEXT}-character limit.`,
+    'github-username': "That doesn't look like a GitHub username.",
+    'visibility': 'Please choose how this should be handled.',
+    'location': 'Please choose a location.',
+    'default': 'Please fill in every field shown.'
+  };
+
+  function wire(formId, statusId, map, action, validate, done) {
+    const form = document.getElementById(formId);
+    const status = document.getElementById(statusId);
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const values = Object.fromEntries(new FormData(form).entries());
+      const errors = validate(values);
+
+      if (errors.length) {
+        status.dataset.state = 'error';
+        status.textContent = MESSAGES[errors.find((k) => k in MESSAGES)] ?? MESSAGES.default;
+        return;
+      }
+
+      status.dataset.state = 'sending';
+      status.textContent = 'Sending…';
+      try {
+        await submitTo(action, buildFormBody(values, map));
+        form.reset();
+        if (form === boardForm) { shapeBoardForm(); counter.textContent = ''; }
+        status.dataset.state = 'done';
+        status.textContent = done;
+      } catch {
+        status.dataset.state = 'error';
+        status.textContent = 'That did not go through. Please try again.';
+      }
+    });
+  }
+
+  wire('join-form', 'join-status', JOIN_MAP, JOIN_ACTION, validateJoin,
+       "Thank you — that's been sent.");
+  wire('board-form', 'board-status', BOARD_MAP, BOARD_ACTION, validateBoard,
+       "Thank you — that's been sent. Posts appear on the board once reviewed.");
+  wire('register-form', 'register-status', REGISTER_MAP, REGISTER_ACTION, validateRegister,
+       "Thank you — that's been sent. Someone will be in touch.");
+</script>
 </body>
 </html>

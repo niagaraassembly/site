@@ -1,38 +1,124 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { TYPE_ORDER, TYPE_LABELS, groupByType, cardHtml, mountBoard }
+import { cardHtml, navHtml, subnavHtml, applyFilters, mountBoard, parseQuery }
   from '../assets/js/board.js';
+import { CATEGORIES } from '../assets/js/nav.js';
 
-const rec = (o = {}) => ({ id: 'b-0001', type: 'standup', title: 'Open bench night',
-                           when: 'Thursday 7pm', where: '12 Ross St',
+const rec = (o = {}) => ({ id: 'b-0001', category: 'events', kind: 'standup',
+                           location: 'niagara', title: 'Open bench night',
+                           when: '2026-09-04', where: '12 Ross St',
                            contact: 'rosa@example.ca', date: '2026-08-20', ...o });
 
-test('every board type has a label and a place in the order', () => {
-  assert.deepEqual(TYPE_ORDER, ['standup', 'talk', 'demo', 'space', 'news', 'idea']);
-  for (const type of TYPE_ORDER) assert.equal(typeof TYPE_LABELS[type], 'string');
+/* --- nav ---------------------------------------------------------- */
+
+test('the main nav is the five categories, in order', () => {
+  const html = navHtml('events');
+  for (const label of ['Events', 'News', 'Spaces', 'Tools', 'Experts']) {
+    assert.ok(html.includes(`>${label}<`), `missing ${label}`);
+  }
+  assert.equal(html.indexOf('Events') < html.indexOf('Experts'), true);
 });
 
-test('groups follow TYPE_ORDER regardless of input order', () => {
-  const groups = groupByType([rec({ type: 'idea', id: 'b-0002' }), rec()]);
-  assert.deepEqual(groups.map(g => g.type), ['standup', 'idea']);
+test('the active category is marked for styling and screen readers', () => {
+  assert.ok(navHtml('tools').includes('aria-current="page"'));
 });
 
-test('empty groups are omitted', () => {
-  assert.deepEqual(groupByType([rec()]).map(g => g.type), ['standup']);
+test('every subnav starts with All, then the screenshot order', () => {
+  const html = subnavHtml('events', 'all');
+  assert.ok(html.indexOf('All') < html.indexOf('Standups'));
+  assert.ok(html.indexOf('Standups') < html.indexOf('Training'));
 });
 
-test('records within a group run newest first', () => {
-  const groups = groupByType([
-    rec({ id: 'b-0001', date: '2026-01-01' }),
-    rec({ id: 'b-0002', date: '2026-08-01' })
-  ]);
-  assert.deepEqual(groups[0].records.map(r => r.id), ['b-0002', 'b-0001']);
+test('each category gets its own subnav', () => {
+  assert.ok(subnavHtml('news', 'all').includes('SAFEs'));
+  assert.ok(subnavHtml('spaces', 'all').includes('Office Space'));
+  assert.ok(!subnavHtml('news', 'all').includes('SAFEs') === false);
+  assert.ok(!subnavHtml('tools', 'all').includes('Logistics'));
 });
 
-test('records sharing a date fall back to id, newest first', () => {
-  const groups = groupByType([rec({ id: 'b-0001' }), rec({ id: 'b-0003' })]);
-  assert.deepEqual(groups[0].records.map(r => r.id), ['b-0003', 'b-0001']);
+test('a subnav renders for every category without throwing', () => {
+  for (const category of CATEGORIES) assert.ok(subnavHtml(category, 'all').length > 0);
 });
+
+/* --- filtering ---------------------------------------------------- */
+
+const many = [
+  rec({ id: 'b-0001', category: 'events', kind: 'standup', location: 'niagara',
+        title: 'Open bench night', when: '2026-09-04', date: '2026-08-20' }),
+  rec({ id: 'b-0002', category: 'events', kind: 'talk', location: 'hamilton',
+        title: 'Steel and software', when: '2020-01-01', date: '2026-08-19' }),
+  rec({ id: 'b-0003', category: 'news', kind: 'hiring', location: 'buffalo',
+        title: 'Trico hiring', link: 'https://example.ca/t',
+        description: 'Forty roles.', date: '2026-08-18' })
+];
+
+test('category is the primary filter', () => {
+  assert.deepEqual(applyFilters(many, { category: 'news' }).map(r => r.id), ['b-0003']);
+});
+
+test('kind narrows within a category, and all means all', () => {
+  assert.deepEqual(applyFilters(many, { category: 'events', kind: 'talk' }).map(r => r.id),
+                   ['b-0002']);
+  assert.equal(applyFilters(many, { category: 'events', kind: 'all' }).length, 2);
+});
+
+test('search matches title, description and where, case-insensitively', () => {
+  assert.deepEqual(applyFilters(many, { q: 'STEEL' }).map(r => r.id), ['b-0002']);
+  assert.deepEqual(applyFilters(many, { q: 'forty' }).map(r => r.id), ['b-0003']);
+  assert.equal(applyFilters(many, { q: 'nothing here' }).length, 0);
+});
+
+test('location filters on the controlled slug, not the free-text venue', () => {
+  assert.deepEqual(applyFilters(many, { location: 'hamilton' }).map(r => r.id), ['b-0002']);
+});
+
+test('upcoming hides events whose date has passed', () => {
+  const ids = applyFilters(many, { category: 'events', upcoming: true }).map(r => r.id);
+  assert.deepEqual(ids, ['b-0001']);
+});
+
+test('upcoming leaves records with no when alone', () => {
+  assert.deepEqual(applyFilters(many, { category: 'news', upcoming: true }).map(r => r.id),
+                   ['b-0003']);
+});
+
+test('posted-since drops anything older than the window', () => {
+  const ids = applyFilters(many, { since: '2026-08-19' }).map(r => r.id);
+  assert.deepEqual(ids, ['b-0001', 'b-0002']);
+});
+
+test('filters compose', () => {
+  assert.deepEqual(
+    applyFilters(many, { category: 'events', location: 'niagara', q: 'bench' }).map(r => r.id),
+    ['b-0001']);
+});
+
+test('results run newest first', () => {
+  assert.deepEqual(applyFilters(many, {}).map(r => r.id), ['b-0001', 'b-0002', 'b-0003']);
+});
+
+/* --- query string -------------------------------------------------- */
+
+test('parseQuery reads the filter state off a URL', () => {
+  const f = parseQuery('?category=tools&kind=fabrication&q=lathe&location=niagara&upcoming=1');
+  assert.equal(f.category, 'tools');
+  assert.equal(f.kind, 'fabrication');
+  assert.equal(f.q, 'lathe');
+  assert.equal(f.upcoming, true);
+});
+
+test('parseQuery refuses a category that is not in the nav', () => {
+  assert.equal(parseQuery('?category=rumour').category, 'events');
+});
+
+test('parseQuery defaults to events and all', () => {
+  const f = parseQuery('');
+  assert.equal(f.category, 'events');
+  assert.equal(f.kind, 'all');
+  assert.equal(f.upcoming, false);
+});
+
+/* --- cards --------------------------------------------------------- */
 
 test('cardHtml escapes every rendered value', () => {
   const html = cardHtml(rec({ title: '<script>alert(1)</script>' }));
@@ -45,27 +131,41 @@ test('cardHtml renders an http link and refuses anything else', () => {
   assert.ok(!cardHtml(rec({ link: 'javascript:alert(1)' })).includes('href='));
 });
 
+test('cardHtml shows the kind label, not the slug', () => {
+  assert.ok(cardHtml(rec()).includes('Standups'));
+  assert.ok(!cardHtml(rec()).includes('>standup<'));
+});
+
+test('cardHtml shows the location label', () => {
+  assert.ok(cardHtml(rec()).includes('Niagara'));
+});
+
 test('cardHtml omits absent fields rather than rendering empties', () => {
-  const html = cardHtml({ id: 'b-0002', type: 'idea', title: 'Shared CMM',
-                          description: 'One machine, six shops.', date: '2026-08-20' });
+  const html = cardHtml({ id: 'b-0002', category: 'news', kind: 'hiring',
+                          location: 'buffalo', title: 'Trico hiring',
+                          description: 'Forty roles.', date: '2026-08-20' });
   assert.ok(!html.includes('card__when'));
-  assert.ok(!html.includes('card__where'));
-  assert.ok(html.includes('Shared CMM'));
+  assert.ok(!html.includes('card__contact'));
 });
 
-test('cards carry the sketch hook so rough.js draws their border', () => {
-  assert.ok(cardHtml(rec()).includes('data-sketch="box"'));
+test('a card never renders a name or an email field', () => {
+  const html = cardHtml(rec({ name: 'Rosa Silva', email: 'rosa@example.ca' }));
+  assert.ok(!html.includes('Rosa Silva'));
+  assert.ok(!html.includes('rosa@example.ca') || html.includes('card__contact'));
 });
 
-test('mountBoard writes grouped markup into the root', () => {
+/* --- mounting ------------------------------------------------------ */
+
+test('mountBoard writes cards and a count into the root', () => {
   const root = { innerHTML: '' };
-  mountBoard([rec()], root);
-  assert.ok(root.innerHTML.includes(TYPE_LABELS.standup));
+  mountBoard(many, { category: 'events', kind: 'all' }, root);
   assert.ok(root.innerHTML.includes('Open bench night'));
+  assert.ok(root.innerHTML.includes('Steel and software'));
+  assert.ok(!root.innerHTML.includes('Trico hiring'));
 });
 
-test('mountBoard says so when the board is empty', () => {
+test('mountBoard says so when a filter matches nothing', () => {
   const root = { innerHTML: '' };
-  mountBoard([], root);
+  mountBoard(many, { category: 'events', q: 'zzzz' }, root);
   assert.ok(/nothing/i.test(root.innerHTML));
 });

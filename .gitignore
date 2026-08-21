@@ -1,2 +1,5 @@
 .superpowers/
 __pycache__/
+
+# Local verification screenshots
+*.png
