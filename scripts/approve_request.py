@@ -1,24 +1,50 @@
 #!/usr/bin/env python3
-"""Turn an approved GitHub Issue into a committed record.
+"""Turn an approved GitHub Issue into a committed board record.
 
-The only writer of data/*.json. Email is dropped here as well as upstream:
-this is the last gate before a public commit, and the repo keeps history.
+The only writer of data/board.json. `name` and `email` are dropped here as
+well as upstream in the Apps Script: this is the last gate before a public
+commit, and git history is permanent.
+
+All six board types share one file and one id prefix, so ids run in a
+single sequence across the board rather than six parallel ones.
 """
 import json, os, re, sys
 from datetime import date
 from pathlib import Path
 
-MAX_COMMENT = 2500
+MAX_TEXT = 2500
 BLOCK = re.compile(r"<!--DATA\s*(\{.*?\})\s*DATA-->", re.S)
+
+BOARD_TYPES = ("standup", "talk", "demo", "space", "news", "idea")
+
+# Mirrors BOARD_REQUIRED in assets/js/submit.js. Two gates, deliberately:
+# the browser gate gives the visitor feedback, this one is what a public
+# commit has to get past.
 REQUIRED = {
-    "endorsement": ["name", "trade", "location"],
-    "meetup": ["title", "starts", "venue", "contact"],
+    "standup": ["title", "when", "where", "contact"],
+    "talk":    ["title", "presenter", "when", "where", "contact"],
+    "demo":    ["title", "presenter", "when", "where", "contact"],
+    "space":   ["where", "description", "contact"],
+    "news":    ["title", "link", "description"],
+    "idea":    ["title", "description"],
 }
-TARGET = {"endorsement": ("data/endorsements.json", "e"),
-          "meetup": ("data/meetups.json", "m")}
+
+OPTIONAL = {
+    "standup": ["description", "link"],
+    "talk":    ["description", "link"],
+    "demo":    ["description", "link"],
+    "space":   ["link"],
+    "news":    [],
+    "idea":    ["link", "contact"],
+}
+
+TARGET = {kind: ("data/board.json", "b") for kind in BOARD_TYPES}
+
+# An allowlist, not a denylist. A field absent from here is never written,
+# so a new field added upstream cannot leak by default.
 PUBLIC = {
-    "endorsement": ["id", "name", "trade", "location", "comment", "date"],
-    "meetup": ["id", "title", "starts", "venue", "contact", "calendar_url"],
+    kind: ["id", "type", *REQUIRED[kind], *OPTIONAL[kind], "date"]
+    for kind in BOARD_TYPES
 }
 
 
@@ -34,8 +60,11 @@ def validate(record):
     if kind not in REQUIRED:
         return ["kind"]
     errors = [f for f in REQUIRED[kind] if not str(record.get(f, "")).strip()]
-    if len(str(record.get("comment", ""))) > MAX_COMMENT:
-        errors.append("comment-too-long")
+    link = str(record.get("link", "")).strip()
+    if link and not re.match(r"^https?://", link, re.I):
+        errors.append("link-not-http")
+    if len(str(record.get("description", ""))) > MAX_TEXT:
+        errors.append("description-too-long")
     return errors
 
 
@@ -51,19 +80,16 @@ def next_id(records, prefix):
 
 def append_record(path, record):
     path = Path(path)
-    kind = record.get("kind", "endorsement")
+    kind = record["kind"]
     prefix = TARGET[kind][1]
     records = json.loads(path.read_text() or "[]")
 
-    out = {"id": next_id(records, prefix)}
+    out = {"id": next_id(records, prefix), "type": kind}
     for field in PUBLIC[kind]:
-        if field == "id":
+        if field in ("id", "type"):
             continue
         if field == "date":
             out["date"] = record.get("date") or date.today().isoformat()
-        elif field == "comment":
-            if record.get("publish_comment", True) and str(record.get("comment", "")).strip():
-                out["comment"] = record["comment"]
         elif str(record.get(field, "")).strip():
             out[field] = record[field]
 
@@ -72,20 +98,8 @@ def append_record(path, record):
     return out
 
 
-def apply_label_override(record, env):
-    """Spec §8.3: the publish-comment decision is a LABEL on the issue, not a
-    field an editor hand-edits into the JSON block. The workflow reads the
-    issue's label set and passes it in; it overrides whatever the block said.
-    Absent env (e.g. a local run) leaves the record untouched.
-    """
-    if "PUBLISH_COMMENT" in env:
-        record["publish_comment"] = env["PUBLISH_COMMENT"] == "true"
-    return record
-
-
 def main():
-    record = apply_label_override(
-        extract_block(os.environ.get("ISSUE_BODY", "")), os.environ)
+    record = extract_block(os.environ.get("ISSUE_BODY", ""))
     errors = validate(record)
     if errors:
         print(f"invalid record, missing or bad: {', '.join(errors)}", file=sys.stderr)

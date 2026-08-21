@@ -1,86 +1,104 @@
-import json, tempfile, unittest
+import json, os, tempfile, unittest
 from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 import approve_request as ar
 
-ISSUE = """Someone endorsed.
+ISSUE = """A stand-up was posted.
 
 <!--DATA
-{"kind":"endorsement","name":"Rosa Silva","trade":"Toolmaker",
- "location":"Welland, ON","email":"rosa@example.ca","comment":"Count me in."}
+{"kind":"standup","title":"Open bench night","when":"Thursday 7pm",
+ "where":"Welland Fabrication, 12 Ross St","contact":"rosa@example.ca"}
 DATA-->
 """
 
+
+def board(**over):
+    rec = {"kind": "standup", "title": "Open bench night", "when": "Thursday 7pm",
+           "where": "12 Ross St", "contact": "rosa@example.ca"}
+    rec.update(over)
+    return rec
+
+
 class TestExtract(unittest.TestCase):
     def test_pulls_the_json_out_of_the_comment(self):
-        self.assertEqual(ar.extract_block(ISSUE)["name"], "Rosa Silva")
+        self.assertEqual(ar.extract_block(ISSUE)["title"], "Open bench night")
 
     def test_missing_block_raises(self):
         with self.assertRaises(ValueError):
             ar.extract_block("no data here")
 
-class TestValidate(unittest.TestCase):
-    def test_endorsement_requires_its_fields(self):
-        self.assertEqual(sorted(ar.validate({"kind": "endorsement"})),
-                         ["location", "name", "trade"])
 
-    def test_comment_over_cap_is_rejected(self):
-        rec = {"kind":"endorsement","name":"a","trade":"b","location":"c","comment":"x"*2501}
-        self.assertIn("comment-too-long", ar.validate(rec))
+class TestValidate(unittest.TestCase):
+    def test_every_spec_type_is_known(self):
+        self.assertEqual(list(ar.BOARD_TYPES),
+                         ["standup", "talk", "demo", "space", "news", "idea"])
 
     def test_unknown_kind_is_rejected(self):
-        self.assertIn("kind", ar.validate({"kind": "nonsense"}))
+        self.assertEqual(ar.validate({"kind": "rumour"}), ["kind"])
 
-    def test_meetup_requires_its_fields(self):
-        self.assertEqual(sorted(ar.validate({"kind": "meetup"})),
-                         ["contact", "starts", "title", "venue"])
+    def test_standup_requires_its_fields(self):
+        self.assertEqual(sorted(ar.validate({"kind": "standup"})),
+                         ["contact", "title", "when", "where"])
 
-class TestWrite(unittest.TestCase):
+    def test_news_does_not_require_a_when(self):
+        rec = {"kind": "news", "title": "Plant reopens",
+               "link": "https://example.ca/x", "description": "Details."}
+        self.assertEqual(ar.validate(rec), [])
+
+    def test_description_over_cap_is_rejected(self):
+        rec = {"kind": "idea", "title": "T", "description": "x" * (ar.MAX_TEXT + 1)}
+        self.assertIn("description-too-long", ar.validate(rec))
+
+    def test_non_http_link_is_rejected(self):
+        self.assertIn("link-not-http", ar.validate(board(link="javascript:alert(1)")))
+
+
+class TestAppend(unittest.TestCase):
     def setUp(self):
-        self.dir = tempfile.TemporaryDirectory()
-        self.path = Path(self.dir.name) / "endorsements.json"
-        self.path.write_text("[]")
+        self.tmp = Path(tempfile.mkdtemp()) / "board.json"
+        self.tmp.write_text("[]")
 
-    def tearDown(self):
-        self.dir.cleanup()
+    def read(self):
+        return json.loads(self.tmp.read_text())
 
-    def test_email_never_reaches_the_file(self):
-        ar.append_record(self.path, ar.extract_block(ISSUE))
-        written = json.loads(self.path.read_text())
-        self.assertNotIn("email", written[0])
-        self.assertEqual(written[0]["name"], "Rosa Silva")
+    def test_writes_the_public_fields_and_the_type(self):
+        out = ar.append_record(self.tmp, board())
+        self.assertEqual(out["type"], "standup")
+        self.assertEqual(out["title"], "Open bench night")
+        self.assertEqual(self.read()[0]["where"], "12 Ross St")
 
-    def test_comment_is_dropped_unless_publish_comment_is_set(self):
-        rec = ar.extract_block(ISSUE)
-        rec["publish_comment"] = False
-        ar.append_record(self.path, rec)
-        self.assertNotIn("comment", json.loads(self.path.read_text())[0])
+    def test_never_writes_name_or_email(self):
+        ar.append_record(self.tmp, board(name="Rosa Silva", email="rosa@example.ca"))
+        written = self.read()[0]
+        self.assertNotIn("name", written)
+        self.assertNotIn("email", written)
 
-    def test_publish_comment_label_overrides_the_block(self):
-        rec = ar.extract_block(ISSUE)          # block says nothing
-        rec["publish_comment"] = True          # ...or even says publish
-        ar.apply_label_override(rec, {"PUBLISH_COMMENT": "false"})
-        ar.append_record(self.path, rec)
-        self.assertNotIn("comment", json.loads(self.path.read_text())[0])
+    def test_drops_fields_that_are_not_public_for_that_type(self):
+        # `presenter` is public on a talk, not on a stand-up.
+        ar.append_record(self.tmp, board(presenter="Someone"))
+        self.assertNotIn("presenter", self.read()[0])
 
-    def test_publish_comment_label_present_publishes(self):
-        rec = ar.apply_label_override(ar.extract_block(ISSUE),
-                                      {"PUBLISH_COMMENT": "true"})
-        ar.append_record(self.path, rec)
-        self.assertEqual(json.loads(self.path.read_text())[0]["comment"],
-                         "Count me in.")
+    def test_stamps_todays_date_when_absent(self):
+        out = ar.append_record(self.tmp, board())
+        self.assertRegex(out["date"], r"^\d{4}-\d{2}-\d{2}$")
 
-    def test_absent_env_leaves_the_record_alone(self):
-        rec = {"kind": "endorsement", "publish_comment": False}
-        ar.apply_label_override(rec, {})
-        self.assertIs(rec["publish_comment"], False)
+    def test_ids_stay_sequential_across_mixed_types(self):
+        ar.append_record(self.tmp, board())
+        ar.append_record(self.tmp, {"kind": "idea", "title": "Shared CMM",
+                                    "description": "One machine, six shops."})
+        self.assertEqual([r["id"] for r in self.read()], ["b-0001", "b-0002"])
 
-    def test_ids_increment(self):
-        ar.append_record(self.path, ar.extract_block(ISSUE))
-        ar.append_record(self.path, ar.extract_block(ISSUE))
-        ids = [r["id"] for r in json.loads(self.path.read_text())]
-        self.assertEqual(ids, ["e-0001", "e-0002"])
+    def test_all_six_types_land_in_one_file(self):
+        for kind in ar.BOARD_TYPES:
+            self.assertEqual(ar.TARGET[kind], ("data/board.json", "b"))
+
+
+class TestMain(unittest.TestCase):
+    def test_invalid_record_exits_non_zero(self):
+        os.environ["ISSUE_BODY"] = '<!--DATA {"kind":"standup"} DATA-->'
+        self.assertEqual(ar.main(), 1)
+
 
 if __name__ == "__main__":
     unittest.main()
