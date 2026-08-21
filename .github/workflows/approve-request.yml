@@ -73,22 +73,41 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # The Actions token cannot invite org members — it returns 403. The
+      # credential is a GitHub App installed on the org rather than a
+      # personal token, so it belongs to no individual, cannot expire out
+      # from under the pipeline, and shows in the audit log as itself.
+      - name: Check the App credentials are present
+        env:
+          APP_ID: ${{ secrets.INVITE_APP_ID }}
+          APP_KEY: ${{ secrets.INVITE_APP_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "${APP_ID:-}" ] || [ -z "${APP_KEY:-}" ]; then
+            echo "INVITE_APP_ID / INVITE_APP_PRIVATE_KEY are not set on this repo." >&2
+            echo "Create a GitHub App on the niagaraassembly org with organization" >&2
+            echo "permission Members: Read and write, install it, and store its App" >&2
+            echo "ID and private key as those two repository secrets." >&2
+            exit 1
+          fi
+
+      # Pinned to a commit SHA, not a tag: a tag can be moved to point at
+      # different code, and this step is handed the App's private key.
+      - name: Mint a short-lived installation token
+        id: apptoken
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          app-id: ${{ secrets.INVITE_APP_ID }}
+          private-key: ${{ secrets.INVITE_APP_PRIVATE_KEY }}
+          owner: niagaraassembly
+
       - name: Invite
         env:
           ISSUE_BODY: ${{ github.event.issue.body }}
-          # NOT github.token. The Actions token cannot invite org members;
-          # it returns 403. This is a fine-grained PAT with organization
-          # permission "Members: Read and write", created by an org owner
-          # and stored as a repository secret.
-          GH_TOKEN: ${{ secrets.ORG_INVITE_TOKEN }}
+          # Expires in an hour, and only ever exists inside this run.
+          GH_TOKEN: ${{ steps.apptoken.outputs.token }}
         run: |
           set -euo pipefail
-
-          if [ -z "${GH_TOKEN:-}" ]; then
-            echo "ORG_INVITE_TOKEN is not set on this repository." >&2
-            echo "The default Actions token cannot invite organization members." >&2
-            exit 1
-          fi
 
           # One line on purpose: a multi-line heredoc here sits at column
           # zero and breaks the enclosing YAML block scalar.
