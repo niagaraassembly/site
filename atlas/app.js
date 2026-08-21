@@ -19,6 +19,7 @@
   var LAYERS = [
     {
       id: 'ham-employment',
+      theme: 'WHAT IS ALLOWED',
       region: 'ONT',
       file: 'data/hamilton-employment-land.geojson',
       label: 'Employment lands',
@@ -32,6 +33,7 @@
     },
     {
       id: 'ham-zoning',
+      theme: 'WHAT IS ALLOWED',
       region: 'ONT',
       file: 'data/hamilton-zoning-industrial.geojson',
       label: 'Industrial zoning',
@@ -45,6 +47,7 @@
     },
     {
       id: 'osm-land',
+      theme: 'WHAT IS ALLOWED',
       region: 'BOTH',
       file: 'data/osm-land.geojson',
       label: 'Industrial land',
@@ -58,6 +61,7 @@
     },
     {
       id: 'osm-disused',
+      theme: 'WHAT IS AVAILABLE',
       region: 'BOTH',
       file: 'data/osm-disused.geojson',
       label: 'Brownfield & recorded disused',
@@ -72,6 +76,7 @@
     },
     {
       id: 'us-parcels',
+      theme: 'WHAT IS HERE NOW',
       file: 'data/us-industrial-parcels.geojson',
       label: 'Industrial parcels',
       group: 'LAND & PLANNING',
@@ -85,6 +90,7 @@
     },
     {
       id: 'us-brownfield',
+      theme: 'WHAT IS AVAILABLE',
       file: 'data/us-brownfield.geojson',
       label: 'Brownfield opportunity areas',
       group: 'LAND & PLANNING',
@@ -98,6 +104,7 @@
     },
     {
       id: 'us-facilities',
+      theme: 'WHAT IS HERE NOW',
       file: 'data/us-facilities.geojson',
       label: 'Regulated facilities',
       group: 'PLACES',
@@ -113,6 +120,7 @@
          availability signal that exists in Ontario without MLS — but a
          departure is not a listing, and the popup says so. */
       id: 'nei-departures',
+      theme: 'WHAT IS AVAILABLE',
       region: 'ONT',
       file: 'data/niagara-departures.geojson',
       label: 'Industry departed',
@@ -124,6 +132,7 @@
     },
     {
       id: 'osm-places',
+      theme: 'WHAT IS HERE NOW',
       region: 'BOTH',
       file: 'data/osm-places.geojson',
       label: 'Industrial places',
@@ -135,6 +144,7 @@
     },
     {
       id: 'osm-rail',
+      theme: 'HOW IT CONNECTS',
       region: 'BOTH',
       file: 'data/osm-rail.geojson',
       label: 'Rail network',
@@ -148,6 +158,7 @@
     },
     {
       id: 'ham-rail',
+      theme: 'HOW IT CONNECTS',
       region: 'ONT',
       file: 'data/hamilton-rail.geojson',
       label: 'Rail (Hamilton GIS)',
@@ -161,6 +172,7 @@
     },
     {
       id: 'ham-truck',
+      theme: 'HOW IT CONNECTS',
       region: 'ONT',
       file: 'data/hamilton-truck-routes.geojson',
       label: 'Truck routes',
@@ -207,6 +219,26 @@
   ];
 
   var activeRegion = 'ONT';
+
+  /* The tab strip used to switch region. Region is a filter now, and the
+     tabs do something the map could not do before: re-cut the same twelve
+     layers three ways. Grouping by question is the default because it is
+     the only one that tells a newcomer what the map is for; the other two
+     answer "what kind of data is this" and "who publishes it", which are
+     questions you only have once you know your way around. */
+  var VIEWS = [
+    { id: 'theme',  label: 'PURPOSE', key: function (s) { return s.theme || 'OTHER'; },
+      title: 'Group layers by the question they help answer' },
+    { id: 'group',  label: 'TYPE',    key: function (s) { return s.group; },
+      title: 'Group layers by kind of data' },
+    { id: 'source', label: 'SOURCE',  key: function (s) { return (s.source || 'Unknown').toUpperCase(); },
+      title: 'Group layers by who publishes them' },
+  ];
+
+  var activeView = 'theme';
+  var layerFilter = '';
+  var rowFor = {};        /* spec.id -> the row node, built once and reused */
+  var collapsed = {};     /* group name -> true when folded shut */
 
   var FRESH_CLASS = {
     'RECENT': 'fresh--recent',
@@ -347,114 +379,198 @@
   }
 
   function inRegion(spec) {
+    if (activeRegion === 'ALL') return true;
     return spec.region === 'BOTH' || spec.region === activeRegion;
+  }
+
+  function matchesFilter(spec) {
+    if (!layerFilter) return true;
+    var hay = [spec.label, spec.source, spec.group, spec.theme].join(' ').toLowerCase();
+    return hay.indexOf(layerFilter) !== -1;
   }
 
   /* Rows are built once and shown or hidden by region rather than rebuilt on
      every tab switch -- rebuilding would drop the checkbox state and the
      feature counts already fetched. */
+  /* Moves the map and swaps the coverage note. Which rows are shown is
+     render()'s job now — this used to do both and the two responsibilities
+     pulled in different directions once region became a filter. */
   function applyRegion(move) {
-    var container = byId('layers');
-    var rows = container.querySelectorAll('[data-region]');
-    for (var i = 0; i < rows.length; i++) {
-      var r = rows[i].getAttribute('data-region');
-      rows[i].hidden = !(r === 'BOTH' || r === activeRegion || r === 'ALL');
-    }
-    var tabs = document.querySelectorAll('.regions__tab');
-    for (var j = 0; j < tabs.length; j++) {
-      var on = tabs[j].getAttribute('data-region') === activeRegion;
-      tabs[j].classList.toggle('is-current', on);
-      tabs[j].setAttribute('aria-selected', on ? 'true' : 'false');
-    }
-    /* Group headings with nothing visible under them would read as empty
-       sections. */
-    var heads = container.querySelectorAll('.layers__group');
-    for (var k = 0; k < heads.length; k++) {
-      var node = heads[k].nextElementSibling;
-      var any = false;
-      while (node && !node.classList.contains('layers__group')) {
-        if (!node.hidden) { any = true; break; }
-        node = node.nextElementSibling;
-      }
-      heads[k].hidden = !any;
-    }
+    var region = REGIONS.filter(function (x) { return x.id === activeRegion; })[0];
     var note = byId('region-note');
     if (note) {
-      var current = REGIONS.filter(function (x) { return x.id === activeRegion; })[0];
-      note.textContent = current ? current.note : '';
+      note.textContent = region ? region.note
+        : 'Both sides at once. What is published differs completely by country, '
+        + 'so a gap on one side is usually a publishing gap, not an empty map.';
     }
-    if (move) {
-      var region = REGIONS.filter(function (x) { return x.id === activeRegion; })[0];
-      if (region && window.AtlasMap.instance) {
-        window.AtlasMap.instance.fitBounds(region.bounds, { padding: [20, 20] });
-      }
+    /* focus() takes a Leaflet layer and reads its extent; a region is raw
+       bounds, so it goes to the map directly. */
+    if (move && region && window.AtlasMap.instance) {
+      window.AtlasMap.instance.fitBounds(region.bounds, { padding: [20, 20] });
     }
   }
 
+  /* The tab strip re-cuts the same layers three ways. */
   function buildTabs() {
-    var strip = el('div', 'regions');
+    var strip = el('div', 'views');
     strip.setAttribute('role', 'tablist');
-    REGIONS.forEach(function (region) {
-      var tab = el('button', 'regions__tab', region.label);
+    VIEWS.forEach(function (view) {
+      var tab = el('button', 'views__tab', view.label);
       tab.type = 'button';
-      tab.title = region.title;
+      tab.title = view.title;
       tab.setAttribute('role', 'tab');
-      tab.setAttribute('data-region', region.id);
+      tab.setAttribute('data-view', view.id);
       tab.addEventListener('click', function () {
-        activeRegion = region.id;
-        applyRegion(true);
+        activeView = view.id;
+        render();
       });
       strip.appendChild(tab);
     });
     byId('layers').parentNode.insertBefore(strip, byId('layers'));
   }
 
-  function buildSwitches() {
-    var container = byId('layers');
-    var groups = [];
-    LAYERS.forEach(function (spec) {
-      if (groups.indexOf(spec.group) === -1) groups.push(spec.group);
+  /* Region is a filter now, not a mode. ALL is offered and is the point of
+     the atlas: the argument is that the region crosses the border. */
+  function buildControls() {
+    var wrap = el('div', 'controls');
+
+    var search = document.createElement('input');
+    search.type = 'search';
+    search.className = 'controls__search';
+    search.placeholder = 'Filter layers';
+    search.setAttribute('aria-label', 'Filter layers');
+    search.addEventListener('input', function () {
+      layerFilter = search.value.trim().toLowerCase();
+      render();
+    });
+    wrap.appendChild(search);
+
+    var chips = el('div', 'chips');
+    [{ id: 'ONT', label: 'ONT' },
+     { id: 'WNY', label: 'WNY' },
+     { id: 'ALL', label: 'Both sides' }].forEach(function (option) {
+      var chip = el('button', 'chips__chip', option.label);
+      chip.type = 'button';
+      chip.setAttribute('data-region', option.id);
+      chip.addEventListener('click', function () {
+        activeRegion = option.id;
+        applyRegion(true);
+        render();
+      });
+      chips.appendChild(chip);
+    });
+    wrap.appendChild(chips);
+
+    byId('layers').parentNode.insertBefore(wrap, byId('layers'));
+  }
+
+  /* Rows are built ONCE and moved between groups on every re-render.
+     Rebuilding them would drop the checkbox state and the feature counts
+     already fetched, and would re-trigger every active layer's download. */
+  function buildRow(spec) {
+    var row = el('label', 'layer');
+    row.style.setProperty('--swatch', spec.colour);
+    row.setAttribute('data-region', spec.region || 'BOTH');
+    row.setAttribute('data-layer', spec.id);
+
+    var box = document.createElement('input');
+    box.type = 'checkbox';
+    box.checked = !!spec.on;
+    row.appendChild(box);
+
+    var body = el('div', '');
+    body.appendChild(el('span', 'layer__name', spec.label));
+
+    var meta = el('span', 'layer__meta');
+    meta.appendChild(el('span', 'layer__count', spec.source));
+    meta.appendChild(document.createTextNode(' \u00b7 '));
+    meta.appendChild(el('span', 'fresh ' + (FRESH_CLASS[spec.freshness] || ''),
+                        spec.freshness));
+    if (spec.region === 'BOTH') {
+      meta.appendChild(document.createTextNode(' \u00b7 '));
+      meta.appendChild(el('span', 'layer__both', 'both sides'));
+    }
+    body.appendChild(meta);
+    row.appendChild(body);
+
+    box.addEventListener('change', function () {
+      if (box.checked) {
+        activate(spec, row);
+      } else if (loaded[spec.id]) {
+        window.AtlasMap.remove(loaded[spec.id].layer);
+      }
     });
 
-    groups.forEach(function (group) {
-      container.appendChild(el('div', 'layers__group', group));
+    return row;
+  }
 
-      LAYERS.filter(function (s) { return s.group === group; }).forEach(function (spec) {
-        var row = el('label', 'layer');
-        row.style.setProperty('--swatch', spec.colour);
-        row.setAttribute('data-region', spec.region || 'BOTH');
+  function render() {
+    var container = byId('layers');
+    var view = VIEWS.filter(function (v) { return v.id === activeView; })[0];
 
-        var box = document.createElement('input');
-        box.type = 'checkbox';
-        box.checked = !!spec.on;
-        row.appendChild(box);
+    var visible = LAYERS.filter(function (spec) {
+      return inRegion(spec) && matchesFilter(spec);
+    });
 
-        var body = el('div', '');
-        body.appendChild(el('span', 'layer__name', spec.label));
+    /* Detach rather than clear: the nodes are reused, so innerHTML = '' on a
+       container holding them would destroy state we depend on. */
+    while (container.firstChild) container.removeChild(container.firstChild);
 
-        var meta = el('span', 'layer__meta');
-        meta.appendChild(el('span', 'layer__count', spec.source));
-        meta.appendChild(document.createTextNode(' · '));
-        meta.appendChild(el('span', 'fresh ' + (FRESH_CLASS[spec.freshness] || ''),
-                            spec.freshness));
-        if (spec.region === 'BOTH') {
-          meta.appendChild(document.createTextNode(' · '));
-          meta.appendChild(el('span', 'layer__both', 'both sides'));
-        }
-        body.appendChild(meta);
-        row.appendChild(body);
+    if (!visible.length) {
+      container.appendChild(el('p', 'layers__empty', 'No layers match.'));
+      return;
+    }
 
-        box.addEventListener('change', function () {
-          if (box.checked) {
-            activate(spec, row);
-          } else if (loaded[spec.id]) {
-            window.AtlasMap.remove(loaded[spec.id].layer);
-          }
-        });
+    var order = [];
+    visible.forEach(function (spec) {
+      var key = view.key(spec);
+      if (order.indexOf(key) === -1) order.push(key);
+    });
 
-        container.appendChild(row);
-        if (spec.on) activate(spec, row);
+    order.forEach(function (key) {
+      var members = visible.filter(function (s) { return view.key(s) === key; });
+      var live = members.filter(function (s) {
+        var row = rowFor[s.id];
+        return row && row.querySelector('input').checked;
+      }).length;
+
+      var head = el('button', 'layers__group', '');
+      head.type = 'button';
+      head.setAttribute('aria-expanded', String(!collapsed[key]));
+      head.appendChild(el('span', 'layers__group-name', key));
+      head.appendChild(el('span', 'layers__group-count',
+                          live ? live + '/' + members.length : String(members.length)));
+      head.addEventListener('click', function () {
+        collapsed[key] = !collapsed[key];
+        render();
       });
+      container.appendChild(head);
+
+      if (collapsed[key]) return;
+      members.forEach(function (spec) {
+        container.appendChild(rowFor[spec.id]);
+      });
+    });
+
+    var tabs = document.querySelectorAll('.views__tab');
+    for (var i = 0; i < tabs.length; i++) {
+      tabs[i].setAttribute('aria-selected',
+        String(tabs[i].getAttribute('data-view') === activeView));
+    }
+    var chips = document.querySelectorAll('.chips__chip');
+    for (var j = 0; j < chips.length; j++) {
+      chips[j].setAttribute('aria-pressed',
+        String(chips[j].getAttribute('data-region') === activeRegion));
+    }
+  }
+
+  function buildSwitches() {
+    LAYERS.forEach(function (spec) { rowFor[spec.id] = buildRow(spec); });
+    render();
+    /* Activation happens after the rows exist, so a layer that starts on has
+       a row to report its count into. */
+    LAYERS.forEach(function (spec) {
+      if (spec.on) activate(spec, rowFor[spec.id]);
     });
   }
 
@@ -486,6 +602,7 @@
         + 'information came from.'));
     });
     buildTabs();
+    buildControls();
     buildSwitches();
     applyRegion(false);
     buildCredits();

@@ -174,9 +174,22 @@ def build(refresh=False):
                 },
             }
 
+    features = sorted(departures.values(),
+                      key=lambda f: (f['properties']['municipality'] or '',
+                                     f['properties']['address'] or ''))
+
+    # `atlas`, not `metadata`: app.js reads collection.atlas.feature_count to
+    # put a count on the sidebar row. A different key means the row silently
+    # shows no count while every other layer does.
     collection = {
         'type': 'FeatureCollection',
-        'metadata': {
+        'atlas': {
+            'layer': 'departure',
+            'dataset': 'Industrial departures',
+            'feature_count': len(features),
+            'freshness': 'UPDATED ANNUALLY',
+            'retrieved_at': date.today().isoformat(),
+            'coverage': 'Niagara Region',
             **SOURCE,
             'derived': 'Industrial addresses occupied in an earlier edition and '
                        'vacant in the latest. Not a listing: a site can be empty '
@@ -185,11 +198,8 @@ def build(refresh=False):
             'baseline': years[0],
             'latest': latest,
             'naics_prefixes': sorted(INDUSTRIAL_NAICS_PREFIXES),
-            'generated': date.today().isoformat(),
         },
-        'features': sorted(departures.values(),
-                           key=lambda f: (f['properties']['municipality'] or '',
-                                          f['properties']['address'] or '')),
+        'features': features,
     }
 
     os.makedirs(DATA_DIR, exist_ok=True)
