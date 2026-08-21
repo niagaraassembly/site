@@ -38,6 +38,12 @@
 
   --measure: 46rem;
   --edge:    0.5rem;   /* how far the nav and footer sit inside the box's lines */
+
+  /* Icons centre on their own box; text sits on a baseline with descender
+     space reserved below it. The nav labels have no descenders, so their
+     optical centre is above the line box's and an icon centred on the line
+     box reads low. Measured against the cap-height midpoint at 12px. */
+  --icon-lift: 0.5px;
   --board:   62rem;   /* the board is denser and earns more width */
 
   /* Prose is a system sans, per the reference's neutrality. The hand face
@@ -102,6 +108,7 @@ body {
 .topnav__links {
   margin-left: auto;
   display: flex;
+  align-items: center;
   gap: 1.5rem;
 }
 .topnav__links a {
@@ -112,8 +119,6 @@ body {
 }
 .topnav__links a:hover { color: var(--ink); text-decoration: underline; }
 
-/* Pulled closer to each other than the words are, so the pair reads as one
-   group rather than as two more nav items. */
 /* Half ink, half paper. Both halves are tokens, so the rectangle inverts
    itself when the theme flips — no second icon, no state class. */
 .themetoggle {
@@ -129,7 +134,14 @@ body {
 }
 .themetoggle:hover { outline: 1px solid var(--rule); outline-offset: 2px; }
 
+/* Pulled closer to each other than the words are, so the pair reads as one
+   group rather than as two more nav items. */
 .topnav__icon { display: flex; align-items: center; margin-left: -0.65rem; }
+
+/* Lifted off the line box onto the glyphs' optical centre. position/top
+   rather than a margin, so nothing else in the row moves. */
+.topnav__icon,
+.themetoggle { position: relative; top: calc(-1 * var(--icon-lift)); }
 .topnav__icon:first-of-type { margin-left: 0; }
 .topnav__icon:hover { color: var(--ink); }
 .topnav__links a.topnav__icon:hover { text-decoration: none; }
@@ -329,6 +341,7 @@ button[type="submit"] {
 }
 .topnav--board ~ .sitefoot { max-width: var(--board); }
 
+.sitefoot a:has(svg) { position: relative; top: calc(-1 * var(--icon-lift)); }
 .sitefoot a { color: var(--ink-soft); text-decoration: none; }
 .sitefoot a:hover { color: var(--ink); text-decoration: underline; }
 .sitefoot svg { display: block; }
