@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Hamilton–Niagara Industrial Atlas</title>
+<title>Industrial Atlas for Greater Niagara Region — @NiagaraAssembly</title>
 <meta name="description" content="A map of the physical industrial economy of Hamilton, Burlington and the Niagara Peninsula — where things are made, moved and stored.">
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -14,6 +14,13 @@
 <body>
 
 <div class="shell">
+
+  <!-- Spans all three columns as the shell grid's FIRST row, so it sits
+       above the panels and the map rather than floating over either. -->
+  <header class="topbar">
+    <span class="topbar__tool">Industrial Atlas for Greater Niagara Region</span>
+    <a class="topbar__brand" href="/">@NiagaraAssembly</a>
+  </header>
 
   <aside class="panel panel--left" id="panel-left">
     <header class="brand">
@@ -54,15 +61,6 @@
       and where the information came from.</p>
     </div>
   </aside>
-
-  <!-- Spans all three columns as the shell grid's second row, so it sits
-       under the panels and the map rather than floating over either. -->
-  <footer class="footbar">
-    <span class="footbar__tool">Industrial Atlas (ONT/WNY)</span>
-    <span class="footbar__sep" aria-hidden="true">|</span>
-    <span class="footbar__line">Helping to locate innovation.</span>
-    <span class="footbar__brand">Paton</span>
-  </footer>
 
 </div>
 

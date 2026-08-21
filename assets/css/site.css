@@ -42,6 +42,49 @@ body {
   font: 1rem/1.65 var(--sans);
 }
 
+/* Top navigation ------------------------------------------------------ */
+/* Sits ABOVE the drawn box, sharing its max-width and centring so the two
+   line up at both edges. The trailing padding is why the last nav item
+   stops short of the box's right edge instead of sitting on it. */
+
+.topnav {
+  display: flex;
+  align-items: baseline;
+  gap: 1.5rem;
+  max-width: var(--measure);
+  margin: 0 auto .9rem;
+  padding: 0 1.15rem;
+}
+.topnav--board { max-width: var(--board); }
+
+.topnav__brand {
+  font: 800 1.0625rem/1 var(--sans);
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+/* margin-left:auto pins the group right; the parent's padding is the gap
+   between the last item and the box edge below it. */
+.topnav__links {
+  margin-left: auto;
+  display: flex;
+  gap: 1.5rem;
+}
+.topnav__links a {
+  font: .75rem/1 var(--sans);
+  letter-spacing: .01em;
+  text-decoration: none;
+  color: var(--ink-soft);
+}
+.topnav__links a:hover { color: var(--ink); text-decoration: underline; }
+.topnav__links a[aria-current="page"] { color: var(--ink); font-weight: 600; }
+
+@media (max-width: 34rem) {
+  .topnav { flex-wrap: wrap; gap: .6rem 1rem; }
+  .topnav__links { margin-left: 0; flex-wrap: wrap; gap: .6rem 1rem; }
+}
+
 /* Position is relative so sketch.js can absolutely position its SVG. */
 .frame {
   position: relative;
