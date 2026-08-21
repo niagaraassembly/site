@@ -44,16 +44,17 @@ body {
 
 /* Top navigation ------------------------------------------------------ */
 /* Sits ABOVE the drawn box, sharing its max-width and centring so the two
-   line up at both edges. The trailing padding is why the last nav item
-   stops short of the box's right edge instead of sitting on it. */
+   line up at both edges. No horizontal padding: the brand's left edge and
+   the last link's right edge are meant to sit exactly on the drawn box's
+   left and right lines. */
 
 .topnav {
   display: flex;
   align-items: baseline;
   gap: 1.5rem;
   max-width: var(--measure);
-  margin: 0 auto .9rem;
-  padding: 0 1.15rem;
+  margin: 0 auto .6rem;
+  padding: 0;
 }
 .topnav--board { max-width: var(--board); }
 
