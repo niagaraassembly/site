@@ -10,6 +10,8 @@ name: Approve request
 on:
   issues:
     types: [labeled]
+  issue_comment:
+    types: [created]
 permissions:
   contents: write
   issues: write
@@ -32,6 +34,8 @@ jobs:
       - name: Write, commit and push
         env:
           ISSUE_BODY: ${{ github.event.issue.body }}
+          # Stamped onto the record so a later member comment can find it.
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
           git config user.name "niagara-assembly-bot"
           git config user.email "noreply@niagaraassembly.com"
@@ -136,3 +140,45 @@ jobs:
             gh issue comment ${{ github.event.issue.number }} --repo ${{ github.repository }} \
               --body "Invitation failed — see the run log. The issue stays open."
           fi
+
+  comment:
+    name: Publish a member comment
+    # author_association is GitHub's own answer to "who is this person to
+    # this repo", evaluated server-side — it cannot be spoofed by the
+    # comment body. MEMBER is an org member; OWNER is an org owner.
+    # Anyone else commenting on a public issue is simply ignored.
+    if: >-
+      github.event_name == 'issue_comment' &&
+      contains(github.event.issue.labels.*.name, 'board') &&
+      (github.event.comment.author_association == 'MEMBER' ||
+       github.event.comment.author_association == 'OWNER')
+    runs-on: ubuntu-latest
+    concurrency:
+      # Shares the publish job's group: both write data/board.json, and two
+      # runs racing would lose one of the writes.
+      group: write-data
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Attach, commit and push
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          COMMENT_AUTHOR: ${{ github.event.comment.user.login }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
+        run: |
+          git config user.name "niagara-assembly-bot"
+          git config user.email "noreply@niagaraassembly.com"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin "$GITHUB_REF_NAME"
+            git reset --hard "origin/$GITHUB_REF_NAME"
+            python3 scripts/add_comment.py || exit 1
+            git add data/
+            if git diff --staged --quiet; then exit 0; fi
+            git commit -m "Add comment from #${{ github.event.issue.number }}"
+            if git push; then exit 0; fi
+            echo "push rejected; re-deriving against latest (attempt $attempt)"
+            sleep $((RANDOM % 5 + 2))
+          done
+          echo "could not push after 5 attempts" >&2
+          exit 1

@@ -184,6 +184,26 @@ test('a card never renders a name or an email field', () => {
   assert.ok(!html.includes('rosa@example.ca') || html.includes('card__contact'));
 });
 
+test('cardHtml renders member comments, escaped', () => {
+  const html = cardHtml(rec({ comments: [
+    { author: 'rosa-silva', body: 'Bench is free that night.', date: '2026-08-21' },
+    { author: 'evil', body: '<img src=x onerror=alert(1)>', date: '2026-08-21' }
+  ]}));
+  assert.ok(html.includes('rosa-silva'));
+  assert.ok(html.includes('Bench is free that night.'));
+  assert.ok(!html.includes('<img'));
+  assert.ok(html.includes('&lt;img'));
+});
+
+test('a card with no comments renders no comment list', () => {
+  assert.ok(!cardHtml(rec()).includes('card__comments'));
+  assert.ok(!cardHtml(rec({ comments: [] })).includes('card__comments'));
+});
+
+test('a malformed comments value is ignored rather than thrown on', () => {
+  assert.ok(!cardHtml(rec({ comments: 'not an array' })).includes('card__comments'));
+});
+
 /* --- mounting ------------------------------------------------------ */
 
 test('mountBoard writes cards and a count into the root', () => {

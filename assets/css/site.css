@@ -207,6 +207,15 @@ ul.plain li::before { content: '- '; color: var(--ink-soft); }
 .card__link,
 .card__contact { margin: 0 0 .2rem; font: .8125rem/1.4 var(--mono); }
 
+/* Member notes on a listing. Indented and ruled so they read as replies
+   to the card rather than as part of what was posted. */
+.card__comments { list-style: none; margin: .8rem 0 0; padding: .5rem 0 0 .9rem;
+                  border-top: 1px dotted var(--rule); }
+.card__comment { margin: 0 0 .4rem; font: .8125rem/1.5 var(--sans); }
+.card__comment-by { font: 600 .6875rem/1 var(--mono); letter-spacing: .06em;
+                    text-transform: uppercase; color: var(--ink-soft);
+                    display: block; margin-bottom: .15rem; }
+
 /* Forms -------------------------------------------------------------- */
 
 fieldset {

@@ -63,7 +63,7 @@ TARGET = {category: ("data/board.json", "b") for category in CATEGORIES}
 # deliberately absent: it is a routing instruction, not content.
 PUBLIC = {
     category: ["id", "category", "kind", "location",
-               *REQUIRED[category], *OPTIONAL[category], "date"]
+               *REQUIRED[category], *OPTIONAL[category], "date", "source"]
     for category in CATEGORIES
 }
 
@@ -123,6 +123,12 @@ def append_record(path, record):
             continue
         if field == "date":
             out["date"] = record.get("date") or date.today().isoformat()
+        elif field == "source":
+            # The issue this came from. Not decoration: it is how a member
+            # comment later finds the record it belongs to, and how an
+            # unpublish would find the record to remove.
+            if record.get("source"):
+                out["source"] = int(record["source"])
         elif str(record.get(field, "")).strip():
             out[field] = record[field]
 
@@ -133,6 +139,8 @@ def append_record(path, record):
 
 def main():
     record = extract_block(os.environ.get("ISSUE_BODY", ""))
+    if os.environ.get("ISSUE_NUMBER"):
+        record["source"] = os.environ["ISSUE_NUMBER"]
     errors = validate(record)
     if errors:
         print(f"invalid record, missing or bad: {', '.join(errors)}", file=sys.stderr)

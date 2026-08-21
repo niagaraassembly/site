@@ -118,6 +118,17 @@ export function cardHtml(record) {
 
   if (record.contact) rows.push(`<p class="card__contact">${e(record.contact)}</p>`);
 
+  /* Comments are written by organisation members, but they arrive from a
+     public issue thread and are escaped like everything else here. */
+  const comments = Array.isArray(record.comments) ? record.comments : [];
+  if (comments.length) {
+    rows.push(`<ul class="card__comments">` + comments.map((c) =>
+      `<li class="card__comment">` +
+        `<span class="card__comment-by">${e(c.author)}</span>` +
+        `<span class="card__comment-body">${e(c.body)}</span>` +
+      `</li>`).join('') + `</ul>`);
+  }
+
   return `<article class="card" data-sketch="box" data-category="${e(record.category)}">` +
          rows.join('') + `</article>`;
 }

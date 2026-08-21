@@ -150,6 +150,15 @@ class TestAppend(unittest.TestCase):
         ar.append_record(self.tmp, post("news", specs="should not appear"))
         self.assertNotIn("specs", self.read()[0])
 
+    def test_stamps_the_source_issue_number_as_an_int(self):
+        """A comment finds its record by this, so it must be present and
+        comparable, not a string on some records and an int on others."""
+        out = ar.append_record(self.tmp, board(source="42"))
+        self.assertEqual(out["source"], 42)
+
+    def test_omits_source_when_there_is_none(self):
+        self.assertNotIn("source", ar.append_record(self.tmp, board()))
+
     def test_stamps_todays_date_when_absent(self):
         out = ar.append_record(self.tmp, board())
         self.assertRegex(out["date"], r"^\d{4}-\d{2}-\d{2}$")
