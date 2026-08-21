@@ -9,9 +9,9 @@
 name: Approve request
 on:
   issues:
-    types: [labeled]
+    types: [labeled, unlabeled]
   issue_comment:
-    types: [created]
+    types: [created, edited, deleted]
 permissions:
   contents: write
   issues: write
@@ -20,6 +20,7 @@ jobs:
   write:
     name: Publish to the board
     if: >-
+      github.event.action == 'labeled' &&
       github.event.label.name == 'approved' &&
       contains(github.event.issue.labels.*.name, 'board')
     runs-on: ubuntu-latest
@@ -71,6 +72,7 @@ jobs:
   invite:
     name: Invite to the organization
     if: >-
+      github.event.action == 'labeled' &&
       github.event.label.name == 'approved' &&
       contains(github.event.issue.labels.*.name, 'opensource')
     runs-on: ubuntu-latest
@@ -161,9 +163,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Attach, commit and push
+      - name: Sync, commit and push
         env:
+          COMMENT_ACTION: ${{ github.event.action }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
+          # Matched on, so an edit changes the right comment and a delete
+          # removes the right one.
+          COMMENT_ID: ${{ github.event.comment.id }}
           COMMENT_AUTHOR: ${{ github.event.comment.user.login }}
           COMMENT_BODY: ${{ github.event.comment.body }}
         run: |
@@ -172,13 +178,66 @@ jobs:
           for attempt in 1 2 3 4 5; do
             git fetch origin "$GITHUB_REF_NAME"
             git reset --hard "origin/$GITHUB_REF_NAME"
-            python3 scripts/add_comment.py || exit 1
+            python3 scripts/sync_comment.py || exit 1
             git add data/
             if git diff --staged --quiet; then exit 0; fi
-            git commit -m "Add comment from #${{ github.event.issue.number }}"
+            git commit -m "Sync comments on #${{ github.event.issue.number }}"
             if git push; then exit 0; fi
             echo "push rejected; re-deriving against latest (attempt $attempt)"
             sleep $((RANDOM % 5 + 2))
           done
           echo "could not push after 5 attempts" >&2
           exit 1
+
+  unpublish:
+    name: Take a post off the board
+    # The mirror of the publish job: `approved` coming OFF a board issue.
+    # github.event.label on an unlabeled event is the label that was removed.
+    if: >-
+      github.event.action == 'unlabeled' &&
+      github.event.label.name == 'approved' &&
+      contains(github.event.issue.labels.*.name, 'board')
+    runs-on: ubuntu-latest
+    concurrency:
+      # Same group as every other writer of data/board.json.
+      group: write-data
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Remove, commit and push
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          git config user.name "niagara-assembly-bot"
+          git config user.email "noreply@niagaraassembly.com"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin "$GITHUB_REF_NAME"
+            git reset --hard "origin/$GITHUB_REF_NAME"
+            python3 scripts/remove_record.py || exit 1
+            git add data/
+            if git diff --staged --quiet; then exit 0; fi
+            git commit -m "Remove record from #${{ github.event.issue.number }}"
+            if git push; then exit 0; fi
+            echo "push rejected; re-deriving against latest (attempt $attempt)"
+            sleep $((RANDOM % 5 + 2))
+          done
+          echo "could not push after 5 attempts" >&2
+          exit 1
+
+      - name: Say what happened, and reopen
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RESULT: ${{ job.status }}
+        run: |
+          if [ "$RESULT" = "success" ]; then
+            gh issue comment ${{ github.event.issue.number }} --repo ${{ github.repository }} \
+              --body "Taken off the board. Re-add \`approved\` to publish it again."
+            # Reopened so it is visible again: an unpublished post that stays
+            # closed is invisible to whoever needs to decide what to do next.
+            gh issue reopen ${{ github.event.issue.number }} --repo ${{ github.repository }} || true
+          else
+            gh issue comment ${{ github.event.issue.number }} --repo ${{ github.repository }} \
+              --body "Removal failed — see the run log. The post is still on the board."
+          fi

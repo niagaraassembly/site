@@ -186,8 +186,8 @@ test('a card never renders a name or an email field', () => {
 
 test('cardHtml renders member comments, escaped', () => {
   const html = cardHtml(rec({ comments: [
-    { author: 'rosa-silva', body: 'Bench is free that night.', date: '2026-08-21' },
-    { author: 'evil', body: '<img src=x onerror=alert(1)>', date: '2026-08-21' }
+    { id: 1, author: 'rosa-silva', body: 'Bench is free that night.', date: '2026-08-21' },
+    { id: 2, author: 'evil', body: '<img src=x onerror=alert(1)>', date: '2026-08-21' }
   ]}));
   assert.ok(html.includes('rosa-silva'));
   assert.ok(html.includes('Bench is free that night.'));
@@ -198,6 +198,12 @@ test('cardHtml renders member comments, escaped', () => {
 test('a card with no comments renders no comment list', () => {
   assert.ok(!cardHtml(rec()).includes('card__comments'));
   assert.ok(!cardHtml(rec({ comments: [] })).includes('card__comments'));
+});
+
+test('the comment id is never rendered into the page', () => {
+  const html = cardHtml(rec({ comments: [
+    { id: 987654321, author: 'rosa-silva', body: 'Note.', date: '2026-08-21' }] }));
+  assert.ok(!html.includes('987654321'));
 });
 
 test('a malformed comments value is ignored rather than thrown on', () => {
