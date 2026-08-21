@@ -26,6 +26,28 @@
 
 ---
 
+## Execution: three batches
+
+The ten tasks below are grouped into three batches, executed inline with a
+review checkpoint after each. The task content is unchanged — only the
+test cadence and the review gates are.
+
+| Batch | Tasks | Verification |
+|---|---|---|
+| 1 — Logic core | 1–4 | All batch tests written first and run once (every one failing), then implemented, then run once green |
+| 2 — Pages | 5–7 | One browser pass covering both pages |
+| 3 — Wiring | 8–10 | `node --check` on all four `.gs`, the round-trip check, YAML parse |
+
+Test suites run in under half a second, so the saving is not in test runs —
+it is in review gates and context switches. Red-green survives inside each
+batch: a test that never failed proves nothing, so every batch's tests are
+run red before any implementation lands.
+
+Commits stay per-task as written below. A batch is a review gate, not a
+single commit.
+
+---
+
 ### Task 1: Clear the ground
 
 Delete the endorsement and meetup pipeline, move the manifesto out of the site, and seed the board's data file. Nothing new is built here — this task exists so every later task starts from a repo with no dead code in it. Both JSON files are currently `[]`, so no data is lost.
