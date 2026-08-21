@@ -1,7 +1,11 @@
+# Fires when a label is added to an issue. Two independent jobs, each
+# gated on the issue also carrying its pipeline's label — so approving a
+# board post never touches the org, and approving an open-source
+# registration never touches data/.
+#
 # On the `issues` event, actions/checkout@v4 checks out the repository's
-# default branch, not any feature branch. This workflow writes to whatever
-# branch is default at run time, so it is only live once this work has been
-# merged there.
+# DEFAULT branch, not any feature branch. This workflow writes to whatever
+# branch is default at run time, so it is only live once merged there.
 name: Approve request
 on:
   issues:
@@ -9,23 +13,25 @@ on:
 permissions:
   contents: write
   issues: write
-concurrency:
-  group: write-data
-  # Never cancel an in-flight write: cancelling mid-run would drop the very
-  # record it was in the middle of committing.
-  cancel-in-progress: false
+
 jobs:
   write:
-    if: github.event.label.name == 'approved'
+    name: Publish to the board
+    if: >-
+      github.event.label.name == 'approved' &&
+      contains(github.event.issue.labels.*.name, 'board')
     runs-on: ubuntu-latest
+    concurrency:
+      group: write-data
+      # Never cancel an in-flight write: cancelling mid-run would drop the
+      # very record it was in the middle of committing.
+      cancel-in-progress: false
     steps:
       - uses: actions/checkout@v4
+
       - name: Write, commit and push
         env:
           ISSUE_BODY: ${{ github.event.issue.body }}
-          # Spec §8.3: both labels are required for a comment to be published.
-          # `approved` gates the job; `publish-comment` gates the comment text.
-          PUBLISH_COMMENT: ${{ contains(github.event.issue.labels.*.name, 'publish-comment') }}
         run: |
           git config user.name "niagara-assembly-bot"
           git config user.email "noreply@niagaraassembly.com"
@@ -35,14 +41,79 @@ jobs:
             python3 scripts/approve_request.py || exit 1
             git add data/
             if git diff --staged --quiet; then exit 0; fi
-            git commit -m "Add record from #${{ github.event.issue.number }}"
+            git commit -m "Add board record from #${{ github.event.issue.number }}"
             if git push; then exit 0; fi
             echo "push rejected; re-deriving against latest (attempt $attempt)"
             sleep $((RANDOM % 5 + 2))
           done
           echo "could not push after 5 attempts" >&2
           exit 1
-      - name: Close the issue
+
+      - name: Say what happened, then close
+        if: always()
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh issue close ${{ github.event.issue.number }} --repo ${{ github.repository }}
+          RESULT: ${{ job.status }}
+        run: |
+          if [ "$RESULT" = "success" ]; then
+            gh issue comment ${{ github.event.issue.number }} --repo ${{ github.repository }} \
+              --body "Published to the board."
+            gh issue close ${{ github.event.issue.number }} --repo ${{ github.repository }}
+          else
+            gh issue comment ${{ github.event.issue.number }} --repo ${{ github.repository }} \
+              --body "Publishing failed — see the run log. The issue stays open."
+          fi
+
+  invite:
+    name: Invite to the organization
+    if: >-
+      github.event.label.name == 'approved' &&
+      contains(github.event.issue.labels.*.name, 'opensource')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Invite
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          # NOT github.token. The Actions token cannot invite org members;
+          # it returns 403. This is a fine-grained PAT with organization
+          # permission "Members: Read and write", created by an org owner
+          # and stored as a repository secret.
+          GH_TOKEN: ${{ secrets.ORG_INVITE_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${GH_TOKEN:-}" ]; then
+            echo "ORG_INVITE_TOKEN is not set on this repository." >&2
+            echo "The default Actions token cannot invite organization members." >&2
+            exit 1
+          fi
+
+          # One line on purpose: a multi-line heredoc here sits at column
+          # zero and breaks the enclosing YAML block scalar.
+          USERNAME="$(python3 -c 'import os,sys; sys.path.insert(0,"scripts"); from approve_request import extract_block; print(extract_block(os.environ["ISSUE_BODY"]).get("github_username",""))')"
+
+          # Validated a third time. The browser check is advice, the Apps
+          # Script check is advice, and this value reaches a command line.
+          if ! printf '%s' "$USERNAME" | grep -qE '^[A-Za-z0-9]([A-Za-z0-9]|-[A-Za-z0-9]){0,38}$'; then
+            echo "refusing to invite: '$USERNAME' is not a valid GitHub username" >&2
+            exit 1
+          fi
+
+          gh api --method PUT "orgs/niagaraassembly/memberships/${USERNAME}" -f role=member
+
+      - name: Say what happened, then close
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RESULT: ${{ job.status }}
+        run: |
+          if [ "$RESULT" = "success" ]; then
+            gh issue comment ${{ github.event.issue.number }} --repo ${{ github.repository }} \
+              --body "Organization invitation sent."
+            gh issue close ${{ github.event.issue.number }} --repo ${{ github.repository }}
+          else
+            gh issue comment ${{ github.event.issue.number }} --repo ${{ github.repository }} \
+              --body "Invitation failed — see the run log. The issue stays open."
+          fi
