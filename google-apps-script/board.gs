@@ -111,7 +111,7 @@ function runSelfTest() {
 
   if (parsed.category !== 'news') throw new Error('FAIL: category not carried');
   if (parsed.kind !== 'hiring') throw new Error('FAIL: kind not carried');
-  if (parsed.location !== 'buffalo') throw new Error('FAIL: location not carried');
+  if (parsed.location !== 'Buffalo') throw new Error('FAIL: location not carried');
   if ('email' in parsed) throw new Error('FAIL: email must never enter the data block');
   if ('name' in parsed) throw new Error('FAIL: name must never enter the data block');
   if ('when' in parsed) throw new Error('FAIL: empty fields must be dropped, not sent blank');
