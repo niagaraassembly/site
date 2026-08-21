@@ -85,8 +85,9 @@
         <select name="category" id="board-category"></select></label>
       <label>Which kind
         <select name="kind" id="board-kind"></select></label>
-      <label>Location
-        <select name="location" id="board-location"></select></label>
+      <label>Location <span class="opt">the town or city, for filtering</span>
+        <input name="location" id="board-location" required
+               placeholder="Hamilton, Welland, Buffalo…"></label>
 
       <p class="fineprint" id="board-hint"></p>
 
@@ -157,26 +158,44 @@
 <script type="module">
   import { buildFormBody, submitTo, MAX_TEXT,
            validateJoin, validateBoard, validateRegister } from './assets/js/submit.js';
-  import { CATEGORIES, CATEGORY_LABELS, KINDS, LOCATIONS,
+  import { CATEGORIES, CATEGORY_LABELS, KINDS,
            REQUIRED, OPTIONAL } from './assets/js/nav.js';
 
   /* Placeholders. docs/SETUP.md replaces these with real values read from
      FB_PUBLIC_LOAD_DATA_ in each live form's page source — NOT from a
      pre-filled link, which yields ids that look right and silently drop
      values for some question types. */
-  const JOIN_ACTION = 'FORM_URL_JOIN';
-  const JOIN_MAP = { name: 'entry.0', email: 'entry.0', level: 'entry.0' };
+  /* Read from FB_PUBLIC_LOAD_DATA_ in each live form's page source, not
+     from a pre-filled link — that method yields ids that look right and
+     silently drop values for some question types. */
+  const JOIN_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLScFaiJNiyegV3F-J_5fHMfKjgKnWA7to6dC2OrLE1gmF-kigw/formResponse';
+  const JOIN_MAP = { name:  'entry.1137859152',
+                     email: 'entry.1220624572',
+                     level: 'entry.1083496865' };
 
-  const BOARD_ACTION = 'FORM_URL_BOARD';
-  const BOARD_MAP = { category: 'entry.0', kind: 'entry.0', location: 'entry.0',
-                      name: 'entry.0', email: 'entry.0', title: 'entry.0',
-                      presenter: 'entry.0', when: 'entry.0', where: 'entry.0',
-                      description: 'entry.0', link: 'entry.0', contact: 'entry.0',
-                      visibility: 'entry.0' };
+  const BOARD_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLSfD9HocHkf_2xZOtT0_Jr358bqlx2SAa70AaADSfdv_i0CDJw/formResponse';
+  const BOARD_MAP = { category:    'entry.572165348',
+                      kind:        'entry.1518496677',
+                      offer:       'entry.443300922',
+                      location:    'entry.2090290740',
+                      name:        'entry.699246176',
+                      email:       'entry.1276802258',
+                      title:       'entry.1851806435',
+                      presenter:   'entry.1350405615',
+                      when:        'entry.1717420552',
+                      where:       'entry.208848275',
+                      specs:       'entry.848637377',
+                      price:       'entry.327182467',
+                      description: 'entry.174033124',
+                      link:        'entry.527562516',
+                      contact:     'entry.999193750',
+                      visibility:  'entry.1277514393' };
 
-  const REGISTER_ACTION = 'FORM_URL_REGISTER';
-  const REGISTER_MAP = { kind: 'entry.0', name: 'entry.0', email: 'entry.0',
-                         github_username: 'entry.0', interest: 'entry.0' };
+  const REGISTER_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLSfI2Rv_vhcoi8xweECkFeagLGbGOC15JzG0T-aL6lvSoCnr7A/formResponse';
+  const REGISTER_MAP = { name:            'entry.379186962',
+                         email:           'entry.767294650',
+                         github_username: 'entry.841033204',
+                         interest:        'entry.1401144592' };
 
   /* Per-category labelling. The `name` attributes never change; only what
      the visitor reads does. Which fields SHOW is derived from nav.js
@@ -226,7 +245,6 @@
   const boardForm = document.getElementById('board-form');
   const categorySelect = document.getElementById('board-category');
   const kindSelect = document.getElementById('board-kind');
-  const locationSelect = document.getElementById('board-location');
   const boardHint = document.getElementById('board-hint');
 
   const option = (value, label) => {
@@ -236,7 +254,6 @@
   };
 
   for (const c of CATEGORIES) categorySelect.append(option(c, CATEGORY_LABELS[c]));
-  for (const [slug, label] of Object.entries(LOCATIONS)) locationSelect.append(option(slug, label));
 
   function shapeBoardForm() {
     const category = categorySelect.value;

@@ -44,19 +44,12 @@
 <script src="../assets/js/sketch.js" defer></script>
 <script type="module">
   import { navHtml, subnavHtml, mountBoard, parseQuery } from '../assets/js/board.js';
-  import { LOCATIONS } from '../assets/js/nav.js';
+  import { locationsIn } from '../assets/js/nav.js';
 
   const root = document.getElementById('board');
   const nav = document.getElementById('nav');
   const subnav = document.getElementById('subnav');
   const filters = document.getElementById('filters');
-
-  for (const [slug, label] of Object.entries(LOCATIONS)) {
-    const option = document.createElement('option');
-    option.value = slug;
-    option.textContent = label;
-    document.getElementById('f-location').append(option);
-  }
 
   let records = [];
   let state = parseQuery(location.search);
@@ -116,6 +109,17 @@
       if (!r.ok) throw new Error(`board.json: HTTP ${r.status}`);
       return r.json();
     });
+
+    /* Location is free text, so the filter's options come from what the
+       board actually holds rather than from a list that would drift out
+       of step with the form. */
+    const select = document.getElementById('f-location');
+    for (const name of locationsIn(records)) {
+      const o = document.createElement('option');
+      o.value = name; o.textContent = name;
+      select.append(o);
+    }
+
     render();
   } catch (err) {
     /* Say so rather than leaving "Loading…" up forever — a stuck spinner

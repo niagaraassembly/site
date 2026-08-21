@@ -21,18 +21,18 @@ BLOCK = re.compile(r"<!--DATA\s*(\{.*?\})\s*DATA-->", re.S)
 # tests/submit.test.mjs both assert the two files still agree.
 CATEGORIES = ("events", "news", "spaces", "tools", "experts")
 
+# The EXACT option values in the live Board form's Kind question.
 KINDS = {
-    "events":  ("standup", "talk", "demo", "launch", "workshop", "training"),
-    "news":    ("new-project", "new-company", "hiring", "expansion",
-                "safe", "other-investment"),
-    "spaces":  ("event-space", "office", "industrial", "retail", "yard", "warehouse"),
+    "events":  ("stand-ups", "talks", "demos", "launches", "workshops", "training"),
+    "news":    ("new projects", "new companies", "hiring", "expansions",
+                "SAFEs", "other investment"),
+    "spaces":  ("events", "office space", "industrial", "retail", "yard", "warehouse"),
     "tools":   ("electronics", "fabrication", "manufacturing", "warehouse", "other"),
     "experts": ("software", "electronics", "fabrication", "manufacturing",
                 "logistics", "management", "other"),
 }
 
-LOCATIONS = ("hamilton", "niagara", "buffalo", "rochester", "other")
-
+# Location is FREE TEXT in the live form — required, but not from a list.
 OFFERS = ("offering", "seeking")
 
 REQUIRED = {
@@ -84,7 +84,7 @@ def validate(record):
 
     errors = [f for f in REQUIRED[category] if not str(record.get(f, "")).strip()]
 
-    if record.get("location") not in LOCATIONS:
+    if not str(record.get("location", "")).strip():
         errors.append("location")
 
     if record.get("offer") and record["offer"] not in OFFERS:

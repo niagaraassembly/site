@@ -99,7 +99,7 @@ function runSelfTest() {
   var props = assertProperties_();
 
   var news = buildBoardBody({
-    category: 'news', kind: 'hiring', location: 'buffalo',
+    category: 'news', kind: 'hiring', location: 'Buffalo',
     name: 'Rosa Silva', email: 'rosa@example.ca',
     title: 'Trico hiring forty', link: 'https://example.ca/trico',
     description: 'Forty roles across two shifts.'
@@ -136,7 +136,7 @@ function runSelfTest() {
   }
 
   var full = JSON.parse(buildBoardBody({
-    category: 'tools', kind: 'electronics', location: 'niagara', offer: 'seeking',
+    category: 'tools', kind: 'electronics', location: 'Niagara', offer: 'seeking',
     name: 'Rosa Silva', email: 'rosa@example.ca', title: 'Reflow oven',
     where: '12 Ross St', specs: 'Heller 1707 MK5', price: 'free to borrow',
     description: 'Bookable evenings.', contact: 'rosa@example.ca'
@@ -145,7 +145,7 @@ function runSelfTest() {
   if (full.specs !== 'Heller 1707 MK5') throw new Error('FAIL: specs not carried');
   if (full.price !== 'free to borrow') throw new Error('FAIL: price not carried');
 
-  var expert = { category: 'experts', kind: 'software', location: 'niagara',
+  var expert = { category: 'experts', kind: 'software', location: 'Niagara',
                  name: 'Rosa Silva', email: 'rosa@example.ca',
                  title: 'Rosa Silva', description: 'IPC-A-610 trainer.',
                  contact: 'rosa@example.ca', visibility: 'private' };

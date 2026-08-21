@@ -4,8 +4,8 @@ import { cardHtml, navHtml, subnavHtml, applyFilters, mountBoard, parseQuery }
   from '../assets/js/board.js';
 import { CATEGORIES } from '../assets/js/nav.js';
 
-const rec = (o = {}) => ({ id: 'b-0001', category: 'events', kind: 'standup',
-                           location: 'niagara', title: 'Open bench night',
+const rec = (o = {}) => ({ id: 'b-0001', category: 'events', kind: 'stand-ups',
+                           location: 'Niagara', title: 'Open bench night',
                            when: '2026-09-04', where: '12 Ross St',
                            contact: 'rosa@example.ca', date: '2026-08-20', ...o });
 
@@ -43,11 +43,11 @@ test('a subnav renders for every category without throwing', () => {
 /* --- filtering ---------------------------------------------------- */
 
 const many = [
-  rec({ id: 'b-0001', category: 'events', kind: 'standup', location: 'niagara',
+  rec({ id: 'b-0001', category: 'events', kind: 'stand-ups', location: 'Niagara',
         title: 'Open bench night', when: '2026-09-04', date: '2026-08-20' }),
-  rec({ id: 'b-0002', category: 'events', kind: 'talk', location: 'hamilton',
+  rec({ id: 'b-0002', category: 'events', kind: 'talks', location: 'Hamilton',
         title: 'Steel and software', when: '2020-01-01', date: '2026-08-19' }),
-  rec({ id: 'b-0003', category: 'news', kind: 'hiring', location: 'buffalo',
+  rec({ id: 'b-0003', category: 'news', kind: 'hiring', location: 'Buffalo',
         title: 'Trico hiring', link: 'https://example.ca/t',
         description: 'Forty roles.', date: '2026-08-18' })
 ];
@@ -57,7 +57,7 @@ test('category is the primary filter', () => {
 });
 
 test('kind narrows within a category, and all means all', () => {
-  assert.deepEqual(applyFilters(many, { category: 'events', kind: 'talk' }).map(r => r.id),
+  assert.deepEqual(applyFilters(many, { category: 'events', kind: 'talks' }).map(r => r.id),
                    ['b-0002']);
   assert.equal(applyFilters(many, { category: 'events', kind: 'all' }).length, 2);
 });
@@ -68,8 +68,10 @@ test('search matches title, description and where, case-insensitively', () => {
   assert.equal(applyFilters(many, { q: 'nothing here' }).length, 0);
 });
 
-test('location filters on the controlled slug, not the free-text venue', () => {
+test('location filters case-insensitively, and not on the free-text venue', () => {
+  // Stored as "Hamilton"; a filter built from "hamilton" must still match.
   assert.deepEqual(applyFilters(many, { location: 'hamilton' }).map(r => r.id), ['b-0002']);
+  assert.deepEqual(applyFilters(many, { location: 'Hamilton' }).map(r => r.id), ['b-0002']);
 });
 
 test('upcoming hides events whose date has passed', () => {
@@ -115,7 +117,7 @@ test('search reaches specs', () => {
 
 test('filters compose', () => {
   assert.deepEqual(
-    applyFilters(many, { category: 'events', location: 'niagara', q: 'bench' }).map(r => r.id),
+    applyFilters(many, { category: 'events', location: 'Niagara', q: 'bench' }).map(r => r.id),
     ['b-0001']);
 });
 
@@ -159,16 +161,17 @@ test('cardHtml renders an http link and refuses anything else', () => {
 
 test('cardHtml shows the kind label, not the slug', () => {
   assert.ok(cardHtml(rec()).includes('Standups'));
-  assert.ok(!cardHtml(rec()).includes('>standup<'));
+  assert.ok(!cardHtml(rec()).includes('>stand-ups<'));
 });
 
-test('cardHtml shows the location label', () => {
+test('cardHtml shows the location as typed', () => {
   assert.ok(cardHtml(rec()).includes('Niagara'));
+  assert.ok(cardHtml(rec({ location: '  Port   Dover ' })).includes('Port Dover'));
 });
 
 test('cardHtml omits absent fields rather than rendering empties', () => {
   const html = cardHtml({ id: 'b-0002', category: 'news', kind: 'hiring',
-                          location: 'buffalo', title: 'Trico hiring',
+                          location: 'Buffalo', title: 'Trico hiring',
                           description: 'Forty roles.', date: '2026-08-20' });
   assert.ok(!html.includes('card__when'));
   assert.ok(!html.includes('card__contact'));

@@ -12,7 +12,7 @@
  * safeHttpUrl are applied at the point of interpolation, not upstream.
  */
 import { escapeHtml, safeHttpUrl } from './escape.js';
-import { CATEGORIES, CATEGORY_LABELS, KINDS, LOCATIONS, OFFERS, kindLabel } from './nav.js';
+import { CATEGORIES, CATEGORY_LABELS, KINDS, OFFERS, kindLabel, normaliseLocation } from './nav.js';
 
 /* --- nav ----------------------------------------------------------- */
 
@@ -55,7 +55,12 @@ export function applyFilters(records, filters = {}, today = new Date().toISOStri
 
     if (filters.kind && filters.kind !== 'all' && r.kind !== filters.kind) return false;
 
-    if (filters.location && r.location !== filters.location) return false;
+    /* Case-insensitive because the field is free text: someone typing
+       "hamilton" must still match a filter built from "Hamilton". */
+    if (filters.location &&
+        normaliseLocation(r.location).toLowerCase() !== filters.location.toLowerCase()) {
+      return false;
+    }
 
     if (filters.offer && r.offer !== filters.offer) return false;
 
@@ -93,7 +98,7 @@ export function parseQuery(search) {
 export function cardHtml(record) {
   const e = escapeHtml;
   const meta = [OFFERS[record.offer], kindLabel(record.category, record.kind),
-                LOCATIONS[record.location]]
+                normaliseLocation(record.location)]
     .filter(Boolean).map(e).join(' &middot; ');
 
   const rows = [`<p class="card__meta">${meta}</p>`];

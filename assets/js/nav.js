@@ -24,60 +24,84 @@ export const CATEGORY_LABELS = {
 
 /* Slug -> visible label, in the screenshot's order. "All" is prepended by
    the page, not stored here — it is a view, never a value a record holds. */
+/* Keys are the EXACT option values in the live Board form's Kind
+   question — they are what actually arrives, so they are what we store.
+   Values are the display labels from the nav screenshot.
+
+   The Kind question holds one de-duplicated list of 25 options; the
+   category decides which subset is legal. That is why a record needs both
+   levels: "warehouse" is a Spaces kind and a Tools kind, "electronics" is
+   a Tools kind and an Experts kind, and "events" is a Spaces kind that
+   happens to share a word with a category. */
 export const KINDS = {
   events: {
-    standup:  'Standups',
-    talk:     'Talks',
-    demo:     'Demos',
-    launch:   'Launches',
-    workshop: 'Workshops',
-    training: 'Training'
+    'stand-ups': 'Standups',
+    'talks':     'Talks',
+    'demos':     'Demos',
+    'launches':  'Launches',
+    'workshops': 'Workshops',
+    'training':  'Training'
   },
   news: {
-    'new-project':      'New Projects',
-    'new-company':      'New Companies',
-    hiring:             'Hiring',
-    expansion:          'Expansions',
-    safe:               'SAFEs',
-    'other-investment': 'Other Investment'
+    'new projects':     'New Projects',
+    'new companies':    'New Companies',
+    'hiring':           'Hiring',
+    'expansions':       'Expansions',
+    'SAFEs':            'SAFEs',
+    'other investment': 'Other Investment'
   },
   spaces: {
-    'event-space': 'Events',
-    office:        'Office Space',
-    industrial:    'Industrial',
-    retail:        'Retail',
-    yard:          'Yard',
-    warehouse:     'Warehouse'
+    'events':       'Events',
+    'office space': 'Office Space',
+    'industrial':   'Industrial',
+    'retail':       'Retail',
+    'yard':         'Yard',
+    'warehouse':    'Warehouse'
   },
   tools: {
-    electronics:   'Electronics',
-    fabrication:   'Fabrication',
-    manufacturing: 'Manufacturing',
-    warehouse:     'Warehouse',
-    other:         'Other'
+    'electronics':   'Electronics',
+    'fabrication':   'Fabrication',
+    'manufacturing': 'Manufacturing',
+    'warehouse':     'Warehouse',
+    'other':         'Other'
   },
   experts: {
-    software:      'Software',
-    electronics:   'Electronics',
-    fabrication:   'Fabrication',
-    manufacturing: 'Manufacturing',
-    logistics:     'Logistics',
-    management:    'Management',
-    other:         'Other'
+    'software':      'Software',
+    'electronics':   'Electronics',
+    'fabrication':   'Fabrication',
+    'manufacturing': 'Manufacturing',
+    'logistics':     'Logistics',
+    'management':    'Management',
+    'other':         'Other'
   }
 };
 
-/* The region filter runs off this, not off free-text `where`. A venue
-   string like "Welland Fabrication, 12 Ross St" is unfilterable; a
-   controlled list is. Both fields exist: `location` filters, `where`
-   tells a human where to actually go. */
-export const LOCATIONS = {
-  hamilton:  'Hamilton',
-  niagara:   'Niagara',
-  buffalo:   'Buffalo',
-  rochester: 'Rochester',
-  other:     'Elsewhere in the region'
-};
+/* Location is FREE TEXT in the live form, so there is no controlled list
+   to validate against. The filter's options are derived from whatever the
+   board actually contains — see locationsIn(). `where` is a different
+   field and stays free text too: `location` is the region you filter by
+   ("Hamilton"), `where` is the address you drive to ("88 Barton St E").
+
+   The cost of free text is that "Hamilton", "hamilton" and "Hamilton, ON"
+   become three filter values. normaliseLocation collapses the first two;
+   the third is a judgement only a person can make. */
+export function normaliseLocation(value) {
+  return String(value ?? '').trim().replace(/\s+/g, ' ');
+}
+
+export function locationsIn(records) {
+  const seen = new Map();
+  for (const r of records ?? []) {
+    const raw = normaliseLocation(r.location);
+    /* First spelling wins. Map.set would let the last one win, so a later
+       "hamilton" would rewrite an earlier "Hamilton" in the dropdown.
+       Matching is case-insensitive either way — this only picks which
+       spelling a reader sees. */
+    const key = raw.toLowerCase();
+    if (raw && !seen.has(key)) seen.set(key, raw);
+  }
+  return [...seen.values()].sort((a, b) => a.localeCompare(b));
+}
 
 /* A board that can only say "I have" is half a board. Offering/Seeking
    makes it bidirectional at the cost of one field, and composes with the

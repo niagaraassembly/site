@@ -9,7 +9,10 @@
  * Trigger > onFormSubmit > From spreadsheet > On form submit). The simple
  * trigger of the same name cannot call UrlFetchApp at all.
  *
- * Form question titles: Name, Email, Level
+ * Form question titles: Name, Email, Type
+ *
+ * "Type" is what the live Join form calls the membership level. It is not
+ * the board's "Type" — different form, different Sheet, different script.
  */
 
 var LEVEL_TAGS = {
@@ -36,7 +39,7 @@ function buildJoinBody(r) {
 
 function onFormSubmit(e) {
   var pick = pickFrom_(e.namedValues);
-  var r = { name: pick('Name'), email: pick('Email'), level: pick('Level') };
+  var r = { name: pick('Name'), email: pick('Email'), level: pick('Type') };
 
   if (!LEVEL_TAGS[r.level]) {
     Logger.log('join: unknown level "%s" — defaulting to List', r.level);

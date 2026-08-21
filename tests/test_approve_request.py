@@ -7,7 +7,7 @@ import approve_request as ar
 ISSUE = """A standup was posted.
 
 <!--DATA
-{"category":"events","kind":"standup","location":"niagara",
+{"category":"events","kind":"stand-ups","location":"Niagara",
  "title":"Open bench night","when":"Thursday 7pm",
  "where":"Welland Fabrication, 12 Ross St","contact":"rosa@example.ca"}
 DATA-->
@@ -26,12 +26,12 @@ VALID = {
                 "contact": "rosa@example.ca", "visibility": "public"},
 }
 
-FIRST_KIND = {"events": "standup", "news": "new-project", "spaces": "event-space",
+FIRST_KIND = {"events": "stand-ups", "news": "new projects", "spaces": "events",
               "tools": "electronics", "experts": "software"}
 
 
 def post(category="events", **over):
-    rec = {"category": category, "kind": FIRST_KIND[category], "location": "niagara"}
+    rec = {"category": category, "kind": FIRST_KIND[category], "location": "Niagara"}
     rec.update(VALID[category])
     rec.update(over)
     return rec
@@ -82,8 +82,10 @@ class TestValidate(unittest.TestCase):
     def test_news_may_carry_a_contact(self):
         self.assertEqual(ar.validate(post("news", contact="jobs@example.ca")), [])
 
-    def test_a_location_outside_the_list_is_rejected(self):
-        self.assertIn("location", ar.validate(post("events", location="toronto")))
+    def test_location_is_required_but_free_text(self):
+        for value in ("Hamilton", "st. catharines", "Buffalo, NY"):
+            self.assertEqual(ar.validate(post("events", location=value)), [], value)
+        self.assertIn("location", ar.validate(post("events", location="   ")))
 
     def test_events_require_a_when_but_news_do_not(self):
         self.assertEqual(ar.validate(post("events", when="")), ["when"])
@@ -115,8 +117,8 @@ class TestAppend(unittest.TestCase):
     def test_writes_the_public_fields_and_both_nav_levels(self):
         out = ar.append_record(self.tmp, board())
         self.assertEqual(out["category"], "events")
-        self.assertEqual(out["kind"], "standup")
-        self.assertEqual(out["location"], "niagara")
+        self.assertEqual(out["kind"], "stand-ups")
+        self.assertEqual(out["location"], "Niagara")
         self.assertEqual(self.read()[0]["where"], "12 Ross St")
 
     def test_never_writes_name_or_email(self):
@@ -164,7 +166,7 @@ class TestAppend(unittest.TestCase):
 
 class TestMain(unittest.TestCase):
     def test_invalid_record_exits_non_zero(self):
-        os.environ["ISSUE_BODY"] = '<!--DATA {"category":"events","kind":"standup"} DATA-->'
+        os.environ["ISSUE_BODY"] = '<!--DATA {"category":"events","kind":"stand-ups"} DATA-->'
         self.assertEqual(ar.main(), 1)
 
 

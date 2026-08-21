@@ -4,14 +4,14 @@ import {
   MAX_TEXT, LEVELS, GH_USER, VISIBILITY,
   buildFormBody, validateJoin, validateBoard, validateRegister
 } from '../assets/js/submit.js';
-import { CATEGORIES, KINDS, REQUIRED, LOCATIONS, isKind } from '../assets/js/nav.js';
+import { CATEGORIES, KINDS, REQUIRED, isKind, locationsIn, normaliseLocation } from '../assets/js/nav.js';
 
 /* A valid post in each category, so a test can name the one field it is
    about instead of restating six. */
 const post = (category, o = {}) => ({
   category,
   kind: Object.keys(KINDS[category])[0],
-  location: 'niagara',
+  location: 'Niagara',
   name: 'Rosa', email: 'r@example.ca',
   ...({
     events:  { title: 'Open bench night', when: 'Thursday 7pm',
@@ -55,7 +55,7 @@ test('an unknown category is rejected before any field is checked', () => {
 test('a kind from the wrong category is rejected', () => {
   // "software" is an Experts kind, not an Events one.
   assert.deepEqual(validateBoard({ category: 'events', kind: 'software' }), ['kind']);
-  assert.deepEqual(validateBoard({ category: 'events', kind: 'standup', name: '' }).length > 0, true);
+  assert.deepEqual(validateBoard({ category: 'events', kind: 'stand-ups', name: '' }).length > 0, true);
 });
 
 test('warehouse is a valid kind under both spaces and tools', () => {
@@ -66,6 +66,21 @@ test('warehouse is a valid kind under both spaces and tools', () => {
 
 test('the five categories match the nav', () => {
   assert.deepEqual(CATEGORIES, ['events', 'news', 'spaces', 'tools', 'experts']);
+});
+
+test('the kind keys are the live form option values', () => {
+  assert.deepEqual(Object.keys(KINDS.events),
+    ['stand-ups', 'talks', 'demos', 'launches', 'workshops', 'training']);
+  assert.deepEqual(Object.keys(KINDS.news),
+    ['new projects', 'new companies', 'hiring', 'expansions', 'SAFEs', 'other investment']);
+  assert.deepEqual(Object.keys(KINDS.spaces),
+    ['events', 'office space', 'industrial', 'retail', 'yard', 'warehouse']);
+});
+
+test('the form Kind list is one de-duplicated union of every category', () => {
+  const union = new Set();
+  for (const c of CATEGORIES) for (const k of Object.keys(KINDS[c])) union.add(k);
+  assert.equal(union.size, 25, 'the live form offers 25 Kind options');
 });
 
 test('every subnav from the screenshot is present, in order', () => {
@@ -96,11 +111,21 @@ test('every category requires a name, an email and a location', () => {
   }
 });
 
-test('a location outside the controlled list is rejected', () => {
-  assert.ok(validateBoard(post('events', { location: 'toronto' })).includes('location'));
-  for (const slug of Object.keys(LOCATIONS)) {
-    assert.deepEqual(validateBoard(post('events', { location: slug })), []);
+test('location is required but free text — any non-empty value passes', () => {
+  for (const value of ['Hamilton', 'st. catharines', 'Buffalo, NY', 'Port Dover']) {
+    assert.deepEqual(validateBoard(post('events', { location: value })), []);
   }
+  assert.ok(validateBoard(post('events', { location: '   ' })).includes('location'));
+});
+
+test('locationsIn derives filter options from the data, case-folded', () => {
+  const records = [{ location: 'Hamilton' }, { location: 'hamilton' },
+                   { location: ' Niagara ' }, { location: '' }];
+  assert.deepEqual(locationsIn(records), ['Hamilton', 'Niagara']);
+});
+
+test('normaliseLocation trims and collapses whitespace', () => {
+  assert.equal(normaliseLocation('  Port   Dover '), 'Port Dover');
 });
 
 test('news needs no when, but events do', () => {
