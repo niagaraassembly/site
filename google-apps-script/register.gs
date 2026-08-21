@@ -10,7 +10,7 @@
  * less it carries, the smaller the surface. The username is validated
  * here as well as in the browser and, later, in the workflow.
  *
- * Form question titles: Name, Email, GitHub username, Interest
+ * Form question titles: Name, Email, GitHub Username, Interest
  */
 
 var KIT_TAG_OPENSOURCE = 'na-opensource';
@@ -42,7 +42,7 @@ function onFormSubmit(e) {
   var pick = pickFrom_(e.namedValues);
   var r = {
     name: pick('Name'), email: pick('Email'),
-    github_username: pick('GitHub username'), interest: pick('Interest')
+    github_username: pick('GitHub Username'), interest: pick('Interest')
   };
 
   createIssue_('Open source: @' + r.github_username, buildOpenSourceBody(r), ['opensource']);
