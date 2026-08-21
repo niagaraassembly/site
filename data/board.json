@@ -1,1 +1,15 @@
-[]
+[
+  {
+    "id": "b-0001",
+    "category": "events",
+    "kind": "stand-ups",
+    "location": "Welland",
+    "title": "Talk on Hamilton History",
+    "when": "2026 09 18",
+    "where": "Downtown",
+    "contact": "morgenpeers@outlook.com",
+    "offer": "offering",
+    "presenter": "Morgen Peers",
+    "date": "2026-08-21"
+  }
+]
