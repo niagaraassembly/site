@@ -44,7 +44,7 @@ REQUIRED = {
 }
 
 OPTIONAL = {
-    "events":  ["offer", "presenter", "description", "price", "link"],
+    "events":  ["presenter", "description", "price", "link"],
     "news":    ["where", "price", "contact"],
     "spaces":  ["offer", "title", "when", "specs", "price", "link"],
     "tools":   ["offer", "presenter", "specs", "price", "link"],

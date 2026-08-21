@@ -4,7 +4,7 @@ import {
   MAX_TEXT, LEVELS, GH_USER, VISIBILITY,
   buildFormBody, validateJoin, validateBoard, validateRegister
 } from '../assets/js/submit.js';
-import { CATEGORIES, KINDS, REQUIRED, isKind, locationsIn, normaliseLocation } from '../assets/js/nav.js';
+import { CATEGORIES, KINDS, REQUIRED, OPTIONAL, isKind, locationsIn, normaliseLocation, hasOffer } from '../assets/js/nav.js';
 
 /* A valid post in each category, so a test can name the one field it is
    about instead of restating six. */
@@ -147,6 +147,13 @@ test('only experts carry a visibility choice, and it is required there', () => {
   }
   // Absent on every other category, and harmless there.
   assert.deepEqual(validateBoard(post('events', { visibility: '' })), []);
+});
+
+test('offer belongs only to categories that are two-sided', () => {
+  assert.deepEqual(CATEGORIES.filter(hasOffer), ['spaces', 'tools', 'experts']);
+  for (const c of CATEGORIES) {
+    assert.equal(OPTIONAL[c].includes('offer'), hasOffer(c), `${c} offer field`);
+  }
 });
 
 test('offer is optional but must be a known value when given', () => {

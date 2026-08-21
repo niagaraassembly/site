@@ -312,6 +312,15 @@
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const values = Object.fromEntries(new FormData(form).entries());
+
+      /* A hidden field must not reach the Google Form. Clearing text
+         inputs on switch is not enough: a <select> has no empty option, so
+         a hidden Offer would still post "offering" on an Events listing.
+         The writer drops it, but nothing stray should leave the page. */
+      for (const label of form.querySelectorAll('[data-field]')) {
+        if (label.hidden) delete values[label.dataset.field];
+      }
+
       const errors = validate(values);
 
       if (errors.length) {

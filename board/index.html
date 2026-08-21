@@ -54,7 +54,7 @@
 <script src="../assets/js/sketch.js" defer></script>
 <script type="module">
   import { navHtml, subnavHtml, mountBoard, parseQuery } from '../assets/js/board.js';
-  import { locationsIn } from '../assets/js/nav.js';
+  import { locationsIn, hasOffer } from '../assets/js/nav.js';
 
   const root = document.getElementById('board');
   const nav = document.getElementById('nav');
@@ -77,6 +77,14 @@
   function render() {
     nav.innerHTML = navHtml(state.category);
     subnav.innerHTML = subnavHtml(state.category, state.kind);
+
+    /* Hidden AND cleared: a stale "seeking" left behind while switching to
+       News would filter every listing out of a category that has no offer
+       to match on. */
+    const offerSelect = document.getElementById('f-offer');
+    const showOffer = hasOffer(state.category);
+    offerSelect.hidden = !showOffer;
+    if (!showOffer && state.offer) { offerSelect.value = ''; state.offer = ''; }
     mountBoard(records, state, root);
     /* Cards and nav links are created here, after sketch.js built its
        registry on DOMContentLoaded — so they must be registered, not just

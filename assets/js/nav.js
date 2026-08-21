@@ -109,6 +109,12 @@ export function locationsIn(records) {
    nor sought. */
 export const OFFERS = { offering: 'Offering', seeking: 'Seeking' };
 
+/* Only categories where a listing is a two-sided proposition. An event
+   happens and news happened — neither is offered or sought, so the field
+   and its filter are hidden for both rather than sitting there inert. */
+export const OFFER_CATEGORIES = ['spaces', 'tools', 'experts'];
+export const hasOffer = (category) => OFFER_CATEGORIES.includes(category);
+
 /* Required fields by CATEGORY, not by kind — differences are kept to the
    minimum that still makes each category readable. Every category also
    requires category, kind, location, name and email; name and email are
@@ -129,7 +135,7 @@ export const REQUIRED = {
    differently: "Heller 1707 MK5, 7 zones" is scanned, "bookable evenings,
    bring your own stencils" is read. */
 export const OPTIONAL = {
-  events:  ['offer', 'presenter', 'description', 'price', 'link'],
+  events:  ['presenter', 'description', 'price', 'link'],
   news:    ['where', 'price', 'contact'],
   spaces:  ['offer', 'title', 'when', 'specs', 'price', 'link'],
   tools:   ['offer', 'presenter', 'specs', 'price', 'link'],

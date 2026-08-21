@@ -90,8 +90,9 @@ test('posted-since drops anything older than the window', () => {
 });
 
 test('offer filters the board in both directions', () => {
-  const both = [rec({ id: 'b-0001', offer: 'offering', title: 'Have a lathe' }),
-                rec({ id: 'b-0002', offer: 'seeking', title: 'Need a lathe' })];
+  const tool = (o) => ({ ...rec(), category: 'tools', kind: 'electronics', ...o });
+  const both = [tool({ id: 'b-0001', offer: 'offering', title: 'Have a lathe' }),
+                tool({ id: 'b-0002', offer: 'seeking', title: 'Need a lathe' })];
   assert.deepEqual(applyFilters(both, { offer: 'seeking' }).map(r => r.id), ['b-0002']);
   assert.equal(applyFilters(both, { offer: '' }).length, 2);
 });
