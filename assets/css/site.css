@@ -52,8 +52,16 @@
   --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root { --ink: #e9e7e2; --ink-soft: #a3a099; --paper: #16171a; --rule: #3a3c40; }
+/* Light is the default, deliberately — not `prefers-color-scheme`. Dark is
+   opt-in via the toggle, which sets data-theme on <html> and remembers the
+   choice. A visitor whose system is dark still gets the light page first,
+   because the drawn box and the plain-document look were designed on
+   paper. */
+:root[data-theme="dark"] {
+  --ink:      #e9e7e2;
+  --ink-soft: #a3a099;
+  --paper:    #16171a;
+  --rule:     #3a3c40;
 }
 
 * { box-sizing: border-box; }
@@ -106,6 +114,21 @@ body {
 
 /* Pulled closer to each other than the words are, so the pair reads as one
    group rather than as two more nav items. */
+/* Half ink, half paper. Both halves are tokens, so the rectangle inverts
+   itself when the theme flips — no second icon, no state class. */
+.themetoggle {
+  margin-left: .15rem;
+  width: 26px;
+  height: 14px;
+  padding: 0;
+  border: 1px solid var(--ink);
+  border-radius: 2px;
+  background: linear-gradient(to right, var(--ink) 0 50%, var(--paper) 50% 100%);
+  cursor: pointer;
+  flex: none;
+}
+.themetoggle:hover { outline: 1px solid var(--rule); outline-offset: 2px; }
+
 .topnav__icon { display: flex; align-items: center; margin-left: -0.65rem; }
 .topnav__icon:first-of-type { margin-left: 0; }
 .topnav__icon:hover { color: var(--ink); }
