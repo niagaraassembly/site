@@ -18,6 +18,11 @@
 
   <form class="filters" id="filters" data-sketch="box" role="search">
     <input type="search" name="q" id="f-q" placeholder="Search the board" aria-label="Search">
+    <select name="offer" id="f-offer" aria-label="Offering or seeking">
+      <option value="">Offering &amp; seeking</option>
+      <option value="offering">Offering</option>
+      <option value="seeking">Seeking</option>
+    </select>
     <select name="location" id="f-location" aria-label="Location">
       <option value="">Anywhere</option>
     </select>
@@ -85,8 +90,8 @@
       e.preventDefault();
       history.pushState(null, '', link.getAttribute('href'));
       state = { ...parseQuery(location.search),
-                q: state.q, location: state.location, since: state.since,
-                upcoming: state.upcoming };
+                q: state.q, offer: state.offer, location: state.location,
+                since: state.since, upcoming: state.upcoming };
       render();
     });
   }
@@ -96,6 +101,7 @@
     state = {
       ...state,
       q: document.getElementById('f-q').value,
+      offer: document.getElementById('f-offer').value,
       location: document.getElementById('f-location').value,
       since: sinceDate(document.getElementById('f-since').value),
       upcoming: document.getElementById('f-upcoming').checked

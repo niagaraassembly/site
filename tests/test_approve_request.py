@@ -74,6 +74,14 @@ class TestValidate(unittest.TestCase):
         for category in ar.CATEGORIES:
             self.assertIn("location", ar.validate(post(category, location="")))
 
+    def test_offer_is_optional_but_checked_when_given(self):
+        self.assertEqual(ar.validate(post("tools", offer="seeking")), [])
+        self.assertEqual(ar.validate(post("tools", offer="")), [])
+        self.assertEqual(ar.validate(post("tools", offer="bartering")), ["offer"])
+
+    def test_news_may_carry_a_contact(self):
+        self.assertEqual(ar.validate(post("news", contact="jobs@example.ca")), [])
+
     def test_a_location_outside_the_list_is_rejected(self):
         self.assertIn("location", ar.validate(post("events", location="toronto")))
 
@@ -127,6 +135,18 @@ class TestAppend(unittest.TestCase):
         "private" on a public page, which is absurd on its face."""
         ar.append_record(self.tmp, post("experts"))
         self.assertNotIn("visibility", self.read()[0])
+
+    def test_writes_offer_specs_and_price(self):
+        ar.append_record(self.tmp, post("tools", offer="seeking",
+                                        specs="Heller 1707 MK5", price="free to borrow"))
+        written = self.read()[0]
+        self.assertEqual(written["offer"], "seeking")
+        self.assertEqual(written["specs"], "Heller 1707 MK5")
+        self.assertEqual(written["price"], "free to borrow")
+
+    def test_specs_is_not_public_on_a_category_that_has_no_specs(self):
+        ar.append_record(self.tmp, post("news", specs="should not appear"))
+        self.assertNotIn("specs", self.read()[0])
 
     def test_stamps_todays_date_when_absent(self):
         out = ar.append_record(self.tmp, board())

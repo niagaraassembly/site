@@ -17,8 +17,9 @@
  *      an expert who asked not to be published simply never gets that
  *      label and cannot be published by approving them.
  *
- * Form question titles: Type, Kind, Location, Name, Email, Title,
- * Presenter, When, Where, Description, Link, Contact, Visibility
+ * Form question titles: Type, Kind, Location, Offer, Name, Email, Title,
+ * Presenter, When, Where, Specs, Price, Description, Link, Contact,
+ * Visibility
  */
 
 var KIT_TAG_BOARD = 'na-board';
@@ -33,10 +34,13 @@ function buildBoardBody(r) {
     category: r.category,
     kind: r.kind,
     location: r.location,
+    offer: r.offer,
     title: r.title,
     presenter: r.presenter,
     when: r.when,
     where: r.where,
+    specs: r.specs,
+    price: r.price,
     description: (r.description || '').slice(0, MAX_TEXT),
     link: r.link,
     contact: r.contact
@@ -72,9 +76,11 @@ function onFormSubmit(e) {
   var pick = pickFrom_(e.namedValues);
   var r = {
     category: pick('Type'), kind: pick('Kind'), location: pick('Location'),
+    offer: pick('Offer'),
     name: pick('Name'), email: pick('Email'),
     title: pick('Title'), presenter: pick('Presenter'), when: pick('When'),
-    where: pick('Where'), description: pick('Description'),
+    where: pick('Where'), specs: pick('Specs'), price: pick('Price'),
+    description: pick('Description'),
     link: pick('Link'), contact: pick('Contact'),
     visibility: pick('Visibility')
   };
@@ -110,6 +116,34 @@ function runSelfTest() {
   if ('name' in parsed) throw new Error('FAIL: name must never enter the data block');
   if ('when' in parsed) throw new Error('FAIL: empty fields must be dropped, not sent blank');
   if ('visibility' in parsed) throw new Error('FAIL: only Experts carry a visibility');
+
+  /* Every field buildBoardBody reads must be one onFormSubmit picks. A
+     field added to the block but not to the pick list is invisible: it
+     arrives undefined, the empty-drop removes it, and the listing simply
+     loses that value with nothing logged. */
+  var picked = onFormSubmit.toString();
+  var readByBody = ['category', 'kind', 'location', 'offer', 'title', 'presenter',
+                    'when', 'where', 'specs', 'price', 'description', 'link', 'contact'];
+  var TITLES = { category: 'Type', kind: 'Kind', location: 'Location', offer: 'Offer',
+                 title: 'Title', presenter: 'Presenter', when: 'When', where: 'Where',
+                 specs: 'Specs', price: 'Price', description: 'Description',
+                 link: 'Link', contact: 'Contact' };
+  for (var i = 0; i < readByBody.length; i++) {
+    if (picked.indexOf("pick('" + TITLES[readByBody[i]] + "')") === -1) {
+      throw new Error('FAIL: onFormSubmit never picks "' + TITLES[readByBody[i]] +
+                      '" — that field would silently arrive empty on every post');
+    }
+  }
+
+  var full = JSON.parse(buildBoardBody({
+    category: 'tools', kind: 'electronics', location: 'niagara', offer: 'seeking',
+    name: 'Rosa Silva', email: 'rosa@example.ca', title: 'Reflow oven',
+    where: '12 Ross St', specs: 'Heller 1707 MK5', price: 'free to borrow',
+    description: 'Bookable evenings.', contact: 'rosa@example.ca'
+  }).match(/<!--DATA\s*([\s\S]*?)\s*DATA-->/)[1]);
+  if (full.offer !== 'seeking') throw new Error('FAIL: offer not carried');
+  if (full.specs !== 'Heller 1707 MK5') throw new Error('FAIL: specs not carried');
+  if (full.price !== 'free to borrow') throw new Error('FAIL: price not carried');
 
   var expert = { category: 'experts', kind: 'software', location: 'niagara',
                  name: 'Rosa Silva', email: 'rosa@example.ca',

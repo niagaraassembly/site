@@ -12,7 +12,7 @@
  * safeHttpUrl are applied at the point of interpolation, not upstream.
  */
 import { escapeHtml, safeHttpUrl } from './escape.js';
-import { CATEGORIES, CATEGORY_LABELS, KINDS, LOCATIONS, kindLabel } from './nav.js';
+import { CATEGORIES, CATEGORY_LABELS, KINDS, LOCATIONS, OFFERS, kindLabel } from './nav.js';
 
 /* --- nav ----------------------------------------------------------- */
 
@@ -37,7 +37,7 @@ export function subnavHtml(category, activeKind) {
 
 /* --- filtering ------------------------------------------------------ */
 
-const SEARCHABLE = ['title', 'description', 'where', 'presenter'];
+const SEARCHABLE = ['title', 'description', 'where', 'presenter', 'specs'];
 
 /* Newest first. Dates are plain ISO strings, so a lexical compare is a
    chronological one — and it sidesteps the timezone bug where
@@ -56,6 +56,8 @@ export function applyFilters(records, filters = {}, today = new Date().toISOStri
     if (filters.kind && filters.kind !== 'all' && r.kind !== filters.kind) return false;
 
     if (filters.location && r.location !== filters.location) return false;
+
+    if (filters.offer && r.offer !== filters.offer) return false;
 
     if (filters.since && String(r.date ?? '') < filters.since) return false;
 
@@ -78,6 +80,7 @@ export function parseQuery(search) {
        a typo in a shared link should not look like a dead site. */
     category: CATEGORIES.includes(category) ? category : CATEGORIES[0],
     kind:     p.get('kind') || 'all',
+    offer:    p.get('offer') || '',
     q:        p.get('q') || '',
     location: p.get('location') || '',
     since:    p.get('since') || '',
@@ -89,7 +92,8 @@ export function parseQuery(search) {
 
 export function cardHtml(record) {
   const e = escapeHtml;
-  const meta = [kindLabel(record.category, record.kind), LOCATIONS[record.location]]
+  const meta = [OFFERS[record.offer], kindLabel(record.category, record.kind),
+                LOCATIONS[record.location]]
     .filter(Boolean).map(e).join(' &middot; ');
 
   const rows = [`<p class="card__meta">${meta}</p>`];
@@ -98,6 +102,10 @@ export function cardHtml(record) {
   if (record.presenter)   rows.push(`<p class="card__by">${e(record.presenter)}</p>`);
   if (record.when)        rows.push(`<p class="card__when">${e(record.when)}</p>`);
   if (record.where)       rows.push(`<p class="card__where">${e(record.where)}</p>`);
+  if (record.specs)       rows.push(`<p class="card__specs">${e(record.specs)}</p>`);
+  /* Price sits above the description because it is the field a reader
+     decides on before reading anything else. */
+  if (record.price)       rows.push(`<p class="card__price">${e(record.price)}</p>`);
   if (record.description) rows.push(`<p class="card__desc">${e(record.description)}</p>`);
 
   const url = safeHttpUrl(record.link);

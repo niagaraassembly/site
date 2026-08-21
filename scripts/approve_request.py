@@ -33,6 +33,8 @@ KINDS = {
 
 LOCATIONS = ("hamilton", "niagara", "buffalo", "rochester", "other")
 
+OFFERS = ("offering", "seeking")
+
 REQUIRED = {
     "events":  ["title", "when", "where", "contact"],
     "news":    ["title", "link", "description"],
@@ -42,11 +44,11 @@ REQUIRED = {
 }
 
 OPTIONAL = {
-    "events":  ["presenter", "description", "link"],
-    "news":    ["where"],
-    "spaces":  ["title", "link"],
-    "tools":   ["presenter", "link"],
-    "experts": ["when", "where", "link"],
+    "events":  ["offer", "presenter", "description", "price", "link"],
+    "news":    ["where", "price", "contact"],
+    "spaces":  ["offer", "title", "when", "specs", "price", "link"],
+    "tools":   ["offer", "presenter", "specs", "price", "link"],
+    "experts": ["offer", "when", "where", "price", "link"],
 }
 
 # Only an expert who chose publication may be published. "private" means
@@ -84,6 +86,9 @@ def validate(record):
 
     if record.get("location") not in LOCATIONS:
         errors.append("location")
+
+    if record.get("offer") and record["offer"] not in OFFERS:
+        errors.append("offer")
 
     if category == "experts" and record.get("visibility") not in PUBLISHABLE_VISIBILITY:
         errors.append("visibility")

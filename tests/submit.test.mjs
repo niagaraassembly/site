@@ -124,6 +124,24 @@ test('only experts carry a visibility choice, and it is required there', () => {
   assert.deepEqual(validateBoard(post('events', { visibility: '' })), []);
 });
 
+test('offer is optional but must be a known value when given', () => {
+  assert.deepEqual(validateBoard(post('tools', { offer: 'offering' })), []);
+  assert.deepEqual(validateBoard(post('tools', { offer: 'seeking' })), []);
+  assert.deepEqual(validateBoard(post('tools', { offer: '' })), []);
+  assert.deepEqual(validateBoard(post('tools', { offer: 'bartering' })), ['offer']);
+});
+
+test('news carries a contact — a hiring post needs somewhere to apply', () => {
+  assert.deepEqual(validateBoard(post('news', { contact: 'jobs@example.ca' })), []);
+});
+
+test('specs and price are accepted where the category allows them', () => {
+  assert.deepEqual(
+    validateBoard(post('tools', { specs: 'Heller 1707 MK5', price: 'free to borrow' })), []);
+  assert.deepEqual(
+    validateBoard(post('spaces', { specs: '4,000 sq ft', price: '$1,200/mo' })), []);
+});
+
 test('a non-http link is rejected wherever it appears', () => {
   assert.deepEqual(validateBoard(post('events', { link: 'javascript:alert(1)' })),
                    ['link-not-http']);

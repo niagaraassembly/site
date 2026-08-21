@@ -87,6 +87,32 @@ test('posted-since drops anything older than the window', () => {
   assert.deepEqual(ids, ['b-0001', 'b-0002']);
 });
 
+test('offer filters the board in both directions', () => {
+  const both = [rec({ id: 'b-0001', offer: 'offering', title: 'Have a lathe' }),
+                rec({ id: 'b-0002', offer: 'seeking', title: 'Need a lathe' })];
+  assert.deepEqual(applyFilters(both, { offer: 'seeking' }).map(r => r.id), ['b-0002']);
+  assert.equal(applyFilters(both, { offer: '' }).length, 2);
+});
+
+test('a card shows offer, specs and price', () => {
+  const html = cardHtml(rec({ offer: 'seeking', specs: 'Heller 1707 MK5',
+                              price: 'free to borrow' }));
+  assert.ok(html.includes('Seeking'));
+  assert.ok(html.includes('Heller 1707 MK5'));
+  assert.ok(html.includes('free to borrow'));
+});
+
+test('price is rendered above the description', () => {
+  const html = cardHtml(rec({ price: '$400/mo', description: 'Month to month.' }));
+  assert.ok(html.indexOf('card__price') < html.indexOf('card__desc'));
+});
+
+test('search reaches specs', () => {
+  assert.deepEqual(
+    applyFilters([rec({ id: 'b-0009', specs: 'Heller 1707 MK5' })], { q: 'heller' })
+      .map(r => r.id), ['b-0009']);
+});
+
 test('filters compose', () => {
   assert.deepEqual(
     applyFilters(many, { category: 'events', location: 'niagara', q: 'bench' }).map(r => r.id),

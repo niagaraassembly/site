@@ -79,6 +79,12 @@ export const LOCATIONS = {
   other:     'Elsewhere in the region'
 };
 
+/* A board that can only say "I have" is half a board. Offering/Seeking
+   makes it bidirectional at the cost of one field, and composes with the
+   existing filters for free. News is excluded: news is neither offered
+   nor sought. */
+export const OFFERS = { offering: 'Offering', seeking: 'Seeking' };
+
 /* Required fields by CATEGORY, not by kind — differences are kept to the
    minimum that still makes each category readable. Every category also
    requires category, kind, location, name and email; name and email are
@@ -91,12 +97,19 @@ export const REQUIRED = {
   experts: ['title', 'description', 'contact']
 };
 
+/* `price` is free text on purpose. "$400/mo", "free to members",
+   "negotiable" and "trade for shop time" are all real answers; a number
+   field forces false precision and then cannot hold the honest one.
+
+   `specs` is separate from `description` because the two get read
+   differently: "Heller 1707 MK5, 7 zones" is scanned, "bookable evenings,
+   bring your own stencils" is read. */
 export const OPTIONAL = {
-  events:  ['presenter', 'description', 'link'],
-  news:    ['where'],
-  spaces:  ['title', 'link'],
-  tools:   ['presenter', 'link'],
-  experts: ['when', 'where', 'link']
+  events:  ['offer', 'presenter', 'description', 'price', 'link'],
+  news:    ['where', 'price', 'contact'],
+  spaces:  ['offer', 'title', 'when', 'specs', 'price', 'link'],
+  tools:   ['offer', 'presenter', 'specs', 'price', 'link'],
+  experts: ['offer', 'when', 'where', 'price', 'link']
 };
 
 export function isKind(category, kind) {

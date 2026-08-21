@@ -9,7 +9,7 @@
  * scripts/approve_request.py mirrors the board rules as a second gate.
  */
 
-import { CATEGORIES, REQUIRED, LOCATIONS, isKind } from './nav.js';
+import { CATEGORIES, REQUIRED, LOCATIONS, OFFERS, isKind } from './nav.js';
 
 export const MAX_TEXT = 2500;
 
@@ -50,6 +50,11 @@ export function validateBoard(v) {
 
   const errors = missing(v, ['name', 'email', 'location', ...REQUIRED[category]]);
   if (v.location && !LOCATIONS[v.location]) errors.push('location');
+
+  /* Always submitted (the control has a default), so this only ever fires
+     on a tampered payload — but it is the difference between a listing
+     that filters and one that silently never matches. */
+  if (v.offer && !OFFERS[v.offer]) errors.push('offer');
 
   /* Experts choose whether their entry is published, kept for staff
      follow-up, or both. Every other category is a board post by

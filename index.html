@@ -93,6 +93,11 @@
       <label>Your name <input name="name" required autocomplete="name"></label>
       <label>Your email <input name="email" type="email" required autocomplete="email"></label>
 
+      <label data-field="offer"><span data-label-for="offer">Are you</span>
+        <select name="offer">
+          <option value="offering">Offering</option>
+          <option value="seeking">Seeking</option>
+        </select></label>
       <label data-field="title"><span data-label-for="title">Title</span>
         <input name="title"></label>
       <label data-field="presenter"><span data-label-for="presenter">Presenter</span>
@@ -101,6 +106,10 @@
         <input name="when" placeholder="2026-09-04, or 'Thursdays 7pm'"></label>
       <label data-field="where"><span data-label-for="where">Where</span>
         <input name="where"></label>
+      <label data-field="specs"><span data-label-for="specs">Specs</span>
+        <input name="specs"></label>
+      <label data-field="price"><span data-label-for="price">Price</span>
+        <input name="price" placeholder="$400/mo, free to members, negotiable…"></label>
       <label data-field="description"><span data-label-for="description">Description</span>
         <textarea name="description"></textarea>
         <span class="opt" id="board-counter"></span></label>
@@ -174,17 +183,26 @@
      rather than restated here — one list, not two that can drift. */
   const LABELS = {
     events:  { title: 'Event title', when: 'When', where: 'Venue',
-               presenter: 'Speaker or host', contact: 'Public contact' },
+               presenter: 'Speaker or host', price: 'Ticket or fee',
+               contact: 'Public contact' },
     news:    { title: 'Headline', description: 'Why it matters here',
-               link: 'Link to the story', where: 'Company or place' },
+               link: 'Link to the story', where: 'Company or place',
+               price: 'Amount, if there is one',
+               contact: 'Who to contact — how to apply, for a hiring post' },
     spaces:  { title: 'Name for the space', where: 'Where the space is',
-               description: 'Size, terms, what suits it', contact: 'Public contact' },
+               when: 'Available from', specs: 'Size and specs',
+               price: 'Rent or terms',
+               description: 'What suits it, and anything else worth saying',
+               contact: 'Public contact' },
     tools:   { title: 'What the tool is', where: 'Where it lives',
+               specs: 'Make, model, capacity',
+               price: 'Price, or free to borrow',
                description: 'What it does, and how to get at it',
                presenter: 'Who owns it', contact: 'Public contact' },
     experts: { title: 'Your name as it should appear publicly',
                description: 'Expertise and credentials',
                when: 'Availability', where: 'Where you work',
+               price: 'Your rate, if you have one',
                contact: 'Public contact' }
   };
 
@@ -192,8 +210,9 @@
      fallback the span keeps the PREVIOUS category's text — which is how
      "Link to the story" ended up on Spaces, Tools and Experts. */
   const DEFAULT_LABELS = {
-    title: 'Title', presenter: 'Presenter', when: 'When', where: 'Where',
-    description: 'Description', link: 'Link', contact: 'Public contact'
+    offer: 'Are you', title: 'Title', presenter: 'Presenter', when: 'When',
+    where: 'Where', specs: 'Specs', price: 'Price', description: 'Description',
+    link: 'Link', contact: 'Public contact'
   };
 
   const HINTS = {
