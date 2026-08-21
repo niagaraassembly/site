@@ -256,4 +256,27 @@ button[type="submit"] {
 .status { min-height: 1.4em; font: .8125rem/1.5 var(--sans); color: var(--ink-soft); }
 .status[data-state="error"] { color: var(--ink); font-weight: 600; }
 
+/* Site footer --------------------------------------------------------- */
+/* Centred under the drawn box, on one line. The SVG is inline rather than
+   a file so it inherits currentColor and follows the dark-mode ink token
+   without a second asset to keep in step. */
+
+.sitefoot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: .5rem;
+  max-width: var(--measure);
+  margin: 1.1rem auto 0;
+  font: .75rem/1.5 var(--sans);
+  color: var(--ink-soft);
+}
+.topnav--board ~ .sitefoot { max-width: var(--board); }
+
+.sitefoot a { color: var(--ink-soft); text-decoration: none; }
+.sitefoot a:hover { color: var(--ink); text-decoration: underline; }
+.sitefoot svg { display: block; }
+.sitefoot__sep { color: var(--rule); }
+
 [hidden] { display: none !important; }
