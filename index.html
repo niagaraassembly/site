@@ -11,6 +11,14 @@
 
 <div class="frame" data-sketch="frame">
 
+  <nav class="nav site-nav" data-sketch="box" aria-label="Main navigation">
+    <a class="nav__item" href="./" aria-current="page">@NiagaraAssembly</a>
+    <a class="nav__item" href="board/">Board</a>
+    <a class="nav__item" href="#join">Join</a>
+    <a class="nav__item" href="#post">Post</a>
+    <a class="nav__item" href="#register">Build</a>
+  </nav>
+
   <h1>@NiagaraAssembly</h1>
 
   <p>@NiagaraAssembly is a growing group of technologists, tradesmen, engineers
@@ -29,6 +37,8 @@
   real estate and logistics visualization systems, to Integrated Production
   Environments using Theia.</p>
 
+  <p>You can learn more about the company <a href="company/">here</a>. Send email <a href="mailto:office@niagaraassembly.com">here</a> to discuss investing in us.</p>
+
   <p>Got some space in old Hamilton where we can hang our hats?<br>
   <a href="mailto:hello@niagaraassembly.com">hello@niagaraassembly.com</a></p>
 
@@ -46,7 +56,7 @@
 
   <!-- Join ------------------------------------------------------------ -->
   <form id="join-form" novalidate>
-    <fieldset data-sketch="box">
+    <fieldset id="join" data-sketch="box">
       <legend>Join</legend>
       <label>Name <input name="name" required autocomplete="name"></label>
       <label>Email <input name="email" type="email" required autocomplete="email"></label>
@@ -68,7 +78,7 @@
 
   <!-- Post to the board ------------------------------------------------ -->
   <form id="board-form" novalidate>
-    <fieldset data-sketch="box">
+    <fieldset id="register" data-sketch="box">
       <legend id="post">Post to the board</legend>
 
       <label>Section
