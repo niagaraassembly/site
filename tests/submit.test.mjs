@@ -1,9 +1,32 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  MAX_TEXT, BOARD_TYPES, LEVELS, GH_USER,
+  MAX_TEXT, LEVELS, GH_USER, VISIBILITY,
   buildFormBody, validateJoin, validateBoard, validateRegister
 } from '../assets/js/submit.js';
+import { CATEGORIES, KINDS, REQUIRED, LOCATIONS, isKind } from '../assets/js/nav.js';
+
+/* A valid post in each category, so a test can name the one field it is
+   about instead of restating six. */
+const post = (category, o = {}) => ({
+  category,
+  kind: Object.keys(KINDS[category])[0],
+  location: 'niagara',
+  name: 'Rosa', email: 'r@example.ca',
+  ...({
+    events:  { title: 'Open bench night', when: 'Thursday 7pm',
+               where: '12 Ross St', contact: 'rosa@example.ca' },
+    news:    { title: 'Plant reopens', link: 'https://example.ca/x',
+               description: 'Two hundred jobs.' },
+    spaces:  { where: '12 Ross St', description: '900 sq ft, month to month.',
+               contact: 'rosa@example.ca' },
+    tools:   { title: 'Reflow oven', where: '12 Ross St',
+               description: 'Bookable evenings.', contact: 'rosa@example.ca' },
+    experts: { title: 'Rosa Silva', description: 'IPC-A-610 trainer, 12 years.',
+               contact: 'rosa@example.ca', visibility: 'public' }
+  })[category],
+  ...o
+});
 
 const join = (o = {}) => ({ name: 'Rosa', email: 'r@example.ca', level: 'List', ...o });
 
@@ -24,64 +47,91 @@ test('every offered level validates', () => {
   for (const level of LEVELS) assert.deepEqual(validateJoin(join({ level })), []);
 });
 
-test('an unknown board type is rejected before any field is checked', () => {
-  assert.deepEqual(validateBoard({ type: 'rumour' }), ['type']);
-  assert.deepEqual(validateBoard({}), ['type']);
+test('an unknown category is rejected before any field is checked', () => {
+  assert.deepEqual(validateBoard({ category: 'rumour' }), ['category']);
+  assert.deepEqual(validateBoard({}), ['category']);
 });
 
-test('board types are exactly the six in the spec', () => {
-  assert.deepEqual(BOARD_TYPES, ['standup', 'talk', 'demo', 'space', 'news', 'idea']);
+test('a kind from the wrong category is rejected', () => {
+  // "software" is an Experts kind, not an Events one.
+  assert.deepEqual(validateBoard({ category: 'events', kind: 'software' }), ['kind']);
+  assert.deepEqual(validateBoard({ category: 'events', kind: 'standup', name: '' }).length > 0, true);
 });
 
-test('news needs no when, but standup does', () => {
-  const news = { type: 'news', name: 'Rosa', email: 'r@example.ca',
-                 title: 'Plant reopens', link: 'https://example.ca/x', description: 'Details.' };
-  assert.deepEqual(validateBoard(news), []);
-
-  const standup = { type: 'standup', name: 'Rosa', email: 'r@example.ca',
-                    title: 'Open bench night', where: 'Welland', contact: 'rosa@example.ca' };
-  assert.deepEqual(validateBoard(standup), ['when']);
+test('warehouse is a valid kind under both spaces and tools', () => {
+  assert.ok(isKind('spaces', 'warehouse'));
+  assert.ok(isKind('tools', 'warehouse'));
+  assert.ok(!isKind('news', 'warehouse'));
 });
 
-test('every board type requires a name and an email', () => {
-  for (const type of BOARD_TYPES) {
-    const errors = validateBoard({ type });
-    assert.ok(errors.includes('name'), `${type} should require name`);
-    assert.ok(errors.includes('email'), `${type} should require email`);
+test('the five categories match the nav', () => {
+  assert.deepEqual(CATEGORIES, ['events', 'news', 'spaces', 'tools', 'experts']);
+});
+
+test('every subnav from the screenshot is present, in order', () => {
+  assert.deepEqual(Object.values(KINDS.events),
+    ['Standups', 'Talks', 'Demos', 'Launches', 'Workshops', 'Training']);
+  assert.deepEqual(Object.values(KINDS.news),
+    ['New Projects', 'New Companies', 'Hiring', 'Expansions', 'SAFEs', 'Other Investment']);
+  assert.deepEqual(Object.values(KINDS.spaces),
+    ['Events', 'Office Space', 'Industrial', 'Retail', 'Yard', 'Warehouse']);
+  assert.deepEqual(Object.values(KINDS.tools),
+    ['Electronics', 'Fabrication', 'Manufacturing', 'Warehouse', 'Other']);
+  assert.deepEqual(Object.values(KINDS.experts),
+    ['Software', 'Electronics', 'Fabrication', 'Manufacturing', 'Logistics', 'Management', 'Other']);
+});
+
+test('a valid post in every category passes', () => {
+  for (const category of CATEGORIES) {
+    assert.deepEqual(validateBoard(post(category)), [], `${category} should validate`);
   }
 });
 
-test('talk and demo require a presenter; standup does not', () => {
-  const base = { name: 'Rosa', email: 'r@example.ca', title: 'T',
-                 when: 'Thursday', where: 'Welland', contact: 'c@example.ca' };
-  assert.deepEqual(validateBoard({ ...base, type: 'talk' }), ['presenter']);
-  assert.deepEqual(validateBoard({ ...base, type: 'demo' }), ['presenter']);
-  assert.deepEqual(validateBoard({ ...base, type: 'standup' }), []);
+test('every category requires a name, an email and a location', () => {
+  for (const category of CATEGORIES) {
+    for (const field of ['name', 'email', 'location']) {
+      assert.ok(validateBoard(post(category, { [field]: '' })).includes(field),
+                `${category} should require ${field}`);
+    }
+  }
 });
 
-test('space needs a location, a description and a contact but no title', () => {
-  const space = { type: 'space', name: 'Rosa', email: 'r@example.ca',
-                  where: '12 Ross St', description: '900 sq ft, month to month.',
-                  contact: 'rosa@example.ca' };
-  assert.deepEqual(validateBoard(space), []);
+test('a location outside the controlled list is rejected', () => {
+  assert.ok(validateBoard(post('events', { location: 'toronto' })).includes('location'));
+  for (const slug of Object.keys(LOCATIONS)) {
+    assert.deepEqual(validateBoard(post('events', { location: slug })), []);
+  }
 });
 
-test('idea needs only a title and a description', () => {
-  const idea = { type: 'idea', name: 'Rosa', email: 'r@example.ca',
-                 title: 'Shared CMM', description: 'One machine, six shops.' };
-  assert.deepEqual(validateBoard(idea), []);
+test('news needs no when, but events do', () => {
+  assert.deepEqual(validateBoard(post('news')), []);
+  assert.deepEqual(validateBoard(post('events', { when: '' })), ['when']);
+});
+
+test('spaces need no title, but tools do', () => {
+  assert.deepEqual(validateBoard(post('spaces', { title: '' })), []);
+  assert.deepEqual(validateBoard(post('tools', { title: '' })), ['title']);
+});
+
+test('only experts carry a visibility choice, and it is required there', () => {
+  assert.deepEqual(VISIBILITY, ['public', 'private', 'both']);
+  assert.deepEqual(validateBoard(post('experts', { visibility: '' })), ['visibility']);
+  assert.deepEqual(validateBoard(post('experts', { visibility: 'maybe' })), ['visibility']);
+  for (const v of VISIBILITY) {
+    assert.deepEqual(validateBoard(post('experts', { visibility: v })), []);
+  }
+  // Absent on every other category, and harmless there.
+  assert.deepEqual(validateBoard(post('events', { visibility: '' })), []);
 });
 
 test('a non-http link is rejected wherever it appears', () => {
-  const idea = { type: 'idea', name: 'Rosa', email: 'r@example.ca',
-                 title: 'T', description: 'D', link: 'javascript:alert(1)' };
-  assert.deepEqual(validateBoard(idea), ['link-not-http']);
+  assert.deepEqual(validateBoard(post('events', { link: 'javascript:alert(1)' })),
+                   ['link-not-http']);
 });
 
 test('an over-long description is rejected', () => {
-  const idea = { type: 'idea', name: 'Rosa', email: 'r@example.ca',
-                 title: 'T', description: 'x'.repeat(MAX_TEXT + 1) };
-  assert.ok(validateBoard(idea).includes('description-too-long'));
+  assert.ok(validateBoard(post('events', { description: 'x'.repeat(MAX_TEXT + 1) }))
+            .includes('description-too-long'));
 });
 
 test('expert registration needs expertise and region', () => {

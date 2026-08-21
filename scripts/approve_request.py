@@ -5,8 +5,8 @@ The only writer of data/board.json. `name` and `email` are dropped here as
 well as upstream in the Apps Script: this is the last gate before a public
 commit, and git history is permanent.
 
-All six board types share one file and one id prefix, so ids run in a
-single sequence across the board rather than six parallel ones.
+All five categories share one file and one id prefix, so ids run in a
+single sequence across the board rather than five parallel ones.
 """
 import json, os, re, sys
 from datetime import date
@@ -15,36 +15,54 @@ from pathlib import Path
 MAX_TEXT = 2500
 BLOCK = re.compile(r"<!--DATA\s*(\{.*?\})\s*DATA-->", re.S)
 
-BOARD_TYPES = ("standup", "talk", "demo", "space", "news", "idea")
+# Mirrors assets/js/nav.js. Two levels rather than one flat type list,
+# because the subnav labels are not unique: "warehouse" is both a Spaces
+# kind and a Tools kind. tests/test_approve_request.py and
+# tests/submit.test.mjs both assert the two files still agree.
+CATEGORIES = ("events", "news", "spaces", "tools", "experts")
 
-# Mirrors BOARD_REQUIRED in assets/js/submit.js. Two gates, deliberately:
-# the browser gate gives the visitor feedback, this one is what a public
-# commit has to get past.
+KINDS = {
+    "events":  ("standup", "talk", "demo", "launch", "workshop", "training"),
+    "news":    ("new-project", "new-company", "hiring", "expansion",
+                "safe", "other-investment"),
+    "spaces":  ("event-space", "office", "industrial", "retail", "yard", "warehouse"),
+    "tools":   ("electronics", "fabrication", "manufacturing", "warehouse", "other"),
+    "experts": ("software", "electronics", "fabrication", "manufacturing",
+                "logistics", "management", "other"),
+}
+
+LOCATIONS = ("hamilton", "niagara", "buffalo", "rochester", "other")
+
 REQUIRED = {
-    "standup": ["title", "when", "where", "contact"],
-    "talk":    ["title", "presenter", "when", "where", "contact"],
-    "demo":    ["title", "presenter", "when", "where", "contact"],
-    "space":   ["where", "description", "contact"],
+    "events":  ["title", "when", "where", "contact"],
     "news":    ["title", "link", "description"],
-    "idea":    ["title", "description"],
+    "spaces":  ["where", "description", "contact"],
+    "tools":   ["title", "where", "description", "contact"],
+    "experts": ["title", "description", "contact"],
 }
 
 OPTIONAL = {
-    "standup": ["description", "link"],
-    "talk":    ["description", "link"],
-    "demo":    ["description", "link"],
-    "space":   ["link"],
-    "news":    [],
-    "idea":    ["link", "contact"],
+    "events":  ["presenter", "description", "link"],
+    "news":    ["where"],
+    "spaces":  ["title", "link"],
+    "tools":   ["presenter", "link"],
+    "experts": ["when", "where", "link"],
 }
 
-TARGET = {kind: ("data/board.json", "b") for kind in BOARD_TYPES}
+# Only an expert who chose publication may be published. "private" means
+# staff follow-up only; writing such a record would be the exact leak the
+# submitter opted out of, so it is rejected here rather than filtered.
+PUBLISHABLE_VISIBILITY = ("public", "both")
+
+TARGET = {category: ("data/board.json", "b") for category in CATEGORIES}
 
 # An allowlist, not a denylist. A field absent from here is never written,
-# so a new field added upstream cannot leak by default.
+# so a new field added upstream cannot leak by default. `visibility` is
+# deliberately absent: it is a routing instruction, not content.
 PUBLIC = {
-    kind: ["id", "type", *REQUIRED[kind], *OPTIONAL[kind], "date"]
-    for kind in BOARD_TYPES
+    category: ["id", "category", "kind", "location",
+               *REQUIRED[category], *OPTIONAL[category], "date"]
+    for category in CATEGORIES
 }
 
 
@@ -56,10 +74,20 @@ def extract_block(issue_body):
 
 
 def validate(record):
-    kind = record.get("kind")
-    if kind not in REQUIRED:
+    category = record.get("category")
+    if category not in REQUIRED:
+        return ["category"]
+    if record.get("kind") not in KINDS[category]:
         return ["kind"]
-    errors = [f for f in REQUIRED[kind] if not str(record.get(f, "")).strip()]
+
+    errors = [f for f in REQUIRED[category] if not str(record.get(f, "")).strip()]
+
+    if record.get("location") not in LOCATIONS:
+        errors.append("location")
+
+    if category == "experts" and record.get("visibility") not in PUBLISHABLE_VISIBILITY:
+        errors.append("visibility")
+
     link = str(record.get("link", "")).strip()
     if link and not re.match(r"^https?://", link, re.I):
         errors.append("link-not-http")
@@ -80,13 +108,13 @@ def next_id(records, prefix):
 
 def append_record(path, record):
     path = Path(path)
-    kind = record["kind"]
-    prefix = TARGET[kind][1]
+    category = record["category"]
+    prefix = TARGET[category][1]
     records = json.loads(path.read_text() or "[]")
 
-    out = {"id": next_id(records, prefix), "type": kind}
-    for field in PUBLIC[kind]:
-        if field in ("id", "type"):
+    out = {"id": next_id(records, prefix), "category": category}
+    for field in PUBLIC[category]:
+        if field in ("id", "category"):
             continue
         if field == "date":
             out["date"] = record.get("date") or date.today().isoformat()
@@ -104,8 +132,8 @@ def main():
     if errors:
         print(f"invalid record, missing or bad: {', '.join(errors)}", file=sys.stderr)
         return 1
-    written = append_record(TARGET[record["kind"]][0], record)
-    print(f"wrote {written['id']} to {TARGET[record['kind']][0]}")
+    written = append_record(TARGET[record["category"]][0], record)
+    print(f"wrote {written['id']} to {TARGET[record['category']][0]}")
     return 0
 
 

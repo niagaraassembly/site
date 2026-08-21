@@ -9,22 +9,15 @@
  * scripts/approve_request.py mirrors the board rules as a second gate.
  */
 
+import { CATEGORIES, REQUIRED, LOCATIONS, isKind } from './nav.js';
+
 export const MAX_TEXT = 2500;
 
 export const LEVELS = ['List', 'Regional', 'Company', 'Champion'];
 
-export const BOARD_TYPES = ['standup', 'talk', 'demo', 'space', 'news', 'idea'];
-
 /* Field names are the stable HTML `name` attributes. The visible labels
-   are rewritten per type by the page; these never change. */
-const BOARD_REQUIRED = {
-  standup: ['title', 'when', 'where', 'contact'],
-  talk:    ['title', 'presenter', 'when', 'where', 'contact'],
-  demo:    ['title', 'presenter', 'when', 'where', 'contact'],
-  space:   ['where', 'description', 'contact'],
-  news:    ['title', 'link', 'description'],
-  idea:    ['title', 'description']
-};
+   are rewritten per category by the page; these never change. */
+export const VISIBILITY = ['public', 'private', 'both'];
 
 /* GitHub's own rule: alphanumeric, single hyphens only in the interior,
    39 characters maximum. Applied here so a bad value never reaches the
@@ -51,10 +44,19 @@ export function validateJoin(v) {
 }
 
 export function validateBoard(v) {
-  const type = String(v.type ?? '');
-  if (!BOARD_TYPES.includes(type)) return ['type'];
+  const category = String(v.category ?? '');
+  if (!CATEGORIES.includes(category)) return ['category'];
+  if (!isKind(category, v.kind)) return ['kind'];
 
-  const errors = missing(v, ['name', 'email', ...BOARD_REQUIRED[type]]);
+  const errors = missing(v, ['name', 'email', 'location', ...REQUIRED[category]]);
+  if (v.location && !LOCATIONS[v.location]) errors.push('location');
+
+  /* Experts choose whether their entry is published, kept for staff
+     follow-up, or both. Every other category is a board post by
+     definition, so the field is only meaningful here. */
+  if (category === 'experts' && !VISIBILITY.includes(String(v.visibility ?? ''))) {
+    errors.push('visibility');
+  }
 
   /* Checked on every type, not just the ones that require a link: an
      optional link is still an href on a public page. */
