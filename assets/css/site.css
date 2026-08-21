@@ -310,6 +310,25 @@ textarea { min-height: 6rem; resize: vertical; }
 .opt { color: var(--ink-soft); font-weight: 400; }
 .fineprint { font: .75rem/1.5 var(--sans); color: var(--ink-soft); max-width: 34rem; }
 
+/* Full width, so it reads as another field in the stack rather than as a
+   second action competing with Send. */
+.reveal {
+  display: block;
+  width: 100%;
+  margin: 0 0 .9rem;
+  padding: .45rem .55rem;
+  background: transparent;
+  color: var(--ink-soft);
+  border: 1px dashed var(--rule);
+  font: .8125rem/1.4 var(--hand);
+  text-align: left;
+  cursor: pointer;
+}
+.reveal:hover { color: var(--ink); border-color: var(--ink); }
+.reveal::before { content: '+ '; }
+.reveal[aria-expanded="true"]::before { content: '\2212 '; }
+.reveal[aria-expanded="true"] { color: var(--ink); border-style: solid; }
+
 button[type="submit"] {
   padding: .5rem 1.1rem;
   background: transparent;
@@ -346,5 +365,29 @@ button[type="submit"] {
 .sitefoot a:hover { color: var(--ink); text-decoration: underline; }
 .sitefoot svg { display: block; }
 .sitefoot__sep { color: var(--rule); }
+
+/* Mobile ------------------------------------------------------------- */
+/* The drawn box and each fieldset carry desktop padding on all four sides.
+   On a 390px screen that is most of the width spent on margins, so the
+   insets shrink — not to nothing, because the drawn border needs room to
+   sit off the text, but to about a third. */
+
+@media (max-width: 40rem) {
+  body { padding: 1.25rem .55rem 2.5rem; }
+
+  .frame { padding: 1.4rem .9rem; }
+  .frame--board { padding: 1.1rem .7rem 1.8rem; }
+
+  fieldset { padding: 1rem .75rem; margin-bottom: 1.25rem; }
+
+  .card { padding: .85rem .9rem; }
+
+  .nav { gap: 1rem; padding: .7rem .85rem; }
+  .subnav { gap: .8rem; padding: .5rem .85rem; }
+  .filters { padding: .5rem .85rem; }
+
+  h1 { margin-bottom: 1.25rem; }
+  h2 { margin-top: 1.75rem; }
+}
 
 [hidden] { display: none !important; }

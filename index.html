@@ -67,6 +67,22 @@
       <legend>Join</legend>
       <label>Name <input name="name" required autocomplete="name"></label>
       <label>Email <input name="email" type="email" required autocomplete="email"></label>
+
+      <button type="button" class="reveal" id="oss-reveal"
+              aria-expanded="false" aria-controls="oss-fields">
+        I can help build the open source software and systems
+      </button>
+
+      <div id="oss-fields" hidden>
+        <label>GitHub username
+          <input name="github_username" placeholder="rosa-silva"
+                 autocapitalize="off" spellcheck="false"></label>
+        <label>What you'd like to work on <span class="opt">optional</span>
+          <textarea name="interest"></textarea></label>
+        <p class="fineprint">Nothing here is published. Approved registrations
+        receive an invitation to the niagaraassembly GitHub organization.</p>
+      </div>
+
       <label>I'd like to
         <select name="level">
           <option value="List">stay on the mailing list</option>
@@ -137,24 +153,6 @@
       never published. Everything else appears on the board once reviewed.</p>
       <button type="submit">Send</button>
       <p class="status" id="board-status" role="status"></p>
-    </fieldset>
-  </form>
-
-  <!-- Open source ------------------------------------------------------ -->
-  <form id="register-form" novalidate>
-    <fieldset data-sketch="box">
-      <legend>Help build software and systems</legend>
-      <input type="hidden" name="kind" value="opensource">
-      <label>Name <input name="name" required autocomplete="name"></label>
-      <label>Email <input name="email" type="email" required autocomplete="email"></label>
-      <label>GitHub username
-        <input name="github_username" placeholder="rosa-silva" autocapitalize="off" spellcheck="false"></label>
-      <label>What you'd like to work on <span class="opt">optional</span>
-        <textarea name="interest"></textarea></label>
-      <p class="fineprint">Nothing here is published. Approved registrations
-      receive an invitation to the niagaraassembly GitHub organization.</p>
-      <button type="submit">Send</button>
-      <p class="status" id="register-status" role="status"></p>
     </fieldset>
   </form>
 
@@ -365,12 +363,62 @@
     });
   }
 
-  wire('join-form', 'join-status', JOIN_MAP, JOIN_ACTION, validateJoin,
-       "Thank you — that's been sent.");
+  /* The open-source fields ride along on the join form but belong to a
+     different Google Form, so a submission with them filled in posts
+     twice: once to Join, once to Register. Two Google Forms means neither
+     Apps Script has to learn about the other. */
+  const ossReveal = document.getElementById('oss-reveal');
+  const ossFields = document.getElementById('oss-fields');
+
+  ossReveal.addEventListener('click', () => {
+    const opening = ossFields.hidden;
+    ossFields.hidden = !opening;
+    ossReveal.setAttribute('aria-expanded', String(opening));
+    if (opening) ossFields.querySelector('input').focus();
+    /* Closing clears: a hidden section must not carry values into the
+       submission, the same rule the board form follows. */
+    else for (const el of ossFields.querySelectorAll('input, textarea')) el.value = '';
+  });
+
+  const joinForm = document.getElementById('join-form');
+  const joinStatus = document.getElementById('join-status');
+
+  joinForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const values = Object.fromEntries(new FormData(joinForm).entries());
+    const wantsOss = !ossFields.hidden &&
+                     String(values.github_username ?? '').trim().length > 0;
+
+    const errors = [
+      ...validateJoin(values),
+      ...(wantsOss ? validateRegister({ ...values, kind: 'opensource' }) : [])
+    ];
+
+    if (errors.length) {
+      joinStatus.dataset.state = 'error';
+      joinStatus.textContent = MESSAGES[errors.find((k) => k in MESSAGES)] ?? MESSAGES.default;
+      return;
+    }
+
+    joinStatus.dataset.state = 'sending';
+    joinStatus.textContent = 'Sending…';
+    try {
+      await submitTo(JOIN_ACTION, buildFormBody(values, JOIN_MAP));
+      if (wantsOss) await submitTo(REGISTER_ACTION, buildFormBody(values, REGISTER_MAP));
+      joinForm.reset();
+      ossFields.hidden = true;
+      ossReveal.setAttribute('aria-expanded', 'false');
+      joinStatus.dataset.state = 'done';
+      joinStatus.textContent = wantsOss
+        ? "Thank you — that's been sent. You'll hear about the GitHub invitation separately."
+        : "Thank you — that's been sent.";
+    } catch {
+      joinStatus.dataset.state = 'error';
+      joinStatus.textContent = 'That did not go through. Please try again.';
+    }
+  });
   wire('board-form', 'board-status', BOARD_MAP, BOARD_ACTION, validateBoard,
        "Thank you — that's been sent. Posts appear on the board once reviewed.");
-  wire('register-form', 'register-status', REGISTER_MAP, REGISTER_ACTION, validateRegister,
-       "Thank you — that's been sent. Someone will be in touch.");
 </script>
 </body>
 </html>
