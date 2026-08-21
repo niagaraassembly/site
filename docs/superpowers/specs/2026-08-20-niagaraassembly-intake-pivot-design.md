@@ -168,7 +168,18 @@ currently `[]`, so nothing is lost.
 
 ### 3.5 Rendering
 
-`board.html` reads `data/board.json` and renders cards grouped by type,
+**URL: `niagaraassembly.com/board`.** That is a directory index, not a
+page: the file is `board/index.html`. GitHub Pages serves `/board/` from
+it and 301-redirects `/board` to `/board/`. A `board.html` at the root
+would only ever be reachable as `/board.html`.
+
+Because the page sits one level down, its asset and data references are
+`../assets/…` and `../data/board.json`, while `index.html` keeps its
+root-relative paths. This is the one place a wrong path silently yields an
+empty board rather than an error, so `board/index.html` is loaded over
+HTTP during development, never opened as a `file://` URL.
+
+`board/index.html` reads `data/board.json` and renders cards grouped by type,
 newest first, every value escaped through `assets/js/escape.js`. The
 `approved` label is an editorial gate, not a security control — that has
 not changed.
@@ -286,7 +297,7 @@ by looking at both in place, not in the abstract.
 **New**
 
 ```
-board.html
+board/index.html
 assets/js/board.js
 google-apps-script/join.gs
 google-apps-script/board.gs
@@ -298,7 +309,7 @@ extra-docs/statement.md
 **Modified**
 
 ```
-index.html                          one-pager; three forms
+index.html                          one-pager; three forms; links to /board/
 assets/js/submit.js                 validateJoin, validateBoard, validateRegister
 assets/css/site.css                 plain-document pass
 assets/js/sketch.js                 ported from site/, retuned
