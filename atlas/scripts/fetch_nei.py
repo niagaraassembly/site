@@ -214,12 +214,18 @@ def build(refresh=False):
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--refresh', action='store_true',
-                        help='ignore the local cache and re-download')
-    args = parser.parse_args()
-    build(refresh=args.refresh)
-    return 0
+    # GUARD: This script's address-keyed logic produced 64 false departure
+    # claims out of 68 (see atlas/logs/2026-08-23.md §14). It has been
+    # replaced by atlas/scripts/normalize/departures.py, which keys on nei_id.
+    # Do not run this script.
+    print(
+        "ERROR: atlas/scripts/fetch_nei.py uses address-keyed departure logic "
+        "that produced 64 false claims out of 68. It has been replaced by "
+        "atlas/scripts/normalize/departures.py, which keys on nei_id. "
+        "See atlas/logs/2026-08-23.md §14 for the root cause.",
+        file=sys.stderr
+    )
+    return 1
 
 
 if __name__ == '__main__':

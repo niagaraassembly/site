@@ -43,6 +43,25 @@ def test_departure_count_is_plausible():
 def test_features_carry_provenance():
     for feat in departures.find_departures(2019, 2022):
         src = feat["properties"]["source"]
-        assert src["licence"].startswith("Open Government Licence 2.0")
-        assert src["id"] == "niagara-nei"
+        assert src["license"].startswith("Open Government Licence 2.0")
+        assert src["source_id"] == "niagara-nei"
+        assert src["retrieved_at"] == "2026-08-21"
         assert feat["properties"]["last_seen"] < feat["properties"]["gone_by"]
+
+
+def test_collection_has_atlas_metadata():
+    """The built collection must carry a top-level atlas block matching the
+    data for app.js to render the provenance panel and sidebar feature count."""
+    fc = departures.build()
+    assert "atlas" in fc
+    atlas = fc["atlas"]
+
+    # Schema fields required by app.js
+    assert "feature_count" in atlas
+    assert atlas["feature_count"] == len(fc["features"])
+    assert atlas["layer"] == "departures"
+    assert "license" in atlas
+    assert "retrieved_at" in atlas
+
+    # Consistency checks
+    assert atlas["feature_count"] >= 5 and atlas["feature_count"] <= 40

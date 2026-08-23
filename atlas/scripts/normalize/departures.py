@@ -23,11 +23,13 @@ from . import nei
 INDUSTRIAL_SECTORS = frozenset({"31", "32", "33", "41", "48", "49"})
 OUT = pathlib.Path(__file__).resolve().parents[2] / "data" / "niagara-departures.geojson"
 
-SOURCE = {
-    "id": "niagara-nei",
+# Per-feature source block schema
+SOURCE_TEMPLATE = {
     "name": "Niagara Region Employment Inventory",
-    "licence": "Open Government Licence 2.0 (Niagara Region)",
+    "license": "Open Government Licence 2.0 (Niagara Region)",
+    "license_url": "https://www.ontario.ca/page/open-government-licence-ontario",
     "attribution": "Contains information licensed under OGL 2.0 - Niagara Region",
+    "source_id": "niagara-nei",
 }
 
 
@@ -66,15 +68,32 @@ def find_departures(baseline, latest):
                 "sector": p.get("primarysector"),
                 "industry": p.get("industry"),
                 "claim_state": "supported",
-                "source": dict(SOURCE, retrieved="2026-08-21", edition=baseline),
+                "source": dict(SOURCE_TEMPLATE, retrieved_at="2026-08-21"),
             },
         })
     return out
 
 
+def _compute_bbox(features):
+    """Compute [min_lon, min_lat, max_lon, max_lat] from feature geometries."""
+    if not features:
+        return None
+    lons, lats = [], []
+    for feat in features:
+        geom = feat.get("geometry", {})
+        coords = geom.get("coordinates", [])
+        if geom.get("type") == "Point" and len(coords) == 2:
+            lons.append(coords[0])
+            lats.append(coords[1])
+    if not lons:
+        return None
+    return [min(lons), min(lats), max(lons), max(lats)]
+
+
 def build():
     """Latest baseline wins, so a departure is attributed to the last edition
-    that actually recorded it."""
+    that actually recorded it. Returns a FeatureCollection with a top-level
+    atlas metadata object."""
     seen, feats = set(), []
     for baseline in sorted((y for y in nei.EDITIONS if y != nei.EDITIONS[-1]), reverse=True):
         for feat in find_departures(baseline, nei.EDITIONS[-1]):
@@ -82,7 +101,22 @@ def build():
                 continue
             seen.add(feat["properties"]["nei_id"])
             feats.append(feat)
-    return {"type": "FeatureCollection", "features": feats}
+
+    bbox = _compute_bbox(feats)
+    return {
+        "type": "FeatureCollection",
+        "atlas": {
+            "layer": "departures",
+            "source": "Niagara Region Employment Inventory",
+            "license": "Open Government Licence 2.0 (Niagara Region)",
+            "attribution": "Contains information licensed under OGL 2.0 - Niagara Region",
+            "freshness": "HISTORICAL",
+            "retrieved_at": "2026-08-21",
+            "bbox": bbox,
+            "feature_count": len(feats),
+        },
+        "features": feats,
+    }
 
 
 if __name__ == "__main__":
