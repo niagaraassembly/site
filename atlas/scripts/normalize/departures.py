@@ -110,7 +110,7 @@ def build():
             "source": "Niagara Region Employment Inventory",
             "license": "Open Government Licence 2.0 (Niagara Region)",
             "attribution": "Contains information licensed under OGL 2.0 - Niagara Region",
-            "freshness": "HISTORICAL",
+            "freshness": "INFERRED",
             "retrieved_at": "2026-08-21",
             "bbox": bbox,
             "feature_count": len(feats),
