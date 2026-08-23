@@ -27,6 +27,7 @@ exists.
 
 | Document | What it holds |
 |---|---|
+| [PUBLICATION-MODEL.md](PUBLICATION-MODEL.md) | who the Atlas is for, and how the work reaches them |
 | [ENVIRONMENT.md](ENVIRONMENT.md) | packages, dependencies, environments and each package's role |
 | [TECHNOLOGY-DECISIONS.md](TECHNOLOGY-DECISIONS.md) | why each tool was chosen over its alternatives; an evolving decision record |
 | [CANDIDATES.md](CANDIDATES.md) · [CANDIDATES-HAMILTON.md](CANDIDATES-HAMILTON.md) | the numbered dataset menus (#1–126 Niagara, #201–290 Hamilton) |
