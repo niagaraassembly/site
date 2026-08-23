@@ -176,17 +176,26 @@ confirmed against an independent source.
 
 ### Two findings from the verification itself
 
-**No Provincially Significant Employment Zone exists anywhere in Niagara.**
+**No Provincially Significant Employment Zone exists anywhere in Niagara
+Region** — see [GLOSSARY.md](GLOSSARY.md); this is true of the *jurisdiction*,
+not of the peninsula, which has ten.
 Reading the PSEZ shapefile for check 4 gave the full list: 31 zones across the
 Greater Golden Horseshoe — Toronto 5, Durham 3, Hamilton 3, Toronto/York 3,
 Waterloo 3, Brantford 2, Halton 2, Halton/Peel 2, Toronto/Peel 2, and one each
 in Guelph, **Haldimand County**, Peel, Simcoe, Toronto/York/Peel and York.
-**Niagara Region has none**, under any of its municipal names. All were
+**Niagara Region has none**, under any of its twelve municipal names. All were
 "Identified by the Minister on December 20, 2019".
 
-Consequence for the engine: `in_psez` is `false` for every Niagara unit by
-construction, and the field is only informative for Hamilton, Halton and
-Haldimand. The absence is itself a finding an atlas about Niagara's industrial
+**Stated precisely, the finding is sharper.** The wider **Niagara Peninsula**
+has ten — Hamilton 3, Halton 2, Halton/Peel 2, Brantford 2, Haldimand 1. So the
+Province designated provincially significant employment zones across the
+peninsula and its approaches and **none inside Niagara Region**. A jurisdiction
+passed over by its neighbours is a far more interesting fact than a blank map,
+and it would have been lost by saying "Niagara".
+
+Consequence for the engine: `in_psez` is `false` for every Niagara **Region**
+unit by construction, and the field is informative only for Hamilton, Halton,
+Haldimand and Brantford. The absence is itself a finding an atlas about Niagara's industrial
 land should probably state plainly.
 
 **mapshaper deletes small polygons unless told not to.** At `-simplify 10%` it

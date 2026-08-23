@@ -27,6 +27,8 @@ exists.
 
 | Document | What it holds |
 |---|---|
+| [GLOSSARY.md](GLOSSARY.md) | places and terms — Niagara Region vs Peninsula vs study area |
+| [logs/](logs/) | raw findings log, appended as work happens |
 | [PUBLICATION-MODEL.md](PUBLICATION-MODEL.md) | who the Atlas is for, and how the work reaches them |
 | [ENVIRONMENT.md](ENVIRONMENT.md) | packages, dependencies, environments and each package's role |
 | [TECHNOLOGY-DECISIONS.md](TECHNOLOGY-DECISIONS.md) | why each tool was chosen over its alternatives; an evolving decision record |
