@@ -32,6 +32,30 @@ def fetch(u,timeout=120,tries=3):
 
 def jfetch(u,**k): return json.loads(fetch(u,**k).decode('utf-8','replace'))
 
+def count_features(path,cap_bytes=200_000_000):
+    """Count features without loading the file.
+
+    json.load on a 2.2 GB layer (Hamilton contours) exhausts memory just to
+    report a number, so stream and count feature markers instead.
+    """
+    if os.path.getsize(path) <= cap_bytes:
+        try:
+            with open(path) as f: return len(json.load(f).get('features',[]))
+        except Exception: return None
+    # trailing comma excludes the "FeatureCollection" header, which would
+    # otherwise be counted as a feature. The carried overlap is exactly
+    # len(MARK)-1 so no whole marker can sit inside it and be counted twice.
+    MARK='"type":"Feature",'
+    n=0; tail=''
+    with open(path,'r',errors='replace') as f:
+        while True:
+            chunk=f.read(4_000_000)
+            if not chunk: break
+            buf=tail+chunk
+            n+=buf.count(MARK)
+            tail=buf[-(len(MARK)-1):]
+    return n or None
+
 def fetch_rest(ep,log,path):
     """Page a layer out as GeoJSON, STREAMING to disk.
 
@@ -102,18 +126,18 @@ def run_layer(job):
         if acc=='rest':
             path=os.path.join(OUT,base+'.geojson')
             if os.path.exists(path) and os.path.getsize(path)>80:
-                try:
-                    d=json.load(open(path)); rec.update(status='skip',features=len(d.get('features',[])),
+                n=count_features(path)
+                if n is not None:
+                    rec.update(status='skip',features=n,
                         path=os.path.relpath(path,ATLAS),bytes=os.path.getsize(path))
                     return rec,lines
-                except Exception: pass
             n=fetch_rest(ep,log,path)
             rec.update(status='ok',features=n,
                        path=os.path.relpath(path,ATLAS),bytes=os.path.getsize(path))
         elif acc=='ago-cache':
             path=os.path.join(OUT,base+'.geojson')
             if os.path.exists(path) and os.path.getsize(path)>80:
-                d=json.load(open(path)); rec.update(status='skip',features=len(d.get('features',[])),
+                rec.update(status='skip',features=count_features(path),
                     path=os.path.relpath(path,ATLAS),bytes=os.path.getsize(path)); return rec,lines
             b=fetch(ep,timeout=300)
             open(path,'wb').write(b)

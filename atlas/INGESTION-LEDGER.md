@@ -23,7 +23,7 @@ when adding, removing or re-pulling a layer.
 | Source layers resolved | **261** |
 | Verified reachable | **238** |
 | Blocked / no machine endpoint | **23** across 12 candidates |
-| **Downloaded** | **204** layers · **2,135,397** features · **2833.3 MB** |
+| **Downloaded** | **231** layers · **2,414,630** features · **5085.8 MB** |
 | Raster services (metadata only) | **4** |
 | Fetch failures | **3** |
 
@@ -342,32 +342,32 @@ survive a fresh clone. Re-pull with `python3 scripts/fetch_candidates.py`.
 | 257 | Waterbodies | Hamilton | Polygon | 3,721 | rest | ✅ | **2026-08-23** | 22.7 MB |
 | 258 | Watercourse | Hamilton | Polyline | 11,252 | rest | ✅ | **2026-08-23** | 47.9 MB |
 | 259 | Shoreline | Hamilton | Polyline | 273 | rest | ✅ | **2026-08-23** | 593 KB |
-| 260 | Contour Lines | Hamilton | Polyline | 221,518 | rest | ✅ | — | — |
-| 261 | Air Monitoring Sites - O3,SO2,NO2 Data | Hamilton | Point | 1,074 | rest | ✅ | — | — |
-| 262 | Air Monitoring Sites - PAH Data | Hamilton | Point | 27 | rest | ✅ | — | — |
-| 263 | Surface Water Quality Program | Hamilton | table | 2,181 | rest | ✅ | — | — |
-| 264 | Adverse Water Quality Incidents | Hamilton | table | 6 | rest | ✅ | — | — |
-| 265 | Waste Landfills and Transfer Stations | Hamilton | Point | 18 | rest | ✅ | — | — |
-| 266 | Community Wide Greenhouse Gas (GHG) Emissions | Hamilton | table | 18 | rest | ✅ | — | — |
+| 260 | Contour Lines | Hamilton | Polyline | 221,518 | rest | ✅ | **2026-08-23** | 2221.9 MB |
+| 261 | Air Monitoring Sites - O3,SO2,NO2 Data | Hamilton | Point | 1,074 | rest | ✅ | **2026-08-23** | 382 KB |
+| 262 | Air Monitoring Sites - PAH Data | Hamilton | Point | 27 | rest | ✅ | **2026-08-23** | 22 KB |
+| 263 | Surface Water Quality Program | Hamilton | table | 2,181 | rest | ✅ | **2026-08-23** | 4.7 MB |
+| 264 | Adverse Water Quality Incidents | Hamilton | table | 6 | rest | ✅ | **2026-08-23** | 1 KB |
+| 265 | Waste Landfills and Transfer Stations | Hamilton | Point | 18 | rest | ✅ | **2026-08-23** | 5 KB |
+| 266 | Community Wide Greenhouse Gas (GHG) Emissions | Hamilton | table | 18 | rest | ✅ | **2026-08-23** | 5 KB |
 | 290 | Targeted Terrestrial Natural Heritage System | Hamilton | table | — | none | ⛔ | — | — |
 
 ### H·F — Economy, business and employment
 
 | # | Layer | Publisher | Geom | Records | Access | Verified | Pulled | Size |
 |---|---|---|---|---:|---|---|---|---:|
-| 267 | Licensed Salvage Yards | Hamilton | table | 12 | rest | ✅ | — | — |
-| 268 | Licensed Public Garages | Hamilton | table | 578 | rest | ✅ | — | — |
-| 269 | Licensed Trade Contractors and Masters | Hamilton | table | 654 | rest | ✅ | — | — |
-| 270 | Business Improvement Areas | Hamilton | Polygon | 14 | rest | ✅ | — | — |
-| 271 | Businesses by Employee Count | Hamilton | table | 10 | rest | ✅ | — | — |
-| 272 | Employment by Sector for Hamilton CMA | Hamilton | table | 11 | rest | ✅ | — | — |
-| 273 | City Growth Targets Employment | Hamilton | table | 25 | rest | ✅ | — | — |
-| 274 | Economic Diversification Score | Hamilton | table | 7 | rest | ✅ | — | — |
-| 275 | Real Estate Sales | Hamilton | table | 9 | rest | ✅ | — | — |
+| 267 | Licensed Salvage Yards | Hamilton | table | 12 | rest | ✅ | **2026-08-23** | 3 KB |
+| 268 | Licensed Public Garages | Hamilton | table | 578 | rest | ✅ | **2026-08-23** | 167 KB |
+| 269 | Licensed Trade Contractors and Masters | Hamilton | table | 654 | rest | ✅ | **2026-08-23** | 165 KB |
+| 270 | Business Improvement Areas | Hamilton | Polygon | 14 | rest | ✅ | **2026-08-23** | 123 KB |
+| 271 | Businesses by Employee Count | Hamilton | table | 10 | rest | ✅ | **2026-08-23** | 3 KB |
+| 272 | Employment by Sector for Hamilton CMA | Hamilton | table | 11 | rest | ✅ | **2026-08-23** | 2 KB |
+| 273 | City Growth Targets Employment | Hamilton | table | 25 | rest | ✅ | **2026-08-23** | 5 KB |
+| 274 | Economic Diversification Score | Hamilton | table | 7 | rest | ✅ | **2026-08-23** | 1 KB |
+| 275 | Real Estate Sales | Hamilton | table | 9 | rest | ✅ | **2026-08-23** | 1 KB |
 | 276 | Census Labour Force | Hamilton | Polygon | 32 | rest | ✅ | **2026-08-23** | 3.4 MB |
-| 277 | Census Occupation 2021 | Hamilton | Polygon | 16 | rest | ✅ | — | — |
-| 278 | Census Occupation 2016 | Hamilton | Polygon | 16 | rest | ✅ | — | — |
-| 279 | Census Unemployment | Hamilton | Polygon | 2 | rest | ✅ | — | — |
+| 277 | Census Occupation 2021 | Hamilton | Polygon | 16 | rest | ✅ | **2026-08-23** | 1.7 MB |
+| 278 | Census Occupation 2016 | Hamilton | Polygon | 16 | rest | ✅ | **2026-08-23** | 1.7 MB |
+| 279 | Census Unemployment | Hamilton | Polygon | 2 | rest | ✅ | **2026-08-23** | 825 KB |
 | 280 | Average Unemployment Rate | Hamilton | table | — | rest | ✅ | ⚠ failed | — |
 
 ### H·G — Heritage and risk
@@ -375,19 +375,19 @@ survive a fresh clone. Re-pull with `python3 scripts/fetch_candidates.py`.
 | # | Layer | Publisher | Geom | Records | Access | Verified | Pulled | Size |
 |---|---|---|---|---:|---|---|---|---:|
 | 281 | Heritage Properties | Hamilton | Point | 10,266 | rest | ✅ | **2026-08-23** | 4.3 MB |
-| 282 | Hamilton Heritage Property Grant Program Recipient | Hamilton | table | 12 | rest | ✅ | — | — |
-| 283 | Fire - Building Structure Fires | Hamilton | table | 7 | rest | ✅ | — | — |
-| 284 | Fire - Vulnerable Occupancy | Hamilton | table | 3 | rest | ✅ | — | — |
-| 285 | Hamilton Fire Department Incidents | Hamilton | table | 49,643 | rest | ✅ | — | — |
+| 282 | Hamilton Heritage Property Grant Program Recipient | Hamilton | table | 12 | rest | ✅ | **2026-08-23** | 3 KB |
+| 283 | Fire - Building Structure Fires | Hamilton | table | 7 | rest | ✅ | **2026-08-23** | 1 KB |
+| 284 | Fire - Vulnerable Occupancy | Hamilton | table | 3 | rest | ✅ | **2026-08-23** | 1 KB |
+| 285 | Hamilton Fire Department Incidents | Hamilton | table | 49,643 | rest | ✅ | **2026-08-23** | 18.3 MB |
 
 ### H·H — Reference
 
 | # | Layer | Publisher | Geom | Records | Access | Verified | Pulled | Size |
 |---|---|---|---|---:|---|---|---|---:|
-| 286 | Census Profile 2016 | Hamilton | table | 2,247 | rest | ✅ | — | — |
-| 287 | Census Dwellings 2021 | Hamilton | Polygon | 16 | rest | ✅ | — | — |
-| 288 | Population and Dwelling Count by Census Tract 2016 | Hamilton | table | 142 | rest | ✅ | — | — |
-| 289 | Municipal Benchmarking Network Canada MBNC | Hamilton | table | 967 | rest | ✅ | — | — |
+| 286 | Census Profile 2016 | Hamilton | table | 2,247 | rest | ✅ | **2026-08-23** | 441 KB |
+| 287 | Census Dwellings 2021 | Hamilton | Polygon | 16 | rest | ✅ | **2026-08-23** | 1.7 MB |
+| 288 | Population and Dwelling Count by Census Tract 2016 | Hamilton | table | 142 | rest | ✅ | **2026-08-23** | 49 KB |
+| 289 | Municipal Benchmarking Network Canada MBNC | Hamilton | table | 967 | rest | ✅ | **2026-08-23** | 281 KB |
 
 ---
 ## Raster and imagery — a different kind of source
@@ -443,7 +443,9 @@ Kept in the ledger rather than dropped, so the gap stays visible.
 
 Newest first. Every fetch, re-pull, addition or removal gets a line.
 
-- **2026-08-23** — Bulk fetch of all reachable layers. 204 layers held
+- **2026-08-23** — Bulk fetch of all reachable layers. 231 layers held
+  locally (2,414,630 features, 5085.8 MB) in `scripts/.cache/bulk/`.
+  4 raster services captured as metadata only. 3 fetch failures.
   locally (2,135,397 features, 2833.3 MB) in `scripts/.cache/bulk/`.
   4 raster services captured as metadata only. 3 fetch failures.
   locally (1,065,376 features, 2097.6 MB) in `scripts/.cache/bulk/`.

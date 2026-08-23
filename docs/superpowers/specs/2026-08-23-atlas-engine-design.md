@@ -356,22 +356,24 @@ determinism (same inputs → same output hash).
 
 Verified and held locally as of 2026-08-23 — see `atlas/INGESTION-LEDGER.md`.
 
-| | Niagara | Hamilton |
-|---|---:|---:|
-| Candidates selected | 125 of 126 | 89 of 90 |
-| Source layers | 171 | 90 |
-| Verified reachable | 149 | 89 |
-| Fetched (files on disk) | 143 | 88 |
-| Features (receipted) | 1,065,376 | 1,070,021 *(partial)* |
+| | Niagara | Hamilton | Total |
+|---|---:|---:|---:|
+| Candidates selected | 125 of 126 | 89 of 90 | 214 |
+| Source layers | 171 | 90 | 261 |
+| Verified reachable | 149 | 89 | 238 |
+| Fetched | 143 | 88 | **231** |
+| Features | 1,065,376 | 1,349,254 | **2,414,630** |
+| Cache size | 2.0 GB | 2.8 GB | **4.8 GB** |
 
-**The Hamilton feature count is a floor, not a total.** The first Hamilton fetch
-was killed deliberately when it reached 4.7 GB RSS on a 7 GB machine (the
-fetcher accumulated pages in memory before writing; it now streams to disk).
-Files kept landing after the kill because workers ran ahead of the receipt
-writer, so **88 files exist on disk against 61 receipts**. Re-running the
-fetcher reconciles this — existing files are skipped and receipted. Contour
-Lines (#260, 221,518 polylines) was still streaming when this spec was written
-and is not counted.
+Receipts reconciled 2026-08-23 after the first Hamilton run was killed at
+4.7 GB RSS (the fetcher accumulated pages in memory; it now streams to disk,
+and the skip path stream-counts rather than parsing a 2.2 GB file to report a
+number). Three fetch failures remain: Brock #106 and #111 behind a Cloudflare
+bot challenge, and Hamilton #280 returning a publisher-side HTTP 500.
+
+The single largest layer is Hamilton **#260 Contour Lines — 221,518 polylines,
+2,222 MB**, 46% of the entire cache. Terrain at 1 m interval is display-and-
+simplify material, not analysis input.
 
 Reference documents: `CANDIDATES.md`, `CANDIDATES-HAMILTON.md`,
 `SCHEMAS-HAMILTON.md`, `RECON-2026-08-22.md`, `DATA-SOURCES.md`,
