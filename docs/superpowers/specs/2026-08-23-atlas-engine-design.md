@@ -2,7 +2,7 @@
 
 - Date: 2026-08-23
 - Status: design approved in conversation; implementation plan not yet written
-- Supersedes: **§8 of `2026-08-19-niagaraassembly-atlas-design.md`** (see §1.1)
+- Supersedes: **§9 of `2026-08-19-niagaraassembly-atlas-design.md`** (see §1.1)
 - Lives at: `atlas/` in this repo
 
 ---
@@ -25,8 +25,8 @@ for almost every unit, and `null` means *no evidence recorded*, never *active*.
 
 ### 1.1 Relationship to the 2026-08-19 spec
 
-That spec's §8 places **"derived scoring or opportunity indices"** out of scope,
-and §7 states the defamation guard that motivates it: the map may report that a
+That spec's §9 places **"derived scoring or opportunity indices"** out of scope,
+and §8 states the defamation guard that motivates it: the map may report that a
 polygon is tagged brownfield; it may not conclude that a site is vacant, that a
 named business is underperforming, or that an owner is neglecting a property.
 
@@ -66,6 +66,7 @@ Locked in conversation, 2026-08-23:
 | D6 | **k = 3** minimum units per published public cell. |
 | D7 | **Employment upper bound** used for under-occupancy. |
 | D8 | **Weights are versioned, published data** with a PR-based contribution path. |
+| D10 | **The site dossier is a first-class output and a verification stage** (§7) — it falsified a live layer on first use. |
 | D9 | **Dormancy is a sparse cited flag, not a fourth score** — the direct vacancy evidence measured 2026-08-23 is too thin to converge on (§5.4). |
 
 ---
@@ -99,6 +100,13 @@ scripts/.cache/{bulk,hamilton}/     261 layers · 204 fetched · 2.1M features
 ```
 
 **Load-bearing choices.**
+
+*The emit stage honours the D-5 disposition* recorded per layer in
+`TECHNOLOGY-DECISIONS.md` — `ship`, `simplify`, `derive`, `tile` or `link`.
+Contours are `derive`: consumed at build into `elev_min_m`, `elev_max_m`,
+`relief_m`, `slope_pct`, and never committed or served. Simplification of
+tiling layers uses mapshaper with `keep-shapes`, and asserts output feature
+count equals input.
 
 *Display geometry is emitted separately from analysis attributes.* They have
 opposite requirements — analysis wants precision, display wants smallness.
@@ -255,8 +263,8 @@ shows no activity, no permit since. The data will not carry that shape.
 |---|---:|---|
 | OSM `brownfield` | 316 | region-wide |
 | OSM `disused` (recorded) | 71 | region-wide |
-| NEI departures 2019→2022, all sectors | **121** | Niagara |
-| ↳ industrial sector only | **15** | Niagara |
+| NEI departures 2019→2022, all sectors | **121** | Niagara Region |
+| ↳ industrial sector only | **15** | Niagara Region |
 | Hamilton demolition permits (typed `DP`) | 3,007 | Hamilton |
 | Hamilton registered vacant (#221) | 84 | Hamilton |
 
@@ -326,7 +334,7 @@ Dormancy is deliberately sparse; **under-occupancy is the signal with volume**
 (~79,000 parcels). Tuning sensitivity therefore means adjusting under-occupancy
 thresholds and the D7 employment-bound convention — both rows in
 `weights/vN.json`, not code. Raising sensitivity is a weight change with a
-published version and a posted score delta (§7), so the history shows what was
+published version and a posted score delta (§8), so the history shows what was
 changed and what it moved.
 
 ### 5.8 No composite
@@ -344,7 +352,7 @@ means nothing.
 ### 6.1 The ladder
 
 **Corrected 2026-08-23.** An earlier draft had the bottom rung as
-`point_cluster`, on the assumption that the nine smaller Niagara municipalities
+`point_cluster`, on the assumption that the nine smaller Niagara Region municipalities
 had no geometry of their own. They do: **Niagara Region publishes Address
 Points (#43) covering all twelve municipalities — 208,004 points**, and
 Hamilton publishes 273,535 (#220). Every square metre of the study area has
@@ -375,15 +383,15 @@ and they still receive transition, dormancy, evidence and every constraint and
 distance attribute. Only the area-denominated scores go null.
 
 **Coverage is a published layer**, not a footnote — shaded by evidence tier.
-Six municipalities publishing nothing is a finding about Niagara's data
+Six municipalities publishing nothing is a finding about Niagara Region's data
 landscape in its own right. This also discharges the open defect carried
-forward as §9.5 of the 2026-08-19 spec.
+forward as §10.5 of the 2026-08-19 spec.
 
 ### 6.2 The asymmetry runs both ways
 
-Niagara has business data Hamilton lacks (98,065 NEI points, no Hamilton
+Niagara Region has business data Hamilton lacks (98,065 NEI points, no Hamilton
 equivalent — #271 is a 10-row summary table and does **not** close the gap).
-Hamilton has servicing data Niagara lacks (13,947 sewer catchments against 119;
+Hamilton has servicing data Niagara Region lacks (13,947 sewer catchments against 119;
 water pressure districts; 2,350 traffic counts). Hamilton also holds the only
 **recorded** vacancy in the system (#221, 84 records).
 
@@ -407,7 +415,94 @@ aggregating it protects nothing.
 
 ---
 
-## 7. Transparency and weight governance
+## 7. The site dossier
+
+**Added 2026-08-23**, after testing the idea against real data. The three
+scores answer *population* questions — how does this place compare across the
+region. The dossier answers the *site* question: **when someone looks at one
+place, is their takeaway rich?** Scarcity of evidence does not diminish it.
+Fifteen well-documented sites is a useful output.
+
+### 7.1 Structure — an assertion, then context bunched beneath it
+
+```
+ASSERTION   what we claim, and the record it rests on
+
+REGULATORY  zoning now · zoning was · Official Plan designation · CIP areas
+PHYSICAL    parcel area · building footprint · coverage · footprint change
+CONSTRAINT  the c_* fractions, named, with the authority behind each
+ACCESS      rail · regional road + AADT · highway · border · canal · transit
+NEIGHBOURS  businesses within 500 m, sector mix, cluster or isolated
+CHANGE      departures · arrivals · turnover · permits · applications
+EVIDENCE    which registers cover this, how stale, what disagrees
+```
+
+Each band is a block that makes one point and cites the layer it came from.
+The reader who wants depth follows the citation; the reader who does not is not
+made to wade.
+
+### 7.2 It is a verification mechanism, not only a presentation
+
+The first dossier assembled — `Hopkins Steel Works, 2 Broadway, Welland`, from
+`data/niagara-departures.geojson` — produced this:
+
+```
+ASSERTION   Hopkins Steel Works — recorded 2018, absent by 2022
+REGULATORY  zoning now L1 Light Industrial · zoning was I2
+            OP Schedule B Light Industrial · CIP area: Brownfield CIA
+PHYSICAL    building present · nearest building 17 m
+ACCESS      rail 513 m · nearest site plan 247 m
+NEIGHBOURS  18 businesses within 500 m, 3 manufacturing:
+              Hopkins Steel Works        ← the subject of the assertion
+              National Group
+              Hydac Corporation
+```
+
+**The neighbours band contained the business the assertion said had left.** NEI
+id 8130 is present in 2017, 2018, 2019 *and* 2022 at that address. Checking all
+68 claimed departures: 18 definitively false at address level, 60 of 68 still
+present by name.
+
+**A regional score would have counted 68 departures and moved on.** Assembling
+the context around one assertion falsified it in a single step. See
+`atlas/BACKLOG.md` for the defect and `atlas/logs/2026-08-23.md` §06 for the
+raw trace.
+
+### 7.3 Therefore: contradiction checks are a build-time test
+
+The dossier's verifying property is made a pipeline stage rather than a lucky
+accident. Every assertion is checked against the bands that could refute it:
+
+| Assertion | Refuted by |
+|---|---|
+| business departed | that business present in any **later** NEI edition |
+| site dormant | an open permit, application or site plan; a current licence |
+| building demolished | a footprint present in a later epoch at that location |
+| land under-occupied | recent permit activity, or employment above band |
+
+A failing check blocks publication of that assertion. This is where the
+regression test named in §9.2 lives.
+
+### 7.4 What each unit tier can produce
+
+| Band | `parcel` | `footprint` | `address` |
+|---|---|---|---|
+| assertion · evidence · change | ✅ | ✅ | ✅ |
+| constraint · access · neighbours | ✅ | ✅ | ✅ |
+| physical (area, coverage) | ✅ | partial — no tenure | ✗ |
+
+Only the area-dependent band degrades. An address-tier site in Wainfleet still
+gets a dossier — assertion, constraints, access, neighbours, change — with the
+physical band marked unavailable rather than blank.
+
+### 7.5 Dependencies
+
+Assembly needs the geospatial toolchain in `atlas/ENVIRONMENT.md` (shapely for
+containment and nearest-neighbour, pyproj for distances in UTM 17N). The
+prototype used pure-Python ray casting, which was adequate for one point and is
+not for a build.
+
+## 8. Transparency and weight governance
 
 **Weights are versioned data.** `engine/weights/v1.json` — every signal a row
 with `id`, `delta`, `label`, `input_field`, `rationale`, `evidence_class`
@@ -435,9 +530,9 @@ generated methodology page, and the coverage layer.
 
 ---
 
-## 8. Failure modes and testing
+## 9. Failure modes and testing
 
-### 8.1 What makes this engine lie
+### 9.1 What makes this engine lie
 
 | Failure | Mitigation |
 |---|---|
@@ -448,7 +543,7 @@ generated methodology page, and the coverage layer.
 | **Stale registers read as current.** | `as_of` per attribute group; a 2016 NEI row is a 2016 observation. |
 | **Weight drift.** | `weights_version` on every score. |
 
-### 8.2 Tests
+### 9.2 Tests
 
 `score.js` being pure is the whole testing story: literal record in, scores
 out, no map, no fetch.
@@ -475,11 +570,11 @@ determinism (same inputs → same output hash).
 
 ---
 
-## 9. Data position
+## 10. Data position
 
 Verified and held locally as of 2026-08-23 — see `atlas/INGESTION-LEDGER.md`.
 
-| | Niagara | Hamilton | Total |
+| | Niagara Region | Hamilton | Total |
 |---|---:|---:|---:|
 | Candidates selected | 125 of 126 | 89 of 90 | 214 |
 | Source layers | 171 | 90 | 261 |
@@ -498,17 +593,26 @@ The single largest layer is Hamilton **#260 Contour Lines — 221,518 polylines,
 2,222 MB**, 46% of the entire cache. Terrain at 1 m interval is display-and-
 simplify material, not analysis input.
 
-Reference documents: `CANDIDATES.md`, `CANDIDATES-HAMILTON.md`,
-`SCHEMAS-HAMILTON.md`, `RECON-2026-08-22.md`, `DATA-SOURCES.md`,
-`INGESTION-LEDGER.md`, `sources/manifest*.json`.
+Reference documents in `atlas/`:
+
+| | |
+|---|---|
+| `GLOSSARY.md` | **binding** — Niagara Region vs Peninsula vs study area |
+| `ENVIRONMENT.md` | the toolchain: shapely 2.1.2, pyproj 3.7.2, pyogrio, orjson, rasterio, mapshaper. Installed and verified 2026-08-23 |
+| `TECHNOLOGY-DECISIONS.md` | D-1…D-12, including **D-5 large-layer disposition** (`ship`/`simplify`/`derive`/`tile`/`link`) which governs what the emit stage may ship |
+| `PUBLICATION-MODEL.md` | audiences and the two documentation tiers |
+| `logs/` | raw findings, appended as work happens — **mandatory**, see `../CLAUDE.md` |
+| `CANDIDATES.md` · `CANDIDATES-HAMILTON.md` | the numbered dataset menus |
+| `SCHEMAS-HAMILTON.md` · `RECON-2026-08-22.md` · `DATA-SOURCES.md` | observed schemas and reconnaissance |
+| `INGESTION-LEDGER.md` · `sources/manifest*.json` | retrieval state |
 
 **Nothing is ingested into `data/` yet.** These are local working copies.
 
 ---
 
-## 10. Constraints carried over
+## 11. Constraints carried over
 
-From `2026-08-19-niagaraassembly-atlas-design.md` §7 and `DATA-SOURCES.md`,
+From `2026-08-19-niagaraassembly-atlas-design.md` §8 and `DATA-SOURCES.md`,
 unchanged and not negotiable:
 
 - **The defamation guard** (§1.1). If it conflicts with a finding, the guard wins.
@@ -523,7 +627,7 @@ unchanged and not negotiable:
 
 ---
 
-## 11. Out of scope
+## 12. Out of scope
 
 - Any composite or single "opportunity" score (§5.4)
 - Any label implying a site is available, for sale, or its owner receptive
@@ -536,7 +640,7 @@ unchanged and not negotiable:
 
 ---
 
-## 12. Open items
+## 13. Open items
 
 1. **Grid size.** 250 m assumed; not tested against how it behaves in dense
    industrial parks versus rural townships.
