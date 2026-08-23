@@ -96,6 +96,24 @@ repeatedly — normalize, enrich, change-detect, emit. Parse time is a real cost
 at that volume, and stdlib `json` is the bottleneck. Not architecturally
 essential; it makes the build practical to iterate on.
 
+#### rasterio *(added for the hillshade pipeline)*
+**Generally:** reads and writes geospatial raster formats on top of GDAL, with
+a numpy-array interface. Handles GeoTIFF, Cloud-Optimized GeoTIFF and GDAL VRT,
+including remote ones over HTTP.
+
+**Role in the Atlas:** reads NRCan's MRDEM hillshade VRT for the study-area
+bounding box (D-12) and writes the clipped raster the tiler consumes. NRCan
+publish the VRT for streaming, so this reads a window rather than downloading a
+national dataset.
+
+**Only needed if the self-hosted hillshade is built.** The Stadia basemaps need
+no Python at all.
+
+#### gdal2tiles *(ships with GDAL, invoked via rasterio's GDAL or the CLI)*
+Cuts the clipped hillshade into an XYZ tile pyramid for Leaflet. Alternative:
+`rio-mbtiles` / PMTiles if a single-file tileset is preferred over ~2,700 loose
+PNGs — decide when building, not now.
+
 ### Node — global npm
 
 #### mapshaper
@@ -120,9 +138,11 @@ tile.
 | | |
 |---|---|
 | Python packages | shapely · pyproj · pyogrio · orjson |
+| Python, hillshade only | rasterio (+ GDAL, bundled in the wheel) |
 | Transitive additions | certifi, packaging (small) |
 | Node packages | mapshaper |
-| Estimated disk | 150–200 MB in `atlas/.venv`, plus ~30 MB npm |
+| Estimated disk | 150–200 MB in `atlas/.venv`, plus ~30 MB npm. rasterio adds ~60 MB |
+| Hillshade tiles, if built | ~55 MB committed (zoom 10–14) |
 
 ---
 

@@ -281,19 +281,125 @@ cross-origin requests — which is what Stadia needs. **Adding
 `Referrer-Policy: no-referrer` at any point would silently break the basemap.**
 Recorded here so that change is made knowingly.
 
-**Chosen:** keep CARTO dark as the default. Add a basemap switcher with a
-terrain option. **Stadia via domain auth** is the recommended terrain source —
-no key, good styles, and the switcher makes it opt-in so the muted default is
-untouched. Self-hosting from NRCan/Ontario DEM remains the independence path if
-the third-party relationship becomes unwelcome; ~55 MB is affordable.
+**Chosen (amended 2026-08-23): both.** CARTO dark stays the default; a basemap
+switcher offers Stadia's styles *and* a self-hosted NRCan hillshade. See D-11
+for the basemap catalogue and D-12 for how the hillshade is produced.
 
 **What would change this:** a move to MapLibre would make terrain-RGB with GPU
 hillshade the better option, and would also open vector basemaps. That is a
 larger change than terrain alone justifies.
 
+
+---
+
+## D-11 · Basemap catalogue — 2026-08-23
+
+**Question.** Which basemaps does the switcher offer?
+
+The muted default is a *working* decision (D-10), not a claim that one basemap
+suits every task. A satellite backdrop suits site inspection; a terrain
+backdrop suits reading the escarpment; Toner suits printing. Offering several
+adds real analytical range, provided the default stays quiet.
+
+### Stadia — domain-authenticated, no API key
+
+Verified against Stadia's own documentation 2026-08-23. Registering
+`niagaraassembly.com` authenticates browser requests via `Origin`/`Referer`;
+**nothing goes in the source**. `localhost` needs no auth, so development is
+unchanged.
+
+| Style | Character | Use here |
+|---|---|---|
+| **Stamen Terrain** | hill shading + natural vegetation colouring | the escarpment, read as landform |
+| **Stamen Toner** | high-contrast black and white | print, and maximum overlay contrast |
+| **Stamen Watercolor** | hand-drawn washes over paper texture | narrative and presentation use |
+| **Alidade Smooth Dark** | muted dark, low POI density | closest analogue to the CARTO dark default |
+| **Alidade Smooth** | muted light | light-mode equivalent |
+| **Alidade Satellite** | imagery with labels and outlines | site inspection — what is actually on the ground |
+| **Stadia Outdoors** | OSM Bright derivative, trails and terrain | recreational context |
+| **OSM Bright** | full-colour general purpose | orientation and street detail |
+
+**The dependency this creates.** Domain auth relies on the browser sending
+`Origin`/`Referer`. The site sets **no `Referrer-Policy`**, so the default
+(`strict-origin-when-cross-origin`) sends it. **Adding
+`Referrer-Policy: no-referrer` would silently break every Stadia style.**
+
+**And the honest trade-off:** eight styles is a terms-of-service relationship
+and a per-tile call to a third party. Stamen's own tiles moved to Stadia in
+2023 — the same thing could happen again. D-12 exists so at least one terrain
+option survives that.
+
+---
+
+## D-12 · Hillshade production — 2026-08-23
+
+**Question.** If we self-host terrain, where does the elevation come from and
+at what resolution?
+
+### Resolution decides everything
+
+| Source | Res | Study area (110 × 60 km) raw float32 |
+|---|---:|---:|
+| Ontario Lidar DTM (bare earth) | **1 m** | **26.4 GB** |
+| — | 10 m | 0.3 GB |
+| **NRCan MRDEM** | **30 m** | **0.03 GB** |
+
+Local disk free is 5.7 GB and the source cache already holds 4.9 GB, so the 1 m
+product is not merely wasteful — it is impossible here.
+
+**And it would be wasted anyway.** At zoom 14 one screen pixel is about 7 m at
+this latitude. A 1 m DEM carries seven times more detail than the highest zoom
+the hillshade will ever be drawn at. Resolution beyond the display resolution
+is storage spent on nothing.
+
+### NRCan MRDEM, and it already ships a hillshade
+
+- **30 m, complete national coverage**, extending across the border for shared
+  watersheds — which suits an atlas that deliberately spans one
+- **Open Government Licence – Canada**
+- Vertical datum CGVD2013 / CGG2013 geoid
+- Published as **DTM, DSM *and* a precomputed hillshade**, as GDAL VRTs on S3,
+  with a **STAC API** and **WMS**
+- NRCan's own note: *"files in this dataset are designed for streaming, not
+  downloading"*
+
+**We therefore do not run `gdaldem hillshade` at all.** The hillshade is
+already produced, by the agency that owns the elevation data, to a national
+standard. We read their VRT for our bounding box and cut an XYZ tile pyramid.
+
+Estimated output: zoom 10–14, ~2,700 greyscale PNG tiles, **≈55 MB** — inside
+GitHub's limits and committable. Zoom 15 alone would add ~165 MB, so the
+pyramid is capped and higher zooms fall through to the vector layers, where the
+escarpment already exists as #255 plus the NEP designations.
+
+### Ontario's lidar DTM is not rejected — it is reassigned
+
+The 1 m bare-earth DTM is the better product for **analysis**, and analysis is
+where per-metre accuracy actually changes an answer. But we do not need to
+download it: **the contour layers already held (#114, #260) are derived from
+the same lidar** at 1 m interval, and D-5 already collapses them to
+`elev_min_m`, `elev_max_m`, `relief_m`, `slope_pct` per unit.
+
+So the split is:
+
+| Purpose | Source | Resolution | Cost |
+|---|---|---|---|
+| **Analysis** — slope, relief per unit | contours already cached (#114, #260) | 1 m lidar-derived | none, already held |
+| **Display** — hillshade basemap | NRCan MRDEM hillshade | 30 m | ~55 MB of tiles |
+
+Fine where it changes a decision, coarse where it only has to look right.
+
+**What would change this:** if the atlas ever needed terrain analysis beyond
+per-unit slope — cut-and-fill volumes, viewsheds, drainage modelling — the
+Ontario lidar DTM becomes necessary and brings a storage problem that needs
+solving on its own terms.
+
 ---
 
 ## Amendment log
 
-- **2026-08-23** — Document created. D-1…D-10 recorded. D-4 amended the same day
+- **2026-08-23** — Document created. D-1…D-12 recorded.
+  D-10 amended the same day: the basemap offering widens to Stadia's eight
+  styles plus a self-hosted NRCan hillshade, rather than one optional terrain
+  layer. D-4 amended the same day
   after the in-memory fetcher hit 4.7 GB RSS and was killed.
