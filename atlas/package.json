@@ -1,0 +1,8 @@
+{
+  "name": "niagara-atlas-tools",
+  "private": true,
+  "description": "Build-time tooling for the Hamilton-Niagara Industrial Atlas. Not shipped to the browser.",
+  "devDependencies": {
+    "mapshaper": "^0.6.0"
+  }
+}

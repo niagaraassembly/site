@@ -5,3 +5,6 @@
 
 # Python virtualenv for the ingestion/enrichment pipeline
 .venv/
+
+# Build-time Node tooling (mapshaper)
+node_modules/

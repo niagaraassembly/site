@@ -180,6 +180,33 @@ elsewhere. Not needed for anything we currently hold.
 catchments); shapely `.simplify()` is acceptable for isolated geometries such
 as individual constraint areas.
 
+### Measured, 2026-08-23 — the claim holds, but it is smaller than asserted
+
+Tested on a 60-polygon adjacent cluster from Welland Current Zoning, with
+8 originally-touching pairs, both methods tuned to comparable vertex reduction
+(1,541 → ~557 vertices). Overlap measured in UTM 17N:
+
+| | Overlap between neighbours | Pairs affected | Union area Δ |
+|---|---:|---:|---:|
+| original | 0.0 m² | 0 | — |
+| **mapshaper** (topology) | **0.0 m²** | **0** | +0.001% |
+| shapely (per-geometry, 0.54 m tol) | **5.7 m²** | **2 of 8** | −0.000% |
+
+So per-geometry simplification *does* tear shared borders — but at moderate
+tolerance the damage is 5.7 m² across a 60-polygon cluster, not the visible
+mess the original argument implied. It grows with tolerance.
+
+**A bigger practical finding, and one nobody warns you about:** at
+`-simplify 10%` mapshaper collapsed **27 of 60 polygons to null geometry** —
+small features vanish entirely. `-simplify 30% keep-shapes` collapsed none.
+**Always pass `keep-shapes`**, and verify the output feature count matches the
+input, or simplification silently deletes small parcels.
+
+**Honest position:** mapshaper is still the right choice for tiling layers, but
+on the strength of `keep-shapes` and predictable behaviour as much as on
+sliver-avoidance. The sliver argument alone would not have justified a second
+runtime.
+
 ---
 
 ## D-7 · JSON parsing — 2026-08-23
@@ -398,6 +425,9 @@ solving on its own terms.
 
 ## Amendment log
 
+- **2026-08-23** — Packages installed and each verified against real cached
+  data; D-6 amended with measured results rather than assertion. See
+  ENVIRONMENT.md §5.
 - **2026-08-23** — Document created. D-1…D-12 recorded.
   D-10 amended the same day: the basemap offering widens to Stadia's eight
   styles plus a self-hosted NRCan hillshade, rather than one optional terrain

@@ -3,9 +3,10 @@
 What the Atlas is built and run with, what each package is for, and what role
 it plays here specifically. Amend when anything is added or removed.
 
-**Status: proposed, not yet installed.** Nothing in §2 exists on this machine
-yet. `scripts/fetch_candidates.py`, `update_ledger.py` and `inspect_cache.py`
-run on the standard library alone and will continue to.
+**Status: installed and verified 2026-08-23.** See §5 for the verification
+results. `scripts/fetch_candidates.py`, `update_ledger.py` and
+`inspect_cache.py` run on the standard library alone and will continue to — the
+venv is for the enrichment pipeline, not the fetchers.
 
 Companion to [TECHNOLOGY-DECISIONS.md](TECHNOLOGY-DECISIONS.md), which records
 *why* these were chosen over the alternatives.
@@ -45,9 +46,13 @@ and because they constrain version choices.
 
 ---
 
-## 2. Proposed packages
+## 2. Installed packages
 
-### Python — into `atlas/.venv`
+### Python — `atlas/.venv`
+
+Installed versions: **shapely 2.1.2 · pyproj 3.7.2 · pyogrio 0.13.0 ·
+orjson 3.12.0 · rasterio 1.4.4**, with numpy 2.4.6, certifi, packaging,
+attrs, click, cligj, click-plugins, affine, pyparsing pulled transitively.
 
 #### shapely (2.x)
 **Generally:** the standard Python interface to GEOS, the geometry engine
@@ -114,7 +119,11 @@ Cuts the clipped hillshade into an XYZ tile pyramid for Leaflet. Alternative:
 `rio-mbtiles` / PMTiles if a single-file tileset is preferred over ~2,700 loose
 PNGs — decide when building, not now.
 
-### Node — global npm
+### Node — `atlas/node_modules` (project-local, not global)
+
+Installed via `package.json` as a devDependency and invoked with
+`npx mapshaper`. Project-local for the same reason as the venv: reversible, and
+nothing outside the repo changes. **mapshaper 0.6.121.**
 
 #### mapshaper
 **Generally:** a command-line tool for editing and simplifying vector GIS
@@ -146,19 +155,54 @@ tile.
 
 ---
 
-## 4. Verification after install
+## 4. Verification — run 2026-08-23
 
-Nothing is trusted until it does real work against real cached data:
+Every package was made to do real work against real cached data before being
+relied on. All six passed; two produced findings worth keeping.
 
-1. `pyproj` transforms a known Welland coordinate WGS84 → EPSG:32617 and back
-   within tolerance.
-2. `shapely` reproduces the pure-Python point-in-polygon result already
-   obtained for Hopkins Steel Works (2 Broadway, Welland → zoning `L1`).
-3. `shapely` computes a parcel area in UTM 17N that matches the publisher's
-   own `AREA_SQM` / `GeometrySTArea` field within a small tolerance — several
-   sources ship precomputed area, which makes this checkable rather than
-   assumed.
-4. `pyogrio` opens one of the SHP-only sources.
-5. `orjson` round-trips a cached layer identically to stdlib `json`.
-6. `mapshaper --version` runs, and simplifying two adjacent zoning polygons
-   leaves no gap between them.
+| # | Check | Result |
+|---|---|---|
+| 1 | pyproj WGS84 ↔ UTM 17N round trip | **0.0000 mm** error |
+| 2 | shapely reproduces the pure-Python point-in-polygon for Hopkins Steel Works (2 Broadway, Welland) | **`L1` Light Industrial** — matches |
+| 3 | shapely area in UTM 17N vs Welland's own `GeometrySTArea`, 1,980 polygons | median **0.0000%**, p95 **0.0000%** |
+| 4 | pyogrio opens a real shapefile (provincial PSEZ package) | **31 features, EPSG:26917** |
+| 5 | orjson parses identically to stdlib | identical; **2.6× faster** |
+| 6 | mapshaper topology vs shapely per-geometry | see TECHNOLOGY-DECISIONS D-6 |
+
+**Check 3 is the strongest result.** Our computed areas agree with the
+publisher's own precomputed figures to four decimal places across every Welland
+zoning polygon. The UTM 17N decision (D-3) is not merely reasonable — it is
+confirmed against an independent source.
+
+### Two findings from the verification itself
+
+**No Provincially Significant Employment Zone exists anywhere in Niagara.**
+Reading the PSEZ shapefile for check 4 gave the full list: 31 zones across the
+Greater Golden Horseshoe — Toronto 5, Durham 3, Hamilton 3, Toronto/York 3,
+Waterloo 3, Brantford 2, Halton 2, Halton/Peel 2, Toronto/Peel 2, and one each
+in Guelph, **Haldimand County**, Peel, Simcoe, Toronto/York/Peel and York.
+**Niagara Region has none**, under any of its municipal names. All were
+"Identified by the Minister on December 20, 2019".
+
+Consequence for the engine: `in_psez` is `false` for every Niagara unit by
+construction, and the field is only informative for Hamilton, Halton and
+Haldimand. The absence is itself a finding an atlas about Niagara's industrial
+land should probably state plainly.
+
+**mapshaper deletes small polygons unless told not to.** At `-simplify 10%` it
+collapsed **27 of 60** test polygons to null geometry. `keep-shapes` prevents
+it. Any simplification step must assert that the output feature count equals
+the input.
+
+---
+
+## 5. Reproducing the verification
+
+```bash
+cd atlas
+.venv/bin/python -c "from pyproj import Transformer; \
+  t=Transformer.from_crs('EPSG:4326','EPSG:32617',always_xy=True); print(t.transform(-79.24,42.99))"
+.venv/bin/python -c "import shapely,pyproj,pyogrio,orjson,rasterio; \
+  print(shapely.__version__,pyproj.__version__,pyogrio.__version__,orjson.__version__,rasterio.__version__)"
+npx mapshaper --version
+```
