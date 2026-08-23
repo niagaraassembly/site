@@ -1,0 +1,1982 @@
+[
+ {
+  "n": 201,
+  "name": "Employment Lands",
+  "pub": "HAM",
+  "sec": "A",
+  "pri": 3,
+  "wanted": [
+   "Employment Lands"
+  ],
+  "layers": [
+   {
+    "title": "Employment Lands",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Employment_Lands/FeatureServer/2",
+    "count": 22,
+    "geometry": "Polygon"
+   }
+  ]
+ },
+ {
+  "n": 202,
+  "name": "Zoning By-law Boundary",
+  "pub": "HAM",
+  "sec": "A",
+  "pri": 3,
+  "wanted": [
+   "Zoning By-law Boundary"
+  ],
+  "layers": [
+   {
+    "title": "Zoning By-law Boundary",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Zoning_By_law_Boundary/FeatureServer/1",
+    "count": 11931,
+    "geometry": "Polygon"
+   }
+  ]
+ },
+ {
+  "n": 203,
+  "name": "Land Use by Ward",
+  "pub": "HAM",
+  "sec": "A",
+  "pri": 2,
+  "wanted": [
+   "Land Use by Ward"
+  ],
+  "layers": [
+   {
+    "title": "Land Use by Ward",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Land_Use_by_Ward/FeatureServer/1",
+    "count": 16,
+    "geometry": "Polygon"
+   }
+  ]
+ },
+ {
+  "n": 204,
+  "name": "Land Use by Ward 2018",
+  "pub": "HAM",
+  "sec": "A",
+  "pri": 3,
+  "wanted": [
+   "Land Use by Ward 2018"
+  ],
+  "layers": [
+   {
+    "title": "Land Use by Ward 2018",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Land_Use_by_Ward_2018/FeatureServer/1",
+    "count": 16,
+    "geometry": "Polygon"
+   }
+  ]
+ },
+ {
+  "n": 205,
+  "name": "Urban Boundary",
+  "pub": "HAM",
+  "sec": "A",
+  "pri": 3,
+  "wanted": [
+   "Urban Boundary"
+  ],
+  "layers": [
+   {
+    "title": "Urban Boundary",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Urban_Boundary/FeatureServer/6",
+    "count": 1,
+    "geometry": "Polygon"
+   }
+  ]
+ },
+ {
+  "n": 206,
+  "name": "Rural Boundary",
+  "pub": "HAM",
+  "sec": "A",
+  "pri": 2,
+  "wanted": [
+   "Rural Boundary"
+  ],
+  "layers": [
+   {
+    "title": "Rural Boundary",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Rural_Boundary/FeatureServer/9",
+    "count": 6,
+    "geometry": "Polygon"
+   }
+  ]
+ },
+ {
+  "n": 207,
+  "name": "Rural Settlement Areas",
+  "pub": "HAM",
+  "sec": "A",
+  "pri": 2,
+  "wanted": [
+   "Rural Settlement Areas"
+  ],
+  "layers": [
+   {
+    "title": "Rural Settlement Areas",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Rural_Settlements/FeatureServer/15",
+    "count": 19,
+    "geometry": "Polygon"
+   }
+  ]
+ },
+ {
+  "n": 208,
+  "name": "City Boundary",
+  "pub": "HAM",
+  "sec": "A",
+  "pri": 2,
+  "wanted": [
+   "City Boundary"
+  ],
+  "layers": [
+   {
+    "title": "City Boundary",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/City_Boundary/FeatureServer/13",
+    "count": 1,
+    "geometry": "Polygon"
+   }
+  ]
+ },
+ {
+  "n": 209,
+  "name": "Community Boundaries",
+  "pub": "HAM",
+  "sec": "A",
+  "pri": 2,
+  "wanted": [
+   "Community Boundaries"
+  ],
+  "layers": [
+   {
+    "title": "Community Boundaries",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Community_Boundaries/FeatureServer/17",
+    "count": 6,
+    "geometry": "Polygon"
+   }
+  ]
+ },
+ {
+  "n": 210,
+  "name": "Neighbourhoods",
+  "pub": "HAM",
+  "sec": "A",
+  "pri": 1,
+  "wanted": [
+   "Neighbourhoods"
+  ],
+  "layers": [
+   {
+    "title": "Neighbourhoods",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Neighborhoods/FeatureServer/8",
+    "count": 234,
+    "geometry": "Polygon"
+   }
+  ]
+ },
+ {
+  "n": 211,
+  "name": "Ward Boundaries",
+  "pub": "HAM",
+  "sec": "A",
+  "pri": 1,
+  "wanted": [
+   "Ward Boundaries"
+  ],
+  "layers": [
+   {
+    "title": "Ward Boundaries",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Ward_Boundaries/FeatureServer/7",
+    "count": 15,
+    "geometry": "Polygon"
+   }
+  ]
+ },
+ {
+  "n": 212,
+  "name": "City Properties",
+  "pub": "HAM",
+  "sec": "A",
+  "pri": 3,
+  "wanted": [
+   "City Properties"
+  ],
+  "layers": [
+   {
+    "title": "City Properties",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/City_Properties/FeatureServer/14",
+    "count": 2313,
+    "geometry": "Point"
+   }
+  ]
+ },
+ {
+  "n": 213,
+  "name": "Development Applications",
+  "pub": "HAM",
+  "sec": "A",
+  "pri": 3,
+  "wanted": [
+   "Development Applications"
+  ],
+  "layers": [
+   {
+    "title": "Development Applications",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Development_Applications/FeatureServer/2",
+    "count": 5189,
+    "geometry": "Point"
+   }
+  ]
+ },
+ {
+  "n": 214,
+  "name": "Planning Applications Reported Quarterly",
+  "pub": "HAM",
+  "sec": "A",
+  "pri": 2,
+  "wanted": [
+   "Planning Applications Reported Quarterly"
+  ],
+  "layers": [
+   {
+    "title": "Planning Applications Reported Quarterly",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Planning_Applications_reported_by_quarter_since_2023_Q1/FeatureServer/38",
+    "count": 1154,
+    "geometry": "Point"
+   }
+  ]
+ },
+ {
+  "n": 215,
+  "name": "Commercial Corridor Community Improvement Project Areas",
+  "pub": "HAM",
+  "sec": "A",
+  "pri": 2,
+  "wanted": [
+   "Commercial Corridor Community Improvement Project Areas"
+  ],
+  "layers": [
+   {
+    "title": "Commercial Corridor Community Improvement Project Areas",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Community_Improvement_Project_Areas_Corridors/FeatureServer/12",
+    "count": 14,
+    "geometry": "Polygon"
+   }
+  ]
+ },
+ {
+  "n": 216,
+  "name": "Commercial District Community Improvement Project Areas",
+  "pub": "HAM",
+  "sec": "A",
+  "pri": 2,
+  "wanted": [
+   "Commercial District Community Improvement Project Areas"
+  ],
+  "layers": [
+   {
+    "title": "Commercial District Community Improvement Project Areas",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Community_Improvement_Project_Areas/FeatureServer/11",
+    "count": 12,
+    "geometry": "Polygon"
+   }
+  ]
+ },
+ {
+  "n": 217,
+  "name": "Tax Increment Grant Program Recipients",
+  "pub": "HAM",
+  "sec": "A",
+  "pri": 2,
+  "wanted": [
+   "Tax Increment Grant Program Recipients"
+  ],
+  "layers": [
+   {
+    "title": "Tax Increment Grant Program Recipients",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Tax_Increment_Grant_Program_Recipients/FeatureServer/7",
+    "count": 21,
+    "geometry": "table"
+   }
+  ]
+ },
+ {
+  "n": 218,
+  "name": "Non-Residential Assessment Percentage of Total Assessment",
+  "pub": "HAM",
+  "sec": "A",
+  "pri": 2,
+  "wanted": [
+   "Non-Residential Assessment Percentage of Total Assessment"
+  ],
+  "layers": [
+   {
+    "title": "Non-Residential Assessment Percentage of Total Assessment",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Non_Residential_Assessment_Percentage_of_Total_Assessment/FeatureServer/5",
+    "count": 11,
+    "geometry": "table"
+   }
+  ]
+ },
+ {
+  "n": 219,
+  "name": "Buildings",
+  "pub": "HAM",
+  "sec": "B",
+  "pri": 3,
+  "wanted": [
+   "Buildings"
+  ],
+  "layers": [
+   {
+    "title": "Buildings",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Buildings/FeatureServer/8",
+    "count": 214293,
+    "geometry": "Polygon"
+   }
+  ]
+ },
+ {
+  "n": 220,
+  "name": "Addresses",
+  "pub": "HAM",
+  "sec": "B",
+  "pri": 3,
+  "wanted": [
+   "Addresses"
+  ],
+  "layers": [
+   {
+    "title": "Addresses",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Addresses/FeatureServer/1",
+    "count": 273535,
+    "geometry": "Point"
+   }
+  ]
+ },
+ {
+  "n": 221,
+  "name": "Vacant Building Registry",
+  "pub": "HAM",
+  "sec": "B",
+  "pri": 3,
+  "wanted": [
+   "Vacant Building Registry"
+  ],
+  "layers": [
+   {
+    "title": "Vacant Building Registry",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Vacant_Building_Registry/FeatureServer/11",
+    "count": 84,
+    "geometry": "table"
+   }
+  ]
+ },
+ {
+  "n": 222,
+  "name": "Building and Demolition Permits 2008 to 2016",
+  "pub": "HAM",
+  "sec": "B",
+  "pri": 3,
+  "wanted": [
+   "Building and Demolition Permits 2008 to 2016"
+  ],
+  "layers": [
+   {
+    "title": "Building and Demolition Permits 2008 to 2016",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Building_and_Demolition_Permits_2008_to_2015/FeatureServer/17",
+    "count": 142620,
+    "geometry": "table"
+   }
+  ]
+ },
+ {
+  "n": 223,
+  "name": "Building and Demolition Permits 2017 to Present",
+  "pub": "HAM",
+  "sec": "B",
+  "pri": 3,
+  "wanted": [
+   "Building and Demolition Permits 2017 to Present"
+  ],
+  "layers": [
+   {
+    "title": "Building and Demolition Permits 2017 to Present",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Building_and_Demolition_Permits_2017_to_Present/FeatureServer/6",
+    "count": 51846,
+    "geometry": "table"
+   }
+  ]
+ },
+ {
+  "n": 224,
+  "name": "Building Permits Issued",
+  "pub": "HAM",
+  "sec": "B",
+  "pri": 2,
+  "wanted": [
+   "Building Permits Issued"
+  ],
+  "layers": [
+   {
+    "title": "Building Permits Issued",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Building_Permits_Issued/FeatureServer/1",
+    "count": 8,
+    "geometry": "table"
+   }
+  ]
+ },
+ {
+  "n": 225,
+  "name": "Building Code Compliance Inspections",
+  "pub": "HAM",
+  "sec": "B",
+  "pri": 1,
+  "wanted": [
+   "Building Code Compliance Inspections"
+  ],
+  "layers": [
+   {
+    "title": "Building Code Compliance Inspections",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Building_Code_Compliance_Inspections/FeatureServer/2",
+    "count": 8,
+    "geometry": "table"
+   }
+  ]
+ },
+ {
+  "n": 226,
+  "name": "Housing Starts",
+  "pub": "HAM",
+  "sec": "B",
+  "pri": 1,
+  "wanted": [
+   "Housing Starts"
+  ],
+  "layers": [
+   {
+    "title": "Housing Starts",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Housing_Starts/FeatureServer/5",
+    "count": 23,
+    "geometry": "table"
+   }
+  ]
+ },
+ {
+  "n": 227,
+  "name": "Registered Cooling Towers",
+  "pub": "HAM",
+  "sec": "B",
+  "pri": 2,
+  "wanted": [
+   "Registered Cooling Towers"
+  ],
+  "layers": [
+   {
+    "title": "Registered Cooling Towers",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Registered_Cooling_Towers/FeatureServer/12",
+    "count": 304,
+    "geometry": "Point"
+   }
+  ]
+ },
+ {
+  "n": 228,
+  "name": "Sanitation Sewer Wastewater Catchment Areas",
+  "pub": "HAM",
+  "sec": "C",
+  "pri": 3,
+  "wanted": [
+   "Sanitation Sewer Wastewater Catchment Areas"
+  ],
+  "layers": [
+   {
+    "title": "Sanitation Sewer Wastewater Catchment Areas",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Sanitation_Sewer_Wastewater_Catchment_Areas/FeatureServer/15",
+    "count": 13947,
+    "geometry": "Polygon"
+   }
+  ]
+ },
+ {
+  "n": 229,
+  "name": "Wastewater Treatment Plant Catchment Areas",
+  "pub": "HAM",
+  "sec": "C",
+  "pri": 3,
+  "wanted": [
+   "Wastewater Treatment Plant Catchment Areas"
+  ],
+  "layers": [
+   {
+    "title": "Wastewater Treatment Plant Catchment Areas",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Wastewater_Treatment_Plant_Catchment_Areas/FeatureServer/0",
+    "count": 2,
+    "geometry": "Polygon"
+   }
+  ]
+ },
+ {
+  "n": 230,
+  "name": "Combined Overflow Wastewater Catchment Areas",
+  "pub": "HAM",
+  "sec": "C",
+  "pri": 3,
+  "wanted": [
+   "Combined Overflow Wastewater Catchment Areas"
+  ],
+  "layers": [
+   {
+    "title": "Combined Overflow Wastewater Catchment Areas",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Combined_Overflow_Wastewater_Catchment_Areas/FeatureServer/1",
+    "count": 8147,
+    "geometry": "Polygon"
+   }
+  ]
+ },
+ {
+  "n": 231,
+  "name": "Combined Sewer Overflow Events",
+  "pub": "HAM",
+  "sec": "C",
+  "pri": 2,
+  "wanted": [
+   "Combined Sewer Overflow Events"
+  ],
+  "layers": [
+   {
+    "title": "Combined Sewer Overflow Events",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Combined_Sewer_Overflow_Events/FeatureServer/4",
+    "count": 97,
+    "geometry": "Point"
+   }
+  ]
+ },
+ {
+  "n": 232,
+  "name": "Sewer Main",
+  "pub": "HAM",
+  "sec": "C",
+  "pri": 3,
+  "wanted": [
+   "Sewer Main"
+  ],
+  "layers": [
+   {
+    "title": "Sewer Main",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Sewer_Main/FeatureServer/0",
+    "count": 54115,
+    "geometry": "Polyline"
+   }
+  ]
+ },
+ {
+  "n": 233,
+  "name": "Sewer Lift Station",
+  "pub": "HAM",
+  "sec": "C",
+  "pri": 2,
+  "wanted": [
+   "Sewer Lift Station"
+  ],
+  "layers": [
+   {
+    "title": "Sewer Lift Station",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Sewer_Lift_Station/FeatureServer/0",
+    "count": 96,
+    "geometry": "Point"
+   }
+  ]
+ },
+ {
+  "n": 234,
+  "name": "Sewer Manhole",
+  "pub": "HAM",
+  "sec": "C",
+  "pri": 1,
+  "wanted": [
+   "Sewer Manhole"
+  ],
+  "layers": [
+   {
+    "title": "Sewer Manhole",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Sewer_Manhole/FeatureServer/0",
+    "count": 48828,
+    "geometry": "Point"
+   }
+  ]
+ },
+ {
+  "n": 235,
+  "name": "Water Pressure District",
+  "pub": "HAM",
+  "sec": "C",
+  "pri": 3,
+  "wanted": [
+   "Water Pressure District"
+  ],
+  "layers": [
+   {
+    "title": "Water Pressure District",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Water_Pressure_District/FeatureServer/0",
+    "count": 28,
+    "geometry": "Polygon"
+   }
+  ]
+ },
+ {
+  "n": 236,
+  "name": "Watermain",
+  "pub": "HAM",
+  "sec": "C",
+  "pri": 3,
+  "wanted": [
+   "Watermain"
+  ],
+  "layers": [
+   {
+    "title": "Watermain",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Watermain/FeatureServer/0",
+    "count": 38298,
+    "geometry": "Polyline"
+   }
+  ]
+ },
+ {
+  "n": 237,
+  "name": "Water Hydrant",
+  "pub": "HAM",
+  "sec": "C",
+  "pri": 2,
+  "wanted": [
+   "Water Hydrant"
+  ],
+  "layers": [
+   {
+    "title": "Water Hydrant",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Water_Hydrant/FeatureServer/0",
+    "count": 14189,
+    "geometry": "Point"
+   }
+  ]
+ },
+ {
+  "n": 238,
+  "name": "Stormwater Management Facilities",
+  "pub": "HAM",
+  "sec": "C",
+  "pri": 2,
+  "wanted": [
+   "Stormwater Management Facilities"
+  ],
+  "layers": [
+   {
+    "title": "Stormwater Management Facilities",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Stormwater_Management_Facilities/FeatureServer/0",
+    "count": 148,
+    "geometry": "Polygon"
+   }
+  ]
+ },
+ {
+  "n": 239,
+  "name": "Street Light Poles and Luminaires",
+  "pub": "HAM",
+  "sec": "C",
+  "pri": 1,
+  "wanted": [
+   "Street Light Poles and Luminaires"
+  ],
+  "layers": [
+   {
+    "title": "Street Light Poles and Luminaires",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Street_Light/FeatureServer",
+    "count": null,
+    "geometry": "table"
+   }
+  ]
+ },
+ {
+  "n": 240,
+  "name": "Volume of Wastewater Treated",
+  "pub": "HAM",
+  "sec": "C",
+  "pri": 1,
+  "wanted": [
+   "Volume of Wastewater Treated"
+  ],
+  "layers": [
+   {
+    "title": "Volume of Wastewater Treated",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Volume_of_Wastewater_Treated/FeatureServer/13",
+    "count": 8,
+    "geometry": "table"
+   }
+  ]
+ },
+ {
+  "n": 241,
+  "name": "Railways",
+  "pub": "HAM",
+  "sec": "D",
+  "pri": 3,
+  "wanted": [
+   "Railways"
+  ],
+  "layers": [
+   {
+    "title": "Railways",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Railways/FeatureServer/10",
+    "count": 1692,
+    "geometry": "Polyline"
+   }
+  ]
+ },
+ {
+  "n": 242,
+  "name": "Truck Route Network",
+  "pub": "HAM",
+  "sec": "D",
+  "pri": 3,
+  "wanted": [
+   "Truck Route Network"
+  ],
+  "layers": [
+   {
+    "title": "Truck Route Network",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Truck_Route_Network/FeatureServer/5",
+    "count": 1250,
+    "geometry": "Polyline"
+   }
+  ]
+ },
+ {
+  "n": 243,
+  "name": "Truck Route Aggregated Data",
+  "pub": "HAM",
+  "sec": "D",
+  "pri": 3,
+  "wanted": [
+   "Truck Route Aggregated Data"
+  ],
+  "layers": [
+   {
+    "title": "Truck Route Aggregated Data",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Truck%20Route%20Aggregated%20Data/FeatureServer/0",
+    "count": 435,
+    "geometry": "Polygon"
+   }
+  ]
+ },
+ {
+  "n": 244,
+  "name": "Truck Route Statistics",
+  "pub": "HAM",
+  "sec": "D",
+  "pri": 2,
+  "wanted": [
+   "Truck Route Statistics"
+  ],
+  "layers": [
+   {
+    "title": "Truck Route Statistics",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/TruckRouteStatistics/FeatureServer/0",
+    "count": 5,
+    "geometry": "table"
+   }
+  ]
+ },
+ {
+  "n": 245,
+  "name": "Average Daily Traffic Count",
+  "pub": "HAM",
+  "sec": "D",
+  "pri": 3,
+  "wanted": [
+   "Average Daily Traffic Count"
+  ],
+  "layers": [
+   {
+    "title": "Average Daily Traffic Count",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Average_Daily_Traffic_Count/FeatureServer/39",
+    "count": 2350,
+    "geometry": "Point"
+   }
+  ]
+ },
+ {
+  "n": 246,
+  "name": "Street Centreline",
+  "pub": "HAM",
+  "sec": "D",
+  "pri": 3,
+  "wanted": [
+   "Street Centreline"
+  ],
+  "layers": [
+   {
+    "title": "Street Centreline",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Street_Centreline/FeatureServer/14",
+    "count": 19855,
+    "geometry": "Polyline"
+   }
+  ]
+ },
+ {
+  "n": 247,
+  "name": "Bridges",
+  "pub": "HAM",
+  "sec": "D",
+  "pri": 2,
+  "wanted": [
+   "Bridges"
+  ],
+  "layers": [
+   {
+    "title": "Bridges",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Bridges/FeatureServer/4",
+    "count": 450,
+    "geometry": "Point"
+   }
+  ]
+ },
+ {
+  "n": 248,
+  "name": "Airport",
+  "pub": "HAM",
+  "sec": "D",
+  "pri": 2,
+  "wanted": [
+   "Airport"
+  ],
+  "layers": [
+   {
+    "title": "Airport",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Airport/FeatureServer/2",
+    "count": 5,
+    "geometry": "Polygon"
+   }
+  ]
+ },
+ {
+  "n": 249,
+  "name": "HSR Bus Routes",
+  "pub": "HAM",
+  "sec": "D",
+  "pri": 3,
+  "wanted": [
+   "HSR Bus Routes"
+  ],
+  "layers": [
+   {
+    "title": "HSR Bus Routes",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/HSR_Bus_Routes/FeatureServer/1",
+    "count": 46,
+    "geometry": "Polyline"
+   }
+  ]
+ },
+ {
+  "n": 250,
+  "name": "HSR Bus Stops",
+  "pub": "HAM",
+  "sec": "D",
+  "pri": 2,
+  "wanted": [
+   "HSR Bus Stops"
+  ],
+  "layers": [
+   {
+    "title": "HSR Bus Stops",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/HSR_Bus_Stops/FeatureServer/2",
+    "count": 2389,
+    "geometry": "Point"
+   }
+  ]
+ },
+ {
+  "n": 251,
+  "name": "Transit Service Areas",
+  "pub": "HAM",
+  "sec": "D",
+  "pri": 2,
+  "wanted": [
+   "Transit Service Areas"
+  ],
+  "layers": [
+   {
+    "title": "Transit Service Areas",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Transit_Service_Areas/FeatureServer/1",
+    "count": 1,
+    "geometry": "Polygon"
+   }
+  ]
+ },
+ {
+  "n": 252,
+  "name": "Traffic Collisions",
+  "pub": "HAM",
+  "sec": "D",
+  "pri": 1,
+  "wanted": [
+   "Traffic Collisions"
+  ],
+  "layers": [
+   {
+    "title": "Traffic Collisions",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Traffic_Collisions/FeatureServer/0",
+    "count": 134136,
+    "geometry": "table"
+   }
+  ]
+ },
+ {
+  "n": 253,
+  "name": "Roundabouts",
+  "pub": "HAM",
+  "sec": "D",
+  "pri": 1,
+  "wanted": [
+   "Roundabouts"
+  ],
+  "layers": [
+   {
+    "title": "Roundabouts",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Roundabouts/FeatureServer/6",
+    "count": 49,
+    "geometry": "Point"
+   }
+  ]
+ },
+ {
+  "n": 254,
+  "name": "Temporary Road Closures",
+  "pub": "HAM",
+  "sec": "D",
+  "pri": 1,
+  "wanted": [
+   "Temporary Road Closures"
+  ],
+  "layers": [
+   {
+    "title": "Temporary Road Closures",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Temporary_Road_Closures/FeatureServer/13",
+    "count": 1,
+    "geometry": "Polyline"
+   }
+  ]
+ },
+ {
+  "n": 255,
+  "name": "Escarpment",
+  "pub": "HAM",
+  "sec": "E",
+  "pri": 3,
+  "wanted": [
+   "Escarpment"
+  ],
+  "layers": [
+   {
+    "title": "Escarpment",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Escarpment/FeatureServer/4",
+    "count": 1,
+    "geometry": "Polyline"
+   }
+  ]
+ },
+ {
+  "n": 256,
+  "name": "Environmentally Sensitive Areas Boundaries",
+  "pub": "HAM",
+  "sec": "E",
+  "pri": 3,
+  "wanted": [
+   "Environmentally Sensitive Areas Boundaries"
+  ],
+  "layers": [
+   {
+    "title": "Environmentally Sensitive Areas Boundaries",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Environmentally_Sensitive_Areas_Boundaries/FeatureServer/3",
+    "count": 207,
+    "geometry": "Polygon"
+   }
+  ]
+ },
+ {
+  "n": 257,
+  "name": "Waterbodies",
+  "pub": "HAM",
+  "sec": "E",
+  "pri": 2,
+  "wanted": [
+   "Waterbodies"
+  ],
+  "layers": [
+   {
+    "title": "Waterbodies",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Waterbodies/FeatureServer/1",
+    "count": 3721,
+    "geometry": "Polygon"
+   }
+  ]
+ },
+ {
+  "n": 258,
+  "name": "Watercourse",
+  "pub": "HAM",
+  "sec": "E",
+  "pri": 3,
+  "wanted": [
+   "Watercourse"
+  ],
+  "layers": [
+   {
+    "title": "Watercourse",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Watercourse/FeatureServer/7",
+    "count": 11252,
+    "geometry": "Polyline"
+   }
+  ]
+ },
+ {
+  "n": 259,
+  "name": "Shoreline",
+  "pub": "HAM",
+  "sec": "E",
+  "pri": 2,
+  "wanted": [
+   "Shoreline"
+  ],
+  "layers": [
+   {
+    "title": "Shoreline",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Shoreline/FeatureServer/17",
+    "count": 273,
+    "geometry": "Polyline"
+   }
+  ]
+ },
+ {
+  "n": 260,
+  "name": "Contour Lines",
+  "pub": "HAM",
+  "sec": "E",
+  "pri": 2,
+  "wanted": [
+   "Contour Lines"
+  ],
+  "layers": [
+   {
+    "title": "Contour Lines",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Contour_Lines/FeatureServer/4",
+    "count": 221518,
+    "geometry": "Polyline"
+   }
+  ]
+ },
+ {
+  "n": 261,
+  "name": "Air Monitoring Sites - O3,SO2,NO2 Data",
+  "pub": "HAM",
+  "sec": "E",
+  "pri": 2,
+  "wanted": [
+   "Air Monitoring Sites - O3,SO2,NO2 Data"
+  ],
+  "layers": [
+   {
+    "title": "Air Monitoring Sites - O3,SO2,NO2 Data",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Monitoring_Sites___O3_SO2_NO2_data/FeatureServer/22",
+    "count": 1074,
+    "geometry": "Point"
+   }
+  ]
+ },
+ {
+  "n": 262,
+  "name": "Air Monitoring Sites - PAH Data",
+  "pub": "HAM",
+  "sec": "E",
+  "pri": 2,
+  "wanted": [
+   "Air Monitoring Sites - PAH Data"
+  ],
+  "layers": [
+   {
+    "title": "Air Monitoring Sites - PAH Data",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Monitoring_Sites___PAH_Data/FeatureServer/0",
+    "count": 27,
+    "geometry": "Point"
+   }
+  ]
+ },
+ {
+  "n": 263,
+  "name": "Surface Water Quality Program",
+  "pub": "HAM",
+  "sec": "E",
+  "pri": 1,
+  "wanted": [
+   "Surface Water Quality Program"
+  ],
+  "layers": [
+   {
+    "title": "Surface Water Quality Program",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Surface_Water_Quality_Program/FeatureServer/14",
+    "count": 2181,
+    "geometry": "table"
+   }
+  ]
+ },
+ {
+  "n": 264,
+  "name": "Adverse Water Quality Incidents",
+  "pub": "HAM",
+  "sec": "E",
+  "pri": 1,
+  "wanted": [
+   "Adverse Water Quality Incidents"
+  ],
+  "layers": [
+   {
+    "title": "Adverse Water Quality Incidents",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Adverse_Water_Quality_Incidents/FeatureServer/1",
+    "count": 6,
+    "geometry": "table"
+   }
+  ]
+ },
+ {
+  "n": 265,
+  "name": "Waste Landfills and Transfer Stations",
+  "pub": "HAM",
+  "sec": "E",
+  "pri": 3,
+  "wanted": [
+   "Waste Landfills and Transfer Stations"
+  ],
+  "layers": [
+   {
+    "title": "Waste Landfills and Transfer Stations",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Waste_Landfills_and_Transfer_Stations/FeatureServer/11",
+    "count": 18,
+    "geometry": "Point"
+   }
+  ]
+ },
+ {
+  "n": 266,
+  "name": "Community Wide Greenhouse Gas (GHG) Emissions",
+  "pub": "HAM",
+  "sec": "E",
+  "pri": 1,
+  "wanted": [
+   "Community Wide Greenhouse Gas (GHG) Emissions"
+  ],
+  "layers": [
+   {
+    "title": "Community Wide Greenhouse Gas (GHG) Emissions",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Community_Wide_Greenhouse_Gas_GHG_Emissions/FeatureServer/1",
+    "count": 18,
+    "geometry": "table"
+   }
+  ]
+ },
+ {
+  "n": 267,
+  "name": "Licensed Salvage Yards",
+  "pub": "HAM",
+  "sec": "F",
+  "pri": 3,
+  "wanted": [
+   "Licensed Salvage Yards"
+  ],
+  "layers": [
+   {
+    "title": "Licensed Salvage Yards",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Licensed_Salvage_Yards/FeatureServer/11",
+    "count": 12,
+    "geometry": "table"
+   }
+  ]
+ },
+ {
+  "n": 268,
+  "name": "Licensed Public Garages",
+  "pub": "HAM",
+  "sec": "F",
+  "pri": 3,
+  "wanted": [
+   "Licensed Public Garages"
+  ],
+  "layers": [
+   {
+    "title": "Licensed Public Garages",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Licensed_Public_Garages/FeatureServer/8",
+    "count": 578,
+    "geometry": "table"
+   }
+  ]
+ },
+ {
+  "n": 269,
+  "name": "Licensed Trade Contractors and Masters",
+  "pub": "HAM",
+  "sec": "F",
+  "pri": 3,
+  "wanted": [
+   "Licensed Trade Contractors and Masters"
+  ],
+  "layers": [
+   {
+    "title": "Licensed Trade Contractors and Masters",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Licensed_Trade_Contractors_and_Masters/FeatureServer/1",
+    "count": 654,
+    "geometry": "table"
+   }
+  ]
+ },
+ {
+  "n": 270,
+  "name": "Business Improvement Areas",
+  "pub": "HAM",
+  "sec": "F",
+  "pri": 2,
+  "wanted": [
+   "Business Improvement Areas"
+  ],
+  "layers": [
+   {
+    "title": "Business Improvement Areas",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Business_Improvement_Areas/FeatureServer/6",
+    "count": 14,
+    "geometry": "Polygon"
+   }
+  ]
+ },
+ {
+  "n": 271,
+  "name": "Businesses by Employee Count",
+  "pub": "HAM",
+  "sec": "F",
+  "pri": 1,
+  "wanted": [
+   "Businesses by Employee Count"
+  ],
+  "layers": [
+   {
+    "title": "Businesses by Employee Count",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Businesses_by_Employee_Count/FeatureServer/10",
+    "count": 10,
+    "geometry": "table"
+   }
+  ]
+ },
+ {
+  "n": 272,
+  "name": "Employment by Sector for Hamilton CMA",
+  "pub": "HAM",
+  "sec": "F",
+  "pri": 2,
+  "wanted": [
+   "Employment by Sector for Hamilton CMA"
+  ],
+  "layers": [
+   {
+    "title": "Employment by Sector for Hamilton CMA",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Employment_by_Sector_for_Hamilton_CMA/FeatureServer/7",
+    "count": 11,
+    "geometry": "table"
+   }
+  ]
+ },
+ {
+  "n": 273,
+  "name": "City Growth Targets Employment",
+  "pub": "HAM",
+  "sec": "F",
+  "pri": 2,
+  "wanted": [
+   "City Growth Targets Employment"
+  ],
+  "layers": [
+   {
+    "title": "City Growth Targets Employment",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/City_Growth_Targets_Employment/FeatureServer/9",
+    "count": 25,
+    "geometry": "table"
+   }
+  ]
+ },
+ {
+  "n": 274,
+  "name": "Economic Diversification Score",
+  "pub": "HAM",
+  "sec": "F",
+  "pri": 1,
+  "wanted": [
+   "Economic Diversification Score"
+  ],
+  "layers": [
+   {
+    "title": "Economic Diversification Score",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Economic_Diversification_Score/FeatureServer/9",
+    "count": 7,
+    "geometry": "table"
+   }
+  ]
+ },
+ {
+  "n": 275,
+  "name": "Real Estate Sales",
+  "pub": "HAM",
+  "sec": "F",
+  "pri": 1,
+  "wanted": [
+   "Real Estate Sales"
+  ],
+  "layers": [
+   {
+    "title": "Real Estate Sales",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Real_Estate_Sales/FeatureServer/6",
+    "count": 9,
+    "geometry": "table"
+   }
+  ]
+ },
+ {
+  "n": 276,
+  "name": "Census Labour Force",
+  "pub": "HAM",
+  "sec": "F",
+  "pri": 2,
+  "wanted": [
+   "Census Labour Force"
+  ],
+  "layers": [
+   {
+    "title": "Census Labour Force",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Census_Labour_Force/FeatureServer/14",
+    "count": 32,
+    "geometry": "Polygon"
+   }
+  ]
+ },
+ {
+  "n": 277,
+  "name": "Census Occupation 2021",
+  "pub": "HAM",
+  "sec": "F",
+  "pri": 2,
+  "wanted": [
+   "Census Occupation 2021"
+  ],
+  "layers": [
+   {
+    "title": "Census Occupation 2021",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Census_Occupation_2021/FeatureServer/18",
+    "count": 16,
+    "geometry": "Polygon"
+   }
+  ]
+ },
+ {
+  "n": 278,
+  "name": "Census Occupation 2016",
+  "pub": "HAM",
+  "sec": "F",
+  "pri": 2,
+  "wanted": [
+   "Census Occupation 2016"
+  ],
+  "layers": [
+   {
+    "title": "Census Occupation 2016",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Census_Occupation_2016/FeatureServer/17",
+    "count": 16,
+    "geometry": "Polygon"
+   }
+  ]
+ },
+ {
+  "n": 279,
+  "name": "Census Unemployment",
+  "pub": "HAM",
+  "sec": "F",
+  "pri": 1,
+  "wanted": [
+   "Census Unemployment"
+  ],
+  "layers": [
+   {
+    "title": "Census Unemployment",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Census_Unemployment/FeatureServer/15",
+    "count": 2,
+    "geometry": "Polygon"
+   }
+  ]
+ },
+ {
+  "n": 280,
+  "name": "Average Unemployment Rate",
+  "pub": "HAM",
+  "sec": "F",
+  "pri": 1,
+  "wanted": [
+   "Average Unemployment Rate"
+  ],
+  "layers": [
+   {
+    "title": "Average Unemployment Rate",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://spatialsolutions.hamilton.ca/webgis/rest/services/OpenData/Tabular_Dashboards_1/MapServer/8",
+    "count": null,
+    "geometry": "table"
+   }
+  ]
+ },
+ {
+  "n": 281,
+  "name": "Heritage Properties",
+  "pub": "HAM",
+  "sec": "G",
+  "pri": 3,
+  "wanted": [
+   "Heritage Properties"
+  ],
+  "layers": [
+   {
+    "title": "Heritage Properties",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Heritage_Properties/FeatureServer/0",
+    "count": 10266,
+    "geometry": "Point"
+   }
+  ]
+ },
+ {
+  "n": 282,
+  "name": "Hamilton Heritage Property Grant Program Recipients",
+  "pub": "HAM",
+  "sec": "G",
+  "pri": 1,
+  "wanted": [
+   "Hamilton Heritage Property Grant Program Recipients"
+  ],
+  "layers": [
+   {
+    "title": "Hamilton Heritage Property Grant Program Recipients",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Hamilton_Heritage_Property_Grant_Program_Recipients/FeatureServer/6",
+    "count": 12,
+    "geometry": "table"
+   }
+  ]
+ },
+ {
+  "n": 283,
+  "name": "Fire - Building Structure Fires",
+  "pub": "HAM",
+  "sec": "G",
+  "pri": 2,
+  "wanted": [
+   "Fire - Building Structure Fires"
+  ],
+  "layers": [
+   {
+    "title": "Fire - Building Structure Fires",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Fire_Building_Structure_Fires/FeatureServer/6",
+    "count": 7,
+    "geometry": "table"
+   }
+  ]
+ },
+ {
+  "n": 284,
+  "name": "Fire - Vulnerable Occupancy",
+  "pub": "HAM",
+  "sec": "G",
+  "pri": 1,
+  "wanted": [
+   "Fire - Vulnerable Occupancy"
+  ],
+  "layers": [
+   {
+    "title": "Fire - Vulnerable Occupancy",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Fire_Vulnerable_Occupancy/FeatureServer/7",
+    "count": 3,
+    "geometry": "table"
+   }
+  ]
+ },
+ {
+  "n": 285,
+  "name": "Hamilton Fire Department Incidents",
+  "pub": "HAM",
+  "sec": "G",
+  "pri": 1,
+  "wanted": [
+   "Hamilton Fire Department Incidents"
+  ],
+  "layers": [
+   {
+    "title": "Hamilton Fire Department Incidents",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/HFD_Fire_Incidents/FeatureServer/0",
+    "count": 49643,
+    "geometry": "table"
+   }
+  ]
+ },
+ {
+  "n": 286,
+  "name": "Census Profile 2016",
+  "pub": "HAM",
+  "sec": "H",
+  "pri": 1,
+  "wanted": [
+   "Census Profile 2016"
+  ],
+  "layers": [
+   {
+    "title": "Census Profile 2016",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Census_Profile_2016/FeatureServer/3",
+    "count": 2247,
+    "geometry": "table"
+   }
+  ]
+ },
+ {
+  "n": 287,
+  "name": "Census Dwellings 2021",
+  "pub": "HAM",
+  "sec": "H",
+  "pri": 1,
+  "wanted": [
+   "Census Dwellings 2021"
+  ],
+  "layers": [
+   {
+    "title": "Census Dwellings 2021",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Census_Dwellings_2021/FeatureServer/26",
+    "count": 16,
+    "geometry": "Polygon"
+   }
+  ]
+ },
+ {
+  "n": 288,
+  "name": "Population and Dwelling Count by Census Tract 2016",
+  "pub": "HAM",
+  "sec": "H",
+  "pri": 2,
+  "wanted": [
+   "Population and Dwelling Count by Census Tract 2016"
+  ],
+  "layers": [
+   {
+    "title": "Population and Dwelling Count by Census Tract 2016",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Population_and_Dwelling_Count_by_Census_Tract_2016/FeatureServer/2",
+    "count": 142,
+    "geometry": "table"
+   }
+  ]
+ },
+ {
+  "n": 289,
+  "name": "Municipal Benchmarking Network Canada MBNC",
+  "pub": "HAM",
+  "sec": "H",
+  "pri": 1,
+  "wanted": [
+   "Municipal Benchmarking Network Canada MBNC"
+  ],
+  "layers": [
+   {
+    "title": "Municipal Benchmarking Network Canada MBNC",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "ok",
+    "access": "rest",
+    "endpoint": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Municipal_Benchmarking_Network_Canada_MBNC/FeatureServer/18",
+    "count": 967,
+    "geometry": "table"
+   }
+  ]
+ },
+ {
+  "n": 290,
+  "name": "Targeted Terrestrial Natural Heritage System",
+  "pub": "HAM",
+  "sec": "E",
+  "pri": 3,
+  "wanted": [
+   "Targeted Terrestrial Natural Heritage System"
+  ],
+  "layers": [
+   {
+    "title": "Targeted Terrestrial Natural Heritage System",
+    "org": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "status": "fail",
+    "access": "none",
+    "endpoint": null,
+    "count": null,
+    "geometry": "table"
+   }
+  ]
+ }
+]

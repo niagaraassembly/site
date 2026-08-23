@@ -1,5 +1,13 @@
 # Hamilton–Niagara Industrial Atlas — Data Source Reconnaissance
 
+> **Superseded in part.** The municipal, conservation-authority, provincial
+> and federal reconnaissance below was extended on **2026-08-22/23** — see
+> **[RECON-2026-08-22.md](RECON-2026-08-22.md)**, which closes the
+> "[Not yet investigated](#not-yet-investigated)" municipal list, reads out
+> the Tier 2 provincial/federal catalogues, and adds NPCA, Haldimand County,
+> the Niagara Escarpment Plan and the Greenbelt. Nothing below has been
+> deleted; where the two disagree, the later document is current.
+
 **Reconnaissance date: 2026-08-18.** Every entry below was verified by
 querying the live endpoint on that date — record counts, field names and
 licences are observed, not assumed. Anything not yet checked is listed under

@@ -1,0 +1,284 @@
+<title>Niagara Atlas Candidates</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  --paper:#EFF1EC; --card:#F7F8F4; --water:#DAE6E5; --line:#C6CFC9;
+  --ink:#12232B; --ink-2:#3D4F54; --ink-3:#6B7B7D;
+  --teal:#2E6E70; --mag:#A63A6B; --amber:#8A6B1F;
+  --sel:#2E6E70; --sel-bg:#DCE9E6;
+  --shadow:0 1px 2px rgba(18,35,43,.06),0 8px 24px rgba(18,35,43,.05);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0E181D; --card:#152329; --water:#1A2C33; --line:#2C4048;
+    --ink:#E2E9E5; --ink-2:#A9BAB9; --ink-3:#7A8E8F;
+    --teal:#79BDB2; --mag:#E883AC; --amber:#D6B45E;
+    --sel:#79BDB2; --sel-bg:#1D3733;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0E181D; --card:#152329; --water:#1A2C33; --line:#2C4048;
+  --ink:#E2E9E5; --ink-2:#A9BAB9; --ink-3:#7A8E8F;
+  --teal:#79BDB2; --mag:#E883AC; --amber:#D6B45E;
+  --sel:#79BDB2; --sel-bg:#1D3733;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.3);
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
+  font-size:15px; line-height:1.55; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px 96px}
+
+header{padding:44px 0 26px;border-bottom:1px solid var(--line)}
+.eyebrow{
+  font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--teal);margin:0 0 12px;font-weight:500;
+}
+h1{
+  font-family:"IBM Plex Sans Condensed",sans-serif;font-weight:700;
+  font-size:clamp(30px,4.6vw,46px);line-height:1.06;margin:0 0 14px;
+  letter-spacing:-.015em;text-wrap:balance;
+}
+.lede{margin:0;max-width:64ch;color:var(--ink-2);font-size:16.5px}
+.lede strong{color:var(--ink);font-weight:600}
+.meta{
+  display:flex;flex-wrap:wrap;gap:8px 26px;margin-top:20px;
+  font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-3);
+}
+.meta b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+
+.bar{
+  position:sticky;top:0;z-index:20;background:var(--paper);
+  border-bottom:1px solid var(--line);padding:12px 0;margin-bottom:4px;
+}
+.bar-in{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.seg{display:flex;border:1px solid var(--line);border-radius:3px;overflow:hidden;background:var(--card)}
+.seg button{
+  font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.05em;
+  border:0;background:transparent;color:var(--ink-2);padding:7px 11px;cursor:pointer;
+  border-right:1px solid var(--line);white-space:nowrap;
+}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--sel-bg);color:var(--ink);font-weight:600}
+.seg button:focus-visible{outline:2px solid var(--teal);outline-offset:-2px}
+input[type=search]{
+  font-family:"IBM Plex Sans",sans-serif;font-size:14px;padding:7px 11px;
+  border:1px solid var(--line);border-radius:3px;background:var(--card);
+  color:var(--ink);min-width:210px;flex:1;
+}
+input[type=search]:focus-visible{outline:2px solid var(--teal);outline-offset:-1px}
+.count{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-3);
+  font-variant-numeric:tabular-nums;margin-left:auto;white-space:nowrap}
+
+.sec{margin-top:36px}
+.sec-h{display:flex;align-items:baseline;gap:12px;margin-bottom:10px;
+  padding-bottom:8px;border-bottom:2px solid var(--ink)}
+.sec-k{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;
+  color:var(--mag);letter-spacing:.1em}
+.sec-t{font-family:"IBM Plex Sans Condensed",sans-serif;font-weight:600;
+  font-size:20px;margin:0;letter-spacing:-.005em}
+.sec-n{margin-left:auto;font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink-3)}
+
+.tbl{width:100%;border-collapse:collapse}
+.tbl tr{border-bottom:1px solid var(--line);cursor:pointer}
+.tbl tr:hover{background:var(--water)}
+.tbl tr.on{background:var(--sel-bg)}
+.tbl td{padding:10px 10px 10px 0;vertical-align:top}
+.c-n{width:52px;font-family:"IBM Plex Mono",monospace;font-size:14px;font-weight:600;
+  color:var(--ink-3);font-variant-numeric:tabular-nums;padding-left:8px!important}
+.tbl tr.on .c-n{color:var(--sel)}
+.c-p{width:34px;padding-top:15px!important}
+.pri{display:flex;gap:2px}
+.pri i{width:5px;height:5px;border-radius:50%;background:var(--line);display:block}
+.pri.p3 i{background:var(--mag)} .pri.p2 i:nth-child(-n+2){background:var(--teal)}
+.pri.p1 i:nth-child(1){background:var(--amber)}
+.c-d{min-width:220px}
+.nm{font-weight:600;display:block;margin-bottom:2px}
+.nm strong{font-weight:700}
+.why{color:var(--ink-2);font-size:13.5px;line-height:1.45}
+.why strong{color:var(--ink);font-weight:600}
+.c-pub{width:74px;text-align:right}
+.c-acc{width:104px;text-align:right}
+.c-rec{width:74px;text-align:right;font-family:"IBM Plex Mono",monospace;font-size:12.5px;
+  color:var(--ink-2);font-variant-numeric:tabular-nums;padding-top:12px!important}
+.lyr{display:block;margin-top:3px;font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--ink-3)}
+.note{display:block;margin-top:5px;font-size:12.5px;color:var(--teal);
+  border-left:2px solid var(--teal);padding-left:8px}
+.blk{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--mag);border:1px solid var(--mag);
+  border-radius:2px;padding:1px 4px;margin-right:6px;vertical-align:1px}
+.chip{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.06em;
+  border:1px solid var(--line);border-radius:2px;padding:2px 5px;color:var(--ink-3);
+  white-space:nowrap;display:inline-block}
+
+.tray{
+  position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--card);
+  border-top:1px solid var(--line);box-shadow:var(--shadow);padding:12px 20px;
+}
+.tray-in{max-width:1180px;margin:0 auto;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.tray[hidden]{display:none}
+.tray-l{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3)}
+.nums{
+  flex:1;min-width:200px;font-family:"IBM Plex Mono",monospace;font-size:13px;
+  background:var(--paper);border:1px solid var(--line);border-radius:3px;
+  padding:7px 10px;color:var(--ink);overflow-x:auto;white-space:nowrap;
+}
+.btn{
+  font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.06em;
+  border:1px solid var(--ink);background:var(--ink);color:var(--paper);
+  padding:8px 13px;border-radius:3px;cursor:pointer;white-space:nowrap;
+}
+.btn.ghost{background:transparent;color:var(--ink-2);border-color:var(--line)}
+.btn:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.empty{padding:44px 0;text-align:center;color:var(--ink-3);
+  font-family:"IBM Plex Mono",monospace;font-size:13px}
+@media (max-width:900px){.c-acc,.c-rec{display:none}}
+@media (max-width:720px){
+  .c-pub{display:none} .c-n{width:42px} .tbl td{padding:9px 7px 9px 0}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="wrap">
+<header>
+  <p class="eyebrow">Niagara Open Data · swept 2026-08-23</p>
+  <h1>Candidate datasets for the industrial atlas</h1>
+  <p class="lede">Every record in the shared Niagara catalogue, the Region's ArcGIS Hub and the Welland Hub, reduced to what could carry a layered industrial analysis. <strong>125 of 126 selected and being pulled into local cache.</strong> Access column shows how each source actually comes out — and which are documents rather than feeds.</p>
+  <div class="meta">
+    <span><b>125</b> selected</span>
+    <span><b>171</b> source layers</span>
+    <span><b>149</b> reachable</span>
+    <span><b>11</b> blocked</span>
+    <span><b>9</b> categories</span>
+  </div>
+</header>
+
+<div class="bar"><div class="bar-in">
+  <div class="seg" id="fpri">
+    <button data-p="0" aria-pressed="true">All</button>
+    <button data-p="3" aria-pressed="false">Core</button>
+    <button data-p="2" aria-pressed="false">Context</button>
+    <button data-p="1" aria-pressed="false">Situational</button>
+  </div>
+  <div class="seg" id="fsel">
+    <button data-s="0" aria-pressed="true">Everything</button>
+    <button data-s="1" aria-pressed="false">Selected only</button>
+  </div>
+  <div class="seg" id="facc">
+    <button data-a="" aria-pressed="true">Any access</button>
+    <button data-a="REST" aria-pressed="false">REST</button>
+    <button data-a="File" aria-pressed="false">File</button>
+    <button data-a="Raster" aria-pressed="false">Raster</button>
+    <button data-a="blocked" aria-pressed="false">Blocked</button>
+  </div>
+  <input type="search" id="q" placeholder="Search name or rationale…" aria-label="Search datasets">
+  <span class="count" id="count"></span>
+</div></div>
+
+<main id="out"></main>
+</div>
+
+<div class="tray" id="tray" hidden><div class="tray-in">
+  <span class="tray-l">Selected</span>
+  <div class="nums" id="nums"></div>
+  <button class="btn" id="copy">Copy numbers</button>
+  <button class="btn ghost" id="clear">Clear</button>
+</div></div>
+
+<script>
+const DATA = [{"n": 1, "name": "Consolidated NEI (98,065 pts)", "why": "The business register. Already in plan", "pub": "RGN", "pri": 3, "sec": "A", "acc": "REST", "lyr": 1, "recs": 98065, "blocked": false, "note": ""}, {"n": 2, "name": "NEI 2017 / 2018 / 2019 / 2022 annual editions", "why": "Year-over-year change detection; already cached", "pub": "RGN", "pri": 3, "sec": "A", "acc": "File", "lyr": 4, "recs": 0, "blocked": false, "note": "Four annual editions."}, {"n": 3, "name": "Urban Area Boundaries", "why": "Settlement envelope — inside/outside changes everything", "pub": "RGN", "pri": 3, "sec": "A", "acc": "REST", "lyr": 1, "recs": 27, "blocked": false, "note": ""}, {"n": 4, "name": "Regional Growth Centre", "why": "Provincially-directed intensification areas", "pub": "RGN", "pri": 2, "sec": "A", "acc": "REST", "lyr": 1, "recs": 3, "blocked": false, "note": ""}, {"n": 5, "name": "Rural Settlements", "why": "Rural employment nodes outside urban boundary", "pub": "RGN", "pri": 2, "sec": "A", "acc": "REST", "lyr": 1, "recs": 31, "blocked": false, "note": ""}, {"n": 6, "name": "Agricultural Land Base", "why": "The competing land designation; hard constraint", "pub": "RGN", "pri": 3, "sec": "A", "acc": "REST", "lyr": 1, "recs": 33, "blocked": false, "note": ""}, {"n": 7, "name": "Strategic Locations for Investment", "why": "Region's own named investment geography", "pub": "RGN", "pri": 3, "sec": "A", "acc": "File", "lyr": 1, "recs": 0, "blocked": false, "note": ""}, {"n": 8, "name": "CIP Project Area", "why": "Regional community improvement areas", "pub": "RGN", "pri": 2, "sec": "A", "acc": "REST", "lyr": 1, "recs": 28, "blocked": false, "note": ""}, {"n": 9, "name": "Municipal Boundaries", "why": "Join key for every municipal source", "pub": "RGN", "pri": 3, "sec": "A", "acc": "REST", "lyr": 1, "recs": 12, "blocked": false, "note": ""}, {"n": 10, "name": "Niagara Region Neighbourhoods", "why": "Sub-municipal reporting geography", "pub": "RGN", "pri": 1, "sec": "A", "acc": "File", "lyr": 1, "recs": 0, "blocked": false, "note": ""}, {"n": 11, "name": "Property Parcels (35,104)", "why": "Parcel fabric", "pub": "NF", "pri": 3, "sec": "A", "acc": "REST", "lyr": 1, "recs": 35104, "blocked": false, "note": ""}, {"n": 12, "name": "Official Plan Schedule A Land Use (1,196)", "why": "Authoritative designation, precomputed `AREA_SQM`", "pub": "NF", "pri": 3, "sec": "A", "acc": "REST", "lyr": 1, "recs": 1196, "blocked": false, "note": ""}, {"n": 13, "name": "Official Plan Schedule A2 Urban Structure", "why": "Structural plan overlay", "pub": "NF", "pri": 2, "sec": "A", "acc": "REST", "lyr": 1, "recs": 1785, "blocked": false, "note": ""}, {"n": 14, "name": "Official Plan Special Policy Areas", "why": "Site-specific policy exceptions", "pub": "NF", "pri": 2, "sec": "A", "acc": "REST", "lyr": 1, "recs": 100, "blocked": false, "note": ""}, {"n": 15, "name": "Zoning By-law 79200 (1,988)", "why": "Primary zoning", "pub": "NF", "pri": 3, "sec": "A", "acc": "REST", "lyr": 1, "recs": 1988, "blocked": false, "note": ""}, {"n": 16, "name": "Zoning By-laws 1538 Crowland / 7069 Humberstone / B0395 Willoughby", "why": "Legacy township by-laws — coverage is the *union* of all four", "pub": "NF", "pri": 3, "sec": "A", "acc": "REST", "lyr": 3, "recs": 173, "blocked": false, "note": "Three legacy by-laws; union with #15."}, {"n": 17, "name": "Parcel Fabric Public (44,265)", "why": "Parcel fabric", "pub": "STC", "pri": 3, "sec": "A", "acc": "REST", "lyr": 1, "recs": 44265, "blocked": false, "note": ""}, {"n": 18, "name": "City Parcel Landuse Public (46,193; 498 `Employment`)", "why": "Authoritative industrial land, parcel-level", "pub": "STC", "pri": 3, "sec": "A", "acc": "REST", "lyr": 1, "recs": 46193, "blocked": false, "note": ""}, {"n": 19, "name": "City Parcel Zoning Public (46,222)", "why": "Zoning at parcel granularity", "pub": "STC", "pri": 3, "sec": "A", "acc": "REST", "lyr": 1, "recs": 46222, "blocked": false, "note": ""}, {"n": 20, "name": "Current Zoning 2017-117 (1,981; 73 industrial)", "why": "Retrieved", "pub": "WEL", "pri": 3, "sec": "A", "acc": "REST", "lyr": 1, "recs": 1981, "blocked": false, "note": "Via AGO Hub cache; origin down."}, {"n": 21, "name": "Old Zoning (2,014)", "why": "**Two-epoch pair with #20** — regulatory change", "pub": "WEL", "pri": 3, "sec": "A", "acc": "REST", "lyr": 1, "recs": 2014, "blocked": false, "note": ""}, {"n": 22, "name": "Official Plan Schedule B (2,598)", "why": "Retrieved", "pub": "WEL", "pri": 2, "sec": "A", "acc": "REST", "lyr": 1, "recs": 2598, "blocked": false, "note": ""}, {"n": 23, "name": "Official Plan Appeal Deferral Areas", "why": "Land under active appeal — contested status", "pub": "WEL", "pri": 2, "sec": "A", "acc": "REST", "lyr": 1, "recs": 2, "blocked": false, "note": ""}, {"n": 24, "name": "Lincoln Zoning Information (SHP)", "why": "Needs conversion, no REST", "pub": "LIN", "pri": 2, "sec": "A", "acc": "File", "lyr": 1, "recs": 0, "blocked": false, "note": ""}, {"n": 25, "name": "Township Lot and Concession", "why": "Historic survey fabric; underlies old parcels", "pub": "NF", "pri": 1, "sec": "A", "acc": "REST", "lyr": 1, "recs": 540, "blocked": false, "note": ""}, {"n": 26, "name": "Subdivisions", "why": "Registered plans", "pub": "NF", "pri": 1, "sec": "A", "acc": "REST", "lyr": 1, "recs": 554, "blocked": false, "note": ""}, {"n": 27, "name": "**RMoN San SPS Catchments**", "why": "**Sanitary sewer pumping-station catchments — the servicing-capacity layer.** Highest-value item in this section", "pub": "RGN", "pri": 3, "sec": "B", "acc": "REST", "lyr": 1, "recs": 119, "blocked": false, "note": ""}, {"n": 28, "name": "Combined Sewage Overflows (CSO)", "why": "Where the sewer system is already stressed", "pub": "RGN", "pri": 3, "sec": "B", "acc": "File", "lyr": 2, "recs": 0, "blocked": false, "note": ""}, {"n": 29, "name": "Open Landfills in Niagara Region", "why": "Industrial land use in its own right; also a siting constraint", "pub": "RGN", "pri": 2, "sec": "B", "acc": "—", "lyr": 1, "recs": 0, "blocked": true, "note": "Portal page, not a service."}, {"n": 30, "name": "Waste Collection Areas", "why": "Service boundary proxy", "pub": "RGN", "pri": 1, "sec": "B", "acc": "REST", "lyr": 1, "recs": 180, "blocked": false, "note": ""}, {"n": 31, "name": "Regional Road Streetlighting", "why": "Proxy for fully-serviced road corridors", "pub": "RGN", "pri": 1, "sec": "B", "acc": "File", "lyr": 1, "recs": 0, "blocked": false, "note": ""}, {"n": 32, "name": "Niagara Weather Information Systems (RWIS)", "why": "Road weather stations; winter logistics reliability", "pub": "RGN", "pri": 1, "sec": "B", "acc": "File", "lyr": 1, "recs": 0, "blocked": false, "note": ""}, {"n": 33, "name": "Hydrants Public", "why": "Fire flow — a real industrial siting constraint", "pub": "STC", "pri": 2, "sec": "B", "acc": "REST", "lyr": 1, "recs": 4235, "blocked": false, "note": ""}, {"n": 34, "name": "Niagara Falls Hydrants", "why": "As #33", "pub": "NF", "pri": 2, "sec": "B", "acc": "REST", "lyr": 1, "recs": 3184, "blocked": false, "note": ""}, {"n": 35, "name": "Sanitary Sewer Maintenance Holes", "why": "Sewer network extent", "pub": "NF", "pri": 2, "sec": "B", "acc": "REST", "lyr": 1, "recs": 6516, "blocked": false, "note": ""}, {"n": 36, "name": "Storm Sewer Maintenance Holes / Stormwater Drainage Structures", "why": "Stormwater capacity", "pub": "NF", "pri": 2, "sec": "B", "acc": "REST", "lyr": 2, "recs": 17080, "blocked": false, "note": ""}, {"n": 37, "name": "Water System Valves / Water Main Breaks", "why": "Water network extent and **failure history**", "pub": "NF", "pri": 2, "sec": "B", "acc": "REST", "lyr": 2, "recs": 5577, "blocked": false, "note": ""}, {"n": 38, "name": "Utility Drawing", "why": "Utility corridor reference", "pub": "NF", "pri": 1, "sec": "B", "acc": "REST", "lyr": 1, "recs": 120, "blocked": false, "note": ""}, {"n": 39, "name": "Building Footprints (region-wide)", "why": "Physical fabric across all 12 municipalities", "pub": "RGN", "pri": 3, "sec": "B", "acc": "REST", "lyr": 1, "recs": 225999, "blocked": false, "note": ""}, {"n": 40, "name": "Building Footprints 2018 (42,247)", "why": "Physical fabric", "pub": "NF", "pri": 3, "sec": "B", "acc": "REST", "lyr": 1, "recs": 42247, "blocked": false, "note": ""}, {"n": 41, "name": "Building Footprints 2010 (39,556)", "why": "**Two-epoch pair with #40** — demolition/construction", "pub": "NF", "pri": 3, "sec": "B", "acc": "REST", "lyr": 1, "recs": 39556, "blocked": false, "note": ""}, {"n": 42, "name": "Building Footprints (26,027)", "why": "Retrieved", "pub": "WEL", "pri": 3, "sec": "B", "acc": "Hub cache", "lyr": 1, "recs": 26027, "blocked": false, "note": "Via AGO Hub cache; origin down."}, {"n": 43, "name": "Address Points", "why": "Region-wide geocoding base", "pub": "RGN", "pri": 3, "sec": "B", "acc": "REST", "lyr": 1, "recs": 208004, "blocked": false, "note": ""}, {"n": 44, "name": "Civic Address Points (22,461)", "why": "Retrieved; geocodes the Business Directory (#71)", "pub": "WEL", "pri": 3, "sec": "B", "acc": "REST", "lyr": 1, "recs": 22461, "blocked": false, "note": ""}, {"n": 45, "name": "Address Points / Master Street Address Guide", "why": "Geocoding base", "pub": "NF", "pri": 2, "sec": "B", "acc": "REST", "lyr": 2, "recs": 36770, "blocked": false, "note": ""}, {"n": 46, "name": "**Regional Road Traffic Volumes (AADT)**", "why": "**Measured traffic counts — the freight-corridor evidence layer.** Direct counterpart to the NYS DOT truck AADT already in the atlas", "pub": "RGN", "pri": 3, "sec": "C", "acc": "File", "lyr": 1, "recs": 0, "blocked": false, "note": ""}, {"n": 47, "name": "Roads (regional)", "why": "Road hierarchy", "pub": "RGN", "pri": 3, "sec": "C", "acc": "REST", "lyr": 1, "recs": 23782, "blocked": false, "note": ""}, {"n": 48, "name": "Welland Canal", "why": "The defining industrial corridor of the peninsula", "pub": "RGN", "pri": 3, "sec": "C", "acc": "REST", "lyr": 1, "recs": 11, "blocked": false, "note": ""}, {"n": 49, "name": "Airports", "why": "Air freight nodes", "pub": "RGN", "pri": 2, "sec": "C", "acc": "REST", "lyr": 1, "recs": 3, "blocked": false, "note": ""}, {"n": 50, "name": "Marinas", "why": "Water access points", "pub": "RGN", "pri": 1, "sec": "C", "acc": "REST", "lyr": 1, "recs": 12, "blocked": false, "note": ""}, {"n": 51, "name": "Pedestrian Ferry", "why": "Cross-canal connectivity", "pub": "RGN", "pri": 1, "sec": "C", "acc": "REST", "lyr": 1, "recs": 1, "blocked": false, "note": ""}, {"n": 52, "name": "Niagara Region Transit GTFS", "why": "**Labour-force access** — can workers reach the site?", "pub": "RGN", "pri": 3, "sec": "C", "acc": "File", "lyr": 1, "recs": 0, "blocked": false, "note": ""}, {"n": 53, "name": "Public Transit Routes", "why": "As #52, simpler geometry", "pub": "RGN", "pri": 2, "sec": "C", "acc": "File", "lyr": 1, "recs": 0, "blocked": false, "note": ""}, {"n": 54, "name": "Road Closures and Lane Restrictions", "why": "Live disruption feed; freshness demo for a \"living map\"", "pub": "RGN", "pri": 2, "sec": "C", "acc": "—", "lyr": 1, "recs": 0, "blocked": true, "note": "Web page only."}, {"n": 55, "name": "Rail Lines (58)", "why": "Retrieved", "pub": "WEL", "pri": 3, "sec": "C", "acc": "REST", "lyr": 1, "recs": 58, "blocked": false, "note": ""}, {"n": 56, "name": "Niagara Falls Roads / Road Intersections / Road Allowance", "why": "Local network detail", "pub": "NF", "pri": 2, "sec": "C", "acc": "REST", "lyr": 3, "recs": 5963, "blocked": false, "note": ""}, {"n": 57, "name": "MTO Buffer Controlled Areas", "why": "**Provincial highway setback — hard development constraint**", "pub": "NF", "pri": 3, "sec": "C", "acc": "REST", "lyr": 1, "recs": 2, "blocked": false, "note": ""}, {"n": 58, "name": "Lands requiring MTO approvals within Lincoln", "why": "As #57, Lincoln", "pub": "LIN", "pri": 3, "sec": "C", "acc": "File", "lyr": 1, "recs": 0, "blocked": false, "note": ""}, {"n": 59, "name": "Niagara Falls International Bridge / International Boundary", "why": "Border crossing geometry — central to peninsula industry", "pub": "NF", "pri": 2, "sec": "C", "acc": "REST", "lyr": 2, "recs": 3, "blocked": false, "note": ""}, {"n": 60, "name": "Bike Routes / Niagara Trails", "why": "Active transport; weak industrial signal", "pub": "RGN", "pri": 1, "sec": "C", "acc": "REST/File", "lyr": 2, "recs": 9, "blocked": false, "note": ""}, {"n": 61, "name": "Sidewalks / Sidewalk Snowplow Routes", "why": "Urban fabric detail", "pub": "NF", "pri": 1, "sec": "C", "acc": "REST", "lyr": 2, "recs": 4097, "blocked": false, "note": ""}, {"n": 62, "name": "Provincial Natural Heritage System", "why": "Provincial-level protection", "pub": "RGN", "pri": 3, "sec": "D", "acc": "REST", "lyr": 1, "recs": 51, "blocked": false, "note": ""}, {"n": 63, "name": "NES Other Wetlands (Non-PSW)", "why": "Wetland constraint", "pub": "RGN", "pri": 3, "sec": "D", "acc": "REST", "lyr": 1, "recs": 7774, "blocked": false, "note": ""}, {"n": 64, "name": "NES Other Woodlands + Significant Woodlands", "why": "Tree protection constraint", "pub": "RGN", "pri": 2, "sec": "D", "acc": "REST", "lyr": 2, "recs": 5085, "blocked": false, "note": ""}, {"n": 65, "name": "NES Perm/Int Watercourses + Contemporary Mapping of Watercourses", "why": "Setback constraint", "pub": "RGN", "pri": 3, "sec": "D", "acc": "REST/File", "lyr": 2, "recs": 28098, "blocked": false, "note": ""}, {"n": 66, "name": "NES Shoreline Areas", "why": "Shoreline development constraint", "pub": "RGN", "pri": 2, "sec": "D", "acc": "REST", "lyr": 1, "recs": 3820, "blocked": false, "note": ""}, {"n": 67, "name": "NES Inland Lakes + Waterbodies", "why": "Hydrography base", "pub": "RGN", "pri": 2, "sec": "D", "acc": "REST/File", "lyr": 2, "recs": 6, "blocked": false, "note": ""}, {"n": 68, "name": "Quaternary + Tertiary Watersheds", "why": "Drainage framework for cumulative-impact analysis", "pub": "RGN", "pri": 2, "sec": "D", "acc": "REST", "lyr": 2, "recs": 15, "blocked": false, "note": ""}, {"n": 69, "name": "Aquatic Species at Risk Maps (Beamsville/Vineland/Campden/Tintern; Jordan)", "why": "Species-at-risk constraint", "pub": "LIN", "pri": 2, "sec": "D", "acc": "—", "lyr": 2, "recs": 0, "blocked": true, "note": "SHP only, no REST."}, {"n": 70, "name": "Lincoln Greenbelt Boundaries", "why": "Municipal cut of the Greenbelt", "pub": "LIN", "pri": 2, "sec": "D", "acc": "File", "lyr": 1, "recs": 0, "blocked": false, "note": ""}, {"n": 71, "name": "Woodland Management Inventory + Sites", "why": "Local tree constraint", "pub": "NF", "pri": 1, "sec": "D", "acc": "REST", "lyr": 2, "recs": 115, "blocked": false, "note": ""}, {"n": 72, "name": "Monitored Beach Water Quality / Niagara Beach Monitoring", "why": "Downstream water-quality context", "pub": "RGN", "pri": 1, "sec": "D", "acc": "File", "lyr": 2, "recs": 0, "blocked": false, "note": ""}, {"n": 73, "name": "**NOP Area of Archaeological Potential**", "why": "**Triggers mandatory assessment before development** — a real cost and delay signal", "pub": "RGN", "pri": 3, "sec": "E", "acc": "REST", "lyr": 1, "recs": 11023, "blocked": false, "note": ""}, {"n": 74, "name": "Designated Heritage Properties", "why": "Protected structures, region-wide", "pub": "RGN", "pri": 3, "sec": "E", "acc": "REST", "lyr": 1, "recs": 318, "blocked": false, "note": ""}, {"n": 75, "name": "Heritage Properties", "why": "Municipal heritage registers", "pub": "NF / WEL / STC", "pri": 2, "sec": "E", "acc": "REST", "lyr": 3, "recs": 1224, "blocked": false, "note": ""}, {"n": 76, "name": "Historic Sites", "why": "Contextual", "pub": "RGN", "pri": 1, "sec": "E", "acc": "REST", "lyr": 1, "recs": 234, "blocked": false, "note": ""}, {"n": 77, "name": "Historical Welland Canal Points of Interest", "why": "Industrial-archaeology narrative for the canal corridor", "pub": "RGN", "pri": 2, "sec": "E", "acc": "File", "lyr": 1, "recs": 0, "blocked": false, "note": ""}, {"n": 78, "name": "War of 1812 Points of Interest", "why": "Contextual only", "pub": "RGN", "pri": 1, "sec": "E", "acc": "File", "lyr": 1, "recs": 0, "blocked": false, "note": ""}, {"n": 79, "name": "**Welland Business Directory (923, exact FT/PT/Seasonal counts)**", "why": "**Second independent register; calibrates NEI size bands.** Retrieved", "pub": "WEL", "pri": 3, "sec": "F", "acc": "REST", "lyr": 2, "recs": 923, "blocked": false, "note": "Attribute table, no geometry — geocode against #44."}, {"n": 80, "name": "Welland Business Licenses", "why": "**Blocked — 404, origin server down.** Retry later", "pub": "WEL", "pri": 3, "sec": "F", "acc": "REST", "lyr": 1, "recs": 0, "blocked": false, "note": "404 at every sublayer."}, {"n": 81, "name": "Employment Generator CIP Areas 2026", "why": "Where the city actively wants employment", "pub": "NF", "pri": 3, "sec": "F", "acc": "REST", "lyr": 1, "recs": 1, "blocked": false, "note": ""}, {"n": 82, "name": "Brownfield CIP Area 2026 + Brownfield CIP Project Areas (11)", "why": "**Municipally-identified brownfields** — the closest open analogue to a contaminated-land register", "pub": "NF", "pri": 3, "sec": "F", "acc": "REST", "lyr": 2, "recs": 12, "blocked": false, "note": ""}, {"n": 83, "name": "Urban Infill Tax Increment Grant Area 2026", "why": "Financial incentive geography", "pub": "NF", "pri": 2, "sec": "F", "acc": "REST", "lyr": 1, "recs": 1, "blocked": false, "note": ""}, {"n": 84, "name": "Community Improvement Plan Areas", "why": "Incentive geography", "pub": "NF / WEL", "pri": 2, "sec": "F", "acc": "REST", "lyr": 2, "recs": 3, "blocked": false, "note": ""}, {"n": 85, "name": "Streetscape Improvement CIP Area 2026", "why": "Incentive geography", "pub": "NF", "pri": 1, "sec": "F", "acc": "REST", "lyr": 1, "recs": 1, "blocked": false, "note": ""}, {"n": 86, "name": "Development Charges + DC Exemption Waiver Areas", "why": "**Cost-of-development surface** — directly affects viability", "pub": "NF / RGN", "pri": 3, "sec": "F", "acc": "REST/File", "lyr": 2, "recs": 2, "blocked": false, "note": ""}, {"n": 87, "name": "Current Development Applications", "why": "**Live pipeline — what is being proposed right now**", "pub": "NF", "pri": 3, "sec": "F", "acc": "REST", "lyr": 1, "recs": 109, "blocked": false, "note": ""}, {"n": 88, "name": "Site Plan Applications (696)", "why": "As #87, retrieved", "pub": "WEL", "pri": 3, "sec": "F", "acc": "REST", "lyr": 1, "recs": 721, "blocked": false, "note": ""}, {"n": 89, "name": "Completed Building Permits + Permits by Neighbourhood/Year", "why": "**Realised investment history**", "pub": "NF", "pri": 3, "sec": "F", "acc": "REST", "lyr": 2, "recs": 13252, "blocked": false, "note": ""}, {"n": 90, "name": "Building Permits Public", "why": "As #89", "pub": "STC", "pri": 3, "sec": "F", "acc": "REST", "lyr": 1, "recs": 11100, "blocked": false, "note": ""}, {"n": 91, "name": "CityView BuildPermits Parcels", "why": "Permits joined to parcels", "pub": "WEL", "pri": 2, "sec": "F", "acc": "—", "lyr": 1, "recs": 0, "blocked": true, "note": "Token Required — private layer."}, {"n": 92, "name": "Construction Activity (active)", "why": "Live construction", "pub": "WEL", "pri": 2, "sec": "F", "acc": "—", "lyr": 1, "recs": 0, "blocked": true, "note": "Origin server down."}, {"n": 93, "name": "City Owned Property (675)", "why": "**Publicly-held land — directly actionable for a development agency**", "pub": "NF", "pri": 3, "sec": "F", "acc": "REST", "lyr": 1, "recs": 675, "blocked": false, "note": ""}, {"n": 94, "name": "Business Improvement Areas", "why": "Organised commercial districts", "pub": "RGN / NF / WEL", "pri": 2, "sec": "F", "acc": "REST", "lyr": 2, "recs": 6, "blocked": false, "note": ""}, {"n": 95, "name": "Chambers of Commerce", "why": "Institutional contacts", "pub": "RGN", "pri": 2, "sec": "F", "acc": "File", "lyr": 1, "recs": 0, "blocked": false, "note": ""}, {"n": 96, "name": "Employment Search Agencies", "why": "Labour-market intermediaries", "pub": "RGN", "pri": 1, "sec": "F", "acc": "File", "lyr": 1, "recs": 0, "blocked": false, "note": ""}, {"n": 97, "name": "Wineries (+ Wineries in Lincoln)", "why": "**Niagara's signature agri-industrial sector** — real processing floorspace", "pub": "RGN / LIN", "pri": 2, "sec": "F", "acc": "REST", "lyr": 1, "recs": 93, "blocked": false, "note": ""}, {"n": 99, "name": "Niagara Region Capital Budget", "why": "**Where infrastructure money is going next** — forward-looking signal", "pub": "RGN", "pri": 3, "sec": "F", "acc": "File", "lyr": 1, "recs": 0, "blocked": false, "note": ""}, {"n": 100, "name": "Niagara Region Tender Results + Past Tender Results", "why": "Actual public construction spend; contractor ecosystem", "pub": "RGN", "pri": 2, "sec": "F", "acc": "File", "lyr": 2, "recs": 0, "blocked": false, "note": ""}, {"n": 101, "name": "Niagara Prosperity Initiative Projects", "why": "Economic development programme geography", "pub": "RGN", "pri": 1, "sec": "F", "acc": "File", "lyr": 1, "recs": 0, "blocked": false, "note": ""}, {"n": 102, "name": "Niagara Falls 2021 Census — Industry Sectors (NAICS 2017)", "why": "NAICS at census geography; validates NEI", "pub": "NF", "pri": 2, "sec": "F", "acc": "REST", "lyr": 1, "recs": 21, "blocked": false, "note": ""}, {"n": 103, "name": "Welland 2016 Census — Industry (NAICS)", "why": "As #102", "pub": "WEL", "pri": 2, "sec": "F", "acc": "REST", "lyr": 1, "recs": 15, "blocked": false, "note": ""}, {"n": 104, "name": "Niagara Census Profiles", "why": "Region-wide census rollup", "pub": "NOD", "pri": 2, "sec": "F", "acc": "—", "lyr": 1, "recs": 0, "blocked": true, "note": "Report/CSV landing page."}, {"n": 105, "name": "Statistics Canada 2016 Census of Agriculture", "why": "Agri-processing base", "pub": "NOD", "pri": 1, "sec": "F", "acc": "—", "lyr": 1, "recs": 0, "blocked": true, "note": "StatCan landing page."}, {"n": 106, "name": "**Niagara Air Photo Mosaic 1934**", "why": "**Pre-war industrial peak.** Ground truth no vector source can give", "pub": "BRU", "pri": 3, "sec": "G", "acc": "REST", "lyr": 1, "recs": 0, "blocked": false, "note": "Brock image service; tiles, not a bulk file."}, {"n": 107, "name": "**Niagara Air Photo Mosaic 1954**", "why": "Post-war expansion", "pub": "BRU", "pri": 3, "sec": "G", "acc": "REST", "lyr": 1, "recs": 0, "blocked": false, "note": "Brock image service; tiles, not a bulk file."}, {"n": 108, "name": "**Niagara Air Photo Mosaic 1965**", "why": "Industrial high-water mark", "pub": "BRU", "pri": 3, "sec": "G", "acc": "—", "lyr": 1, "recs": 0, "blocked": true, "note": "Image service; needs another probe path."}, {"n": 109, "name": "**Niagara Air Photo Mosaic 1972**", "why": "Immediately pre-decline", "pub": "BRU", "pri": 3, "sec": "G", "acc": "REST", "lyr": 1, "recs": 0, "blocked": false, "note": "Brock image service; tiles, not a bulk file."}, {"n": 110, "name": "Niagara Air Photo Index", "why": "Coverage index for #106–109", "pub": "BRU", "pri": 2, "sec": "G", "acc": "—", "lyr": 1, "recs": 0, "blocked": true, "note": "Index is a document."}, {"n": 111, "name": "Niagara Topographic Maps 1910s / 1930s / 1950s / 1960s / 1970s", "why": "Rail spurs, works and canals as mapped at the time", "pub": "BRU", "pri": 2, "sec": "G", "acc": "Raster/REST", "lyr": 5, "recs": -1, "blocked": false, "note": "Five map series."}, {"n": 112, "name": "Niagara Historical Map Gallery", "why": "Catalogue of the above", "pub": "BRU", "pri": 1, "sec": "G", "acc": "—", "lyr": 1, "recs": 0, "blocked": true, "note": "Gallery page, not a service."}, {"n": 113, "name": "Niagara Falls Ortho Imagery 2006 / 2013 / 2018", "why": "**Brackets the 2010–2018 footprint pair (#40/#41)**", "pub": "NF", "pri": 3, "sec": "G", "acc": "Raster", "lyr": 3, "recs": -1, "blocked": false, "note": "Image services refused the request."}, {"n": 114, "name": "Niagara Falls 2018 1m Contours", "why": "Terrain — grading cost, drainage", "pub": "NF", "pri": 2, "sec": "G", "acc": "REST", "lyr": 1, "recs": 24835, "blocked": false, "note": ""}, {"n": 115, "name": "Niagara Falls Base Map", "why": "Cartographic reference", "pub": "NF", "pri": 1, "sec": "G", "acc": "REST", "lyr": 1, "recs": 22, "blocked": false, "note": ""}, {"n": 116, "name": "Census Dissemination Areas 2011 / 2016", "why": "Smallest census geography for joins", "pub": "NF", "pri": 2, "sec": "H", "acc": "REST", "lyr": 2, "recs": 294, "blocked": false, "note": ""}, {"n": 117, "name": "NF 2021 Census — Labour Force Status", "why": "Workforce availability", "pub": "NF", "pri": 2, "sec": "H", "acc": "REST", "lyr": 1, "recs": 21, "blocked": false, "note": ""}, {"n": 118, "name": "NF 2021 Census — Commuting Destination / Duration / Main Mode", "why": "**Where workers actually travel** — catchment evidence", "pub": "NF", "pri": 3, "sec": "H", "acc": "REST", "lyr": 3, "recs": 63, "blocked": false, "note": "Three census tables."}, {"n": 119, "name": "NF 2021 Census — Class of Worker / Occupation (NOC 2021)", "why": "Skills base", "pub": "NF", "pri": 2, "sec": "H", "acc": "REST", "lyr": 2, "recs": 42, "blocked": false, "note": ""}, {"n": 120, "name": "NF 2021 Census — Highest Certificate/Diploma/Degree", "why": "Skills base", "pub": "NF", "pri": 1, "sec": "H", "acc": "REST", "lyr": 1, "recs": 21, "blocked": false, "note": ""}, {"n": 121, "name": "All Schools / Private Career Colleges / Literacy and Adult Education", "why": "Training pipeline", "pub": "RGN", "pri": 1, "sec": "H", "acc": "REST/File", "lyr": 3, "recs": 248, "blocked": false, "note": ""}, {"n": 122, "name": "Licensed Child Care Centres / EarlyON Centres", "why": "Workforce-participation enabler", "pub": "RGN", "pri": 1, "sec": "H", "acc": "REST", "lyr": 2, "recs": 199, "blocked": false, "note": ""}, {"n": 123, "name": "By-Law Index", "why": "Locates the governing by-law behind a designation", "pub": "RGN", "pri": 2, "sec": "I", "acc": "—", "lyr": 1, "recs": 0, "blocked": true, "note": "By-law index is a document listing."}, {"n": 124, "name": "Municipal Boundary / City Limits", "why": "Clipping and attribution", "pub": "NF / STC / WEL / FE", "pri": 2, "sec": "I", "acc": "REST/File", "lyr": 4, "recs": 2, "blocked": false, "note": ""}, {"n": 125, "name": "Niagara Region Council Elected Officials", "why": "Contact/accountability layer", "pub": "RGN", "pri": 1, "sec": "I", "acc": "File", "lyr": 1, "recs": 0, "blocked": false, "note": ""}, {"n": 126, "name": "Niagara Region MBNCanada Benchmarking", "why": "Municipal performance comparators", "pub": "RGN", "pri": 1, "sec": "I", "acc": "File", "lyr": 1, "recs": 0, "blocked": false, "note": ""}];
+const SECN = {A:"Land, planning and zoning",B:"Infrastructure and servicing",C:"Transportation and logistics",D:"Environmental and natural-heritage constraint",E:"Heritage and archaeological constraint",F:"Economy, business and employment",G:"Historical imagery and basemaps",H:"Labour-force and demographic context",I:"Administrative and reference"};
+const KEY="niagara-atlas-candidates-v1";
+let sel=new Set(), fpri=0, fsel=0, facc="", q="";
+try{const r=localStorage.getItem(KEY); if(r) sel=new Set(JSON.parse(r));}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify([...sel]));}catch(e){}};
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function render(){
+  const ql=q.trim().toLowerCase();
+  const rows=DATA.filter(r=>{
+    if(fpri&&r.pri!==fpri) return false;
+    if(fsel&&!sel.has(r.n)) return false;
+    if(facc==="blocked"&&!r.blocked) return false;
+    if(facc&&facc!=="blocked"&&!(r.acc||"").includes(facc)) return false;
+    if(ql){const h=(r.name+" "+r.why+" "+r.pub).toLowerCase().replace(/<[^>]+>/g,"");
+      if(!h.includes(ql)) return false;}
+    return true;
+  });
+  document.getElementById("count").textContent=rows.length+" of "+DATA.length+" shown · "+sel.size+" selected";
+  const out=document.getElementById("out");
+  if(!rows.length){out.innerHTML='<p class="empty">Nothing matches those filters.</p>';return;}
+  let h="";
+  for(const k of Object.keys(SECN)){
+    const g=rows.filter(r=>r.sec===k); if(!g.length) continue;
+    h+='<section class="sec"><div class="sec-h"><span class="sec-k">'+k+'</span>'+
+       '<h2 class="sec-t">'+esc(SECN[k])+'</h2><span class="sec-n">'+g.length+'</span></div><table class="tbl"><tbody>';
+    for(const r of g){
+      const recs = r.recs>0 ? r.recs.toLocaleString() : (r.recs===-1?'raster':'—');
+      const note = r.note ? '<span class="note">'+esc(r.note)+'</span>' : '';
+      const blk  = r.blocked ? '<span class="blk">blocked</span> ' : '';
+      h+='<tr data-n="'+r.n+'"'+(sel.has(r.n)?' class="on"':'')+(r.blocked?' data-blocked="1"':'')+'>'+
+         '<td class="c-n">'+r.n+'</td>'+
+         '<td class="c-p"><span class="pri p'+r.pri+'" title="priority '+r.pri+'"><i></i><i></i><i></i></span></td>'+
+         '<td class="c-d"><span class="nm">'+blk+r.name+'</span><span class="why">'+r.why+'</span>'+note+'</td>'+
+         '<td class="c-acc"><span class="chip">'+esc(r.acc)+'</span>'+(r.lyr>1?'<span class="lyr">'+r.lyr+' layers</span>':'')+'</td>'+
+         '<td class="c-rec">'+recs+'</td>'+
+         '<td class="c-pub"><span class="chip">'+r.pub+'</span></td></tr>';
+    }
+    h+='</tbody></table></section>';
+  }
+  out.innerHTML=h;
+  updateTray();
+}
+function updateTray(){
+  const t=document.getElementById("tray");
+  if(!sel.size){t.hidden=true;return;}
+  t.hidden=false;
+  document.getElementById("nums").textContent=[...sel].sort((a,b)=>a-b).join(", ");
+}
+document.getElementById("out").addEventListener("click",e=>{
+  const tr=e.target.closest("tr[data-n]"); if(!tr) return;
+  const n=+tr.dataset.n;
+  if(sel.has(n)){sel.delete(n);tr.classList.remove("on");}else{sel.add(n);tr.classList.add("on");}
+  save(); updateTray();
+  document.getElementById("count").textContent=
+    document.querySelectorAll("tr[data-n]").length+" of "+DATA.length+" shown · "+sel.size+" selected";
+  if(fsel) render();
+});
+document.getElementById("fpri").addEventListener("click",e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  fpri=+b.dataset.p;
+  [...e.currentTarget.children].forEach(x=>x.setAttribute("aria-pressed",x===b));
+  render();
+});
+document.getElementById("fsel").addEventListener("click",e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  fsel=+b.dataset.s;
+  [...e.currentTarget.children].forEach(x=>x.setAttribute("aria-pressed",x===b));
+  render();
+});
+document.getElementById("facc").addEventListener("click",e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  facc=b.dataset.a;
+  [...e.currentTarget.children].forEach(x=>x.setAttribute("aria-pressed",x===b));
+  render();
+});
+document.getElementById("q").addEventListener("input",e=>{q=e.target.value;render();});
+document.getElementById("copy").addEventListener("click",async e=>{
+  const txt=[...sel].sort((a,b)=>a-b).join(", ");
+  try{await navigator.clipboard.writeText(txt); e.target.textContent="Copied";}
+  catch(err){
+    const r=document.createRange(); r.selectNodeContents(document.getElementById("nums"));
+    const s=getSelection(); s.removeAllRanges(); s.addRange(r); e.target.textContent="Select & copy";
+  }
+  setTimeout(()=>{e.target.textContent="Copy numbers";},1600);
+});
+document.getElementById("clear").addEventListener("click",()=>{sel.clear();save();render();});
+render();
+</script>

@@ -5,12 +5,25 @@ that has been designed and deferred — kept so nothing found or decided gets
 lost between sessions. Everything in Tier A was verified
 against a live endpoint on the date shown — those are facts, not leads.
 
-Companion to [DATA-SOURCES.md](DATA-SOURCES.md) (what we use and why) and
-[us/DATA-SOURCES.md](us/DATA-SOURCES.md) (the American side).
+Companion to [DATA-SOURCES.md](DATA-SOURCES.md) (what we use and why),
+[us/DATA-SOURCES.md](us/DATA-SOURCES.md) (the American side),
+[RECON-2026-08-22.md](RECON-2026-08-22.md) (municipal/provincial/federal
+reconnaissance and the government roster) and
+[CANDIDATES.md](CANDIDATES.md) (the numbered catalogue sweep — 126 selectable
+datasets) and **[INGESTION-LEDGER.md](INGESTION-LEDGER.md)** — the standing
+record of the merged collection: what was selected, which endpoint each layer
+resolves to, when it was last verified and when it was last pulled. Amend the
+ledger on every fetch.
 
 **Currently live:** 11 map layers plus one reference table — 18,386 features,
 24.8 MB — from OpenStreetMap, the City of Hamilton, NYS GIS, NYS Department of
 State, NYS DEC, and the US Census Bureau.
+
+**Held locally, not yet ingested:** 143 Niagara layers (1,065,376 features,
+2.0 GB) — see [INGESTION-LEDGER.md](INGESTION-LEDGER.md). **Hamilton: 90
+candidates verified 2026-08-23 (1,349,254 features), none yet fetched** — see
+[CANDIDATES-HAMILTON.md](CANDIDATES-HAMILTON.md). Hamilton currently holds only
+**4 layers / 3,422 features** in `data/`, the weakest coverage in the atlas.
 
 ---
 
@@ -61,6 +74,52 @@ coverage.
 Counts, schemas and licences confirmed by query on **2026-08-18**. These need
 ingestion work, not investigation.
 
+### Haldimand County — 425 items, own server, found 2026-08-23
+
+Single-tier municipality on the western peninsula; never previously
+considered. Server `gis.haldimandcounty.ca`, Hub feed at
+`opendata-haldimand.hub.arcgis.com/data.json`.
+
+- **Zoning/Zones — 3,391** · **Topo/BuildingFootprint — 29,447** (both verified)
+- Also: OfficialPlan/Land_use, Planning Applications, ParcelsOnlinePublic,
+  Civic Addresses, Special Flood Plain Policy Areas, Holding, Special
+  Provisions, Bylaw Reference, Conservation Authorities
+- Licence not yet checked.
+
+### Provincial planning constraints — found 2026-08-23
+
+All **OGL – Ontario**, via LIO GeoHub. The atlas currently has no constraint
+layers at all; these plus NPCA regulation lands are the whole category.
+
+- **Niagara Escarpment Plan** — boundary, policy area, **land use
+  designations**. The NEC has real development control through Grimsby,
+  Lincoln, St. Catharines, Thorold and NOTL.
+- **Greenbelt** — designations, specialty crop areas, river valley
+  connections, towns/villages, hamlets. Constrains much of rural Niagara.
+- **Provincially Significant Employment Zones** — 428 KB ZIP, verified 200.
+
+### Welland — retrieved 2026-08-22, blocked on one layer
+
+Origin ArcGIS Server (`arcgisweb.welland.ca`) is **down** — "Could not access
+any server machines" at every path. Retrieved via the ArcGIS Online Hub cache
+instead (`opendata.arcgis.com/api/v3/datasets/{itemId}_{layer}/downloads/data`).
+11 of 12 priority layers cached in `scripts/.cache/welland/`; see
+[RECON-2026-08-22.md](RECON-2026-08-22.md).
+
+- **Current Zoning** 1,981 polygons, 73 Industrial · **Old Zoning** 2,014
+  (a two-epoch regulatory pair)
+- **Building Footprints** 26,027 · **Civic Address Points** 22,461
+- **Business Directory** 923 businesses with exact FullTime/PartTime/Seasonal
+  counts and `Estab` year, no geometry — geocodable against the address points.
+  NEI 2022 records 1,299 businesses in Welland against this 923: **two
+  independent registers disagreeing by ~29%**, which makes Welland the
+  calibration municipality for the scoring engine.
+- **Business Licenses — 404 at every sublayer.** In DCAT, not cached. Retry
+  when the origin server recovers.
+- Discovery note: the Hub feed (`open.welland.ca/data.json`) carries **172
+  datasets against CKAN's 44**, including Official Plan and Consolidated
+  Zoning which CKAN omits entirely.
+
 ### Niagara Consolidated NEI — 98,065 business points
 The largest verified source found, and twelve times the size of the entire
 current atlas.
@@ -98,21 +157,35 @@ Businesses by Employee Count · Building & Demolition Permits (2008–2016 and
 2017–present) · Planning Applications Reported Quarterly · Waterbodies ·
 Watercourse · Airport · Business Improvement Areas · Historic Railways
 
-**Vacant Building Registry** and **Businesses by Employee Count** are the two
-worth checking first — the second is the only candidate found so far for
-closing the Hamilton business gap.
+**Both checked 2026-08-23; see [CANDIDATES-HAMILTON.md](CANDIDATES-HAMILTON.md).**
+
+- **Vacant Building Registry — 84 records, table, no geometry.** Fields
+  `STATUS, ZONING, IN_DATE, ISSUE_DATE, EXPIRY_DATE, FOLDER_NAME`. This is
+  **recorded** vacancy, not inferred — the only ground truth in the atlas, and
+  the calibration set for the under-occupancy model.
+- ~~**Businesses by Employee Count**~~ — **CLOSED.** It is **10 rows, a
+  city-wide summary table** of business counts per employee band, with no
+  geometry. It is a statistic, not a register, and **does not close the
+  Hamilton business gap.** Do not re-investigate.
+- **Partial replacement found:** the licence registers — Salvage Yards (12),
+  Public Garages (578), Trade Contractors and Masters (654) — give **1,244
+  named, addressed industrial businesses**. Not comprehensive, but industrial-
+  specific and the best business-level data Hamilton publishes.
+- **Also closed: "Real Estate Sales"** is 9 rows of annual `Q1..Q4` totals, not
+  transactions. It does not change the MPAC dead end.
 
 ---
 
-## Tier B — reachable, contents uninspected
+## Tier B — read 2026-08-22
 
-Confirmed HTTP 200 on 2026-08-18; catalogue never read.
+Catalogues read; see [RECON-2026-08-22.md](RECON-2026-08-22.md) for detail.
 
-| Source | Endpoint | Expected value |
-|---|---|---|
-| Ontario GeoHub | `geohub.lio.gov.on.ca` | Provincial land use, transport, hydrography |
-| Ontario Open Data | `data.ontario.ca/api/3/action/` | Employment and industrial statistics |
-| Open Government Canada | `open.canada.ca/data/api/3/action/` | National rail network, ports, NAICS statistics |
+| Source | Outcome |
+|---|---|
+| Ontario GeoHub / data.ontario.ca | **Provincially Significant Employment Zones** — OGL-Ontario, 428 KB ZIP package, verified HTTP 200. Ingest. Municipal Land Use Planning (CSV) useful but modest. |
+| Open Government Canada | Low yield. Industrial/rail hits are the 2006 National Atlas raster series. StatCan NAICS tables are aggregate, not geolocated — cannot serve as a register. **NPRI** facility data (ECCC data mart) is geolocated and is the EPR analogue, but only covers above-threshold reporters. |
+| Ontario Brownfields environmental site registry | **Blocked** — catalogued with no resources and no licence. The Record of Site Condition registry is a web lookup, not a feed. Needs a human look. |
+| Ontario land parcels | **Closed** — licensed "Not applicable"; the Teranet/MPAC fabric, catalogued but not released. Extends the existing MPAC dead end to the provincial level. |
 
 ---
 
@@ -120,8 +193,11 @@ Confirmed HTTP 200 on 2026-08-18; catalogue never read.
 
 Ordered by how much they would change the map.
 
-1. **Burlington** — still the real hole, and **probed without success on
-   2026-08-19**. `opendata.burlington.ca` exists but returns **HTTP 403**;
+1. **Burlington — KNOWN WEAKNESS, flagged 2026-08-23.** The weakest part of
+   the entire source base; unimproved across three passes. Burlington is in
+   core scope and covered by **neither** the Hamilton nor the Niagara
+   datasets, so any region-wide layer or score is weakest exactly there.
+   Probed without success on **2026-08-19**. `opendata.burlington.ca` exists but returns **HTTP 403**;
    `gis.burlington.ca` does not resolve; the `cityofburlington` ArcGIS Online
    org has only 8 public items (historic locations and a bulk-trash form,
    nothing industrial, and possibly Burlington Vermont). No DCAT feed found at
@@ -129,12 +205,21 @@ Ordered by how much they would change the map.
    data page, or Halton Region as the upper tier** — the 403 in particular
    suggests a portal that exists and is refusing automated requests rather
    than one that is absent.
-2. **Halton Region** — Burlington's upper tier; may publish employment land.
+2. **Halton Region — never probed at all.** Burlington's upper tier and the
+   only route to patching the Burlington hole from an adjacent tier. Highest
+   unprobed priority.
 3. **Statistics Canada** — business counts by NAICS and census subdivision.
    The obvious candidate for the Hamilton business gap, and the only one that
    would let Hamilton and Niagara be compared on the same basis.
-4. **The nine Niagara lower-tier municipalities** — St. Catharines, Welland,
-   Niagara Falls, Thorold, Port Colborne, Grimsby, Lincoln, Fort Erie.
+4. ~~**The nine Niagara lower-tier municipalities**~~ — **resolved
+   2026-08-22, see [RECON-2026-08-22.md](RECON-2026-08-22.md).** They do not
+   run separate portals: `niagaraopendata.ca` is a shared CKAN catalogue with
+   11 publishing organizations and 534 datasets. Niagara Falls (329 datasets,
+   35,104 parcels, building footprints at 2010 *and* 2018) and St. Catharines
+   (46,193 land-use parcels, 498 designated Employment) are Tier A and ready
+   to ingest. Six municipalities publish nothing at all. NPCA was also found
+   publishing 335 items including Regulated Floodplain Extent and Approximate
+   Regulation Lands.
 5. **HOPA Ports** (Hamilton-Oshawa Port Authority) — returned HTTP 403 to a
    plain request; needs a different approach or a human look.
 6. **CN / CPKC / Metrolinx / VIA** — public infrastructure only. Assume no
