@@ -67,11 +67,11 @@ coverage.
 
 ---
 
-# ⚠ Live data defect — the departures layer
+# Resolved 2026-08-23 — the departures layer
 
-**Found 2026-08-23 while assembling a site dossier.**
-`data/niagara-departures.geojson` is **live in the atlas** and asserts that 68
-named businesses departed. It is substantially wrong.
+**Originally found 2026-08-23 while assembling a site dossier.**
+`data/niagara-departures.geojson` was **live in the atlas** and asserted that
+68 named businesses departed. It was substantially wrong.
 
 Checked against the NEI 2022 inventory (`scripts/.cache/nei2022.geojson`):
 
@@ -94,16 +94,40 @@ same normalization problem as §5.6 of the engine spec. On a name-only match,
 **Why this matters beyond data quality.** A false departure is a published
 claim that a *named business* ceased operating at a *stated address*. That is
 precisely the class of claim the defamation guard in
-`2026-08-19-niagaraassembly-atlas-design.md` §7 exists to prevent, and it is
-live now.
+`2026-08-19-niagaraassembly-atlas-design.md` §7 exists to prevent, and it was
+live at the time.
 
-**Actions:**
-1. Treat the layer as unpublishable until rebuilt.
-2. Rebuild departure detection on normalized `nei_id` **plus** normalized
-   address, not on name matching — and require absence across *all* later
-   survey years, not just one.
-3. Add the check as a regression test: no feature in a departures layer may
-   name a business present in any later NEI edition.
+**Actions taken:**
+1. ✅ Treated the layer as unpublishable until rebuilt.
+2. ✅ Rebuilt departure detection keyed on `nei_id` rather than address or name.
+3. ✅ Added the regression test.
+
+**Root cause (§14 of `atlas/logs/2026-08-23.md`).** Not the address/name
+matching imprecision this entry originally suspected. The actual cause: NEI
+address strings are not stable between editions — Hopkins Steel Works is
+`2 Broadway` in the 2017 and 2018 editions and `2 Broadway Street` in 2019 and
+2022 — so an address-derived key manufactures a false departure every time the
+Region restyles an address string, independent of whether the business is
+still there. Street-suffix normalization was tried as a fix and only closed
+9–13% of the gap. `nei_id` is stable across all four editions and is the
+correct key: 64 of the 68 shipped features had their `nei_id` present in the
+2022 edition, meaning they never departed.
+
+**Resolution.** `atlas/scripts/normalize/departures.py` rebuilds the layer by
+diffing `nei_id` sets between a baseline edition and every edition after it —
+a departure requires absence from *all* later editions, not just the latest.
+`atlas/data/niagara-departures.geojson` was regenerated: **68 → 34 claimed
+departures**. `atlas/tests/test_departures.py::test_no_departure_names_a_business_present_later`
+is the regression test: it asserts no emitted feature's `nei_id` appears in
+any edition later than its stated baseline, and
+`test_hopkins_is_not_a_departure` pins the specific false positive found here
+so it cannot recur. Full per-business breakdown of the 34 surviving
+departures is in `atlas/logs/2026-08-23.md` §16.
+
+Note: `atlas/scripts/fetch_nei.py`, the legacy script that produced the
+original defective layer, was left in place (out of scope for this fix) and
+would regenerate the address-keyed layer if run again — it should be retired
+in a follow-up task.
 
 Found by assembling a site dossier rather than by any score — see engine spec
 §6. A per-site evidence assembly surfaced a contradiction that a regional
