@@ -45,3 +45,71 @@ def test_anchors_cover_all_twelve_lower_tier_municipalities():
     for expected in ("wainfleet", "west lincoln", "pelham", "grimsby",
                      "thorold", "port colborne"):
         assert any(expected in m for m in munis), f"{expected} missing"
+
+
+# --- Fix round 1 (atlas/logs/2026-08-23.md SS20) -----------------------------
+#
+# Three design defects in the original brief, corrected here:
+#   1. Directional suffixes (Burlington Street East vs West) were dropped
+#      from the Hamilton street string, collapsing distinct streets into one
+#      anchor key.
+#   2. A trailing direction blocked normalize_street's trailing-type-word
+#      drop ("RYMAL RD E" kept "rd").
+#   3. Municipality strings did not match between sources ("City of
+#      Hamilton" vs "Hamilton").
+
+
+def test_trailing_direction_still_drops_the_type_word():
+    """Defect 2: a direction in final position must not block the drop."""
+    same_short = addresses.normalize_street("RYMAL RD E")
+    same_long = addresses.normalize_street("Rymal Road East")
+    plain = addresses.normalize_street("Rymal Road")
+    assert same_short == same_long
+    assert plain != same_short
+    assert plain != same_long
+
+
+def test_all_four_cardinal_directions_round_trip():
+    """Long and short forms of every cardinal must key identically."""
+    pairs = [
+        ("N", "North"), ("S", "South"), ("E", "East"), ("W", "West"),
+    ]
+    for short, long in pairs:
+        short_key = addresses.normalize_street(f"Main St {short}")
+        long_key = addresses.normalize_street(f"Main Street {long}")
+        assert short_key == long_key, f"{short}/{long} mismatch"
+        # and it must differ from having no direction at all
+        assert short_key != addresses.normalize_street("Main St")
+
+
+def test_municipality_civic_status_prefix_is_absorbed():
+    """Defect 3: 'City of Hamilton' must key the same as 'Hamilton'."""
+    a = addresses.address_key("90", "Webster", "City of Hamilton")
+    b = addresses.address_key("90", "Webster", "Hamilton")
+    c = addresses.address_key("90", "Webster", "CITY OF HAMILTON")
+    assert a == b == c
+    assert a is not None
+
+
+def test_municipality_normalization_does_not_damage_niagara_names():
+    """The prefix strip must not touch names that already work."""
+    for name in ("St. Catharines", "Niagara Falls", "Niagara-on-the-Lake",
+                 "West Lincoln"):
+        assert addresses.normalize_municipality(name) == name.strip().lower()
+
+
+def test_directional_streets_produce_distinct_present_anchors():
+    """Regression for defect 1: E/W variants must not collapse, and both
+    must actually be present in the loaded index (not just the key function
+    in isolation)."""
+    # Civic number 77 on Burlington Street exists on both East and West in
+    # Hamilton's address points (verified directly against the cache).
+    east_key = addresses.address_key("77", "Burlington Street East",
+                                      "City of Hamilton")
+    west_key = addresses.address_key("77", "Burlington Street West",
+                                      "City of Hamilton")
+    assert east_key != west_key
+
+    anchors = addresses.load_anchors()
+    assert east_key in anchors, "Burlington Street East anchor missing"
+    assert west_key in anchors, "Burlington Street West anchor missing"
