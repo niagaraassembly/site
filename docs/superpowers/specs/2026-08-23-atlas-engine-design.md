@@ -19,6 +19,10 @@ It answers three questions separately and never merges them:
 2. **Transition** — has something changed here recently?
 3. **Evidence** — how much do we actually know about this place?
 
+Alongside them it carries **dormancy** (§5.4) — not a fourth score but a sparse,
+cited flag, present only where a record actually says something. It is `null`
+for almost every unit, and `null` means *no evidence recorded*, never *active*.
+
 ### 1.1 Relationship to the 2026-08-19 spec
 
 That spec's §8 places **"derived scoring or opportunity indices"** out of scope,
@@ -62,6 +66,7 @@ Locked in conversation, 2026-08-23:
 | D6 | **k = 3** minimum units per published public cell. |
 | D7 | **Employment upper bound** used for under-occupancy. |
 | D8 | **Weights are versioned, published data** with a PR-based contribution path. |
+| D9 | **Dormancy is a sparse cited flag, not a fourth score** — the direct vacancy evidence measured 2026-08-23 is too thin to converge on (§5.4). |
 
 ---
 
@@ -140,11 +145,11 @@ The contract between build and runtime: a flat object of scalars and booleans.
   "dist_highway_m": 2100, "dist_border_m": 18400, "dist_canal_m": 610,
   "transit_400m": true, "hydrant_150m": true, "water_pressure_district": null,
 
-  "nei_departed_n": 1, "nei_arrived_n": 0, "nei_last_year": 2022,
+  "nei_departed_n": 1, "nei_arrived_n": 0, "turnover_n": 2, "nei_last_year": 2022,
   "footprint_delta_m2": null, "zoning_changed": true,
   "permits_5y": 0, "demolition_permits": 0, "demolition_basis": null,
   "dev_application_open": false, "site_plan_open": true,
-  "registered_vacant": false,
+  "registered_vacant": false, "osm_disused": false, "osm_brownfield": false,
 
   "registers_n": 3,
   "has": ["parcel","zoning","designation","nei","osm","footprint"],
@@ -178,7 +183,7 @@ rather than a UI afterthought.
 
 ---
 
-## 5. The three sub-scores
+## 5. The three sub-scores, and dormancy
 
 Each is a pure function of `(record, weights)` emitting a **signal list** —
 every point traceable to a named piece of evidence.
@@ -188,6 +193,7 @@ score(record, weights) → {
   underoccupancy: { value, band, signals:[{delta, text, basis}], employees_range },
   transition:     { value, direction, signals:[...] },
   evidence:       { value, tier, registers_n, conflict, signals:[...] },
+  dormancy:       null | { level, signals:[...], as_of },   // §5.4 — sparse
   weights_version: "v1"
 }
 ```
@@ -237,9 +243,96 @@ low evidence is a lead, not a finding.
 and OSM is blank, or when two registers disagree about the same ground. Welland
 is the measurable case — NEI records 1,299 businesses, the city directory 923.
 
-### 5.4 No composite
+### 5.4 Dormancy — a sparse flag, not a score
 
-The output type has three score fields and no fourth. A single number would be
+**Added 2026-08-23 after measuring the available evidence.** The intent was a
+convergence score: a register says a business left, nothing replaced it, OSM
+shows no activity, no permit since. The data will not carry that shape.
+
+**Measured, 2026-08-23:**
+
+| Signal | Count | Coverage |
+|---|---:|---|
+| OSM `brownfield` | 316 | region-wide |
+| OSM `disused` (recorded) | 71 | region-wide |
+| NEI departures 2019→2022, all sectors | **121** | Niagara |
+| ↳ industrial sector only | **15** | Niagara |
+| Hamilton demolition permits (typed `DP`) | 3,007 | Hamilton |
+| Hamilton registered vacant (#221) | 84 | Hamilton |
+
+121 departures from 12,016 businesses over three years. A rule requiring three
+or four signals to agree on one parcel would return approximately nothing.
+
+**Therefore dormancy is not scored for every unit.** It is a flag computed only
+where at least one qualifying observation exists, carrying the citation for
+each. `dormancy: null` is the normal case and means *no dormancy evidence
+recorded here* — never *this site is active*.
+
+```js
+dormancy: null | {
+  level: "recorded" | "corroborated" | "single-signal",
+  signals: [{source_id, observed_on, text}],
+  as_of: "2026-08-23"
+}
+```
+
+- **`recorded`** — a register states it. Only Hamilton #221 qualifies today (84
+  buildings). Rendered as a cited fact, never as a score.
+- **`corroborated`** — two or more independent observations agree (e.g. an NEI
+  departure with no arrival *and* an OSM `disused` tag).
+- **`single-signal`** — one observation. Displayed with the observation named,
+  because one source saying something is a lead, not a finding.
+
+**Labels.** The public string is *"records suggest inactivity"* with the
+evidence enumerated beneath. The words *vacant*, *empty* and *available* are
+reserved for `recorded`, where a register supplies them, and are then quoted
+with attribution. This is the §1.1 guard applied at the level of wording.
+
+**Validation.** Hamilton's 84 registered-vacant buildings are the test set.
+Dormancy is aimed squarely at what that register measures, so unlike
+under-occupancy it is a fair test: the flag should fire on them.
+
+### 5.5 Premises turnover — a signal found while measuring
+
+`nei_id` keys a **premises record, not a business**. Across 2019→2022, 95.4% of
+ids keep the same business name but **544 change name under the same id** —
+4.5× more common than departure. A premises turning over is a different
+phenomenon from one emptying, and it is far better evidenced.
+
+Carried as `turnover_n` on the record and fed to **transition** (§5.2), not to
+dormancy. Noted here because it was found while establishing that dormancy
+could not be a convergence score, and it is the more abundant signal.
+
+### 5.6 NEI cross-year normalization
+
+The NEI schema drifts across survey years and cross-year comparison silently
+returns **zero** unless normalized:
+
+| Year | Id field | Employee field |
+|---|---|---|
+| 2017 | `NEI_ID` | `SizeRange_Employees` |
+| 2018 | `NEI_ID` | `SizeRange_Employees` |
+| 2019 | `NEI_ID` | `EmployeeSizeRange` |
+| 2022 | `nei_id` | `sizerangeemployees` |
+
+`normalize/nei.py` lower-cases and strips underscores from every key before
+mapping. A test asserts that each year-pair yields a non-zero intersection —
+silent zero is the failure mode this guards against, and it is the one that
+already occurred during design.
+
+### 5.7 Where aggressiveness lives
+
+Dormancy is deliberately sparse; **under-occupancy is the signal with volume**
+(~79,000 parcels). Tuning sensitivity therefore means adjusting under-occupancy
+thresholds and the D7 employment-bound convention — both rows in
+`weights/vN.json`, not code. Raising sensitivity is a weight change with a
+published version and a posted score delta (§7), so the history shows what was
+changed and what it moved.
+
+### 5.8 No composite
+
+The output type has three score fields and no fourth. Dormancy (§5.4) is a
+flag with citations, not a score, and is never summed with them. A single number would be
 the most-requested feature and the most dishonest: it would average a physical
 observation, a temporal observation and an epistemic one into a quantity that
 means nothing.
@@ -345,6 +438,10 @@ out, no map, no fetch.
   its value**: if the inference does not surface known-vacant buildings, the
   inference is wrong, and we would rather learn that in CI than in public.
 
+**Cross-year normalization test.** Each NEI year-pair must yield a non-zero
+intersection. Silent zero from schema drift is the failure mode that already
+occurred once during design (§5.6).
+
 **Also:** golden fixtures (a frozen record sample committed to the repo, so a
 weight change shows as a reviewable diff — this is what the PR workflow posts);
 coverage assertions (Wainfleet must never produce a parcel-tier unit);
@@ -434,3 +531,10 @@ unchanged and not negotiable:
    until established.
 7. **Burlington and Halton** remain the weakest part of the source base.
    Burlington returns HTTP 403; Halton has never been probed.
+8. **Dormancy is thinly evidenced outside Hamilton.** 121 NEI departures and 71
+   OSM `disused` tags region-wide. If dormancy is to matter at scale it needs a
+   new source, not a cleverer rule — the curated submission pipeline in §6 of
+   the 2026-08-19 spec is the obvious candidate, and this measurement is
+   probably why that spec proposed human curation in the first place.
+9. **Premises turnover (§5.5) is unexplored.** 544 name changes under a stable
+   id, 4.5× more common than departure, and nobody has looked at what they are.
