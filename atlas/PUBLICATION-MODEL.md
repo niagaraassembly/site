@@ -82,6 +82,20 @@ Provisional groupings — **to be fine-tuned:**
 
 These are entry points, not silos. A single site record touches all three.
 
+**Their character — recorded 2026-08-23.** These pages are *not* decision
+documents and should not read like the foundational ones. Each is three things
+at once:
+
+- **attestation to approach** — here is how we did this, and why it can be trusted
+- **appeal for participation** — here is where someone with this expertise comes in
+- **casual celebration** — here is what has been achieved so far, said lightly
+
+**Form: tight block-based narrative with anchored links into the source
+documents.** A block makes one point and links to the evidence for it; the
+reader who wants depth follows the anchor, and the reader who does not is not
+made to wade. Cartography needs no heavy decision-making to earn its page — it
+is about visual approach, shown.
+
 ---
 
 ## 3. Cartography has a distinct standing
