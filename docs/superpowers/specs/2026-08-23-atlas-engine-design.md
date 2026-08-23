@@ -423,10 +423,55 @@ region. The dossier answers the *site* question: **when someone looks at one
 place, is their takeaway rich?** Scarcity of evidence does not diminish it.
 Fifteen well-documented sites is a useful output.
 
-### 7.1 Structure — an assertion, then context bunched beneath it
+### 7.0 The dossier is for every parcel, not only the flagged ones
+
+**Amended 2026-08-23 on the project owner's direction.** An earlier draft put
+an assertion at the head and made context subordinate to it. That is backwards.
+Most parcels carry **no** assertion — nothing departed, nothing is dormant —
+and the context is still the point.
+
+**The dossier's job is to bring a piece of land's story alive.** A working,
+fully-occupied industrial site has a story: what it is zoned, what it was zoned
+before, what sits on it, how big, how reached, what constrains it, who its
+neighbours are, when it was built and what stood there before. None of that
+requires anything to be wrong with the place.
+
+So the structure inverts:
+
+- **Context is always present.** Every unit gets every band its tier can fill.
+- **An assertion is one optional band**, present only when a record says
+  something specific — a departure, a registered vacancy, a demolition.
+- **The scores are three more readings**, not the headline.
+
+An atlas that only lights up where it suspects abandonment is a decline map.
+The subject is the physical industrial economy — most of which is *working* —
+and the dossier has to serve a reader asking "what is this place?" as well as
+one asking "what went wrong here?"
+
+### 7.0.1 Story includes time
+
+The data supports real temporal depth, and a site's story should use it:
+
+| Span | Source |
+|---|---|
+| 1934 · 1954 · 1965 · 1972 | Brock air photo mosaics (#106–109) |
+| 1910s–1970s | Brock topographic series (#111) |
+| 2006 · 2013 · 2018 | Niagara Falls ortho imagery (#113) |
+| 2008 → present | Hamilton permits (#222–223), 194,466 records |
+| 2010 · 2018 | Niagara Falls building footprints (#40, #41) |
+| pre-2017 · current | Welland zoning (#20, #21) |
+| 2017 · 2018 · 2019 · 2022 | NEI editions |
+| per business | NEI `yearopen` |
+
+A parcel that was open field in 1934, built on by 1965, rezoned I2 → L1 in
+2017 and now holds three businesses is a **ninety-year story** assembled from
+sources we already hold. That is the dossier working at full strength, and it
+has nothing to do with dormancy.
+
+### 7.1 Structure — context always, assertion when there is one
 
 ```
-ASSERTION   what we claim, and the record it rests on
+ASSERTION   optional — present only when a record says something specific
 
 REGULATORY  zoning now · zoning was · Official Plan designation · CIP areas
 PHYSICAL    parcel area · building footprint · coverage · footprint change
@@ -434,6 +479,7 @@ CONSTRAINT  the c_* fractions, named, with the authority behind each
 ACCESS      rail · regional road + AADT · highway · border · canal · transit
 NEIGHBOURS  businesses within 500 m, sector mix, cluster or isolated
 CHANGE      departures · arrivals · turnover · permits · applications
+HISTORY     imagery epochs · footprint change · rezoning · years opened
 EVIDENCE    which registers cover this, how stale, what disagrees
 ```
 
@@ -540,6 +586,7 @@ contradicts it — not that contradicted features are absent.
 
 | Band | `parcel` | `footprint` | `address` |
 |---|---|---|---|
+| context bands (regulatory, constraint, access, neighbours, history) | ✅ | ✅ | ✅ |
 | assertion · evidence · change | ✅ | ✅ | ✅ |
 | constraint · access · neighbours | ✅ | ✅ | ✅ |
 | physical (area, coverage) | ✅ | partial — no tenure | ✗ |
