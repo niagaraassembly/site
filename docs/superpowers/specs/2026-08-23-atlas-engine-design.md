@@ -66,7 +66,7 @@ Locked in conversation, 2026-08-23:
 | D6 | **k = 3** minimum units per published public cell. |
 | D7 | **Employment upper bound** used for under-occupancy. |
 | D8 | **Weights are versioned, published data** with a PR-based contribution path. |
-| D10 | **The site dossier is a first-class output and a verification stage** (§7) — it falsified a live layer on first use. |
+| D10 | **The site dossier is a first-class output and a verification stage** (§7) — it falsified a live layer on first use. A contradicted finding is **shown as a contradiction**, never suppressed (§7.3–7.4). |
 | D9 | **Dormancy is a sparse cited flag, not a fourth score** — the direct vacancy evidence measured 2026-08-23 is too thin to converge on (§5.4). |
 
 ---
@@ -468,7 +468,7 @@ the context around one assertion falsified it in a single step. See
 `atlas/BACKLOG.md` for the defect and `atlas/logs/2026-08-23.md` §06 for the
 raw trace.
 
-### 7.3 Therefore: contradiction checks are a build-time test
+### 7.3 Therefore: contradiction checks are a build-time stage
 
 The dossier's verifying property is made a pipeline stage rather than a lucky
 accident. Every assertion is checked against the bands that could refute it:
@@ -480,10 +480,63 @@ accident. Every assertion is checked against the bands that could refute it:
 | building demolished | a footprint present in a later epoch at that location |
 | land under-occupied | recent permit activity, or employment above band |
 
-A failing check blocks publication of that assertion. This is where the
-regression test named in §9.2 lives.
+Each assertion carries a resulting state:
 
-### 7.4 What each unit tier can produce
+```
+claim_state: "supported" | "contested" | "refuted"
+```
+
+**A failed check does not delete the finding. It changes what is shown.**
+Suppressing a contradicted assertion would hide the most informative thing on
+the card — that two records disagree about the same ground — and would leave
+the reader trusting a silence they cannot inspect.
+
+| State | What the card shows |
+|---|---|
+| `supported` | the assertion, its source and date, and the corroborating bands |
+| `contested` | **both records, side by side**, each with source and date, and what the disagreement turns on |
+| `refuted` | **the discrepancy**, stated as a discrepancy — never the claim as fact |
+
+The Hopkins card under this model does not read *"Hopkins Steel Works
+departed"*, and it does not read blank. It reads:
+
+> **Records disagree about this site.**
+> The derived departures layer records *Hopkins Steel Works, last seen 2018,
+> gone by 2022*.
+> The Niagara Employment Inventory lists *Hopkins Steel Works* at 2 Broadway in
+> its **2017, 2018, 2019 and 2022** editions.
+> A derived layer and a source register conflict; the register is the stronger
+> evidence.
+
+That is more useful than either the false claim or its absence, and it is what
+the reader needs in order to reach their own conclusion.
+
+### 7.4 The line the guard actually draws
+
+The defamation guard (§1.1) does not prohibit publishing a contradiction. It
+prohibits **asserting as fact** something about a named business that the
+evidence does not support.
+
+- **Not published:** *"Hopkins Steel Works ceased operating at 2 Broadway."*
+  An unqualified claim about a named business, contradicted by the register.
+- **Published:** the two records, both cited and dated, and the discrepancy
+  between them. Every word of that is true and every part is checkable.
+
+So what a failing check blocks is the **unqualified assertion**, not the
+information. The engine may always show what each source says. It may not
+adopt one source's claim as its own conclusion when another refutes it.
+
+A **computed claim** — the engine's own best reading — may be offered
+alongside, clearly labelled as computed, with its inputs listed and its
+confidence stated. It is never the only thing shown, and it never replaces the
+underlying records. The reader is given the evidence and the engine's opinion,
+and can disagree with the second while keeping the first.
+
+This is where the regression test named in §9.2 lives: the test asserts that no
+feature is published in the `supported` state while a later register
+contradicts it — not that contradicted features are absent.
+
+### 7.5 What each unit tier can produce
 
 | Band | `parcel` | `footprint` | `address` |
 |---|---|---|---|
@@ -495,7 +548,7 @@ Only the area-dependent band degrades. An address-tier site in Wainfleet still
 gets a dossier — assertion, constraints, access, neighbours, change — with the
 physical band marked unavailable rather than blank.
 
-### 7.5 Dependencies
+### 7.6 Dependencies
 
 Assembly needs the geospatial toolchain in `atlas/ENVIRONMENT.md` (shapely for
 containment and nearest-neighbour, pyproj for distances in UTM 17N). The
