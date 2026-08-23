@@ -60,7 +60,7 @@ Locked in conversation, 2026-08-23:
 |---|---|
 | D1 | **Tiered audience.** Public sees regional pattern; members see parcel detail. |
 | D2 | **Three sub-scores, reported separately.** No composite, ever. |
-| D3 | **Parcel-primary unit with graceful degradation** to footprint, then point cluster. |
+| D3 | **Parcel-primary unit with graceful degradation** to footprint, then address point. Address points are the universal join anchor (§6.1). |
 | D4 | **Tier boundary built into the pipeline; public artefact only is deployed.** No auth infrastructure now. |
 | D5 | **Hybrid computation** — spatial joins at build time, scoring arithmetic at runtime. |
 | D6 | **k = 3** minimum units per published public cell. |
@@ -123,7 +123,7 @@ The contract between build and runtime: a flat object of scalars and booleans.
 
 ```jsonc
 {
-  "id": "wel-parcel-0000", "unit_tier": "parcel", "municipality": "Welland",
+  "id": "wel-parcel-0000", "unit_tier": "parcel",   // parcel | footprint | address "municipality": "Welland",
   "area_m2": 57783, "geom_ref": "wel/0000",
 
   "designation": "employment", "zoning_code": "G1",
@@ -209,7 +209,7 @@ Activity evidence — an open application, a recent permit, a named operator —
 maximise apparent under-use and make the engine flattering to its own thesis.
 The range is reported alongside.
 
-**Returns `null` where there is no denominator.** Point-cluster units and all
+**Returns `null` where there is no denominator.** Address-tier units (no area) and all
 of Hamilton (no employment data) return null, never zero. Zero would read as
 "fully used" — the exact inversion of "we do not know."
 
@@ -343,11 +343,36 @@ means nothing.
 
 ### 6.1 The ladder
 
-| `unit_tier` | Where | What can be said |
-|---|---|---|
-| `parcel` | Niagara Falls, St. Catharines (~79k) | ratios against real parcel area |
-| `footprint` | Welland (26k), Hamilton (214k) | ratios against building extent only |
-| `point_cluster` | the other nine Niagara municipalities | presence and change only |
+**Corrected 2026-08-23.** An earlier draft had the bottom rung as
+`point_cluster`, on the assumption that the nine smaller Niagara municipalities
+had no geometry of their own. They do: **Niagara Region publishes Address
+Points (#43) covering all twelve municipalities — 208,004 points**, and
+Hamilton publishes 273,535 (#220). Every square metre of the study area has
+address-level geometry.
+
+**Two different roles, previously conflated.**
+
+- **Join anchor — the address point.** Universal, 481,539 across both regions.
+  This is what address-bearing tables geocode *to*: Hamilton's 194k permits,
+  the vacant registry, the licence registers, Welland's business directory.
+- **Analysis unit — the thing a score attaches to.** Parcel where it exists,
+  else building footprint, else the address point itself.
+
+Records land on the anchor and roll *up* to the unit. Where no parcel or
+footprint exists the anchor is also the unit, and area-based scores are null
+because a point has no area — not because the place is unknown.
+
+| `unit_tier` | Where | Count | What can be said |
+|---|---|---:|---|
+| `parcel` | Niagara Falls, St. Catharines | 79,369 | ratios against real parcel area; tenure boundary |
+| `footprint` | Welland, Hamilton, Niagara Falls | 282,567 | ratios against building extent; no tenure |
+| `address` | **everywhere**, incl. the six municipalities that publish nothing | 481,539 | presence, change, constraint containment, distance — **not** area ratios |
+
+The six non-publishing municipalities hold **51,778 address points** between
+them (Thorold 12,136 · Grimsby 12,013 · Port Colborne 10,200 · Pelham 8,148 ·
+West Lincoln 5,801 · Wainfleet 3,480). They are thinner-evidenced, not absent —
+and they still receive transition, dormancy, evidence and every constraint and
+distance attribute. Only the area-denominated scores go null.
 
 **Coverage is a published layer**, not a footnote — shaded by evidence tier.
 Six municipalities publishing nothing is a finding about Niagara's data
@@ -444,7 +469,8 @@ occurred once during design (§5.6).
 
 **Also:** golden fixtures (a frozen record sample committed to the repo, so a
 weight change shows as a reviewable diff — this is what the PR workflow posts);
-coverage assertions (Wainfleet must never produce a parcel-tier unit);
+coverage assertions (Wainfleet must never produce a parcel-tier unit, and must
+produce address-tier units — 3,480 of them);
 determinism (same inputs → same output hash).
 
 ---

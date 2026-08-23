@@ -136,9 +136,10 @@ Four floats — about 32 bytes per parcel. Across ~79,000 parcels that is
 is the part anyone can actually use: *"this parcel falls 4 m across its length"*
 is a siting fact; a contour polyline is not.
 
-For visual terrain, use an **external hillshade basemap tile source**. It costs
-no repo space, is better cartography than raw contour lines, and terrain relief
-is exactly the kind of context a basemap is for.
+For visual terrain, see **D-10** — a hillshade basemap is an *optional* variant
+rather than a default, because the escarpment is already vectorised (#255 plus
+the NEP layers) and `slope_pct` answers the siting question. The basemap covers
+only the aesthetic need.
 
 **The contour GeoJSON stays in the local cache** (gitignored) as the input to
 that derivation, and is re-pullable from the ledger endpoints. It is never
@@ -219,7 +220,80 @@ only (#24, #69, provincial PSEZ) and cannot be ingested otherwise.
 
 ---
 
+## D-10 · Basemap and terrain — 2026-08-23
+
+**Question.** How is terrain represented, and on what basemap?
+
+**Context.** `map.js:30` already states the working decision: *"A muted basemap
+is a working decision, not a style one … a standard colour basemap spends all
+its contrast on roads and [labels]."* CARTO dark is in place. External raster
+tiles are therefore already accepted architecture — the question is which, and
+whether terrain earns a place.
+
+### Terrain: mostly answered without a basemap
+
+| Need | Answered by | Cost |
+|---|---|---|
+| "Is this parcel awkward to build on?" | `slope_pct`, `relief_m` — derived attributes (D-5) | ~32 bytes/unit |
+| "Where is the escarpment?" | #255 Escarpment, plus NEP boundary / policy area / land-use designations | already held |
+| "What does the land feel like?" | a hillshade — **the only need nothing else covers** | see below |
+
+Only the third row is a genuine gap, and it is aesthetic rather than
+analytical. **Hillshade is therefore an optional basemap variant, never a
+default layer** — an always-on shaded raster would add ambient texture across
+the whole viewport, which is precisely what the muted-basemap decision rejects.
+
+### Basemap options
+
+| Option | Auth | Trade-offs |
+|---|---|---|
+| **CARTO dark** (current) | none | muted by design; no terrain |
+| **Stadia** (Stamen Terrain, Alidade Smooth Dark) | **domain-based, no key** | styles are strong; adds a third-party dependency and a terms-of-service relationship |
+| Esri World Hillshade | none, attribution required | free, zero setup; `{z}/{y}/{x}` tile order, not the usual `{z}/{x}/{y}` |
+| OpenTopoMap | none | contours *and* hillshade baked in; cartographically busy, fights the muted intent |
+| Mapbox / MapTiler terrain-RGB | API key | GPU hillshade from encoded elevation — a **MapLibre/Mapbox GL** feature. Leaflet 1.9 has no equivalent, so this means changing map library |
+| **Self-hosted** (NRCan CDEM or Ontario DEM) | none | full independence. `gdaldem hillshade` → tile pyramid. Study area z10–14 ≈ 2,700 greyscale tiles ≈ **55 MB** — feasible. z15 alone would add ~165 MB, so cap the zoom range |
+
+### On API keys in a static site
+
+Recorded because the question recurs and the intuition is wrong.
+
+**GitHub Actions secrets do not protect a client-side map key.** Secrets are
+available at *build* time; injecting one into the built JavaScript makes it
+readable by anyone with view-source. The benefit is real but narrow — the key
+stays out of git history and can be rotated without a source commit — and it is
+**not** confidentiality.
+
+**What actually protects a browser tile key is domain restriction.**
+
+**Stadia supports domain-based authentication with no API key at all.** Their
+documentation calls it the recommended production method: the service validates
+the `Origin` and `Referer` headers the browser sets itself, which JavaScript
+cannot forge. Register `niagaraassembly.com` in the Stadia dashboard and the
+map authenticates with **nothing in the source at all** — no key, no secret, no
+rotation, no Action step. `localhost` needs no authentication either, so local
+development works unchanged.
+
+**One dependency this creates:** domain auth relies on the browser sending
+`Origin`/`Referer`. The site currently sets **no `Referrer-Policy`**, so the
+browser default (`strict-origin-when-cross-origin`) sends the origin on
+cross-origin requests — which is what Stadia needs. **Adding
+`Referrer-Policy: no-referrer` at any point would silently break the basemap.**
+Recorded here so that change is made knowingly.
+
+**Chosen:** keep CARTO dark as the default. Add a basemap switcher with a
+terrain option. **Stadia via domain auth** is the recommended terrain source —
+no key, good styles, and the switcher makes it opt-in so the muted default is
+untouched. Self-hosting from NRCan/Ontario DEM remains the independence path if
+the third-party relationship becomes unwelcome; ~55 MB is affordable.
+
+**What would change this:** a move to MapLibre would make terrain-RGB with GPU
+hillshade the better option, and would also open vector basemaps. That is a
+larger change than terrain alone justifies.
+
+---
+
 ## Amendment log
 
-- **2026-08-23** — Document created. D-1…D-9 recorded. D-4 amended the same day
+- **2026-08-23** — Document created. D-1…D-10 recorded. D-4 amended the same day
   after the in-memory fetcher hit 4.7 GB RSS and was killed.
