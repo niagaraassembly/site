@@ -2,3 +2,6 @@
 # pattern missed atlas/us/scripts/.cache/ entirely and would have committed
 # it.
 .cache/
+
+# Python virtualenv for the ingestion/enrichment pipeline
+.venv/

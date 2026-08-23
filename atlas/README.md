@@ -23,6 +23,18 @@ pass comes before significant application code, precisely so the architecture
 is shaped by the data that actually exists rather than the data one assumes
 exists.
 
+**Reference documents:**
+
+| Document | What it holds |
+|---|---|
+| [ENVIRONMENT.md](ENVIRONMENT.md) | packages, dependencies, environments and each package's role |
+| [TECHNOLOGY-DECISIONS.md](TECHNOLOGY-DECISIONS.md) | why each tool was chosen over its alternatives; an evolving decision record |
+| [CANDIDATES.md](CANDIDATES.md) · [CANDIDATES-HAMILTON.md](CANDIDATES-HAMILTON.md) | the numbered dataset menus (#1–126 Niagara, #201–290 Hamilton) |
+| [SCHEMAS-HAMILTON.md](SCHEMAS-HAMILTON.md) | observed field-level schemas of fetched Hamilton layers |
+| [INGESTION-LEDGER.md](INGESTION-LEDGER.md) | what is held locally, verified when, pulled when |
+| [RECON-2026-08-22.md](RECON-2026-08-22.md) | municipal/provincial/federal reconnaissance and the government roster |
+| [DATA-SOURCES.md](DATA-SOURCES.md) · [BACKLOG.md](BACKLOG.md) | the 2026-08-18 baseline, and everything found but not loaded |
+
 **Done:**
 
 - [`DATA-SOURCES.md`](DATA-SOURCES.md) — every source verified against its

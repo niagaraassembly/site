@@ -67,6 +67,50 @@ coverage.
 
 ---
 
+# ⚠ Live data defect — the departures layer
+
+**Found 2026-08-23 while assembling a site dossier.**
+`data/niagara-departures.geojson` is **live in the atlas** and asserts that 68
+named businesses departed. It is substantially wrong.
+
+Checked against the NEI 2022 inventory (`scripts/.cache/nei2022.geojson`):
+
+| | |
+|---|---:|
+| Claimed departures | 68 |
+| Same name **and** address **and** municipality present in NEI 2022 | **18 — definitively false** |
+| Same business name present, address string differs | 42 — *probably* also false |
+| No name match in NEI 2022 | 8 |
+
+**Worked case.** `Hopkins Steel Works`, 2 Broadway, Welland — the layer records
+*last seen 2018, gone by 2022*. NEI id **8130 is present in 2017, 2018, 2019
+and 2022** at that address. It never departed.
+
+The 42 middle cases are uncertain only because address strings drift between
+survey years (`2 Broadway` in 2018 → `2 Broadway Street` in 2019), which is the
+same normalization problem as §5.6 of the engine spec. On a name-only match,
+**60 of 68 (88%)** are still present.
+
+**Why this matters beyond data quality.** A false departure is a published
+claim that a *named business* ceased operating at a *stated address*. That is
+precisely the class of claim the defamation guard in
+`2026-08-19-niagaraassembly-atlas-design.md` §7 exists to prevent, and it is
+live now.
+
+**Actions:**
+1. Treat the layer as unpublishable until rebuilt.
+2. Rebuild departure detection on normalized `nei_id` **plus** normalized
+   address, not on name matching — and require absence across *all* later
+   survey years, not just one.
+3. Add the check as a regression test: no feature in a departures layer may
+   name a business present in any later NEI edition.
+
+Found by assembling a site dossier rather than by any score — see engine spec
+§6. A per-site evidence assembly surfaced a contradiction that a regional
+aggregate never would.
+
+---
+
 # Data backlog
 
 ## Tier A — verified available, not loaded
