@@ -2,8 +2,6 @@ import sys, pathlib
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "scripts"))
 
 import units
-from normalize.addresses import load_anchors, normalize_municipality
-from normalize.geometry_sources import FOOTPRINT_SOURCES, PARCEL_SOURCES
 
 
 def test_tier_order_is_the_spec_ladder():
@@ -46,19 +44,46 @@ def test_municipality_join_holds_between_polygon_sources_and_anchors():
     two forms silently disagree ('hamilton' vs 'city of hamilton'),
     build_units() would mint address-tier units for a municipality that
     already has parcels or footprints, duplicating units and inflating
-    every later count. This asserts the join actually holds: every
-    municipality named in PARCEL_SOURCES and FOOTPRINT_SOURCES matches at
-    least one anchor municipality, once both sides are normalized the same
-    way. On failure it prints both sets so a future mismatch is
-    diagnosable rather than mysterious."""
-    source_munis = {normalize_municipality(s["municipality"])
-                     for s in PARCEL_SOURCES + FOOTPRINT_SOURCES}
-    anchor_munis = {normalize_municipality(a["municipality"])
-                     for a in load_anchors().values()}
-    missing = source_munis - anchor_munis
-    assert not missing, (
-        f"source municipalities with no matching anchor municipality: "
-        f"{sorted(missing)}\n"
-        f"source municipalities (normalized): {sorted(source_munis)}\n"
-        f"anchor municipalities (normalized): {sorted(anchor_munis)}"
+    every later count.
+
+    Consolidated fix round, item 1: this must exercise units.build_units()
+    itself, not just the raw source data. Computing normalized sets
+    directly from PARCEL_SOURCES/FOOTPRINT_SOURCES and load_anchors() (as
+    this test formerly did) proves the *data* can be aligned, never that
+    units.py actually performs the alignment - it would still pass if
+    units.py regressed to comparing raw, unnormalized strings. The
+    property that matters and that actually depends on units.py's join
+    logic: no municipality appearing on a parcel or footprint unit may
+    also appear on an address unit. That duplication is exactly what the
+    join exists to prevent."""
+    built = units.build_units()
+    polygon_munis = {u["municipality"] for u in built
+                      if u["unit_tier"] in ("parcel", "footprint")}
+    address_munis = {u["municipality"] for u in built
+                      if u["unit_tier"] == "address"}
+    overlap = polygon_munis & address_munis
+    assert not overlap, (
+        f"municipalities on both a polygon-tier and an address-tier unit "
+        f"(duplication the join should have prevented): {sorted(overlap)}\n"
+        f"polygon-tier municipalities: {sorted(polygon_munis)}\n"
+        f"address-tier municipalities: {sorted(address_munis)}"
+    )
+
+
+def test_index_contains_only_allowed_municipalities():
+    """Consolidated fix round, item 4: the unit index scope is the twelve
+    Niagara Region lower-tier municipalities plus Hamilton - an explicit
+    allow-list, not whatever labels happen to appear in source data.
+    Stray regional/county labels ('regional municipality of niagara',
+    'county of brant', 'wellington county', 'regional municipality of
+    halton') must be excluded rather than normalized into the list, because
+    normalizing 'regional municipality of niagara' yields 'niagara', which
+    is not a lower-tier municipality and would merely rename the bug."""
+    built = units.build_units()
+    munis = {u["municipality"] for u in built}
+    assert munis == units.ALLOWED_MUNICIPALITIES, (
+        f"unexpected municipalities in index: "
+        f"{sorted(munis - units.ALLOWED_MUNICIPALITIES)}\n"
+        f"allowed municipalities missing from index: "
+        f"{sorted(units.ALLOWED_MUNICIPALITIES - munis)}"
     )

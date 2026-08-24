@@ -69,11 +69,13 @@ SOURCES = (
     {"path": CACHE / "bulk" / "043-address-points.geojson",
      "id": "niagara-address-points",
      "number": "Full_StreetNo", "street": "StreetName", "muni": "Municipality",
-     "type_field": "StreetType", "dir_field": "StreetDir"},
+     "type_field": "StreetType", "dir_field": "StreetDir",
+     "licence": "Open Government Licence 2.0 (Niagara Region)"},
     {"path": CACHE / "hamilton" / "220-addresses.geojson",
      "id": "hamilton-addresses",
      "number": "NUMBER_COMPLETE", "street": "STREET_NAME", "muni": "MUNICIPALITY",
-     "type_field": "STREET_SUFFIX_TYPE", "dir_field": "STREET_SUFFIX_DIRECTION"},
+     "type_field": "STREET_SUFFIX_TYPE", "dir_field": "STREET_SUFFIX_DIRECTION",
+     "licence": "City of Hamilton Open Data Licence"},
 )
 
 
@@ -157,5 +159,6 @@ def load_anchors():
                 "lon": point[0], "lat": point[1],
                 "municipality": str(props.get(src["muni"]) or "").strip().lower(),
                 "source_id": src["id"],
+                "licence": src["licence"],
             }
     return anchors

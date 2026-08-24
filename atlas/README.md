@@ -19,7 +19,7 @@ site repo. It has no dependency on the site's build (`build.py` only reads
 ## Status: reconnaissance and normalization complete
 
 The data-source reconnaissance pass is finished and the normalization pipeline
-is built. The unit index (445,086 units across three tiers) exists, carrying
+is built. The unit index (445,075 units across three tiers) exists, carrying
 provenance on every feature. Enrichment, change detection, scoring, emit and
 the dossier remain to be built; nothing is rendered in the app yet.
 
@@ -51,8 +51,12 @@ the dossier remain to be built; nothing is rendered in the app yet.
   boundaries, NEI stabilized on `nei_id` rather than address, departures
   corrected (34 true departures, not 68), address anchor index (354,601 keys),
   parcel/footprint tiers (79,369 + 282,567 units), coverage per municipality.
-- **Unit index** — 445,086 units (parcel, footprint, address tiers) in UTM 17N,
-  each with centroid, area (where applicable), and provenance block.
+- **Unit index** — 445,075 units (parcel, footprint, address tiers) in UTM 17N,
+  each with centroid, area (where applicable), and provenance block. Scoped to
+  the twelve Niagara Region lower-tier municipalities plus Hamilton by an
+  explicit allow-list; 11 units in stray regional/county labels (not a
+  lower-tier municipality) are excluded and the exclusion count is reported,
+  not dropped silently.
 
 **Not started:** enrichment and constraints, change detection, scoring, emit,
 the dossier, the Leaflet application, basemaps.
