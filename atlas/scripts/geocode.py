@@ -13,6 +13,22 @@ the build. Spec section 9.1.
 from normalize.addresses import address_key
 
 
+# Observed geocoding rates, measured against the real cached tables.
+# A floor is set BELOW its observed rate — a floor above it would already fail.
+# Measured 2026-08-23 against scripts/.cache/hamilton/221-vacant-building-registry.geojson
+# (84 rows): 86.9% (73/84). The 11 unmatched were diagnosed as highway/concession
+# naming ("HWY 8" vs "Highway No. 8"), two rows whose FOLDER_NAME omits a direction
+# the address point carries, one fractional civic number, and two streets absent
+# from the address points entirely.
+GEOCODE_FLOORS = {
+    "hamilton-vacant-registry": 0.80,
+}
+# Hamilton's building and demolition permits (194,466 rows) and its licensed-business
+# registers are separate source schemas and have NOT been measured. They get their own
+# floors when they are ingested. Do not apply this floor to them — a floor borrowed
+# from an unrelated table is a guess wearing a number.
+
+
 class GeocodeRateError(RuntimeError):
     """Raised when a table geocodes below its required floor."""
 

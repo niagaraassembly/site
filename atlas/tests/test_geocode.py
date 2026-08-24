@@ -46,3 +46,12 @@ def test_municipality_default_applies_when_field_absent():
     rows = [{"n": "2", "s": "Broadway"}]
     res = geocode.geocode(rows, "n", "s", None, ANCHORS, municipality_default="Welland")
     assert res["rate"] == 1.0
+
+
+def test_geocode_floor_below_observed_rate():
+    """The floor is set BELOW the observed rate so it cannot already be failing."""
+    observed_rate = 0.869  # 73/84 against 221-vacant-building-registry (measured 2026-08-23)
+    floor = geocode.GEOCODE_FLOORS["hamilton-vacant-registry"]
+    assert floor < observed_rate, (
+        f"Floor ({floor:.1%}) must be strictly below observed rate ({observed_rate:.1%})"
+    )

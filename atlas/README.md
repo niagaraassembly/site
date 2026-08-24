@@ -16,12 +16,12 @@ site repo. It has no dependency on the site's build (`build.py` only reads
 
 ---
 
-## Status: reconnaissance complete, no application code yet
+## Status: reconnaissance and normalization complete
 
-This is deliberate. The brief is explicit that a data-source reconnaissance
-pass comes before significant application code, precisely so the architecture
-is shaped by the data that actually exists rather than the data one assumes
-exists.
+The data-source reconnaissance pass is finished and the normalization pipeline
+is built. The unit index (445,086 units across three tiers) exists, carrying
+provenance on every feature. Enrichment, change detection, scoring, emit and
+the dossier remain to be built; nothing is rendered in the app yet.
 
 **Reference documents:**
 
@@ -45,9 +45,17 @@ exists.
   licences. Gaps and dead ends recorded explicitly.
 - [`sources/sources.json`](sources/sources.json) — machine-readable registry,
   ready for the UI to expose so the atlas is auditable.
+- **Ingestion** — Hamilton and Niagara address points, parcels, footprints, and
+  NEI business records cached.
+- **Normalization** — schemas unified across municipal/regional/national
+  boundaries, NEI stabilized on `nei_id` rather than address, departures
+  corrected (34 true departures, not 68), address anchor index (354,601 keys),
+  parcel/footprint tiers (79,369 + 282,567 units), coverage per municipality.
+- **Unit index** — 445,086 units (parcel, footprint, address tiers) in UTM 17N,
+  each with centroid, area (where applicable), and provenance block.
 
-**Not started:** ingestion scripts, normalization, entity resolution, derived
-analysis, the Leaflet application.
+**Not started:** enrichment and constraints, change detection, scoring, emit,
+the dossier, the Leaflet application, basemaps.
 
 ### What the reconnaissance established
 
