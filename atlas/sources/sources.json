@@ -272,5 +272,70 @@
     },
     "status": "active",
     "notes": "Field names change case between editions — 2019 ships PrimaryNAICS, 2022 ships primarynaics. Compare on lower-cased keys or the diff silently returns nothing. This is the only Ontario source found that supports the industrial-underuse method; MPAC, the obvious candidate, is fee-based and withholds income data. A departure is not a listing: a site can be empty and not for sale, or sold and not yet reoccupied."
+  },
+  {
+    "id": "nf-property-parcels",
+    "name": "Niagara Falls Property Parcels",
+    "organization": "City of Niagara Falls",
+    "license": "Open Government Licence 2.0 (Niagara Falls)",
+    "last_retrieved": "2026-08-22",
+    "verified": {
+      "date": "2026-08-22",
+      "records": 35104
+    },
+    "coverage": "Niagara Falls",
+    "status": "active"
+  },
+  {
+    "id": "stc-parcel-fabric",
+    "name": "St. Catharines Parcel Fabric Public",
+    "organization": "City of St. Catharines",
+    "license": "Open Government Licence 2.0 (Corporation of the City of St. Catharines)",
+    "last_retrieved": "2026-08-22",
+    "verified": {
+      "date": "2026-08-22",
+      "records": 44265
+    },
+    "coverage": "St. Catharines",
+    "status": "active"
+  },
+  {
+    "id": "nf-footprints-2018",
+    "name": "Niagara Falls Building Footprints 2018",
+    "organization": "City of Niagara Falls",
+    "license": "Open Government Licence 2.0 (Niagara Falls)",
+    "last_retrieved": "2026-08-22",
+    "verified": {
+      "date": "2026-08-22",
+      "records": 42247
+    },
+    "coverage": "Niagara Falls",
+    "status": "active"
+  },
+  {
+    "id": "welland-footprints",
+    "name": "Welland Building Footprints",
+    "organization": "City of Welland",
+    "license": "Open Government Licence 2.0 (Welland)",
+    "last_retrieved": "2026-08-22",
+    "verified": {
+      "date": "2026-08-22",
+      "records": 26027
+    },
+    "coverage": "Welland",
+    "status": "active"
+  },
+  {
+    "id": "hamilton-buildings",
+    "name": "Hamilton Buildings",
+    "organization": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "last_retrieved": "2026-08-23",
+    "verified": {
+      "date": "2026-08-23",
+      "records": 214293
+    },
+    "coverage": "Hamilton",
+    "status": "active"
   }
 ]

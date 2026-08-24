@@ -1,4 +1,4 @@
-import sys, pathlib
+import sys, pathlib, json
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "scripts"))
 
 import units
@@ -86,4 +86,24 @@ def test_index_contains_only_allowed_municipalities():
         f"{sorted(munis - units.ALLOWED_MUNICIPALITIES)}\n"
         f"allowed municipalities missing from index: "
         f"{sorted(units.ALLOWED_MUNICIPALITIES - munis)}"
+    )
+
+
+def test_every_source_id_exists_in_registry():
+    """Provenance travels with every feature (binding constraint): source id,
+    retrieval date, licence, original id. Every source.id appearing in the
+    unit index must resolve to a record in atlas/sources/sources.json, so
+    that downstream code can attach the full source metadata to features."""
+    built = units.build_units()
+    source_ids = {u["source"]["id"] for u in built}
+
+    sources_path = pathlib.Path(__file__).resolve().parents[1] / "sources" / "sources.json"
+    with open(sources_path) as fh:
+        sources_registry = json.load(fh)
+    registry_ids = {s["id"] for s in sources_registry}
+
+    missing = source_ids - registry_ids
+    assert not missing, (
+        f"source ids in unit index but missing from sources.json: "
+        f"{sorted(missing)}"
     )
