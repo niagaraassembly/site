@@ -160,6 +160,76 @@
     "notes": "Publicly readable and server-rendered, but robots.txt is 'Disallow: /'. Do NOT build an automated collector against it. Link out only."
   },
   {
+    "id": "niagara-address-points",
+    "name": "Niagara Region Address Points",
+    "organization": "Niagara Region",
+    "url": "https://open.niagararegion.ca/datasets/NiagaraRegion::address-points",
+    "service_url": "https://services1.arcgis.com/WxiLK82TWf8W3O3f/arcgis/rest/services/OpenData_Address_Points/FeatureServer/43",
+    "download_url": "https://open.niagararegion.ca/api/download/v1/items/574a111cfe26426a90f1266cb5803d53/geojson?layers=43",
+    "format": "geojson",
+    "category": [
+      "address"
+    ],
+    "coverage": "Niagara Region, all twelve lower-tier municipalities",
+    "update_frequency": "unknown",
+    "freshness_state": "UPDATED ANNUALLY",
+    "license": "Open Government Licence 2.0 (Niagara Region)",
+    "license_url": "https://niagaraopendata.ca/pages/open-government-licence-niagara-region",
+    "attribution": "Contains information licensed under the Open Government Licence – Niagara Region",
+    "share_alike": false,
+    "last_retrieved": "2026-08-22",
+    "verified": {
+      "date": "2026-08-22",
+      "records": 208004,
+      "geometry": "point",
+      "fields": [
+        "OBJECTID",
+        "GSmartID",
+        "Full_StreetNo",
+        "StreetNoUpper",
+        "Qualifier",
+        "StreetName",
+        "StreetType",
+        "StreetDir",
+        "Unit",
+        "Municipality",
+        "CreateDate",
+        "Xcoord",
+        "Ycoord",
+        "StreetNo",
+        "LifeCycleStatus"
+      ]
+    },
+    "status": "active",
+    "notes": "The universal geocoding base for Niagara Region's twelve lower-tier municipalities, including the six that publish no parcels or footprints of their own (normalize.addresses.load_anchors reads this). Municipality field carries source spelling, including a small number of boundary-edge rows tagged with a neighbouring county or the regional name rather than a lower-tier municipality; normalize.units excludes those from the unit index rather than folding them into a lower-tier bucket."
+  },
+  {
+    "id": "hamilton-addresses",
+    "name": "City of Hamilton Addresses",
+    "organization": "City of Hamilton",
+    "url": "https://open.hamilton.ca",
+    "service_url": "https://services.arcgis.com/rYz782eMbySr2srL/arcgis/rest/services/Addresses/FeatureServer/1",
+    "format": "geojson",
+    "category": [
+      "address"
+    ],
+    "coverage": "City of Hamilton",
+    "update_frequency": "varies",
+    "freshness_state": "UPDATED ANNUALLY",
+    "license": "City of Hamilton Open Data Licence",
+    "license_url": "https://www.hamilton.ca/city-initiatives/strategies-actions/open-data-licence-terms-and-conditions",
+    "attribution": "Contains information licensed under the City of Hamilton Open Data Licence",
+    "share_alike": false,
+    "last_retrieved": "2026-08-23",
+    "verified": {
+      "date": "2026-08-23",
+      "records": 273535,
+      "geometry": "point"
+    },
+    "status": "active",
+    "notes": "The geocoding base for every Hamilton address-bearing table (permits, vacant registry, licence registers - normalize.addresses.load_anchors reads this). MUNICIPALITY field records the full legal form ('City of Hamilton'); normalize.addresses.normalize_municipality strips the civic-status prefix before comparing to other sources' 'Hamilton'."
+  },
+  {
     "id": "niagara-employment-inventory",
     "name": "Niagara Region Employment Inventory",
     "organization": "Niagara Region",
@@ -202,5 +272,70 @@
     },
     "status": "active",
     "notes": "Field names change case between editions — 2019 ships PrimaryNAICS, 2022 ships primarynaics. Compare on lower-cased keys or the diff silently returns nothing. This is the only Ontario source found that supports the industrial-underuse method; MPAC, the obvious candidate, is fee-based and withholds income data. A departure is not a listing: a site can be empty and not for sale, or sold and not yet reoccupied."
+  },
+  {
+    "id": "nf-property-parcels",
+    "name": "Niagara Falls Property Parcels",
+    "organization": "City of Niagara Falls",
+    "license": "Open Government Licence 2.0 (Niagara Falls)",
+    "last_retrieved": "2026-08-22",
+    "verified": {
+      "date": "2026-08-22",
+      "records": 35104
+    },
+    "coverage": "Niagara Falls",
+    "status": "active"
+  },
+  {
+    "id": "stc-parcel-fabric",
+    "name": "St. Catharines Parcel Fabric Public",
+    "organization": "City of St. Catharines",
+    "license": "Open Government Licence 2.0 (Corporation of the City of St. Catharines)",
+    "last_retrieved": "2026-08-22",
+    "verified": {
+      "date": "2026-08-22",
+      "records": 44265
+    },
+    "coverage": "St. Catharines",
+    "status": "active"
+  },
+  {
+    "id": "nf-footprints-2018",
+    "name": "Niagara Falls Building Footprints 2018",
+    "organization": "City of Niagara Falls",
+    "license": "Open Government Licence 2.0 (Niagara Falls)",
+    "last_retrieved": "2026-08-22",
+    "verified": {
+      "date": "2026-08-22",
+      "records": 42247
+    },
+    "coverage": "Niagara Falls",
+    "status": "active"
+  },
+  {
+    "id": "welland-footprints",
+    "name": "Welland Building Footprints",
+    "organization": "City of Welland",
+    "license": "Open Government Licence 2.0 (Welland)",
+    "last_retrieved": "2026-08-22",
+    "verified": {
+      "date": "2026-08-22",
+      "records": 26027
+    },
+    "coverage": "Welland",
+    "status": "active"
+  },
+  {
+    "id": "hamilton-buildings",
+    "name": "Hamilton Buildings",
+    "organization": "City of Hamilton",
+    "license": "City of Hamilton Open Data Licence",
+    "last_retrieved": "2026-08-23",
+    "verified": {
+      "date": "2026-08-23",
+      "records": 214293
+    },
+    "coverage": "Hamilton",
+    "status": "active"
   }
 ]
