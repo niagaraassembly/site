@@ -305,7 +305,7 @@ an absent field.
 
 ---
 
-## 10. Agri-industrial — Niagara's distinctive sector
+## 10. Agri-industrial — the Niagara Peninsula's distinctive sector
 
 Observed in the study area (Overpass, 2026-08-27):
 
@@ -317,7 +317,7 @@ greenhouse horticulture 612 · vineyards 836 · orchards 176 · wineries 82
 production under agricultural zoning* — high energy and water demand,
 year-round labour, truck movements, CO₂ supply. It behaves like a factory and is
 classified like a farm. An atlas of the physical industrial economy that omits
-it misses a real part of Niagara's productive base.
+it misses a real part of the peninsula's productive base.
 
 **Greenbelt Specialty Crop Areas** (OGL Ontario, LIO) cut both ways: *inside* is
 a development constraint; *adjacent* is a locating advantage for processing —
