@@ -433,7 +433,7 @@ reader sees the uncertainty rather than inheriting the choice silently.
 
 Each signal $s_i$ is a triple (condition, delta, label). The score is
 
-$$U \;=\; \mathrm{clip}\!\left(\sum_{i} w_i \cdot \mathbb{1}[\phi_i(u)],\; 0,\; 100\right)$$
+$$U \;=\; \mathrm{clip}\!\left(\sum_{i} w_i \cdot \mathbf{1}[\phi_i(u)],\; 0,\; 100\right)$$
 
 with $w_i$ read from a **versioned weight table** and $\phi_i$ the firing
 condition. Every score carries `weights_version`; a score computed under v1 is
