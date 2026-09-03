@@ -1,17 +1,6 @@
 const POSTCARD_WIDTH = 1200;
 const POSTCARD_HEIGHT = 1500;
 
-
-/*
- * --------------------------------------------------------------------------
- * Text helpers
- * --------------------------------------------------------------------------
- *
- * Preserve intentional line breaks while normalising ordinary whitespace.
- * A single newline is a hard line break.
- * A blank line is a paragraph break.
- */
-
 function cleanText(value) {
   return String(value || "")
     .replace(/\r\n/g, "\n")
@@ -22,31 +11,15 @@ function cleanText(value) {
     .trim();
 }
 
-
 function titleCase(value) {
   const text = cleanText(value);
 
-  if (!text) {
-    return "";
-  }
+  if (!text) return "";
 
   return text
     .replace(/[-_]+/g, " ")
     .replace(/\b\w/g, letter => letter.toUpperCase());
 }
-
-
-/*
- * --------------------------------------------------------------------------
- * Canvas text
- * --------------------------------------------------------------------------
- *
- * Returns the y-coordinate immediately after the final line.
- *
- * Explicit newlines are preserved.
- * Blank lines produce additional vertical spacing.
- * Long lines wrap automatically.
- */
 
 function drawWrappedText(
   ctx,
@@ -60,9 +33,7 @@ function drawWrappedText(
 ) {
   text = cleanText(text);
 
-  if (!text) {
-    return y;
-  }
+  if (!text) return y;
 
   const paragraphs = text.split("\n");
   const lines = [];
@@ -77,9 +48,7 @@ function drawWrappedText(
     let line = "";
 
     for (const word of words) {
-      const test = line
-        ? `${line} ${word}`
-        : word;
+      const test = line ? `${line} ${word}` : word;
 
       if (
         ctx.measureText(test).width > maxWidth &&
@@ -99,7 +68,7 @@ function drawWrappedText(
 
   const visibleLines = lines.slice(0, maxLines);
 
-  if (lines.length > maxLines) {
+  if (lines.length > maxLines && visibleLines.length) {
     let last =
       visibleLines[visibleLines.length - 1];
 
@@ -122,10 +91,6 @@ function drawWrappedText(
 
     y += lineHeight;
 
-    /*
-     * Blank lines already consume one lineHeight.
-     * Paragraphs can optionally receive additional spacing.
-     */
     if (!current && paragraphGap) {
       y += paragraphGap;
     }
@@ -133,13 +98,6 @@ function drawWrappedText(
 
   return y;
 }
-
-
-/*
- * --------------------------------------------------------------------------
- * Board URL
- * --------------------------------------------------------------------------
- */
 
 function postcardUrl(record) {
   if (record && record.link) {
@@ -162,13 +120,6 @@ function postcardUrl(record) {
   ).href;
 }
 
-
-/*
- * --------------------------------------------------------------------------
- * Postcard drawing
- * --------------------------------------------------------------------------
- */
-
 function drawPostcard(record) {
   const canvas =
     document.createElement("canvas");
@@ -184,11 +135,8 @@ function drawPostcard(record) {
     );
   }
 
-
   /*
-   * ------------------------------------------------------------------------
    * Background
-   * ------------------------------------------------------------------------
    */
 
   ctx.fillStyle = "#f5f2e9";
@@ -200,11 +148,8 @@ function drawPostcard(record) {
     POSTCARD_HEIGHT
   );
 
-
   /*
-   * ------------------------------------------------------------------------
    * Outer border
-   * ------------------------------------------------------------------------
    */
 
   ctx.strokeStyle = "#171717";
@@ -217,11 +162,8 @@ function drawPostcard(record) {
     POSTCARD_HEIGHT - 68
   );
 
-
   /*
-   * ------------------------------------------------------------------------
    * Header
-   * ------------------------------------------------------------------------
    */
 
   ctx.fillStyle = "#171717";
@@ -234,11 +176,6 @@ function drawPostcard(record) {
     85,
     105
   );
-
-
-  /*
-   * Header rule
-   */
 
   ctx.beginPath();
 
@@ -253,11 +190,8 @@ function drawPostcard(record) {
 
   ctx.stroke();
 
-
   /*
-   * ------------------------------------------------------------------------
    * Category
-   * ------------------------------------------------------------------------
    */
 
   const category =
@@ -271,8 +205,13 @@ function drawPostcard(record) {
 
     ctx.fillStyle = "#555";
 
+    const categoryLabel =
+      category.toLowerCase() === "events"
+        ? "EVENT"
+        : category.toUpperCase();
+
     ctx.fillText(
-      category.toUpperCase(),
+      categoryLabel,
       85,
       y
     );
@@ -282,11 +221,8 @@ function drawPostcard(record) {
     y += 30;
   }
 
-
   /*
-   * ------------------------------------------------------------------------
    * Title
-   * ------------------------------------------------------------------------
    */
 
   ctx.fillStyle = "#171717";
@@ -305,13 +241,14 @@ function drawPostcard(record) {
     0
   );
 
-  y += 55;
+  /*
+   * Reduced spacing after title.
+   */
 
+  y += 25;
 
   /*
-   * ------------------------------------------------------------------------
    * Location / date / place
-   * ------------------------------------------------------------------------
    */
 
   ctx.font =
@@ -339,7 +276,7 @@ function drawPostcard(record) {
       2
     );
 
-    y += 10;
+    y += 8;
   }
 
   if (when) {
@@ -353,7 +290,7 @@ function drawPostcard(record) {
       2
     );
 
-    y += 10;
+    y += 8;
   }
 
   if (where) {
@@ -367,21 +304,18 @@ function drawPostcard(record) {
       2
     );
 
-    y += 10;
+    y += 8;
   }
 
-
   /*
-   * ------------------------------------------------------------------------
    * Offer
-   * ------------------------------------------------------------------------
    */
 
   const offer =
     cleanText(record.offer);
 
   if (offer) {
-    y += 10;
+    y += 8;
 
     ctx.font =
       "600 25px Arial, Helvetica, sans-serif";
@@ -394,17 +328,11 @@ function drawPostcard(record) {
       y
     );
 
-    y += 45;
+    y += 40;
   }
 
-
   /*
-   * ------------------------------------------------------------------------
-   * Presenter / host
-   * ------------------------------------------------------------------------
-   *
-   * The site's public field is called "Presenter".
-   * It is optional, so nothing is rendered when absent.
+   * Presenter
    */
 
   const presenter =
@@ -439,21 +367,18 @@ function drawPostcard(record) {
       2
     );
 
-    y += 25;
+    y += 20;
   }
 
-
   /*
-   * ------------------------------------------------------------------------
    * Description
-   * ------------------------------------------------------------------------
    */
 
   const description =
     cleanText(record.description);
 
   if (description) {
-    y += 20;
+    y += 15;
 
     ctx.font =
       "400 31px Arial, Helvetica, sans-serif";
@@ -467,22 +392,18 @@ function drawPostcard(record) {
       y,
       1030,
       45,
-      10,
-      12
+      9,
+      10
     );
 
-    y += 25;
+    y += 20;
   }
 
-
   /*
-   * ------------------------------------------------------------------------
-   * Public contact
-   * ------------------------------------------------------------------------
+   * Lower section
    *
-   * IMPORTANT:
-   * `contact` is deliberately public.
-   * The submitter's private `email` is never used here.
+   * This follows the main content rather than being
+   * independently forced onto it.
    */
 
   const contact =
@@ -491,27 +412,16 @@ function drawPostcard(record) {
   const url =
     postcardUrl(record);
 
-  /*
-   * Keep the lower section safely above the footer.
-   *
-   * If the content above has consumed more space, move the lower section
-   * down with it. If it would collide with the footer, cap it.
-   */
-
   const lowerSectionY =
-    Math.min(
-      Math.max(y + 35, 930),
-      1050
-    );
-
-
-  /*
-   * Lower rule
-   */
+    Math.max(y + 25, 1060);
 
   ctx.beginPath();
 
-  ctx.moveTo(85, lowerSectionY);
+  ctx.moveTo(
+    85,
+    lowerSectionY
+  );
+
   ctx.lineTo(
     POSTCARD_WIDTH - 85,
     lowerSectionY
@@ -522,15 +432,12 @@ function drawPostcard(record) {
 
   ctx.stroke();
 
+  let lowerY =
+    lowerSectionY + 65;
 
   /*
-   * ------------------------------------------------------------------------
    * Public contact
-   * ------------------------------------------------------------------------
    */
-
-  let lowerY =
-    lowerSectionY + 70;
 
   if (contact) {
     ctx.fillStyle = "#171717";
@@ -561,14 +468,11 @@ function drawPostcard(record) {
       2
     );
 
-    lowerY += 28;
+    lowerY += 24;
   }
 
-
   /*
-   * ------------------------------------------------------------------------
    * Link
-   * ------------------------------------------------------------------------
    */
 
   ctx.fillStyle = "#171717";
@@ -596,65 +500,32 @@ function drawPostcard(record) {
     lowerY,
     1030,
     36,
-    3
+    2
   );
-
 
   /*
-   * ------------------------------------------------------------------------
    * Footer
-   * ------------------------------------------------------------------------
+   *
+   * Board URL only.
    */
-
-  ctx.fillStyle = "#171717";
-
-  ctx.font =
-    "600 28px Arial, Helvetica, sans-serif";
-
-  ctx.fillText(
-    "NIAGARA ASSEMBLY",
-    85,
-    1390
-  );
-
 
   ctx.font =
     "400 23px Arial, Helvetica, sans-serif";
 
   ctx.fillStyle = "#555";
 
+  ctx.textAlign = "right";
+
   ctx.fillText(
-    "Technology • Industry • Commons",
-    85,
+    "www.niagaraassembly.com/board",
+    1115,
     1430
   );
 
-
-  /*
-   * Small assembly mark
-   */
-
-  ctx.strokeStyle = "#171717";
-  ctx.lineWidth = 3;
-
-  ctx.beginPath();
-
-  ctx.moveTo(1080, 1365);
-  ctx.lineTo(1120, 1405);
-  ctx.lineTo(1080, 1445);
-
-  ctx.stroke();
-
+  ctx.textAlign = "left";
 
   return canvas;
 }
-
-
-/*
- * --------------------------------------------------------------------------
- * JPEG conversion
- * --------------------------------------------------------------------------
- */
 
 function canvasToBlob(canvas) {
   return new Promise(
@@ -678,13 +549,6 @@ function canvasToBlob(canvas) {
   );
 }
 
-
-/*
- * --------------------------------------------------------------------------
- * Filename
- * --------------------------------------------------------------------------
- */
-
 function postcardFilename(record) {
   const title =
     cleanText(record.title)
@@ -698,13 +562,6 @@ function postcardFilename(record) {
   );
 }
 
-
-/*
- * --------------------------------------------------------------------------
- * Share / download
- * --------------------------------------------------------------------------
- */
-
 async function shareOrDownload(
   blob,
   filename
@@ -717,12 +574,6 @@ async function shareOrDownload(
         type: "image/jpeg"
       }
     );
-
-
-  /*
-   * Prefer the native share sheet when
-   * the browser supports file sharing.
-   */
 
   if (
     navigator.share &&
@@ -739,14 +590,7 @@ async function shareOrDownload(
       });
 
       return;
-
     } catch (error) {
-
-      /*
-       * User cancelled the share sheet.
-       * That is not an error.
-       */
-
       if (
         error &&
         error.name === "AbortError"
@@ -760,11 +604,6 @@ async function shareOrDownload(
       );
     }
   }
-
-
-  /*
-   * Fall back to downloading the JPEG.
-   */
 
   const url =
     URL.createObjectURL(blob);
@@ -787,13 +626,6 @@ async function shareOrDownload(
   );
 }
 
-
-/*
- * --------------------------------------------------------------------------
- * Create postcard
- * --------------------------------------------------------------------------
- */
-
 async function createPostcard(record) {
   if (!record) {
     throw new Error(
@@ -813,13 +645,6 @@ async function createPostcard(record) {
   );
 }
 
-
-/*
- * --------------------------------------------------------------------------
- * Attach button to an exact Board card
- * --------------------------------------------------------------------------
- */
-
 export function attachPostcardButtons(
   card,
   record
@@ -827,10 +652,6 @@ export function attachPostcardButtons(
   if (!card || !record) {
     return;
   }
-
-  /*
-   * Prevent duplicate installation.
-   */
 
   if (
     card.querySelector(
@@ -840,21 +661,11 @@ export function attachPostcardButtons(
     return;
   }
 
-
-  /*
-   * Wrapper
-   */
-
   const wrapper =
     document.createElement("div");
 
   wrapper.className =
     "board-postcard";
-
-
-  /*
-   * Button
-   */
 
   const button =
     document.createElement("button");
@@ -874,11 +685,6 @@ export function attachPostcardButtons(
     }`
   );
 
-
-  /*
-   * Action
-   */
-
   button.addEventListener(
     "click",
     async () => {
@@ -892,7 +698,6 @@ export function attachPostcardButtons(
 
         button.textContent =
           "Postcard";
-
       } catch (error) {
         console.error(
           "postcard:",
@@ -905,9 +710,7 @@ export function attachPostcardButtons(
         setTimeout(
           () => {
             button.disabled = false;
-
-            button.textContent =
-              "Postcard";
+            button.textContent = "Postcard";
           },
           1800
         );
@@ -919,18 +722,10 @@ export function attachPostcardButtons(
     }
   );
 
-
   wrapper.append(button);
 
   card.append(wrapper);
 }
-
-
-/*
- * --------------------------------------------------------------------------
- * Public exports
- * --------------------------------------------------------------------------
- */
 
 export {
   createPostcard,
