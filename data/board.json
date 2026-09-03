@@ -1,1 +1,16 @@
-[]
+[
+  {
+    "id": "b-0001",
+    "category": "events",
+    "kind": "training",
+    "location": "Niagara Falls",
+    "title": "The 27th International Conference on Condensed Matter Nuclear Science",
+    "when": "2026-08-31",
+    "where": "Americana Conference Resort, Spa & Waterpark",
+    "contact": "dalexand@lakeheadu.ca",
+    "description": "The conference will cover a wide range of topics related to Condensed Matter Nuclear Science, including but not limited to:Heat Production\nTransmutations\nElectrochemical Experiments\nHot Gas Experiments\nBeam Experiments\nPlasma Experiments\nArtificial Intelligence (AI) in low energy nuclear reactions (LENR)\nMaterial Studies\nTheoretical Studies\nRelated Studies",
+    "link": "https://www.iccf-27.org/program/",
+    "date": "2026-09-03",
+    "source": 3
+  }
+]
