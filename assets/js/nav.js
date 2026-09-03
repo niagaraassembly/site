@@ -149,7 +149,7 @@ export const OPTIONAL = {
   spaces:  ['offer', 'title', 'when', 'specs', 'price', 'link'],
   tools:   ['offer', 'presenter', 'specs', 'price', 'link'],
   experts: ['offer', 'when', 'where', 'price', 'link'],
-  shows:   ['where']
+  shows:   []
 };
 
 export function isKind(category, kind) {

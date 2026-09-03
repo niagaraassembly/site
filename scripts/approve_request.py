@@ -201,9 +201,7 @@ OPTIONAL = {
         "price",
         "link",
     ],
-    "shows": [
-        "where",
-    ],
+    "shows": [],
 }
 
 # Experts who selected "private" must never be published.
