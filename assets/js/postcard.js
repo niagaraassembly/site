@@ -1,4 +1,3 @@
-```javascript
 const POSTCARD_WIDTH = 1200;
 const POSTCARD_HEIGHT = 1500;
 
