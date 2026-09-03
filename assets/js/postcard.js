@@ -754,4 +754,3 @@ export {
   createPostcard,
   drawPostcard
 };
-```
