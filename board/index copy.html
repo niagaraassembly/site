@@ -4,172 +4,1210 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Board — @NiagaraAssembly</title>
-<meta name="description" content="Events, news, spaces, tools and experts across the Niagara region.">
-<!-- One level down: every path here is ../-prefixed. A wrong path shows an
-     empty board rather than an error, so this page is checked over HTTP. -->
-<!-- Applied before first paint so a dark-mode visitor never sees a flash
-     of the light page. Inline and blocking on purpose: a deferred or
-     external script runs too late to prevent it. -->
-<script>try{document.documentElement.dataset.theme=localStorage.getItem('na-theme')||'light'}catch(e){document.documentElement.dataset.theme='light'}</script>
+<meta
+  name="description"
+  content="Events, news, spaces, tools and experts across the Niagara region."
+>
+
+<script>
+try {
+  document.documentElement.dataset.theme =
+    localStorage.getItem('na-theme') || 'light';
+} catch (e) {
+  document.documentElement.dataset.theme = 'light';
+}
+</script>
+
 <link rel="stylesheet" href="../assets/css/site.css">
+
+<style>
+/* ---------------------------------------------------------------
+ * Postcard control
+ * --------------------------------------------------------------- */
+
+.board-postcard {
+  margin-top: 1rem;
+}
+
+.board-postcard__button {
+  appearance: none;
+  border: 1px solid currentColor;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1;
+  padding: 0.55rem 0.75rem;
+  cursor: pointer;
+}
+
+.board-postcard__button:hover {
+  background: currentColor;
+  color: var(--bg, Canvas);
+}
+
+.board-postcard__button:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+</style>
 </head>
+
 <body>
 
 <header class="topnav">
+
   <a class="topnav__brand" href="/">@NiagaraAssembly</a>
+
   <nav class="topnav__links" aria-label="Main">
+
     <a href="#join">Mailing List</a>
     <a href="/membership/">Membership</a>
     <a href="https://updates.niagaraassembly.com">Updates</a>
     <b>Board</b>
-    <a class="topnav__icon" href="https://github.com/niagaraassembly" rel="noopener" aria-label="Niagara Assembly on GitHub"><svg viewBox="0 0 16 16" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></a>
-    <a class="topnav__icon" href="https://x.com/niagaraassembly" rel="noopener" aria-label="Niagara Assembly on X"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M17.5 3h3.1l-6.8 7.7L21.8 21h-6.2l-4.9-6.4L5.1 21H2l7.2-8.2L2.4 3h6.3l4.4 5.8L17.5 3Zm-1.1 16.1h1.7L7.7 4.8H5.9l10.5 14.3Z"/></svg></a>
-    <a class="topnav__icon" href="https://discord.gg/kxacHHRmBC" rel="noopener" aria-label="Niagara Assembly on Discord"><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M19.54 0c1.13 2.01 1.94 4.2 2.31 6.51a16.8 16.8 0 0 0-4.05-1.23c-.17-.03-.34.05-.43.2-.18.31-.38.64-.55.96a15.4 15.4 0 0 0-9.64 0c-.17-.32-.37-.65-.55-.96a.5.5 0 0 0-.43-.2C4.98 5.29 3.62 5.7 2.15 6.51A22.8 22.8 0 0 0 .46 19.04c1.93 1.43 3.8 2.3 5.64 2.87.14.04.3-.01.39-.13.43-.59.82-1.21 1.15-1.86.07-.14.01-.31-.13-.36a14.2 14.2 0 0 1-1.76-.84c-.17-.09-.18-.33-.02-.43.12-.08.25-.16.37-.24.08-.05.18-.06.27-.02 5.8 2.65 12.07 2.65 17.8 0 .09-.04.19-.03.27.02.12.08.25.16.37.24.16.1.15.34-.02.43-.56.31-1.15.59-1.76.84-.14.06-.2.22-.13.36.34.65.72 1.27 1.15 1.86.09.12.25.17.39.13 1.85-.57 3.72-1.44 5.64-2.87A22.8 22.8 0 0 0 19.54 0ZM8.03 15.22c-1.13 0-2.06-1.04-2.06-2.32s.91-2.32 2.06-2.32 2.08 1.04 2.06 2.32c0 1.28-.91 2.32-2.06 2.32Zm7.94 0c-1.13 0-2.06-1.04-2.06-2.32s.91-2.32 2.06-2.32 2.08 1.04 2.06 2.32c0 1.28-.91 2.32-2.06 2.32Z"/></svg></a>
-    <button type="button" class="themetoggle" data-theme-toggle aria-label="Switch between light and dark"></button>
+
+    <a
+      class="topnav__icon"
+      href="https://github.com/niagaraassembly"
+      rel="noopener"
+      aria-label="Niagara Assembly on GitHub"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          fill="currentColor"
+          d="M12 .5a12 12 0 0 0-3.79 23.39c.6.11.82-.26.82-.58v-2.24c-3.34.73-4.04-1.61-4.04-1.61-.55-1.4-1.33-1.77-1.33-1.77-1.09-.75.08-.74.08-.74 1.2.08 1.84 1.23 1.84 1.23 1.07 1.83 2.81 1.3 3.5.99.11-.77.42-1.3.76-1.6-2.67-.3-5.47-1.34-5.47-5.94 0-1.31.47-2.38 1.23-3.22-.12-.3-.53-1.52.12-3.17 0 0 1-.32 3.3 1.23a11.4 11.4 0 0 1 6-.01c2.29-1.55 3.29-1.23 3.29-1.23.65 1.65.24 2.87.12 3.17.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.63-5.49 5.93.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.58A12 12 0 0 0 12 .5Z"
+        />
+      </svg>
+    </a>
+
+    <a
+      class="topnav__icon"
+      href="https://x.com/niagaraassembly"
+      rel="noopener"
+      aria-label="Niagara Assembly on X"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          fill="currentColor"
+          d="M18.9 2H22l-6.77 7.74L23.2 22h-6.25l-4.9-6.42L6.43 22H3.32l7.24-8.28L2.8 2h6.41l4.43 5.86L18.9 2Zm-1.1 17.8h1.73L8.27 4.08H6.41L17.8 19.8Z"
+        />
+      </svg>
+    </a>
+
+    <a
+      class="topnav__icon"
+      href="https://discord.gg/kxacHHRmBC"
+      rel="noopener"
+      aria-label="Niagara Assembly on Discord"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          fill="currentColor"
+          d="M19.54 5.3A16.6 16.6 0 0 0 15.48 4l-.5 1.02a15.4 15.4 0 0 0-5.96 0L8.52 4c-1.45.25-2.8.7-4.06 1.3C1.88 9.1 1.18 12.8 1.53 16.45a16.6 16.6 0 0 0 4.98 2.52l1.2-1.64c-.66-.25-1.3-.56-1.9-.92l.46-.36c3.67 1.7 7.65 1.7 11.28 0l.46.36c-.6.36-1.24.67-1.9.92l1.2 1.64a16.6 16.6 0 0 0 4.98-2.52c.4-4.25-.68-7.92-2.75-11.15ZM8.94 14.2c-1.08 0-1.96-.99-1.96-2.2s.86-2.2 1.96-2.2c1.1 0 1.98.99 1.96 2.2 0 1.21-.87 2.2-1.96 2.2Zm6.12 0c-1.08 0-1.96-.99-1.96-2.2s.86-2.2 1.96-2.2c1.1 0 1.98.99 1.96 2.2 0 1.21-.87 2.2-1.96 2.2Z"
+        />
+      </svg>
+    </a>
+
+    <button
+      type="button"
+      class="themetoggle"
+      data-theme-toggle
+      aria-label="Switch between light and dark"
+    ></button>
+
   </nav>
 </header>
 
+
 <div class="frame frame--board" data-sketch="frame">
 
-  <nav class="nav" id="nav" data-sketch="box" aria-label="Board sections"></nav>
-  <nav class="subnav" id="subnav" data-sketch="box" aria-label="Subsections"></nav>
+  <nav
+    class="nav"
+    id="nav"
+    data-sketch="box"
+    aria-label="Board sections"
+  ></nav>
 
-  <form class="filters" id="filters" data-sketch="box" role="search">
-    <input type="search" name="q" id="f-q" placeholder="Search the board" aria-label="Search">
-    <select name="offer" id="f-offer" aria-label="Offering or seeking">
+  <nav
+    class="subnav"
+    id="subnav"
+    data-sketch="box"
+    aria-label="Subsections"
+  ></nav>
+
+
+  <form
+    class="filters"
+    id="filters"
+    data-sketch="box"
+    role="search"
+  >
+
+    <input
+      type="search"
+      name="q"
+      id="f-q"
+      placeholder="Search the board"
+      aria-label="Search"
+    >
+
+    <select
+      name="offer"
+      id="f-offer"
+      aria-label="Offering or seeking"
+    >
       <option value="">Offering &amp; seeking</option>
       <option value="offering">Offering</option>
       <option value="seeking">Seeking</option>
     </select>
-    <select name="location" id="f-location" aria-label="Location">
+
+    <select
+      name="location"
+      id="f-location"
+      aria-label="Location"
+    >
       <option value="">Anywhere</option>
     </select>
-    <select name="since" id="f-since" aria-label="Posted">
+
+    <select
+      name="since"
+      id="f-since"
+      aria-label="Posted"
+    >
       <option value="">Any time</option>
       <option value="7">Past 7 days</option>
       <option value="30">Past 30 days</option>
     </select>
-    <label class="check"><input type="checkbox" name="upcoming" id="f-upcoming"> Upcoming only</label>
+
+    <label class="check">
+      <input
+        type="checkbox"
+        name="upcoming"
+        id="f-upcoming"
+      >
+      Upcoming only
+    </label>
+
   </form>
 
-  <div id="board"><p class="board__empty">Loading…</p></div>
 
-  <p><a href="../#post">Post to the board</a></p>
+  <div id="board">
+    <p class="board__empty">Loading…</p>
+  </div>
+
+
+  <p>
+    <a href="../#post">Post to the board</a>
+  </p>
 
 </div>
 
+
 <footer class="sitefoot">
+
   <span>Niagara Assembly (unincorporated)</span>
+
   <span class="sitefoot__sep" aria-hidden="true">-</span>
-  <a href="mailto:office@niagaraassembly.com">office@niagaraassembly.com</a>
+
+  <a href="mailto:office@niagaraassembly.com">
+    office@niagaraassembly.com
+  </a>
+
   <span class="sitefoot__sep" aria-hidden="true">-</span>
-  <a class="topnav__icon" href="https://discord.gg/kxacHHRmBC" rel="noopener" aria-label="Niagara Assembly on Discord">
-    <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M19.54 0c1.13 2.01 1.94 4.2 2.31 6.51a16.8 16.8 0 0 0-4.05-1.23c-.17-.03-.34.05-.43.2-.18.31-.38.64-.55.96a15.4 15.4 0 0 0-9.64 0c-.17-.32-.37-.65-.55-.96a.5.5 0 0 0-.43-.2C4.98 5.29 3.62 5.7 2.15 6.51A22.8 22.8 0 0 0 .46 19.04c1.93 1.43 3.8 2.3 5.64 2.87.14.04.3-.01.39-.13.43-.59.82-1.21 1.15-1.86.07-.14.01-.31-.13-.36a14.2 14.2 0 0 1-1.76-.84c-.17-.09-.18-.33-.02-.43.12-.08.25-.16.37-.24.08-.05.18-.06.27-.02 5.8 2.65 12.07 2.65 17.8 0 .09-.04.19-.03.27.02.12.08.25.16.37.24.16.1.15.34-.02.43-.56.31-1.15.59-1.76.84-.14.06-.2.22-.13.36.34.65.72 1.27 1.15 1.86.09.12.25.17.39.13 1.85-.57 3.72-1.44 5.64-2.87A22.8 22.8 0 0 0 19.54 0ZM8.03 15.22c-1.13 0-2.06-1.04-2.06-2.32s.91-2.32 2.06-2.32 2.08 1.04 2.06 2.32c0 1.28-.91 2.32-2.06 2.32Zm7.94 0c-1.13 0-2.06-1.04-2.06-2.32s.91-2.32 2.06-2.32 2.08 1.04 2.06 2.32c0 1.28-.91 2.32-2.06 2.32Z"/></svg></a>
-  <a href="https://github.com/niagaraassembly" rel="noopener" aria-label="Niagara Assembly on GitHub">
-    <svg viewBox="0 0 16 16" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+
+  <a
+    class="topnav__icon"
+    href="https://discord.gg/kxacHHRmBC"
+    rel="noopener"
+    aria-label="Niagara Assembly on Discord"
+  >
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        fill="currentColor"
+        d="M19.54 5.3A16.6 16.6 0 0 0 15.48 4l-.5 1.02a15.4 15.4 0 0 0-5.96 0L8.52 4c-1.45.25-2.8.7-4.06 1.3C1.88 9.1 1.18 12.8 1.53 16.45a16.6 16.6 0 0 0 4.98 2.52l1.2-1.64c-.66-.25-1.3-.56-1.9-.92l.46-.36c3.67 1.7 7.65 1.7 11.28 0l.46.36c-.6.36-1.24.67-1.9.92l1.2 1.64a16.6 16.6 0 0 0 4.98-2.52c.4-4.25-.68-7.92-2.75-11.15ZM8.94 14.2c-1.08 0-1.96-.99-1.96-2.2s.86-2.2 1.96-2.2c1.1 0 1.98.99 1.96 2.2 0 1.21-.87 2.2-1.96 2.2Zm6.12 0c-1.08 0-1.96-.99-1.96-2.2s.86-2.2 1.96-2.2c1.1 0 1.98.99 1.96 2.2 0 1.21-.87 2.2-1.96 2.2Z"
+      />
+    </svg>
   </a>
-  <a href="https://x.com/niagaraassembly" rel="noopener" aria-label="Niagara Assembly on X">
-    <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M17.5 3h3.1l-6.8 7.7L21.8 21h-6.2l-4.9-6.4L5.1 21H2l7.2-8.2L2.4 3h6.3l4.4 5.8L17.5 3Zm-1.1 16.1h1.7L7.7 4.8H5.9l10.5 14.3Z"/></svg>
+
+  <a
+    href="https://github.com/niagaraassembly"
+    rel="noopener"
+    aria-label="Niagara Assembly on GitHub"
+  >
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        fill="currentColor"
+        d="M12 .5a12 12 0 0 0-3.79 23.39c.6.11.82-.26.82-.58v-2.24c-3.34.73-4.04-1.61-4.04-1.61-.55-1.4-1.33-1.77-1.33-1.77-1.09-.75.08-.74.08-.74 1.2.08 1.84 1.23 1.84 1.23 1.07 1.83 2.81 1.3 3.5.99.11-.77.42-1.3.76-1.6-2.67-.3-5.47-1.34-5.47-5.94 0-1.31.47-2.38 1.23-3.22-.12-.3-.53-1.52.12-3.17 0 0 1-.32 3.3 1.23a11.4 11.4 0 0 1 6-.01c2.29-1.55 3.29-1.23 3.29-1.23.65 1.65.24 2.87.12 3.17.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.63-5.49 5.93.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.58A12 12 0 0 0 12 .5Z"
+      />
+    </svg>
   </a>
+
+  <a
+    href="https://x.com/niagaraassembly"
+    rel="noopener"
+    aria-label="Niagara Assembly on X"
+  >
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        fill="currentColor"
+        d="M18.9 2H22l-6.77 7.74L23.2 22h-6.25l-4.9-6.42L6.43 22H3.32l7.24-8.28L2.8 2h6.41l4.43 5.86L18.9 2Zm-1.1 17.8h1.73L8.27 4.08H6.41L17.8 19.8Z"
+      />
+    </svg>
+  </a>
+
 </footer>
+
 
 <script src="../vendor/rough.min.js" defer></script>
 <script src="../assets/js/sketch.js" defer></script>
 <script type="module" src="../assets/js/theme.js"></script>
+
+
 <script type="module">
-  import { navHtml, subnavHtml, mountBoard, parseQuery } from '../assets/js/board.js';
-  import { locationsIn, hasOffer } from '../assets/js/nav.js';
 
-  const root = document.getElementById('board');
-  const nav = document.getElementById('nav');
-  const subnav = document.getElementById('subnav');
-  const filters = document.getElementById('filters');
+import {
+  navHtml,
+  subnavHtml,
+  mountBoard,
+  parseQuery
+} from '../assets/js/board.js';
 
-  let records = [];
-  let state = parseQuery(location.search);
+import {
+  locationsIn,
+  hasOffer
+} from '../assets/js/nav.js';
 
-  /* "Past 7 days" is stored as a day count in the control but as an
-     absolute ISO date in the filter, so applyFilters stays a pure
-     comparison with no clock of its own. */
-  function sinceDate(days) {
-    if (!days) return '';
-    const d = new Date();
-    d.setDate(d.getDate() - Number(days));
-    return d.toISOString().slice(0, 10);
+
+/* ------------------------------------------------------------------
+ * Board state
+ * ---------------------------------------------------------------- */
+
+const root = document.getElementById('board');
+const nav = document.getElementById('nav');
+const subnav = document.getElementById('subnav');
+const filters = document.getElementById('filters');
+
+let records = [];
+let state = parseQuery(location.search);
+
+
+/* ------------------------------------------------------------------
+ * Text normalization
+ *
+ * Board records ultimately originate in a GitHub issue. Depending
+ * on where the text has passed through, a line break can arrive as:
+ *
+ *   actual newline
+ *   "\\n"
+ *   "/n"
+ *
+ * Normalize the latter two here so every downstream renderer gets
+ * a real newline character.
+ * ---------------------------------------------------------------- */
+
+function normalizeText(value) {
+  if (typeof value !== 'string') return value;
+
+  return value
+    .replace(/\\n/g, '\n')
+    .replace(/\/n/g, '\n')
+    .replace(/\r\n/g, '\n')
+    .replace(/\r/g, '\n');
+}
+
+
+function normalizeRecord(record) {
+  const normalized = {};
+
+  for (const [key, value] of Object.entries(record || {})) {
+    normalized[key] =
+      typeof value === 'string'
+        ? normalizeText(value)
+        : value;
   }
 
-  function render() {
-    nav.innerHTML = navHtml(state.category);
-    subnav.innerHTML = subnavHtml(state.category, state.kind);
+  return normalized;
+}
 
-    /* Hidden AND cleared: a stale "seeking" left behind while switching to
-       News would filter every listing out of a category that has no offer
-       to match on. */
-    const offerSelect = document.getElementById('f-offer');
-    const showOffer = hasOffer(state.category);
-    offerSelect.hidden = !showOffer;
-    if (!showOffer && state.offer) { offerSelect.value = ''; state.offer = ''; }
-    mountBoard(records, state, root);
-    /* Cards and nav links are created here, after sketch.js built its
-       registry on DOMContentLoaded — so they must be registered, not just
-       redrawn. */
-    if (window.NASketch) window.NASketch.redraw();
+
+/* ------------------------------------------------------------------
+ * Filtering
+ * ---------------------------------------------------------------- */
+
+function sinceDate(days) {
+  if (!days) return '';
+
+  const d = new Date();
+  d.setDate(d.getDate() - Number(days));
+
+  return d.toISOString().slice(0, 10);
+}
+
+
+/* ------------------------------------------------------------------
+ * Postcard text helpers
+ * ---------------------------------------------------------------- */
+
+function postcardValue(value) {
+  return normalizeText(
+    value == null ? '' : String(value)
+  ).trim();
+}
+
+
+function addPostcardButton(card, record) {
+  if (!card || !record) return;
+
+  if (card.querySelector('.board-postcard')) {
+    return;
   }
 
-  /* Nav and subnav are real links, so they work without script and can be
-     copied and shared. Intercepted here only to avoid a reload. */
-  for (const bar of [nav, subnav]) {
-    bar.addEventListener('click', (e) => {
-      const link = e.target.closest('a');
-      if (!link) return;
-      e.preventDefault();
-      history.pushState(null, '', link.getAttribute('href'));
-      state = { ...parseQuery(location.search),
-                q: state.q, offer: state.offer, location: state.location,
-                since: state.since, upcoming: state.upcoming };
-      render();
-    });
-  }
+  const wrap = document.createElement('div');
+  wrap.className = 'board-postcard';
 
-  filters.addEventListener('submit', (e) => e.preventDefault());
-  filters.addEventListener('input', () => {
-    state = {
-      ...state,
-      q: document.getElementById('f-q').value,
-      offer: document.getElementById('f-offer').value,
-      location: document.getElementById('f-location').value,
-      since: sinceDate(document.getElementById('f-since').value),
-      upcoming: document.getElementById('f-upcoming').checked
-    };
-    render();
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'board-postcard__button';
+  button.textContent = 'Create postcard';
+
+  button.addEventListener('click', async () => {
+    button.disabled = true;
+
+    try {
+      await createPostcard(record);
+    } catch (err) {
+      console.error('postcard:', err);
+      alert('The postcard could not be created.');
+    } finally {
+      button.disabled = false;
+    }
   });
 
-  addEventListener('popstate', () => { state = parseQuery(location.search); render(); });
+  wrap.appendChild(button);
+  card.appendChild(wrap);
+}
 
-  try {
-    records = await fetch('../data/board.json').then((r) => {
-      if (!r.ok) throw new Error(`board.json: HTTP ${r.status}`);
-      return r.json();
-    });
 
-    /* Location is free text, so the filter's options come from what the
-       board actually holds rather than from a list that would drift out
-       of step with the form. */
-    const select = document.getElementById('f-location');
-    for (const name of locationsIn(records)) {
-      const o = document.createElement('option');
-      o.value = name; o.textContent = name;
-      select.append(o);
+/* ------------------------------------------------------------------
+ * Find the rendered card corresponding to a Board record
+ * ---------------------------------------------------------------- */
+
+function findCardForRecord(record) {
+  const title = postcardValue(record.title);
+
+  if (!title) return null;
+
+  const candidates = root.querySelectorAll(
+    'article, li, section, .card, [class*="card"]'
+  );
+
+  for (const candidate of candidates) {
+    if (candidate.textContent.includes(title)) {
+      return candidate;
+    }
+  }
+
+  return null;
+}
+
+
+/* ------------------------------------------------------------------
+ * Install postcard controls
+ * ---------------------------------------------------------------- */
+
+function installPostcardButtons() {
+  for (const record of records) {
+    const card = findCardForRecord(record);
+
+    if (card) {
+      addPostcardButton(card, record);
+    }
+  }
+}
+
+
+/* ------------------------------------------------------------------
+ * Canvas helpers
+ * ---------------------------------------------------------------- */
+
+function canvasRoundRect(ctx, x, y, w, h, r) {
+  const radius = Math.min(r, w / 2, h / 2);
+
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + w - radius, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
+  ctx.lineTo(x + w, y + h - radius);
+  ctx.quadraticCurveTo(
+    x + w,
+    y + h,
+    x + w - radius,
+    y + h
+  );
+  ctx.lineTo(x + radius, y + h);
+  ctx.quadraticCurveTo(
+    x,
+    y + h,
+    x,
+    y + h - radius
+  );
+  ctx.lineTo(x, y + radius);
+  ctx.quadraticCurveTo(x, y, x + radius, y);
+  ctx.closePath();
+}
+
+
+/* ------------------------------------------------------------------
+ * Word wrapping
+ * ---------------------------------------------------------------- */
+
+function wrapText(ctx, text, maxWidth) {
+  const paragraphs = postcardValue(text).split('\n');
+  const lines = [];
+
+  for (const paragraph of paragraphs) {
+
+    if (!paragraph.trim()) {
+      lines.push('');
+      continue;
     }
 
-    render();
-  } catch (err) {
-    /* Say so rather than leaving "Loading…" up forever — a stuck spinner
-       is indistinguishable from an empty board. */
-    console.error(err);
-    nav.innerHTML = navHtml(state.category);
-    root.innerHTML = '<p class="board__empty">The board could not be loaded. Please reload.</p>';
+    const words = paragraph.split(/\s+/);
+    let line = '';
+
+    for (const word of words) {
+      const test = line ? line + ' ' + word : word;
+
+      if (ctx.measureText(test).width <= maxWidth) {
+        line = test;
+        continue;
+      }
+
+      if (line) {
+        lines.push(line);
+      }
+
+      /*
+       * If one individual word is wider than the available width,
+       * break it rather than allowing it to overflow the postcard.
+       */
+      if (ctx.measureText(word).width <= maxWidth) {
+        line = word;
+      } else {
+        let part = '';
+
+        for (const char of word) {
+          const testPart = part + char;
+
+          if (
+            ctx.measureText(testPart).width <= maxWidth
+          ) {
+            part = testPart;
+          } else {
+            if (part) lines.push(part);
+            part = char;
+          }
+        }
+
+        line = part;
+      }
+    }
+
+    if (line) {
+      lines.push(line);
+    }
   }
+
+  return lines;
+}
+
+
+function drawWrappedText(
+  ctx,
+  text,
+  x,
+  y,
+  maxWidth,
+  lineHeight,
+  maxLines = Infinity
+) {
+  const lines = wrapText(ctx, text, maxWidth);
+
+  let count = 0;
+
+  for (const line of lines) {
+
+    if (count >= maxLines) {
+      break;
+    }
+
+    if (line) {
+      ctx.fillText(line, x, y + count * lineHeight);
+    }
+
+    count++;
+  }
+
+  return count;
+}
+
+
+/* ------------------------------------------------------------------
+ * Postcard data
+ *
+ * Deliberately include every populated field submitted to the Board.
+ * Empty fields simply do not appear.
+ * ---------------------------------------------------------------- */
+
+function postcardFields(record) {
+  const fields = [];
+
+  const add = (label, key) => {
+    const value = postcardValue(record[key]);
+
+    if (value) {
+      fields.push({
+        label,
+        value
+      });
+    }
+  };
+
+  add('Kind', 'kind');
+  add('Offering / seeking', 'offer');
+  add('Presenter', 'presenter');
+  add('When', 'when');
+  add('Where', 'where');
+  add('Location', 'location');
+  add('Specs', 'specs');
+  add('Price', 'price');
+  add('Description', 'description');
+  add('Link', 'link');
+  add('Contact', 'contact');
+
+  return fields;
+}
+
+
+/* ------------------------------------------------------------------
+ * Draw postcard
+ * ---------------------------------------------------------------- */
+
+async function createPostcard(record) {
+
+  const width = 1200;
+  const height = 1500;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+
+  const ctx = canvas.getContext('2d');
+
+  if (!ctx) {
+    throw new Error('Canvas is not available.');
+  }
+
+
+  /* --------------------------------------------------------------
+   * Base
+   * -------------------------------------------------------------- */
+
+  ctx.fillStyle = '#f5f2e9';
+  ctx.fillRect(0, 0, width, height);
+
+
+  /* --------------------------------------------------------------
+   * Outer border
+   * -------------------------------------------------------------- */
+
+  ctx.strokeStyle = '#171717';
+  ctx.lineWidth = 5;
+  ctx.strokeRect(34, 34, width - 68, height - 68);
+
+
+  /* --------------------------------------------------------------
+   * Header
+   * -------------------------------------------------------------- */
+
+  let y = 92;
+
+  ctx.fillStyle = '#171717';
+
+  ctx.font = '700 30px Arial, Helvetica, sans-serif';
+  ctx.fillText('@NiagaraAssembly', 78, y);
+
+  y += 48;
+
+  ctx.font = '700 20px Arial, Helvetica, sans-serif';
+  ctx.fillText(
+    'TECHNOLOGY  •  INDUSTRY  •  COMMONS',
+    78,
+    y
+  );
+
+
+  /* --------------------------------------------------------------
+   * Category
+   * -------------------------------------------------------------- */
+
+  y += 78;
+
+  const category =
+    postcardValue(record.category).toUpperCase();
+
+  if (category) {
+    ctx.font = '700 22px Arial, Helvetica, sans-serif';
+    ctx.fillText(category, 78, y);
+  }
+
+
+  /* --------------------------------------------------------------
+   * Title
+   * -------------------------------------------------------------- */
+
+  y += 58;
+
+  const title = postcardValue(record.title) || '(untitled)';
+
+  ctx.font = '700 68px Arial, Helvetica, sans-serif';
+
+  const titleLines = wrapText(
+    ctx,
+    title,
+    1044
+  );
+
+  for (const line of titleLines.slice(0, 4)) {
+    ctx.fillText(line, 78, y);
+    y += 78;
+  }
+
+
+  /* --------------------------------------------------------------
+   * Information block
+   * -------------------------------------------------------------- */
+
+  y += 22;
+
+  const fields = postcardFields(record);
+
+  const labelWidth = 260;
+  const valueX = 78 + labelWidth;
+  const valueWidth = 1044 - labelWidth;
+
+  ctx.font = '700 22px Arial, Helvetica, sans-serif';
+
+  for (const field of fields) {
+
+    /*
+     * Description gets more vertical space and is treated as prose.
+     * Everything else gets a compact labelled row.
+     */
+    if (field.label === 'Description') {
+
+      ctx.font =
+        '700 22px Arial, Helvetica, sans-serif';
+
+      ctx.fillText(
+        field.label,
+        78,
+        y
+      );
+
+      y += 36;
+
+      ctx.font =
+        '400 24px Arial, Helvetica, sans-serif';
+
+      const lines = wrapText(
+        ctx,
+        field.value,
+        1044
+      );
+
+      for (const line of lines) {
+
+        if (y > height - 240) {
+          break;
+        }
+
+        if (line) {
+          ctx.fillText(line, 78, y);
+        }
+
+        y += 32;
+      }
+
+      y += 18;
+      continue;
+    }
+
+
+    ctx.font =
+      '700 21px Arial, Helvetica, sans-serif';
+
+    ctx.fillText(
+      field.label,
+      78,
+      y
+    );
+
+
+    ctx.font =
+      '400 24px Arial, Helvetica, sans-serif';
+
+    const lines = wrapText(
+      ctx,
+      field.value,
+      valueWidth
+    );
+
+    let lineY = y;
+
+    for (const line of lines) {
+
+      if (lineY > height - 240) {
+        break;
+      }
+
+      if (line) {
+        ctx.fillText(
+          line,
+          valueX,
+          lineY
+        );
+      }
+
+      lineY += 31;
+    }
+
+    y = Math.max(
+      y + 36,
+      lineY
+    ) + 12;
+  }
+
+
+  /* --------------------------------------------------------------
+   * Divider
+   * -------------------------------------------------------------- */
+
+  const footerY = height - 190;
+
+  ctx.strokeStyle = '#171717';
+  ctx.lineWidth = 2;
+
+  ctx.beginPath();
+  ctx.moveTo(78, footerY);
+  ctx.lineTo(width - 78, footerY);
+  ctx.stroke();
+
+
+  /* --------------------------------------------------------------
+   * Link
+   * -------------------------------------------------------------- */
+
+  ctx.fillStyle = '#171717';
+
+  ctx.font =
+    '700 24px Arial, Helvetica, sans-serif';
+
+  ctx.fillText(
+    'Link:',
+    78,
+    footerY + 52
+  );
+
+  const link =
+    postcardValue(record.link) ||
+    `${location.origin}/board/`;
+
+  ctx.font =
+    '400 23px Arial, Helvetica, sans-serif';
+
+  const linkLines = wrapText(
+    ctx,
+    link,
+    900
+  );
+
+  let linkY = footerY + 52;
+
+  for (const line of linkLines.slice(0, 2)) {
+
+    ctx.fillText(
+      line,
+      165,
+      linkY
+    );
+
+    linkY += 30;
+  }
+
+
+  /* --------------------------------------------------------------
+   * Footer branding
+   * -------------------------------------------------------------- */
+
+  ctx.font =
+    '700 20px Arial, Helvetica, sans-serif';
+
+  ctx.fillText(
+    'NIAGARA ASSEMBLY',
+    78,
+    height - 82
+  );
+
+  ctx.font =
+    '400 20px Arial, Helvetica, sans-serif';
+
+  ctx.fillText(
+    'niagaraassembly.com/board',
+    width - 390,
+    height - 82
+  );
+
+
+  /* --------------------------------------------------------------
+   * JPEG
+   * -------------------------------------------------------------- */
+
+  const blob = await new Promise((resolve, reject) => {
+
+    canvas.toBlob(
+      result => {
+        if (result) {
+          resolve(result);
+        } else {
+          reject(
+            new Error('Could not create JPEG.')
+          );
+        }
+      },
+      'image/jpeg',
+      0.92
+    );
+
+  });
+
+
+  /* --------------------------------------------------------------
+   * File
+   * -------------------------------------------------------------- */
+
+  const safeTitle =
+    title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .slice(0, 60) ||
+    'board-postcard';
+
+  const file =
+    new File(
+      [blob],
+      `${safeTitle}.jpg`,
+      { type: 'image/jpeg' }
+    );
+
+
+  /* --------------------------------------------------------------
+   * Share if supported
+   * -------------------------------------------------------------- */
+
+  if (
+    navigator.share &&
+    navigator.canShare &&
+    navigator.canShare({ files: [file] })
+  ) {
+
+    try {
+
+      await navigator.share({
+        title:
+          title === '(untitled)'
+            ? 'Niagara Assembly Board'
+            : title,
+        text:
+          'Posted on the Niagara Assembly Board.',
+        files: [file]
+      });
+
+      return;
+
+    } catch (err) {
+
+      /*
+       * User cancellation is not an error worth surfacing.
+       * Fall through to download only for actual share failures.
+       */
+      if (err && err.name === 'AbortError') {
+        return;
+      }
+    }
+  }
+
+
+  /* --------------------------------------------------------------
+   * Download fallback
+   * -------------------------------------------------------------- */
+
+  const url =
+    URL.createObjectURL(blob);
+
+  const a =
+    document.createElement('a');
+
+  a.href = url;
+  a.download = `${safeTitle}.jpg`;
+
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+
+  setTimeout(
+    () => URL.revokeObjectURL(url),
+    1000
+  );
+}
+
+
+/* ------------------------------------------------------------------
+ * Rendering
+ * ---------------------------------------------------------------- */
+
+function render() {
+
+  nav.innerHTML =
+    navHtml(state.category);
+
+  subnav.innerHTML =
+    subnavHtml(
+      state.category,
+      state.kind
+    );
+
+
+  const offerSelect =
+    document.getElementById('f-offer');
+
+  const showOffer =
+    hasOffer(state.category);
+
+  offerSelect.hidden =
+    !showOffer;
+
+
+  if (!showOffer && state.offer) {
+
+    offerSelect.value = '';
+    state.offer = '';
+
+  }
+
+
+  mountBoard(
+    records,
+    state,
+    root
+  );
+
+
+  /*
+   * mountBoard() owns the actual card markup.
+   *
+   * Wait one animation frame so its DOM has been committed, then
+   * attach postcard controls to the rendered cards.
+   */
+  requestAnimationFrame(() => {
+    installPostcardButtons();
+  });
+
+
+  if (window.NASketch) {
+    window.NASketch.redraw();
+  }
+}
+
+
+/* ------------------------------------------------------------------
+ * Navigation
+ * ---------------------------------------------------------------- */
+
+for (const bar of [nav, subnav]) {
+
+  bar.addEventListener(
+    'click',
+    (e) => {
+
+      const link =
+        e.target.closest('a');
+
+      if (!link) return;
+
+      e.preventDefault();
+
+      history.pushState(
+        null,
+        '',
+        link.getAttribute('href')
+      );
+
+      state = {
+        ...parseQuery(location.search),
+        q: state.q,
+        offer: state.offer,
+        location: state.location,
+        since: state.since,
+        upcoming: state.upcoming
+      };
+
+      render();
+    }
+  );
+}
+
+
+/* ------------------------------------------------------------------
+ * Filters
+ * ---------------------------------------------------------------- */
+
+filters.addEventListener(
+  'submit',
+  (e) => e.preventDefault()
+);
+
+
+filters.addEventListener(
+  'input',
+  () => {
+
+    state = {
+      ...state,
+
+      q:
+        document.getElementById(
+          'f-q'
+        ).value,
+
+      offer:
+        document.getElementById(
+          'f-offer'
+        ).value,
+
+      location:
+        document.getElementById(
+          'f-location'
+        ).value,
+
+      since:
+        sinceDate(
+          document.getElementById(
+            'f-since'
+          ).value
+        ),
+
+      upcoming:
+        document.getElementById(
+          'f-upcoming'
+        ).checked
+    };
+
+    render();
+  }
+);
+
+
+/* ------------------------------------------------------------------
+ * Browser history
+ * ---------------------------------------------------------------- */
+
+addEventListener(
+  'popstate',
+  () => {
+
+    state =
+      parseQuery(
+        location.search
+      );
+
+    render();
+  }
+);
+
+
+/* ------------------------------------------------------------------
+ * Load Board data
+ * ---------------------------------------------------------------- */
+
+try {
+
+  records =
+    await fetch(
+      '../data/board.json'
+    ).then(
+      async (response) => {
+
+        if (!response.ok) {
+          throw new Error(
+            `board.json: HTTP ${response.status}`
+          );
+        }
+
+        const data =
+          await response.json();
+
+        /*
+         * Normalize every string as soon as the Board data enters
+         * the page. This means both the normal web Board and the
+         * postcard generator receive the same corrected record.
+         */
+        return Array.isArray(data)
+          ? data.map(normalizeRecord)
+          : [];
+      }
+    );
+
+
+  const select =
+    document.getElementById(
+      'f-location'
+    );
+
+
+  for (
+    const name of locationsIn(records)
+  ) {
+
+    const option =
+      document.createElement(
+        'option'
+      );
+
+    option.value = name;
+    option.textContent = name;
+
+    select.append(option);
+  }
+
+
+  render();
+
+} catch (err) {
+
+  console.error(err);
+
+  nav.innerHTML =
+    navHtml(state.category);
+
+  root.innerHTML =
+    '<p class="board__empty">' +
+    'The board could not be loaded. Please reload.' +
+    '</p>';
+}
+
 </script>
+
 </body>
 </html>
