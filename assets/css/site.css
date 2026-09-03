@@ -333,7 +333,10 @@ ul.plain li::before { content: '- '; color: var(--ink-soft); }
 /* Price carries weight because it is what a reader decides on before
    reading anything else. */
 .card__price { margin: .35rem 0 .2rem; font: 600 .9375rem/1.3 var(--sans); }
-.card__desc { margin: .6rem 0 .4rem; }
+.card__desc {
+  margin: .6rem 0 .4rem;
+  white-space: pre-line;
+}
 .card__link,
 .card__contact { margin: 0 0 .2rem; font: .8125rem/1.4 var(--mono); }
 
