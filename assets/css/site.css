@@ -94,6 +94,7 @@ body {
   margin: 0 auto .6rem;
   padding: 0 var(--edge);
 }
+
 .topnav--board { max-width: var(--board); }
 
 .topnav__brand {
@@ -111,13 +112,55 @@ body {
   align-items: center;
   gap: 1.5rem;
 }
+
 .topnav__links a {
   font: .75rem/1 var(--sans);
   letter-spacing: .01em;
   text-decoration: none;
   color: var(--ink-soft);
 }
-.topnav__links a:hover { color: var(--ink); text-decoration: underline; }
+
+.topnav__links a:hover {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+/* Social icons ------------------------------------------------------- */
+/* The icons are inline SVGs, so give them explicit dimensions rather than
+   relying on the browser's SVG intrinsic sizing. They inherit currentColor
+   and therefore follow the light/dark ink tokens automatically. */
+
+.topnav__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  margin-left: -0.65rem;
+  color: var(--ink-soft);
+  flex: 0 0 16px;
+}
+
+.topnav__icon svg {
+  display: block;
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+
+/* Pull the first icon back out of the compressed icon spacing so the
+   social pair remains visually grouped without affecting the text links. */
+.topnav__icon:first-of-type {
+  margin-left: 0;
+}
+
+.topnav__icon:hover {
+  color: var(--ink);
+}
+
+.topnav__links a.topnav__icon:hover {
+  text-decoration: none;
+}
 
 /* Half ink, half paper. Both halves are tokens, so the rectangle inverts
    itself when the theme flips — no second icon, no state class. */
@@ -128,24 +171,45 @@ body {
   padding: 0;
   border: 1px solid var(--ink);
   border-radius: 2px;
-  background: linear-gradient(to right, var(--ink) 0 50%, var(--paper) 50% 100%);
+  background: linear-gradient(
+    to right,
+    var(--ink) 0 50%,
+    var(--paper) 50% 100%
+  );
   cursor: pointer;
   flex: none;
 }
-.themetoggle:hover { outline: 1px solid var(--rule); outline-offset: 2px; }
 
-/* Pulled closer to each other than the words are, so the pair reads as one
-   group rather than as two more nav items. */
-.topnav__icon { display: flex; align-items: center; margin-left: -0.65rem; }
-
-/* Lifted off the line box onto the glyphs' optical centre. position/top
-   rather than a margin, so nothing else in the row moves. */
+/* Lift icons and theme toggle onto the same optical centre as the nav text. */
 .topnav__icon,
-.themetoggle { position: relative; top: calc(-1 * var(--icon-lift)); }
-.topnav__icon:first-of-type { margin-left: 0; }
-.topnav__icon:hover { color: var(--ink); }
-.topnav__links a.topnav__icon:hover { text-decoration: none; }
-.topnav__links a[aria-current="page"] { color: var(--ink); font-weight: 600; }
+.themetoggle {
+  position: relative;
+  top: calc(-1 * var(--icon-lift));
+}
+
+.themetoggle:hover {
+  outline: 1px solid var(--rule);
+  outline-offset: 2px;
+}
+
+.topnav__links a[aria-current="page"] {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+@media (max-width: 34rem) {
+  .topnav {
+    flex-wrap: wrap;
+    gap: .6rem 1rem;
+  }
+
+  .topnav__links {
+    margin-left: 0;
+    flex-wrap: wrap;
+    gap: .6rem 1rem;
+  }
+}
+
 
 @media (max-width: 34rem) {
   .topnav { flex-wrap: wrap; gap: .6rem 1rem; }
