@@ -1,4 +1,3 @@
-```python
 #!/usr/bin/env python3
 
 """Turn an approved GitHub Issue into a committed board record.
@@ -64,6 +63,7 @@ CATEGORIES = (
     "spaces",
     "tools",
     "experts",
+    "shows",
 )
 
 # These must remain synchronized with the live Board form and assets/js/nav.js.
@@ -110,6 +110,13 @@ KINDS = {
         "management",
         "other",
     ),
+    "shows": (
+        "shops",
+        "factories",
+        "makerspaces",
+        "studios",
+        "labs",
+    ),
 }
 
 OFFERS = (
@@ -145,6 +152,13 @@ REQUIRED = {
         "title",
         "description",
         "contact",
+    ],
+    "shows": [
+        "title",
+        "presenter",
+        "specs",
+        "description",
+        "link",
     ],
 }
 
@@ -186,6 +200,9 @@ OPTIONAL = {
         "where",
         "price",
         "link",
+    ],
+    "shows": [
+        "where",
     ],
 }
 
@@ -568,4 +585,3 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
-```

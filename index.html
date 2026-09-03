@@ -245,6 +245,13 @@
                when: 'Availability', where: 'Where you work',
                price: 'Your rate, if you have one',
                contact: 'Public contact' }
+    shows:   {
+              title: 'Show title',
+              presenter: 'Work',
+              specs: 'Subject',
+              description: 'About the show',
+              link: 'Where to follow it',
+              where: 'Location' }
   };
 
   /* A category that does not name a field falls back to these. Without a
@@ -261,7 +268,8 @@
     news:    'A link and a few lines about what changed.',
     spaces:  'Space someone else could use. Roughly what, roughly on what terms.',
     tools:   'A machine or tool others could get at.',
-    experts: 'Offer training or workshops. You choose whether this is published.'
+    experts: 'Offer training or workshops. You choose whether this is published.',
+    shows:   'A personal or shared practice being narrated over time.'
   };
 
   const boardForm = document.getElementById('board-form');

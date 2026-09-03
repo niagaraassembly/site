@@ -201,8 +201,10 @@ export function cardHtml(record) {
 
   if (record.presenter) {
     rows.push(
-      `<p class="card__by">${e(record.presenter)}</p>`
-    );
+      record.category === 'shows'
+        ? `<p class="card__work"><strong>Work</strong><br>${e(record.presenter)}</p>`
+        : `<p class="card__by">${e(record.presenter)}</p>`
+     );
   }
 
   if (record.when) {
@@ -219,8 +221,10 @@ export function cardHtml(record) {
 
   if (record.specs) {
     rows.push(
-      `<p class="card__specs">${e(record.specs)}</p>`
-    );
+      record.category === 'shows'
+        ? `<p class="card__subject"><strong>Subject</strong><br>${e(record.specs)}</p>`
+        : `<p class="card__specs">${e(record.specs)}</p>`
+  );
   }
 
   /* Price sits above the description because it is the field a reader

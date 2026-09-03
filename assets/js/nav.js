@@ -12,14 +12,15 @@
  * suites on both sides assert they still agree.
  */
 
-export const CATEGORIES = ['events', 'news', 'spaces', 'tools', 'experts'];
+export const CATEGORIES = ['events', 'news', 'spaces', 'tools', 'experts', 'shows'];
 
 export const CATEGORY_LABELS = {
   events:  'Events',
   news:    'News',
   spaces:  'Spaces',
   tools:   'Tools',
-  experts: 'Experts'
+  experts: 'Experts',
+  shows:    'Shows'
 };
 
 /* Slug -> visible label, in the screenshot's order. "All" is prepended by
@@ -73,6 +74,13 @@ export const KINDS = {
     'logistics':     'Logistics',
     'management':    'Management',
     'other':         'Other'
+  },
+  shows: {
+    'shops': 'Shops',
+    'factories': 'Factories',
+    'makerspaces': 'Makerspaces',
+    'studios': 'Studios',
+    'labs': 'Labs'
   }
 };
 
@@ -124,7 +132,8 @@ export const REQUIRED = {
   news:    ['title', 'link', 'description'],
   spaces:  ['where', 'description', 'contact'],
   tools:   ['title', 'where', 'description', 'contact'],
-  experts: ['title', 'description', 'contact']
+  experts: ['title', 'description', 'contact'],
+  shows:   ['title', 'presenter', 'specs', 'description', 'link']
 };
 
 /* `price` is free text on purpose. "$400/mo", "free to members",
@@ -139,7 +148,8 @@ export const OPTIONAL = {
   news:    ['where', 'price', 'contact'],
   spaces:  ['offer', 'title', 'when', 'specs', 'price', 'link'],
   tools:   ['offer', 'presenter', 'specs', 'price', 'link'],
-  experts: ['offer', 'when', 'where', 'price', 'link']
+  experts: ['offer', 'when', 'where', 'price', 'link'],
+  shows:   ['where']
 };
 
 export function isKind(category, kind) {
