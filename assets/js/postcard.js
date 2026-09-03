@@ -908,7 +908,7 @@ export function attachPostcardButtons(
             button.disabled = false;
 
             button.textContent =
-              "Create postcard";
+              "Postcard";
           },
           1800
         );
