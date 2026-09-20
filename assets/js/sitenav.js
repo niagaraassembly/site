@@ -34,7 +34,7 @@ export const NAV = [
       node('/services/', 'NA*',      ['Interviews', 'Profiles', 'Edits'])
     ] },
     node('/', 'Goods',  ['Retail']),
-    node('/', 'Places', ['Hamilton', 'Fort Erie', 'GB', 'WNY'])
+    node('/', 'Places', ['Hamilton', 'Fort Erie', 'GB', 'WNY', 'Dunkirk, NY', 'Rochester', 'Erie, PA'])
   ] },
   { word: 'Assembly', items: [
     node('/assembly/', 'Membership',
