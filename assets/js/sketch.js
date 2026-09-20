@@ -70,10 +70,20 @@
            ' L ' + x + ' ' + (y + r) + ' Q ' + x + ' ' + y + ' ' + (x + r) + ' ' + y + ' Z';
   }
 
+  /* Find this element's own drawing among its direct children. It must not
+     assume the drawing is the first child: other scripts may add children to a
+     drawn element (the Apps panel does), and a missed lookup would create a
+     second drawing on every redraw and leave the old, stale-sized one behind. */
   function svgFor(el) {
-    var svg = el.firstChild;
-    if (!svg || svg.nodeType !== 1 || !svg.classList ||
-        !svg.classList.contains('sketch-svg')) {
+    var svg = null;
+    for (var i = 0; i < el.children.length; i++) {
+      var child = el.children[i];
+      if (child.classList && child.classList.contains('sketch-svg')) {
+        svg = child;
+        break;
+      }
+    }
+    if (!svg) {
       svg = document.createElementNS(NS, 'svg');
       svg.setAttribute('class', 'sketch-svg');
       svg.setAttribute('aria-hidden', 'true');

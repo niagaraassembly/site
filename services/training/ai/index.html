@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI training — @NiagaraAssembly</title>
+<meta name="description" content="How teams, companies, secure and offline environments, and government and defence set up AI infrastructure and workflows, and what Niagara Assembly would build under Clark.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('na-theme')||'light'}catch(e){document.documentElement.dataset.theme='light'}</script>
+<link rel="stylesheet" href="/assets/css/site.css">
+</head>
+<body>
+
+<header class="topnav" data-sitenav></header>
+
+<div class="frame" data-sketch="frame">
+
+  <h1>AI training</h1>
+
+  <p><b>Using AI well inside an organization is less about the model than about the
+  setup around it: where it runs, what it can see, who can use it, and how you know
+  it is behaving.</b> This page lays out how teams, companies, secure and offline
+  environments, and government and defence set that up, and what we want to build
+  under <a href="/services/training/clark/">Clark</a>.</p>
+
+  <p class="fineprint">Aspirational. We do not currently offer AI courses, and
+  nothing on this page can be booked. It is orientation, not legal or security
+  advice, and the field changes fast; check the sources at the bottom.</p>
+
+  <h2>Start with two questions</h2>
+
+  <p>Almost every setup decision follows from these: <b>where does the model
+  run</b>, and <b>where does your data go</b>? A public chat tool, an API in your
+  own application, a model in your private cloud, a server in your own building, and
+  a machine with no network at all are five different answers, and each brings its
+  own infrastructure, controls and trade-offs.</p>
+
+  <h2>Six ways organizations run AI</h2>
+
+  <div class="tablewrap">
+  <table class="data">
+    <thead><tr><th>Setup and where it runs</th><th>Who it suits</th><th>Trade-off</th></tr></thead>
+    <tbody>
+      <tr><td><b>1. Hosted assistants</b><br>The provider&rsquo;s cloud, through their apps.</td>
+          <td>Individuals and teams who want to start quickly.</td>
+          <td>Prompts and files leave your network. Check the provider&rsquo;s terms on retention and training, and use business plans with admin controls.</td></tr>
+      <tr><td><b>2. API in your own tools</b><br>The provider&rsquo;s cloud, called from your applications.</td>
+          <td>Teams building AI into a product or workflow.</td>
+          <td>You own the application, logging and access control around it.</td></tr>
+      <tr><td><b>3. Private cloud</b><br>Models offered inside your own cloud account and region.</td>
+          <td>Companies that need data to stay in a tenancy and region they control.</td>
+          <td>More set-up and cloud skills; residency and access are yours to manage.</td></tr>
+      <tr><td><b>4. Self-hosted, on-premises</b><br>Your own servers, running open-weight models.</td>
+          <td>Firms with sensitive data or steady heavy use.</td>
+          <td>You provide hardware, serving software, updates and expertise.</td></tr>
+      <tr><td><b>5. Air-gapped</b><br>A network with no outside connection.</td>
+          <td>Defence contractors, health systems, financial and other regulated work.</td>
+          <td>Everything, including models and updates, is brought in through controlled transfer.</td></tr>
+      <tr><td><b>6. Accredited government networks</b><br>Government-authorized environments, up to classified networks.</td>
+          <td>Public sector and defence.</td>
+          <td>Authorization, accreditation and oversight requirements dominate the design.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>The building blocks</h2>
+
+  <p>Whatever the setup, a working deployment is made of the same layers. Published
+  <a href="https://arxiv.org/pdf/2501.12904" rel="noopener">reference architectures</a>
+  describe them as presentation, application logic, model integration and data,
+  with monitoring and guardrails running across all of them.</p>
+
+  <div class="tablewrap">
+  <table class="data">
+    <thead><tr><th>Layer</th><th>What it does</th><th>Examples</th></tr></thead>
+    <tbody>
+      <tr><td><b>Models</b></td><td>The AI itself: hosted models, or open-weight models you run.</td><td>Hosted frontier models; open-weight families such as Llama.</td></tr>
+      <tr><td><b>Serving</b></td><td>Runs a model and answers requests.</td><td>vLLM for shared servers; llama.cpp and Ollama for local and offline use.</td></tr>
+      <tr><td><b>Gateway and access</b></td><td>One controlled front door: sign-in, roles, logging, rate limits.</td><td>An AI gateway with single sign-on and role-based access.</td></tr>
+      <tr><td><b>Retrieval (RAG)</b></td><td>Lets the model answer from your documents by looking them up first.</td><td>Embedding models and a vector database such as Qdrant or Milvus.</td></tr>
+      <tr><td><b>Tools and agents</b></td><td>Connects a model to your systems and data so it can act.</td><td>Model Context Protocol (MCP), AGENTS.md, agent frameworks such as goose.</td></tr>
+      <tr><td><b>Guardrails and evaluation</b></td><td>Filters what goes in and out, and tests whether it behaves.</td><td>Test sets, red-team exercises, input and output checks.</td></tr>
+      <tr><td><b>Observability</b></td><td>Shows how the system is being used and whether it is healthy.</td><td>Latency, throughput, token use, errors and GPU load.</td></tr>
+      <tr><td><b>Hardware</b></td><td>The compute underneath.</td><td>GPUs for shared servers; CPUs and quantized models for small local setups.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>From idea to dependable use</h2>
+
+  <div class="tablewrap">
+  <table class="data">
+    <thead><tr><th>Stage</th><th>What happens</th></tr></thead>
+    <tbody>
+      <tr><td><b>1. Choose the use</b></td><td>Pick a specific task and judge what happens if the AI is wrong.</td></tr>
+      <tr><td><b>2. Choose the setup</b></td><td>Decide where the model runs, based on how sensitive the data is.</td></tr>
+      <tr><td><b>3. Prepare data and access</b></td><td>Classify what the AI may see, and make sure it respects who is allowed to see what.</td></tr>
+      <tr><td><b>4. Build and connect</b></td><td>Wire in retrieval and tools through the gateway.</td></tr>
+      <tr><td><b>5. Test</b></td><td>Evaluate against real examples, and try to break it before others do.</td></tr>
+      <tr><td><b>6. Roll out</b></td><td>Publish clear rules of use and train the people who will use it, keeping a human in the loop where it matters.</td></tr>
+      <tr><td><b>7. Watch and improve</b></td><td>Monitor use, quality and cost, and revisit as models and rules change.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>Four situations in more detail</h2>
+
+  <div class="area">
+  <h3>Teams and companies</h3>
+  <ul class="plain">
+    <li>Decide which tools are approved, and use business plans with sign-in and admin controls.</li>
+    <li>Set a data rule: what may and may not be pasted into an AI tool.</li>
+    <li>For internal knowledge, use retrieval with permissions respected, so people only get answers from documents they may see.</li>
+    <li>Log use, write a short usage policy, and train people in it.</li>
+    <li>Govern with a recognised framework: the NIST AI RMF for risk, and ISO/IEC 42001 if you need something you can be audited against.</li>
+  </ul>
+  </div>
+
+  <div class="area">
+  <h3>Offline and secure workloads</h3>
+  <ul class="plain">
+    <li>Run an open-weight model locally with vLLM or llama.cpp; both can run with no outside connection, though vLLM needs careful network configuration for full isolation.</li>
+    <li>Keep embeddings and the vector database local too, so documents never leave the environment.</li>
+    <li>Use quantized models (formats such as GGUF, GPTQ, AWQ) to fit the hardware you have.</li>
+    <li>Bring models, software and updates in through controlled transfer, and check what you bring in.</li>
+    <li>Practitioner guides describe this pattern for defence contractors, health systems and financial firms.</li>
+  </ul>
+  </div>
+
+  <div class="area">
+  <h3>Government and defence</h3>
+  <ul class="plain">
+    <li><b>U.S. impact levels.</b> The Department of Defense authorizes cloud systems by impact level. IL5 covers controlled unclassified information and national security systems; IL6 covers classified data up to SECRET in dedicated classified environments.</li>
+    <li><b>In practice.</b> In December 2025 the department launched GenAI.mil to put commercial AI tools, authorized at IL5, in front of about three million personnel. In 2026 it announced agreements to deploy AI on its classified networks.</li>
+    <li><b>Canada.</b> The DND/CAF AI Strategy commits the defence team to being AI-enabled by 2030, with safe, responsible and ethical use. Federal departments are also covered by the Treasury Board&rsquo;s Directive on Automated Decision-Making and its generative AI guidance.</li>
+    <li><b>Ontario.</b> Bill 194 (the Enhancing Digital Security and Trust Act, 2024) sets AI requirements for public-sector entities, including public disclosure of use and human oversight.</li>
+    <li>The common thread is authorization, accountable oversight, and data staying inside approved boundaries.</li>
+  </ul>
+  </div>
+
+  <div class="area">
+  <h3>Solo builders and small teams</h3>
+  <ul class="plain">
+    <li>Start with a model on your own workstation, using llama.cpp or Ollama, and keep your data on your machine.</li>
+    <li>Share it on a small server as use grows, then add retrieval over your own documents.</li>
+    <li>It is a natural companion to <a href="/services/training/linux/">Linux</a> skills, and to our
+    <a href="/services/tools/environments/">Environments</a> work: Theia now includes a framework for building AI-powered tools and IDEs.</li>
+  </ul>
+  </div>
+
+  <h2>Frameworks and standards</h2>
+
+  <div class="tablewrap">
+  <table class="data">
+    <thead><tr><th>Framework</th><th>Who</th><th>What it is</th></tr></thead>
+    <tbody>
+      <tr><td><b>AI RMF 1.0</b> and the Generative AI Profile</td><td>NIST</td>
+          <td>Voluntary guidance for managing AI risk, organized as Govern, Map, Measure and Manage. Released January 2023; the Generative AI Profile (AI 600-1) followed in July 2024.</td></tr>
+      <tr><td><b>ISO/IEC 42001</b></td><td>ISO/IEC</td>
+          <td>A management-system standard for AI. An organization can be audited and certified against it.</td></tr>
+      <tr><td><b>OWASP Top 10 for LLM Applications</b></td><td>OWASP</td>
+          <td>The most critical security risks in LLM-based applications, such as prompt injection and sensitive information disclosure.</td></tr>
+      <tr><td><b>MITRE ATLAS</b></td><td>MITRE</td>
+          <td>A knowledge base of real-world adversary tactics and techniques against AI systems.</td></tr>
+      <tr><td><b>Model Context Protocol</b></td><td>Agentic AI Foundation (Linux Foundation)</td>
+          <td>An open protocol for connecting models to tools and data. Created at Anthropic and donated to the Foundation in December 2025.</td></tr>
+      <tr><td><b>Directive on Automated Decision-Making</b></td><td>Treasury Board of Canada</td>
+          <td>Mandatory rules for federal use of automated decision systems.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>Credentials that exist</h2>
+
+  <div class="tablewrap">
+  <table class="data">
+    <thead><tr><th>Credential</th><th>Certifies</th><th>For</th></tr></thead>
+    <tbody>
+      <tr><td><b>IAPP AIGP</b><br>AI Governance Professional</td><td>A person</td>
+          <td>Those who govern AI across its lifecycle: policy, risk and compliance.</td></tr>
+      <tr><td><b>ISO/IEC 42001 certificate</b></td><td>An organization</td>
+          <td>Companies that must prove their AI governance to customers or boards; awarded after an accredited audit.</td></tr>
+      <tr><td><b>PECB ISO/IEC 42001 courses</b><br>Foundation, Lead Implementer, Lead Auditor</td><td>A person</td>
+          <td>Those who build or audit an AI management system.</td></tr>
+      <tr><td><b>Kubernetes and Linux credentials</b></td><td>A person</td>
+          <td>Those running AI workloads on shared infrastructure. See <a href="/services/training/linux/">Linux training</a>.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>Unlike IPC in electronics, there is no single body for AI skills yet. Credentials
+  cluster around governance, security and the infrastructure underneath, which is why
+  the setup matters as much as the model.</p>
+
+  <h2>What we would do</h2>
+
+  <ul class="plain">
+    <li><b>AI at work, without the hype.</b> Plain sessions for teams on what to use,
+    what not to paste, and how to write a usage policy.</li>
+    <li><b>Build a private setup.</b> Hands-on labs to run a model and a document
+    search on a local or offline machine, on Linux.</li>
+    <li><b>Choose your setup.</b> Clinics for small companies on picking from the six
+    setups above and what each demands.</li>
+    <li><b>Governance workshops.</b> Working through the NIST AI RMF and ISO/IEC 42001
+    on a real use case.</li>
+    <li><b>Show and tell.</b> <a href="/services/events/demos/">Demos</a> and
+    <a href="/services/events/talks/">talks</a> from people running AI in production
+    around the region.</li>
+  </ul>
+
+  <h2>What we need</h2>
+
+  <ul class="plain">
+    <li>Security, infrastructure and machine learning practitioners who would teach or mentor.</li>
+    <li>Teams willing to share how they set AI up, and what went wrong.</li>
+    <li>Compliance and governance people, including those in public-sector and defence work.</li>
+    <li>GPUs and servers, lent or donated, for hands-on labs.</li>
+    <li>Students and small companies who will tell us what they cannot find.</li>
+  </ul>
+
+  <p><a href="/#register">Register as an expert</a>, <a href="/#join">join the list</a>,
+  or write to <a href="mailto:office@niagaraassembly.com">office@niagaraassembly.com</a>.</p>
+
+  <h2>References</h2>
+
+  <ul class="plain">
+    <li><a href="https://www.nist.gov/itl/ai-risk-management-framework" rel="noopener">NIST: AI Risk Management Framework</a></li>
+    <li><a href="https://www.iso.org/standard/81230.html" rel="noopener">ISO/IEC 42001:2023: AI management systems</a></li>
+    <li><a href="https://genai.owasp.org/resource/owasp-genai-llm-top-10-2026/" rel="noopener">OWASP GenAI Security Project: LLM Top 10</a></li>
+    <li><a href="https://atlas.mitre.org/" rel="noopener">MITRE ATLAS</a></li>
+    <li><a href="https://www.linuxfoundation.org/press/linux-foundation-announces-the-formation-of-the-agentic-ai-foundation" rel="noopener">Linux Foundation: Agentic AI Foundation, MCP and AGENTS.md</a></li>
+    <li><a href="https://arxiv.org/pdf/2501.12904" rel="noopener">A Functional Software Reference Architecture for LLM-Integrated Systems</a></li>
+    <li><a href="https://konic.io/blog/air-gapped-llm" rel="noopener">Air-gapped LLM deployment: what it means and when you need it</a></li>
+    <li><a href="https://www.distillabs.ai/learn/air-gapped-and-on-premise-llm-deployment/" rel="noopener">Air-gapped and on-premise LLM deployment</a></li>
+    <li><a href="https://defensescoop.com/2025/12/09/genai-mil-platform-dod-commercial-ai-models-agentic-tools-google-gemini/" rel="noopener">DefenseScoop: DOD begins rollout of GenAI.mil</a></li>
+    <li><a href="https://federalnewsnetwork.com/defense-news/2026/05/dod-strikes-deals-with-major-tech-firms-to-deploy-ai-on-classified-networks/" rel="noopener">Federal News Network: AI on classified networks</a></li>
+    <li><a href="https://knoxsystems.com/resources/il5-vs-il6" rel="noopener">DoD impact levels IL5 and IL6 explained</a></li>
+    <li><a href="https://www.canada.ca/en/department-national-defence/corporate/reports-publications/dnd-caf-artificial-intelligence-strategy/foreword.html" rel="noopener">DND/CAF Artificial Intelligence Strategy</a></li>
+    <li><a href="https://www.tbs-sct.canada.ca/pol/doc-eng.aspx?id=32592" rel="noopener">Treasury Board: Directive on Automated Decision-Making</a></li>
+    <li><a href="https://www.ola.org/en/legislative-business/bills/parliament-43/session-1/bill-194" rel="noopener">Ontario Bill 194, 2024</a></li>
+    <li><a href="https://pecb.com/en/education-and-certification-for-individuals/iso-iec-42001" rel="noopener">PECB: ISO/IEC 42001 training and certification</a></li>
+    <li><a href="https://theia-ide.org/theia-platform/" rel="noopener">Eclipse Theia Platform, including Theia AI</a></li>
+  </ul>
+
+  <p class="fineprint">Niagara Assembly is not affiliated with, or endorsed by, any
+  organization named on this page. Names are used to describe standards, programs
+  and products that exist. This page describes how AI systems are set up; it is not
+  legal, security or compliance advice, and it takes no position on any particular
+  use of AI.</p>
+
+</div>
+
+<footer class="sitefoot">
+  <span>Niagara Assembly (unincorporated)</span>
+  <span class="sitefoot__sep" aria-hidden="true">-</span>
+  <a href="mailto:office@niagaraassembly.com">office@niagaraassembly.com</a>
+  <span class="sitefoot__sep" aria-hidden="true">-</span>
+  <a class="topnav__icon" href="https://discord.gg/kxacHHRmBC" rel="noopener" aria-label="Niagara Assembly on Discord">
+    <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M19.54 0c1.13 2.01 1.94 4.2 2.31 6.51a16.8 16.8 0 0 0-4.05-1.23c-.17-.03-.34.05-.43.2-.18.31-.38.64-.55.96a15.4 15.4 0 0 0-9.64 0c-.17-.32-.37-.65-.55-.96a.5.5 0 0 0-.43-.2C4.98 5.29 3.62 5.7 2.15 6.51A22.8 22.8 0 0 0 .46 19.04c1.93 1.43 3.8 2.3 5.64 2.87.14.04.3-.01.39-.13.43-.59.82-1.21 1.15-1.86.07-.14.01-.31-.13-.36a14.2 14.2 0 0 1-1.76-.84c-.17-.09-.18-.33-.02-.43.12-.08.25-.16.37-.24.08-.05.18-.06.27-.02 5.8 2.65 12.07 2.65 17.8 0 .09-.04.19-.03.27.02.12.08.25.16.37.24.16.1.15.34-.02.43-.56.31-1.15.59-1.76.84-.14.06-.2.22-.13.36.34.65.72 1.27 1.15 1.86.09.12.25.17.39.13 1.85-.57 3.72-1.44 5.64-2.87A22.8 22.8 0 0 0 19.54 0ZM8.03 15.22c-1.13 0-2.06-1.04-2.06-2.32s.91-2.32 2.06-2.32 2.08 1.04 2.06 2.32c0 1.28-.91 2.32-2.06 2.32Zm7.94 0c-1.13 0-2.06-1.04-2.06-2.32s.91-2.32 2.06-2.32 2.08 1.04 2.06 2.32c0 1.28-.91 2.32-2.06 2.32Z"/></svg></a>
+  <a href="https://github.com/niagaraassembly" rel="noopener" aria-label="Niagara Assembly on GitHub">
+    <svg viewBox="0 0 16 16" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+  </a>
+  <a href="https://x.com/niagaraassembly" rel="noopener" aria-label="Niagara Assembly on X">
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M17.5 3h3.1l-6.8 7.7L21.8 21h-6.2l-4.9-6.4L5.1 21H2l7.2-8.2L2.4 3h6.3l4.4 5.8L17.5 3Zm-1.1 16.1h1.7L7.7 4.8H5.9l10.5 14.3Z"/></svg>
+  </a>
+</footer>
+
+<script src="/vendor/rough.min.js" defer></script>
+<script src="/assets/js/sketch.js" defer></script>
+<script type="module" src="/assets/js/sitenav.js"></script>
+<script type="module" src="/assets/js/theme.js"></script>
+</body>
+</html>

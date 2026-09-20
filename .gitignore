@@ -3,3 +3,5 @@ __pycache__/
 
 # Local verification screenshots
 *.png
+# ...but site images under assets/img/ are real assets and must be committed
+!assets/img/**/*.png

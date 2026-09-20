@@ -89,3 +89,18 @@ test('Clark is the first item under Training', () => {
   assert.equal(training.items[0].label, 'Clark');
   assert.equal(training.items[0].path, '/services/training/clark/');
 });
+
+import { APPS } from '../assets/js/sitenav.js';
+
+test('the Apps panel starts with HeavyMap and every app is complete', () => {
+  assert.equal(APPS[0].name, 'HeavyMap');
+  assert.equal(APPS[0].href, 'https://heavymap.com');
+  assert.equal(APPS[0].icon, '/assets/img/apps/heavymap.png');
+  assert.equal(APPS[0].blurb,
+    'A creative mapping and industrial intelligence tool for experts and the general public.');
+  for (const app of APPS) {
+    for (const key of ['name', 'status', 'href', 'label', 'blurb']) {
+      assert.ok(app[key], `${app.name ?? '(unnamed)'} is missing ${key}`);
+    }
+  }
+});

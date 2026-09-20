@@ -26,7 +26,7 @@ export const NAV = [
   { word: 'Niagara', caps: true, items: [
     { label: 'Services', path: '/services/', items: [
       node('/services/', 'Spaces',   ['Work', 'Office', 'Event', 'Digital', 'Retail', 'Storage']),
-      node('/services/', 'Training', ['Clark', 'Electronics', 'Manufacturing', 'Linux']),
+      node('/services/', 'Training', ['Clark', 'Electronics', 'Manufacturing', 'Linux', 'Robotics', 'AI']),
       node('/services/', 'Events',   ['Meetups', 'Talks', 'Tours', 'Workshops', 'Launches', 'Demos']),
       node('/services/', 'Tools',    ['Board', 'HeavyMap', 'Environments', 'Gage']),
       node('/services/', 'News',     ['Sector', 'Solo']),
@@ -117,6 +117,21 @@ export function toggle(sel, depth, item) {
   return sel[depth] === item ? sel.slice(0, depth) : [...sel.slice(0, depth), item];
 }
 
+/* The apps we have designed or launched, shown in the Apps panel beside the
+   page. Add an entry here and it appears; nothing else needs to change. `icon`
+   is optional: without one the entry gets a plain lettered tile so the row
+   keeps its shape. */
+export const APPS = [
+  {
+    name: 'HeavyMap',
+    icon: '/assets/img/apps/heavymap.png',
+    status: 'In design',
+    href: 'https://heavymap.com',
+    label: 'heavymap.com',
+    blurb: 'A creative mapping and industrial intelligence tool for experts and the general public.'
+  }
+];
+
 /* ---- rendering (browser only) ------------------------------------------- */
 
 const ICONS = {
@@ -174,20 +189,73 @@ function build(header) {
   });
 
   /* Two groups so small screens can pull the text links onto their own line
-     (beside the hint) while the icons and theme toggle stay with the title. */
+     (beside the hint) while the icons and theme toggle stay with the title.
+     On a wide screen the icons and toggle come first, and the text links
+     (List, Updates, Apps) follow to their right. */
+  const appsButton = el('button', { type: 'button', 'aria-expanded': 'false',
+                                    'aria-controls': 'apps-panel' }, 'Apps');
+
   const links = el('nav', { class: 'topnav__links', 'aria-label': 'Site links' },
-    el('span', { class: 'topnav__text' },
-      el('a', { href: '/#join' }, 'List'),
-      el('a', { href: 'https://updates.niagaraassembly.com' }, 'Updates')),
     el('span', { class: 'topnav__social' },
       iconLink('https://github.com/niagaraassembly', 'Niagara Assembly on GitHub', ICONS.github),
       iconLink('https://x.com/niagaraassembly', 'Niagara Assembly on X', ICONS.x),
       iconLink('https://discord.gg/kxacHHRmBC', 'Niagara Assembly on Discord', ICONS.discord),
       el('button', { type: 'button', class: 'themetoggle', 'data-theme-toggle': '',
-                     'aria-label': 'Switch between light and dark' })));
+                     'aria-label': 'Switch between light and dark' })),
+    el('span', { class: 'topnav__text' },
+      el('a', { href: '/#join' }, 'List'),
+      el('a', { href: 'https://updates.niagaraassembly.com' }, 'Updates'),
+      appsButton));
+
+  /* The Apps panel. On a screen wide enough to leave a margin beside the
+     drawn frame, it hangs in that margin outside the box (it is a child of the
+     frame so CSS can pin it to the frame's top edge however far the menu rows
+     push the frame down). Where there is no such margin it becomes a compact
+     strip above the frame, still outside the box. */
+  const panel = el('aside', { class: 'appspanel', id: 'apps-panel',
+                              'aria-label': 'Apps', hidden: '' });
+  for (const app of APPS) {
+    const icon = app.icon
+      ? el('img', { class: 'app__icon', src: app.icon, alt: '', width: '40', height: '40' })
+      : el('span', { class: 'app__icon app__icon--blank', 'aria-hidden': 'true' }, app.name[0]);
+    panel.append(el('div', { class: 'app' },
+      icon,
+      el('div', { class: 'app__head' },
+        el('p', { class: 'app__name' }, app.name),
+        el('p', { class: 'app__status' }, app.status)),
+      el('p', { class: 'app__link' },
+        el('a', { href: app.href, rel: 'noopener' }, app.label)),
+      el('p', { class: 'app__blurb' }, app.blurb)));
+  }
+
+  const frame = document.querySelector('.frame');
+  /* The margin beside the frame is (viewport - frame) / 2. These widths are
+     where that margin first fits a usable panel; the board's frame is wider. */
+  const wide = window.matchMedia(
+    frame && frame.classList.contains('frame--board') ? '(min-width: 87rem)' : '(min-width: 69rem)');
+  const place = () => {
+    const side = Boolean(frame) && wide.matches;
+    panel.classList.toggle('appspanel--side', side);
+    panel.classList.toggle('appspanel--inline', !side);
+    if (side) frame.append(panel); else header.after(panel);
+  };
+  place();
+  wide.addEventListener('change', place);
+
+  const setApps = (open) => {
+    panel.hidden = !open;
+    appsButton.setAttribute('aria-expanded', String(open));
+  };
+  appsButton.addEventListener('click', () => setApps(panel.hidden));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !panel.hidden) { setApps(false); appsButton.focus(); }
+  });
 
   const rows = el('div', { class: 'topnav__rows', id: 'topnav-rows' });
-  const hint = el('p', { class: 'topnav__hint' }, 'Click above for menus');
+  /* Arrows are decoration pointing at the wordmark above; hide them from
+     screen readers so the hint reads simply "menus". */
+  const arrow = () => el('span', { 'aria-hidden': 'true' }, '\u25B2');
+  const hint = el('p', { class: 'topnav__hint' }, arrow(), ' menus ', arrow());
 
   /* Rows sit in normal flow, so each one pushes the page content down.
      Items with children are buttons that expand in place; only leaf items
