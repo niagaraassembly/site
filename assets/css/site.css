@@ -35,6 +35,7 @@
   --ink-soft: #55585d;
   --paper:    #f7f6f3;
   --rule:     #c9c6bf;
+  --field:    #fefdfb;   /* form fields: a step lighter than the page, short of white */
 
   --measure: 46rem;
   --edge:    0.5rem;   /* how far the nav and footer sit inside the box's lines */
@@ -68,6 +69,7 @@
   --ink-soft: #a3a099;
   --paper:    #16171a;
   --rule:     #3a3c40;
+  --field:    #1d1e22;   /* dark mirror: a step lighter than the page */
 }
 
 * { box-sizing: border-box; }
@@ -87,21 +89,112 @@ body {
    uses the same inset, so the three edges agree. */
 
 .topnav {
-  display: flex;
-  align-items: baseline;
-  gap: 1.5rem;
   max-width: var(--measure);
   margin: 0 auto .6rem;
   padding: 0 var(--edge);
+  /* Reserve the bar's height: the header is filled by sitenav.js after first
+     paint, and without this the page would jump when it arrives. */
+  min-height: 2.6rem;
 }
 
 .topnav--board { max-width: var(--board); }
 
-.topnav__brand {
-  font: 800 1.0625rem/1 var(--sans);
-  letter-spacing: -0.02em;
-  text-decoration: none;
+.topnav__bar {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.1rem;
+}
+
+/* Words and links share this column beside the logo. When they no longer
+   fit on one line the links wrap beneath the words, and being in the same
+   column they start at the left edge of "Niagara" rather than the logo. */
+.topnav__main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .35rem 1rem;
+}
+
+/* Logo on the home page, house on every other page. Same box, so swapping
+   between them does not move the wordmark. */
+.topnav__logo {
+  display: flex;
+  flex: none;
+  width: 2.1rem;
+  height: 2.1rem;
   color: var(--ink);
+}
+.topnav__logo img { width: 100%; height: 100%; object-fit: contain; display: block; }
+/* The logo is a JPEG on white. Multiply drops the white against the light
+   paper; in dark mode invert + screen does the same against the dark one.
+   Both go away once a transparent asset replaces it. */
+.topnav__logo img { mix-blend-mode: multiply; }
+:root[data-theme="dark"] .topnav__logo img { filter: invert(1); mix-blend-mode: screen; }
+
+.topnav__logo--house svg { width: 100%; height: 100%; display: block; }
+.house__body {
+  fill: color-mix(in srgb, var(--ink) 14%, transparent);
+  stroke: currentColor; stroke-width: 1.5; stroke-linejoin: round;
+}
+.house__door { fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linejoin: round; }
+
+.topnav__words { display: flex; align-items: center; gap: .7rem; min-height: 2.1rem; }
+
+.topnav__word {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: 700 1.4rem/1.1 var(--sans);
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  cursor: pointer;
+  text-underline-offset: 5px;
+  text-decoration-thickness: 1px;
+}
+.topnav__word:hover,
+.topnav__word[aria-expanded="true"] { text-decoration: underline; }
+
+/* Submenu rows sit in normal flow so they push the framed page down. They
+   start under the words, not under the logo. */
+.topnav__rows {
+  display: flex;
+  flex-direction: column;
+  gap: .55rem;
+  padding: .7rem 0 0 calc(2.1rem + 1.1rem);
+}
+.topnav__rows:empty { display: none; }
+
+.topnav__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem 1.15rem;
+}
+.topnav__row a,
+.topnav__row button {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font: .8125rem/1.2 var(--sans);
+  color: var(--ink-soft);
+  text-decoration: none;
+}
+.topnav__row a:hover,
+.topnav__row button:hover { color: var(--ink); text-decoration: underline; }
+.topnav__row .is-active {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.topnav__row[data-caps] :is(a, button) { text-transform: uppercase; letter-spacing: .03em; }
+.topnav__row[data-tier="leaf"] :is(a, button) { font: 1rem/1.2 var(--hand); }
+
+.topnav__hint {
+  margin: .55rem 0 0 calc(2.1rem + 1.1rem);
+  font: .75rem/1 var(--sans);
+  color: var(--ink-soft);
 }
 
 /* margin-left:auto pins the group right; the parent's padding is the gap
@@ -110,8 +203,13 @@ body {
   margin-left: auto;
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: .85rem;
+  min-height: 2.1rem;
 }
+.topnav__text,
+.topnav__social { display: flex; align-items: center; }
+.topnav__text { gap: 1.5rem; }
+.topnav__social { gap: .85rem; }
 
 .topnav__links a {
   font: .75rem/1 var(--sans);
@@ -153,6 +251,8 @@ body {
 .topnav__icon:first-of-type {
   margin-left: 0;
 }
+
+.topnav__social .topnav__icon { margin-left: 0; }
 
 .topnav__icon:hover {
   color: var(--ink);
@@ -197,23 +297,49 @@ body {
   font-weight: 600;
 }
 
-@media (max-width: 34rem) {
+/* Small screens: one grid for the whole header. The title line keeps the
+   logo, wordmark, icons and theme toggle; List and Updates drop to the line
+   beneath, sharing it with the hint; menu rows follow, indented to the
+   wordmark. The wrappers around them stop generating boxes so their children
+   become grid items directly. */
+@media (max-width: 40rem) {
   .topnav {
-    flex-wrap: wrap;
-    gap: .6rem 1rem;
+    display: grid;
+    grid-template-columns: auto auto 1fr auto;
+    grid-template-areas:
+      "logo words words social"
+      ".    text  hint  hint"
+      ".    rows  rows  rows";
+    column-gap: .9rem;
+    row-gap: .35rem;
+    align-items: center;
   }
-
-  .topnav__links {
-    margin-left: 0;
-    flex-wrap: wrap;
-    gap: .6rem 1rem;
-  }
+  .topnav__bar, .topnav__main, .topnav__links { display: contents; }
+  .topnav__logo   { grid-area: logo; }
+  .topnav__words  { grid-area: words; gap: .5rem; }
+  .topnav__social { grid-area: social; gap: .6rem; }
+  .topnav__text   { grid-area: text; gap: 1rem; }
+  .topnav__hint   { grid-area: hint; margin: 0 0 0 .6rem; padding: 0; }
+  .topnav__rows   { grid-area: rows; padding: .2rem 0 0; }
+  .topnav__word   { font-size: 1.15rem; }
 }
 
+/* The narrowest phones (360px class) cannot fit logo, title and four icons
+   at the size above; tighten rather than let them collide. */
+@media (max-width: 24rem) {
+  .topnav { column-gap: .6rem; }
+  .topnav__logo   { width: 1.8rem; height: 1.8rem; }
+  .topnav__word   { font-size: 1rem; }
+  .topnav__words  { gap: .4rem; }
+  .topnav__social { gap: .45rem; }
+}
 
-@media (max-width: 34rem) {
-  .topnav { flex-wrap: wrap; gap: .6rem 1rem; }
-  .topnav__links { margin-left: 0; flex-wrap: wrap; gap: .6rem 1rem; }
+@media (max-width: 21rem) {
+  .topnav { column-gap: .45rem; }
+  .topnav__logo   { width: 1.5rem; height: 1.5rem; }
+  .topnav__word   { font-size: .875rem; }
+  .topnav__words  { gap: .3rem; }
+  .topnav__social { gap: .35rem; }
 }
 
 /* Position is relative so sketch.js can absolutely position its SVG. */
@@ -300,7 +426,7 @@ ul.plain li::before { content: '- '; color: var(--ink-soft); }
 .filters input[type="search"] { flex: 1 1 14rem; min-width: 10rem; }
 .filters input, .filters select {
   padding: .35rem .5rem;
-  background: transparent;
+  background: var(--field);
   color: var(--ink);
   border: 1px solid var(--rule);
   font: .8125rem/1.4 var(--sans);
@@ -367,7 +493,7 @@ label input, label select, label textarea {
   width: 100%;
   margin-top: .3rem;
   padding: .45rem .55rem;
-  background: transparent;
+  background: var(--field);
   color: var(--ink);
   border: 1px solid var(--rule);
   font: .9375rem/1.4 var(--sans);
@@ -407,6 +533,57 @@ button[type="submit"] {
 
 .status { min-height: 1.4em; font: .8125rem/1.5 var(--sans); color: var(--ink-soft); }
 .status[data-state="error"] { color: var(--ink); font-weight: 600; }
+
+/* Tables ------------------------------------------------------------- */
+/* Plain ruled tables in the same drawn-line spirit as the frame: rules, no
+   fills. The wrapper scrolls sideways on a phone rather than squeezing text. */
+.tablewrap { overflow-x: auto; margin: 0 0 1.5rem; }
+table.data { width: 100%; border-collapse: collapse; font: .875rem/1.5 var(--sans); }
+table.data th,
+table.data td {
+  text-align: left;
+  vertical-align: top;
+  padding: .6rem 1rem .6rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+table.data th {
+  font: 700 .8125rem/1.3 var(--hand);
+  border-bottom: 1.4px solid var(--ink);
+  white-space: nowrap;
+}
+table.data td:first-child { white-space: nowrap; }
+/* On a phone let the first column wrap too; otherwise a long row label
+   pushes the other columns out of view. */
+@media (max-width: 40rem) {
+  table.data th, table.data td:first-child { white-space: normal; }
+  table.data th, table.data td { padding-right: .6rem; }
+}
+
+/* A named block within a long page (e.g. one of six training areas). */
+.area { margin: 0 0 .5rem; }
+.area h3 { margin: 1.75rem 0 .4rem; }
+
+/* Membership pages --------------------------------------------------- */
+.price { font: 700 1.35rem/1.2 var(--hand); margin: 0 0 1.5rem; }
+.price small { font: 400 .8125rem/1.2 var(--sans); color: var(--ink-soft); }
+
+a.cta {
+  display: inline-block;
+  padding: .55rem 1.2rem;
+  border: 1.4px solid var(--ink);
+  color: var(--ink);
+  font: .9375rem/1 var(--hand);
+  text-decoration: none;
+}
+a.cta:hover { background: var(--ink); color: var(--paper); }
+
+.quote { margin: 2rem 0; padding: 0 0 0 1rem; border-left: 2px solid var(--rule); max-width: 36rem; }
+.quote cite { display: block; margin-top: .5rem; font: .8125rem/1.4 var(--sans); color: var(--ink-soft); font-style: normal; }
+
+/* The same closing block on every membership page (.memberfoot) and every
+   spaces page (.pagefoot). */
+.memberfoot, .pagefoot { margin-top: 2.5rem; padding-top: 1.1rem; border-top: 1px solid var(--rule); }
+.memberfoot p, .pagefoot p { margin-bottom: .8rem; }
 
 /* Site footer --------------------------------------------------------- */
 /* Centred under the drawn box, on one line. The SVG is inline rather than

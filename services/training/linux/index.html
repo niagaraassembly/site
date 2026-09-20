@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Linux training — @NiagaraAssembly</title>
+<meta name="description" content="Linux from the kernel outward: where structured training exists, how it applies in industry, prototyping and school, and what Niagara Assembly would build under Clark.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('na-theme')||'light'}catch(e){document.documentElement.dataset.theme='light'}</script>
+<link rel="stylesheet" href="/assets/css/site.css">
+</head>
+<body>
+
+<header class="topnav" data-sitenav></header>
+
+<div class="frame" data-sketch="frame">
+
+  <h1>Linux training</h1>
+
+  <p><b>Linux is not one skill. It is a stack, from the kernel that talks to the
+  hardware to the systems that run factories, labs and startups, and each layer
+  has its own people, tools and ways of learning.</b> This page maps the stack,
+  shows where recognised training already exists, and describes what we want to
+  build under <a href="/services/training/clark/">Clark</a> for industry, for
+  students, and for anyone prototyping something real.</p>
+
+  <p class="fineprint">Aspirational. We do not currently offer any of the
+  courses named here, and nothing on this page can be booked. Where we describe
+  what we would do, we say &ldquo;would&rdquo;.</p>
+
+  <h2>Why it matters here</h2>
+
+  <p>Linux is the quiet foundation under a great deal of modern industry. It runs
+  the <a href="https://www.top500.org/" rel="noopener">supercomputers on the TOP500 list</a>
+  (every one of them, for several years running), a great many of the servers
+  behind online services, and a large share of the embedded devices in machines,
+  vehicles and instruments. It is also free to inspect, change and build on,
+  which is why it is the natural tool for a student with a small, inexpensive board and a
+  founder with a product idea. For a region with a manufacturing past and a
+  making future, knowing Linux well is a durable advantage.</p>
+
+  <h2>The stack, from the kernel outward</h2>
+
+  <div class="tablewrap">
+  <table class="data">
+    <thead><tr><th>Layer</th><th>What happens here</th><th>Where paths exist</th></tr></thead>
+    <tbody>
+      <tr><td><b>Kernel and drivers</b></td>
+          <td>Scheduling, memory, and the drivers that let software talk to hardware. Where Linux itself is written.</td>
+          <td>The Linux Foundation's free <a href="https://training.linuxfoundation.org/training/a-beginners-guide-to-linux-kernel-development-lfd103/" rel="noopener">kernel development course</a> and its <a href="https://training.linuxfoundation.org/training/linux-kernel-internals-and-development/" rel="noopener">internals course</a></td></tr>
+      <tr><td><b>Embedded and real-time</b></td>
+          <td>Building a purpose-made Linux for a device: bootloader, kernel, filesystem. Meeting hard timing deadlines.</td>
+          <td>The <a href="https://www.yoctoproject.org/" rel="noopener">Yocto Project</a>; real-time support (<a href="https://en.wikipedia.org/wiki/PREEMPT_RT" rel="noopener">PREEMPT_RT</a>)</td></tr>
+      <tr><td><b>Operating systems</b></td>
+          <td>Users, storage, networking, services and day-to-day administration.</td>
+          <td>LPIC-1 and LPIC-2, LFCS, RHCSA</td></tr>
+      <tr><td><b>Security, virtualization, containers</b></td>
+          <td>Hardening servers, running workloads in containers, orchestrating them, keeping services available.</td>
+          <td>LPIC-3 streams, Kubernetes (CKA), LPI DevOps Tools Engineer</td></tr>
+      <tr><td><b>Industrial edge and safety</b></td>
+          <td>Control logic and analytics on industrial computers, and Linux where failure has real consequences.</td>
+          <td>Vendor programs; the ELISA project</td></tr>
+      <tr><td><b>Prototyping and robotics</b></td>
+          <td>Single-board computers, sensors, robots, and the path from bench prototype to product.</td>
+          <td>ROS 2 and its community; board makers</td></tr>
+      <tr><td><b>Everyday use</b></td>
+          <td>The command line, files, packages and scripting. Where everyone starts.</td>
+          <td>Linux Essentials, LFCA</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>Credentials that already exist</h2>
+
+  <p>Unlike manufacturing, Linux has mature, well-known certification. Three
+  families cover most of it:</p>
+
+  <ul class="plain">
+    <li><b><a href="https://www.lpi.org/our-certifications/summary-of-lpi-certifications/" rel="noopener">Linux Professional Institute</a></b>
+    &mdash; vendor-neutral. Linux Essentials for beginners, then LPIC-1, LPIC-2,
+    and four LPIC-3 specializations (mixed environments, security,
+    virtualization and containerization, high availability and storage). It also
+    offers a DevOps Tools Engineer credential.</li>
+    <li><b><a href="https://training.linuxfoundation.org/certification-catalog/" rel="noopener">The Linux Foundation</a></b>
+    &mdash; the <a href="https://training.linuxfoundation.org/certification/certified-it-associate/" rel="noopener">LFCA</a>
+    as an entry point, the performance-based
+    <a href="https://training.linuxfoundation.org/certification/linux-foundation-certified-sysadmin-lfcs/" rel="noopener">LFCS</a>
+    for system administrators, and Kubernetes certifications such as the CKA.</li>
+    <li><b><a href="https://www.redhat.com/en/services/certification/rhcsa" rel="noopener">Red Hat</a></b>
+    &mdash; the RHCSA, a hands-on exam on Red Hat Enterprise Linux, with the RHCE
+    above it. Vendor-specific, and widely asked for.</li>
+  </ul>
+
+  <p>For course content, schedules and fees, go to those bodies; we would
+  rather point you to the source than restate it.</p>
+
+  <div class="area">
+  <h3>In traditional and advanced industry</h3>
+  <p>Factory floors are changing from boxes of dedicated hardware to software
+  running on standard computers. Siemens sells a
+  <a href="https://www.siemens.com/en-us/products/simatic/s7-1500v/" rel="noopener">virtual PLC</a>
+  that runs on its industrial PCs, and open source projects such as
+  <a href="https://autonomylogic.com/" rel="noopener">OpenPLC</a> bring PLC logic to
+  ordinary Linux machines. Since kernel 6.12 the real-time extension
+  (PREEMPT_RT) is part of the mainline Linux kernel on supported architectures,
+  so deterministic control no longer needs a separate patch set. Where safety is
+  at stake, the Linux Foundation's
+  <a href="https://elisa.tech/" rel="noopener">ELISA project</a> works with
+  industry to show that a Linux-based system meets safety requirements. All of
+  this is moving quickly, which is why a local place to learn it and ask
+  questions is worth having. It also connects to our
+  <a href="/services/training/manufacturing/">Manufacturing training</a>,
+  where automation and emerging technology overlap with everything above.</p>
+  </div>
+
+  <div class="area">
+  <h3>In prototyping, school and startups</h3>
+  <p>A student can begin on a small board and a free course. The kernel
+  development course from the Linux Foundation is free and teaches how to build a
+  kernel, write and test a patch, and work with reviewers, which is a real
+  credential in open source. A founder can prototype on a single-board computer,
+  use <a href="https://www.ros.org/" rel="noopener">ROS 2</a> for a robot (it
+  runs on hardware like Raspberry Pi and NVIDIA Jetson, with Python and C++), then
+  move to a custom image for production. That is the whole arc, from idea to
+  product, on one open platform. We are also testing Integrated Production
+  Environments built on open tools as part of what Niagara Assembly builds for
+  its Membership.</p>
+  </div>
+
+  <h2>What we would do</h2>
+
+  <ul class="plain">
+    <li><b>Start people well.</b> Install days and command-line evenings for
+    complete beginners, and study groups for LPI and LFCS exams.</li>
+    <li><b>Build things.</b> Weekend labs where a group takes a board from
+    nothing to a working, purpose-built system, or gets a first patch reviewed.</li>
+    <li><b>Bridge to industry.</b> Talks, demos and tours where shops that run
+    Linux on their floors show how, and what they wish new hires knew.</li>
+    <li><b>Mentor.</b> Match people at each layer of the stack with someone one
+    or two layers further along.</li>
+    <li><b>Teach what nobody certifies.</b> Clark Courses on the practical
+    glue: debugging a boot, reading a datasheet, moving from prototype to
+    production. They carry no vendor credential and are labelled as ours.</li>
+  </ul>
+
+  <h2>What we need</h2>
+
+  <p>The stack is wide, and no one person covers it. We are looking for:</p>
+
+  <ul class="plain">
+    <li>Sysadmins, embedded engineers, kernel contributors and controls people
+    who use Linux and would teach, mentor or give a talk.</li>
+    <li>Shops and labs that run Linux in production and would host a visit.</li>
+    <li>Boards, sensors, benches and test gear, lent or donated, for hands-on
+    sessions.</li>
+    <li>Students and founders who will tell us what they cannot find.</li>
+    <li>Training providers and colleges interested in working with us.</li>
+  </ul>
+
+  <p><a href="/#register">Register as an expert</a>, put your name on
+  <a href="/#join">the list</a>, or write to
+  <a href="mailto:office@niagaraassembly.com">office@niagaraassembly.com</a>.
+  If you have tools or space to share, <a href="/board/">post them on the
+  Board</a>.</p>
+
+  <p class="fineprint">Niagara Assembly is not affiliated with, or endorsed by,
+  any organization named on this page. Names are used to describe credentials
+  and programs that exist. Linux&reg; is the registered trademark of Linus
+  Torvalds in the U.S. and other countries.</p>
+
+</div>
+
+<footer class="sitefoot">
+  <span>Niagara Assembly (unincorporated)</span>
+  <span class="sitefoot__sep" aria-hidden="true">-</span>
+  <a href="mailto:office@niagaraassembly.com">office@niagaraassembly.com</a>
+  <span class="sitefoot__sep" aria-hidden="true">-</span>
+  <a class="topnav__icon" href="https://discord.gg/kxacHHRmBC" rel="noopener" aria-label="Niagara Assembly on Discord">
+    <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M19.54 0c1.13 2.01 1.94 4.2 2.31 6.51a16.8 16.8 0 0 0-4.05-1.23c-.17-.03-.34.05-.43.2-.18.31-.38.64-.55.96a15.4 15.4 0 0 0-9.64 0c-.17-.32-.37-.65-.55-.96a.5.5 0 0 0-.43-.2C4.98 5.29 3.62 5.7 2.15 6.51A22.8 22.8 0 0 0 .46 19.04c1.93 1.43 3.8 2.3 5.64 2.87.14.04.3-.01.39-.13.43-.59.82-1.21 1.15-1.86.07-.14.01-.31-.13-.36a14.2 14.2 0 0 1-1.76-.84c-.17-.09-.18-.33-.02-.43.12-.08.25-.16.37-.24.08-.05.18-.06.27-.02 5.8 2.65 12.07 2.65 17.8 0 .09-.04.19-.03.27.02.12.08.25.16.37.24.16.1.15.34-.02.43-.56.31-1.15.59-1.76.84-.14.06-.2.22-.13.36.34.65.72 1.27 1.15 1.86.09.12.25.17.39.13 1.85-.57 3.72-1.44 5.64-2.87A22.8 22.8 0 0 0 19.54 0ZM8.03 15.22c-1.13 0-2.06-1.04-2.06-2.32s.91-2.32 2.06-2.32 2.08 1.04 2.06 2.32c0 1.28-.91 2.32-2.06 2.32Zm7.94 0c-1.13 0-2.06-1.04-2.06-2.32s.91-2.32 2.06-2.32 2.08 1.04 2.06 2.32c0 1.28-.91 2.32-2.06 2.32Z"/></svg></a>
+  <a href="https://github.com/niagaraassembly" rel="noopener" aria-label="Niagara Assembly on GitHub">
+    <svg viewBox="0 0 16 16" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+  </a>
+  <a href="https://x.com/niagaraassembly" rel="noopener" aria-label="Niagara Assembly on X">
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M17.5 3h3.1l-6.8 7.7L21.8 21h-6.2l-4.9-6.4L5.1 21H2l7.2-8.2L2.4 3h6.3l4.4 5.8L17.5 3Zm-1.1 16.1h1.7L7.7 4.8H5.9l10.5 14.3Z"/></svg>
+  </a>
+</footer>
+
+<script src="/vendor/rough.min.js" defer></script>
+<script src="/assets/js/sketch.js" defer></script>
+<script type="module" src="/assets/js/sitenav.js"></script>
+<script type="module" src="/assets/js/theme.js"></script>
+</body>
+</html>
