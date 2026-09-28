@@ -1,0 +1,368 @@
+/* Niagara Assembly — mini-magazine styles (START and future MAGS).
+ *
+ * Loaded in addition to site.css on all MAGS pages. Keeps magazine
+ * chrome isolated so site.css stays clean.
+ */
+
+/* Kicker: the small label above the article or issue h1.
+   Links back to the issue index or mag index. */
+.mag-kicker {
+  font: .75rem/1 var(--mono);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 0 0 .6rem;
+}
+.mag-kicker a { color: inherit; text-decoration: none; }
+.mag-kicker a:hover { color: var(--ink); text-decoration: underline; }
+.mag-kicker__sep { margin: 0 .35em; opacity: .5; }
+
+/* Pull h1 and date together; the 2rem gap site.css puts under h1 is too
+   wide between the title and its dateline. */
+.article h1 { margin-bottom: .5rem; }
+
+.mag-date {
+  font: .8125rem/1 var(--sans);
+  color: var(--ink-soft);
+  margin: 0 0 2.25rem;
+}
+
+/* Issue stamp: Vol. / No. / date on the issue index. */
+.issue-stamp {
+  font: .75rem/1 var(--mono);
+  color: var(--ink-soft);
+  letter-spacing: .06em;
+  margin: 0 0 2.5rem;
+}
+
+/* Publication title in the kicker on issue index pages: slightly
+   larger and bolder than the small article-page kicker. */
+.mag-kicker--pub {
+  font-size: .9rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+}
+
+/* Article body: slightly more room for long-form reading. */
+.article p { line-height: 1.75; }
+.article ol,
+.article ul:not(.plain) { max-width: 40rem; line-height: 1.65; padding-left: 1.25rem; margin: 0 0 1.15em; }
+
+/* Footer navigation: back to issue / prev / next. */
+.mag-foot {
+  margin-top: 2.5rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem 2rem;
+  font: .8125rem/1.4 var(--sans);
+  color: var(--ink-soft);
+}
+.mag-foot a { color: var(--ink-soft); text-decoration: none; }
+.mag-foot a:hover { color: var(--ink); text-decoration: underline; }
+.mag-foot__next { margin-left: auto; }
+
+/* Issue index --------------------------------------------------------- */
+
+.issue-intro { margin: 0 0 2.5rem; max-width: 40rem; }
+
+.issue-list { list-style: none; padding: 0; margin: 0 0 2.5rem; }
+.issue-list__item {
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+.issue-list__item:first-child { border-top: 1px solid var(--rule); }
+.issue-list__title {
+  font: 600 1.05rem/1.3 var(--sans);
+  text-decoration: none;
+  color: var(--ink);
+  display: block;
+}
+.issue-list__title:hover { text-decoration: underline; }
+.issue-list__meta {
+  font: .75rem/1 var(--mono);
+  color: var(--ink-soft);
+  margin-top: .3rem;
+}
+
+/* Sparks -------------------------------------------------------------- */
+
+.sparks-intro { margin: 0 0 2rem; max-width: 40rem; }
+
+.sparks-list { list-style: none; padding: 0; margin: 0; }
+.spark {
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+.sparks-list li:first-child .spark { padding-top: 0; }
+.spark__headline {
+  font: 700 .9375rem/1.3 var(--sans);
+  margin: 0 0 .25rem;
+}
+.spark__meta {
+  font: .75rem/1 var(--mono);
+  letter-spacing: .05em;
+  color: var(--ink-soft);
+  margin: 0 0 .55rem;
+}
+
+/* Article figures ----------------------------------------------------- */
+
+.article figure {
+  margin: 2rem 0;
+}
+.article figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.article figcaption {
+  margin-top: .5rem;
+  font: .75rem/1.5 var(--sans);
+  color: var(--ink-soft);
+}
+
+.spark__body {
+  font: .875rem/1.6 var(--sans);
+  margin: 0 0 .4rem;
+  max-width: 38rem;
+  color: var(--ink-soft);
+}
+.spark__sources {
+  font: .75rem/1.5 var(--mono);
+  margin: 0;
+}
+.spark__sources a { color: var(--ink-soft); }
+.spark__sources a:hover { color: var(--ink); }
+.spark__sources__sep { margin: 0 .5em; opacity: .5; }
+
+/* Sparks table button (on issue index) -------------------------------- */
+
+.sparks-open-btn {
+  display: inline;
+  padding: .3rem .7rem;
+  border: 1.4px solid var(--rule);
+  background: none;
+  color: var(--ink-soft);
+  font: .8125rem/1 var(--sans);
+  cursor: pointer;
+  vertical-align: baseline;
+}
+.sparks-open-btn:hover { border-color: var(--ink); color: var(--ink); }
+
+/* Sparks modal dialog ------------------------------------------------- */
+
+dialog.sparks-dialog {
+  padding: 0;
+  border: 1.4px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+  width: min(76rem, 94vw);
+  max-width: none;
+  max-height: 85vh;
+  overflow: hidden;
+}
+dialog.sparks-dialog[open] {
+  display: flex;
+  flex-direction: column;
+}
+dialog.sparks-dialog::backdrop {
+  background: rgba(23, 24, 26, 0.5);
+}
+.sparks-dialog__head {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .7rem 1.25rem;
+  border-bottom: 1px solid var(--rule);
+  background: var(--paper);
+}
+.sparks-dialog__title {
+  font: 700 .875rem/1 var(--sans);
+}
+.sparks-dialog__close {
+  background: none;
+  border: none;
+  padding: .25rem .45rem;
+  font: 1.15rem/1 var(--sans);
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.sparks-dialog__close:hover { color: var(--ink); }
+.sparks-dialog__body {
+  overflow: auto;
+  padding: 1rem 1.25rem 1.5rem;
+  flex: 1;
+}
+/* Company column wraps; other columns stay on one line. */
+.sparks-dialog__body table.data td { white-space: nowrap; }
+.sparks-dialog__body table.data td:nth-child(2) { white-space: normal; min-width: 13rem; }
+.sparks-dialog__body table.data td:last-child  { white-space: normal; min-width: 12rem; }
+
+/* Scroll offset so topnav doesn't cover anchored spark entries. */
+.sparks-list li[id] { scroll-margin-top: 5rem; }
+
+/* Sparks map ---------------------------------------------------------- */
+
+.sparks-map-figure {
+  position: relative;
+  margin: 1.5rem 0 2rem;
+  border: 1.4px solid var(--rule);
+}
+.sparks-map-small {
+  width: 100%;
+  height: 260px;
+}
+.sparks-map-large {
+  width: 100%;
+  height: 65vh;
+}
+.sparks-map-figure figcaption {
+  padding: .4rem .6rem;
+  font: .6875rem/1.4 var(--sans);
+  color: var(--ink-soft);
+  border-top: 1px solid var(--rule);
+}
+
+/* Expand button sits inside the map, bottom-right corner. z-index keeps it
+   above Leaflet's own layers but the Leaflet attribution stays visible. */
+.sparks-map-expand {
+  position: absolute;
+  bottom: 2rem;  /* above the figcaption */
+  right: .5rem;
+  z-index: 1000;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  background: var(--paper);
+  border: 1.4px solid var(--rule);
+  color: var(--ink-soft);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sparks-map-expand:hover { border-color: var(--ink); color: var(--ink); }
+
+/* Map dialog body has no padding so the map fills edge to edge. */
+.sparks-dialog__body--map { padding: 0; }
+
+/* Dark mode: invert the OSM tile layer so it reads on the dark paper.
+   Markers live in a separate pane and are unaffected by this filter. */
+:root[data-theme="dark"] .leaflet-tile-pane {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+/* Sparks filter field ------------------------------------------------- */
+
+.sparks-tabs {
+  display: flex;
+  gap: .4rem;
+  margin: 1.5rem 0 .9rem;
+}
+.sparks-tab {
+  background: none;
+  border: 1.4px solid var(--rule);
+  padding: .3rem .85rem;
+  font: .8125rem/1 var(--sans);
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.sparks-tab:hover { border-color: var(--ink); color: var(--ink); }
+.sparks-tab.is-active {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.sparks-filter {
+  margin: 0 0 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.sparks-filter__input {
+  font: .875rem/1.4 var(--sans);
+  color: var(--ink);
+  background: var(--paper);
+  border: 1.4px solid var(--rule);
+  padding: .4rem .65rem;
+  width: 100%;
+  max-width: 22rem;
+}
+.sparks-filter__input:focus { outline: none; border-color: var(--ink); }
+.sparks-filter__count {
+  font: .75rem/1 var(--mono);
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+/* Reading panel ---------------------------------------------------------
+   Desktop-only slide-in panel. The arrow button on the issue list opens
+   the article in a fixed right-hand panel; body shifts left to make room. */
+
+.issue-list__title-row {
+  display: flex;
+  align-items: baseline;
+  gap: .6rem;
+}
+.issue-list__title-row .issue-list__title { flex: 1; }
+
+.issue-list__arrow {
+  background: none;
+  border: none;
+  padding: 0 .1rem;
+  font: .85rem/1 var(--sans);
+  color: var(--ink-soft);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.issue-list__arrow:hover { color: var(--ink); }
+
+.read-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 42vw;
+  height: 100vh;
+  background: var(--paper);
+  border-left: 1px solid var(--rule);
+  overflow-y: auto;
+  padding: 1.25rem 2rem 3rem;
+  box-sizing: border-box;
+  transform: translateX(100%);
+  transition: transform .35s ease;
+  z-index: 200;
+}
+.read-panel.is-open { transform: translateX(0); }
+
+.read-panel__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+.read-panel__close {
+  background: none;
+  border: none;
+  padding: .25rem .4rem;
+  font: 1.2rem/1 var(--sans);
+  color: var(--ink-soft);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.read-panel__close:hover { color: var(--ink); }
+
+/* Mobile: hide panel controls entirely. */
+@media (max-width: 51.99em) {
+  .issue-list__arrow,
+  .read-panel { display: none; }
+}
+
+/* Desktop: enable the panel and shift body content left when open. */
+@media (min-width: 52em) {
+  body { transition: padding-right .35s ease; }
+  body.panel-open { padding-right: 42vw; }
+}

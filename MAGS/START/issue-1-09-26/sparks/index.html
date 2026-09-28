@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sparks — START Issue 1 · Niagara Assembly</title>
+<meta name="description" content="Twenty-five investments and workforce initiatives announced across the Niagara–Buffalo–Rochester corridor in a two-month window, July–September 2026.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('na-theme')||'light'}catch(e){document.documentElement.dataset.theme='light'}</script>
+<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="stylesheet" href="/assets/css/mag.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+<body>
+
+<header class="topnav" data-sitenav></header>
+
+<div class="frame" data-sketch="frame">
+
+  <p class="mag-kicker">
+    <a href="../">START</a>
+    <span class="mag-kicker__sep">&middot;</span>
+    <a href="../">Issue 1</a>
+  </p>
+
+  <h1>Sparks</h1>
+
+  <p class="sparks-intro">Twenty-five investments and workforce initiatives announced across the Niagara&ndash;Buffalo&ndash;Rochester corridor in a roughly two-month window, July&ndash;September 2026. The pattern: advanced manufacturing, defence and aerospace, semiconductor supply chain, optics and photonics, and workforce training all moving at the same time. Got a spark to share? Write to <a href="mailto:office@niagaraassembly.com">office@niagaraassembly.com</a>.</p>
+
+  <figure class="sparks-map-figure">
+    <div id="sparks-map-small" class="sparks-map-small"></div>
+    <button type="button" class="sparks-map-expand" id="sparks-map-expand" aria-label="Expand map">
+      <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"/></svg>
+    </button>
+    <figcaption>Niagara&ndash;Buffalo&ndash;Rochester corridor &mdash; July&ndash;September 2026 industrial activity. Click a marker for details.</figcaption>
+  </figure>
+
+  <div class="sparks-tabs" role="tablist" aria-label="Filter by region">
+    <button type="button" class="sparks-tab is-active" data-tab="all" role="tab" aria-selected="true">All</button>
+    <button type="button" class="sparks-tab" data-tab="on" role="tab" aria-selected="false">Ontario</button>
+    <button type="button" class="sparks-tab" data-tab="ny" role="tab" aria-selected="false">New York</button>
+  </div>
+
+  <div class="sparks-filter">
+    <input type="search" id="sparks-filter" class="sparks-filter__input" placeholder="Filter by company, location or sector&hellip;" aria-label="Filter sparks entries">
+    <span class="sparks-filter__count" id="sparks-filter-count" aria-live="polite"></span>
+  </div>
+
+  <h2>Niagara, Ontario</h2>
+
+  <ul class="sparks-list">
+
+    <li id="fbt-innovative-technologies">
+      <div class="spark">
+        <p class="spark__headline">FBT Innovative Technologies &mdash; St. Catharines</p>
+        <p class="spark__meta">Sept 25, 2026 &middot; $9.54M &middot; Advanced manufacturing</p>
+        <p class="spark__body">Facility expansion and new metalworking machinery creating 20 new jobs and protecting 79 existing positions. Part of a $29.7M provincial announcement covering four Niagara manufacturers, with $6.71M in provincial support. FBT is an established advanced manufacturer rather than a generic industrial employer &mdash; the kind of facility that anchors regional supply chains.</p>
+        <p class="spark__sources"><a href="https://samoosterhoffmpp.ca/ontario-investing-nearly-7-million-to-protect-tariff-impacted-workers-and-businesses-in-niagara/" rel="noopener">Sam Oosterhoff, MPP &rarr;</a></p>
+      </div>
+    </li>
+
+    <li id="valbruna-asw">
+      <div class="spark">
+        <p class="spark__headline">Valbruna ASW &mdash; Welland</p>
+        <p class="spark__meta">Sept 25, 2026 &middot; $8.61M &middot; Specialty steel / defence / energy</p>
+        <p class="spark__body">New steelmaking equipment and technology upgrades to diversify the company&rsquo;s specialty-steel business and serve Canadian demand across defence, infrastructure, and energy markets. 11 new jobs, 152 positions protected. Valbruna also appeared in a July FedDev Ontario announcement covering 13 Niagara businesses &mdash; a sign of ongoing, multi-source capital investment rather than a single event.</p>
+        <p class="spark__sources">
+          <a href="https://samoosterhoffmpp.ca/ontario-investing-nearly-7-million-to-protect-tariff-impacted-workers-and-businesses-in-niagara/" rel="noopener">Sam Oosterhoff, MPP &rarr;</a>
+          <span class="spark__sources__sep">&middot;</span>
+          <a href="https://www.canada.ca/en/economic-development-southern-ontario/news/2026/07/thirteen-niagara-region-businesses-receive-support-to-strengthen-resiliency-and-grow.html" rel="noopener">FedDev Ontario &rarr;</a>
+        </p>
+      </div>
+    </li>
+
+    <li id="cmi-heavy-industries">
+      <div class="spark">
+        <p class="spark__headline">CMI Heavy Industries &mdash; Stevensville</p>
+        <p class="spark__meta">Sept 25, 2026 &middot; $5.95M &middot; Heavy manufacturing / defence</p>
+        <p class="spark__body">New boring mill &mdash; precision capital equipment that positions CMI for defence and heavy-industrial supply chain work. 10 new jobs, 63 positions protected. CMI also appeared in the July FedDev Ontario batch alongside Valbruna and seven other Niagara manufacturers.</p>
+        <p class="spark__sources">
+          <a href="https://samoosterhoffmpp.ca/ontario-investing-nearly-7-million-to-protect-tariff-impacted-workers-and-businesses-in-niagara/" rel="noopener">Sam Oosterhoff, MPP &rarr;</a>
+          <span class="spark__sources__sep">&middot;</span>
+          <a href="https://www.canada.ca/en/economic-development-southern-ontario/news/2026/07/thirteen-niagara-region-businesses-receive-support-to-strengthen-resiliency-and-grow.html" rel="noopener">FedDev Ontario &rarr;</a>
+        </p>
+      </div>
+    </li>
+
+    <li id="agri-plastics-group">
+      <div class="spark">
+        <p class="spark__headline">Agri-Plastics Group &mdash; Grassie</p>
+        <p class="spark__meta">Sept 25, 2026 &middot; $5.63M &middot; Plastics manufacturing</p>
+        <p class="spark__body">Facility expansion plus new rotational-molding equipment. 7 new jobs, 71 positions protected. Fourth member of the September 25 provincial announcement alongside FBT, Valbruna, and CMI.</p>
+        <p class="spark__sources"><a href="https://samoosterhoffmpp.ca/ontario-investing-nearly-7-million-to-protect-tariff-impacted-workers-and-businesses-in-niagara/" rel="noopener">Sam Oosterhoff, MPP &rarr;</a></p>
+      </div>
+    </li>
+
+    <li id="vtr-feeder-solutions">
+      <div class="spark">
+        <p class="spark__headline">VTR Feeder Solutions &mdash; Grimsby, ON</p>
+        <p class="spark__meta">July 2026 &middot; $3.5M federal / $6M total &middot; Precision manufacturing / automation</p>
+        <p class="spark__body">Modernization of VTR&rsquo;s Grimsby facility through advanced machining, additive manufacturing, and automated inspection technologies &mdash; reshoring high-precision parts-feeding manufacturing currently outsourced overseas. Part of the July 2026 FedDev Ontario announcement covering 13 Niagara Region businesses. VTR also merged with Performance Feeders under Global Feeders Group in early 2026, forming the largest parts-feeding organization in North America. The company serves medical, pharmaceutical, automotive, packaging, and consumer goods manufacturers &mdash; an automation supplier sitting just behind the front lines of production across multiple sectors.</p>
+        <p class="spark__sources">
+          <a href="https://www.canada.ca/en/economic-development-southern-ontario/news/2026/07/government-of-canada-investments-to-help-niagara-region-businesses-adapt-and-drive-innovation.html" rel="noopener">FedDev Ontario &rarr;</a>
+          <span class="spark__sources__sep">&middot;</span>
+          <a href="https://www.design-engineering.com/thirteen-niagara-region-businesses-receive-support-investment-from-federal-government-1004049106/" rel="noopener">Design Engineering &rarr;</a>
+        </p>
+      </div>
+    </li>
+
+    <li id="niagara-college-cerra">
+      <div class="spark">
+        <p class="spark__headline">Niagara College + CERRA &mdash; Welland</p>
+        <p class="spark__meta">Sept 4, 2026 &middot; Defence / robotics / autonomous systems / education</p>
+        <p class="spark__body">Strategic collaboration between Niagara College and the Canadian Emergency Responders Robotics Association (CERRA) to connect education, applied research, technology developers, and operational end users around defence, public safety, and autonomous systems. New Defence Systems Engineering Technology (3-year) and Technician (2-year) programs began fall 2026 with 40+ inaugural students working hands-on with drones, autonomous vehicles, photonics, mechatronics, and instrument payloads. Ontario simultaneously announced 3,586 additional postsecondary seats at Brock and Niagara College including STEM and trades.</p>
+        <p class="spark__sources">
+          <a href="https://www.niagaracollege.ca/blog/2026/09/04/niagara-college-and-canadian-emergency-responders-robotics-association-partner-to-advance-canadas-defence-and-public-safety-technology-ecosystem/" rel="noopener">Niagara College &rarr;</a>
+          <span class="spark__sources__sep">&middot;</span>
+          <a href="https://news.ontario.ca/en/release/1008030/ontario-funding-more-than-3500-more-seats-in-niagara-to-prepare-students-for-in-demand-careers" rel="noopener">Ontario Newsroom &rarr;</a>
+          <span class="spark__sources__sep">&middot;</span>
+          <a href="https://www.niagaracollege.ca/insidenc/2026/09/22/minister-quinn-visits-ncs-welland-campus-to-tour-priority-growth-fund-areas/" rel="noopener">Inside NC &rarr;</a>
+        </p>
+      </div>
+    </li>
+
+    <li id="max-aicher">
+      <div class="spark">
+        <p class="spark__headline">Max Aicher North America &mdash; Hamilton, ON</p>
+        <p class="spark__meta">Aug 31, 2026 &middot; $7M federal / $9.3M total &middot; Steel manufacturing</p>
+        <p class="spark__body">Modernization of critical rolling mill systems to increase steel production capacity and productivity, the largest of nine Hamilton-area manufacturers supported in a single FedDev Ontario announcement on August 31. The full batch totalled $12.5 million and included Automation Design and Installation, Fellfab, Hooper Welding Enterprises, Canadian Metal Buildings, and four others &mdash; a cross-section of Hamilton&rsquo;s industrial base responding to tariff pressures by upgrading equipment and reshoring capability. Max Aicher North America is a subsidiary of the German Max Aicher Group, a significant steel producer; its Hamilton presence connects the corridor to continental steel supply chains.</p>
+        <p class="spark__sources">
+          <a href="https://www.canada.ca/en/economic-development-southern-ontario/news/2026/08/nine-hamilton-businesses-receive-government-of-canada-support-to-strengthen-canadian-supply-chains-and-drive-growth.html" rel="noopener">FedDev Ontario &rarr;</a>
+          <span class="spark__sources__sep">&middot;</span>
+          <a href="https://www.plant.ca/technology/feddev-ontario-invests-12-5m-in-nine-hamilton-area-manufacturers/" rel="noopener">Plant Magazine &rarr;</a>
+        </p>
+      </div>
+    </li>
+
+  </ul>
+
+  <h2>Buffalo &ndash; Western New York</h2>
+
+  <ul class="sparks-list">
+
+    <li id="moog-clean-room">
+      <div class="spark">
+        <p class="spark__headline">Moog &mdash; Niagara Falls, NY</p>
+        <p class="spark__meta">Sept 24, 2026 &middot; Aerospace / space propulsion</p>
+        <p class="spark__body">ISO Class 8 clean room completed at the Niagara Falls facility, increasing dedicated clean-room capacity by more than 80% for production of satellite and space propulsion systems and thrusters. Connects geographically to Moog&rsquo;s $150M Advanced Integrated Manufacturing facility in Elma and its optics supply chain partners in Rochester &mdash; a Niagara Falls &rarr; Buffalo/East Aurora &rarr; Rochester aerospace corridor is becoming visible.</p>
+        <p class="spark__sources"><a href="https://www.moog.com/news/operating-group-news/2026/moog-clean-room-expands-thruster-production.html" rel="noopener">Moog &rarr;</a></p>
+      </div>
+    </li>
+
+    <li id="americarb">
+      <div class="spark">
+        <p class="spark__headline">Americarb &mdash; Niagara Falls, NY</p>
+        <p class="spark__meta">Sept 2026 &middot; $29M &middot; Defence / advanced materials / hypersonic propulsion</p>
+        <p class="spark__body">$29 million expansion at the Niagara Falls advanced materials facility, driven by a $12.6 million Department of Defense contract for carbonized rayon phenolic &mdash; the insulating material that lines rocket nozzles in intercontinental ballistic and hypersonic missiles. A new 50,000 sq ft building plus refurbishment of four existing buildings will increase heat-treatment capacity tenfold, from 30,000 to 300,000 lbs of material per year. Roughly 45 new jobs averaging $70,000 annually, ranging into six figures for engineering and managerial roles. Phase 1 construction targeted October 2026; full completion September 2027. Americarb is one of very few U.S. producers of this class of material &mdash; a quiet but critical node in the defence supply chain, operating less than a mile from the Rainbow Bridge.</p>
+        <p class="spark__sources">
+          <a href="https://buffalonews.com/news/local/business/development/article_ebf413a8-bff9-4d82-9afd-cd51202de7db.html" rel="noopener">Buffalo News &rarr;</a>
+          <span class="spark__sources__sep">&middot;</span>
+          <a href="https://www.esd.ny.gov/esd-media-center/press-releases/esd-announces-americarb-expand-manufacturing-operations-niagara-county" rel="noopener">Empire State Development &rarr;</a>
+        </p>
+      </div>
+    </li>
+
+    <li id="northland-clean-energy">
+      <div class="spark">
+        <p class="spark__headline">Northland Workforce Training Center &mdash; Buffalo, NY</p>
+        <p class="spark__meta">Sept 25, 2026 &middot; $4.2M &middot; Clean energy workforce training</p>
+        <p class="spark__body">New Clean Energy Experience Center and Clean Technology Training Lab, funded by Empire State Development, National Grid, and NYPA. Designed around hands-on workforce training; first program is a one-year Building Maintenance Clean Facilities Technician certificate with Alfred State College, starting January. Northland is also the workforce partner Moog and Edwards Vacuum are working with for CNC technician pipelines &mdash; making it one of the most strategically positioned institutions in the region.</p>
+        <p class="spark__sources"><a href="https://www.btpm.org/local/2026-09-25/northland-workforce-training-center-unveils-new-clean-energy-center-training-lab" rel="noopener">Buffalo Toronto Public Media &rarr;</a></p>
+      </div>
+    </li>
+
+    <li id="ima-life">
+      <div class="spark">
+        <p class="spark__headline">IMA Life North America &mdash; Tonawanda, NY</p>
+        <p class="spark__meta">Sept 25, 2026 &middot; $30M &middot; Pharmaceutical equipment manufacturing</p>
+        <p class="spark__body">Completion of a 120,000 sq ft facility at 700 Colvin Woods Parkway &mdash; 90,000 sq ft of production space and 30,000 sq ft of offices on 15 acres &mdash; purpose-built to expand output of industrial freeze dryers for pharmaceutical customers including Pfizer and Moderna. The machines lyophilize (freeze-dry) liquid medicines into shelf-stable powders for global distribution. IMA Life employs 195 in Tonawanda and is actively hiring 70 more. Parent company IMA Group is based in Bologna, Italy; the Tonawanda facility is its North American manufacturing base &mdash; another example of European precision manufacturers choosing WNY as their U.S. production anchor.</p>
+        <p class="spark__sources">
+          <a href="https://www.fingerlakes1.com/2026/09/25/ima-life-completes-30-million-tonawanda-plant-expansion-plans-70-hires/" rel="noopener">Fingerlakes1 &rarr;</a>
+          <span class="spark__sources__sep">&middot;</span>
+          <a href="https://www.governor.ny.gov/news/governor-hochul-celebrates-completion-ima-life-north-americas-30-million-expansion-project" rel="noopener">Governor Hochul &rarr;</a>
+        </p>
+      </div>
+    </li>
+
+    <li id="ny-smart-i-corridor">
+      <div class="spark">
+        <p class="spark__headline">NY SMART I-Corridor / CNC Training Pathway &mdash; Buffalo, NY</p>
+        <p class="spark__meta">Sept 16, 2026 &middot; $2.7M &middot; Semiconductor workforce / CNC</p>
+        <p class="spark__body">About 10 regional manufacturers collaborated with Northland Workforce Training Center to define a new CNC training pathway, driven by demand from Edwards Vacuum&rsquo;s new semiconductor-supply-chain facility at STAMP in Genesee County ($319M investment, 599 jobs). The model is worth noting: employers identify a production bottleneck, define skill requirements, the training institution builds the curriculum around actual equipment, and companies hire graduates. Edwards Vacuum was posting manufacturing positions in September as it prepares for production at STAMP.</p>
+        <p class="spark__sources">
+          <a href="https://nysmarticorridor.com/the-ny-smart-i-corridor-just-put-2-7-million-under-contract-across-upstate-new-york-heres-what-it-proves/" rel="noopener">NY SMART I-Corridor &rarr;</a>
+          <span class="spark__sources__sep">&middot;</span>
+          <a href="https://buffaloniagara.org/success-story/edwards-vacuum/" rel="noopener">Invest Buffalo Niagara (Edwards) &rarr;</a>
+        </p>
+      </div>
+    </li>
+
+    <li id="niagara-power-transformer">
+      <div class="spark">
+        <p class="spark__headline">Niagara Power Transformer &mdash; Cheektowaga, NY</p>
+        <p class="spark__meta">Aug 18, 2026 &middot; $71M &middot; Electrical manufacturing</p>
+        <p class="spark__body">Proposed 96,000 sq ft new manufacturing facility; workforce growing from 146 to 219 (73 new jobs); roughly 50% increase in transformer production. The company makes custom liquid-filled power transformers for electrical grids, industrial plants, data centers, renewable-energy infrastructure, semiconductor fabs, and defence installations &mdash; one of those product categories that quietly sits underneath every other industrial sector.</p>
+        <p class="spark__sources"><a href="https://www.audacy.com/wben/news/local/niagara-power-transformer-eyes-71m-expansion" rel="noopener">Audacy / WBEN &rarr;</a></p>
+      </div>
+    </li>
+
+    <li id="moog-aim">
+      <div class="spark">
+        <p class="spark__headline">Moog Advanced Integrated Manufacturing &mdash; Elma, NY</p>
+        <p class="spark__meta">Aug 14, 2026 &middot; $150M &middot; Defence / aerospace / automation</p>
+        <p class="spark__body">150,000 sq ft facility incorporating advanced machining, robotics, automation, and automated inspection for military aircraft programs. Simultaneously: 75 STEM scholarships and workforce-development partnerships with Northland Workforce Training Center, Buffalo Prep, Dream It Do It WNY, and Say Yes Buffalo. Moog also operates a 13,000 sq ft Operations Training Center for hands-on technician development. The full pattern &mdash; factory &rarr; automation &rarr; training center &rarr; STEM pipeline &mdash; is deliberately built in.</p>
+        <p class="spark__sources"><a href="https://www.moog.com/news/operating-group-news/2026/moog-celebrates-75-years.html" rel="noopener">Moog &rarr;</a></p>
+      </div>
+    </li>
+
+    <li id="eaton-mission-systems">
+      <div class="spark">
+        <p class="spark__headline">Eaton Mission Systems &mdash; Orchard Park, NY</p>
+        <p class="spark__meta">July 2026 completion &middot; $18.5M &middot; Aerospace / military / actuation systems</p>
+        <p class="spark__body">Completion of a 50,000 sq ft expansion bringing Eaton Mission Systems&rsquo; Orchard Park footprint up 40%, creating 77 new jobs and securing 453 existing ones. The facility produces flight actuation technology for military and commercial aerospace: the expansion allows Eaton to extend products currently exclusive to the U.S. Air Force into U.S. Navy programs, increasing production capacity to serve growing defence demand. Eaton Mission Systems sits within the same South Buffalo aerospace belt as Moog&rsquo;s AIM facility in Elma, and its growth is driven by the same underlying shift in federal defence procurement patterns that is accelerating across the corridor.</p>
+        <p class="spark__sources">
+          <a href="https://www.eaton.com/us/en-us/company/news-insights/news-releases/2025/eaton-announces-18m-expansion-of-orchard-park--new-york.html" rel="noopener">Eaton &rarr;</a>
+          <span class="spark__sources__sep">&middot;</span>
+          <a href="https://www.wgrz.com/article/money/business/eaton-breaks-ground-on-orchard-park-expansion-project-adds-100-jobs/71-f4920cbd-8f98-41e1-993b-a5b0730a842c" rel="noopener">WGRZ &rarr;</a>
+        </p>
+      </div>
+    </li>
+
+    <li id="ub-battery-workforce">
+      <div class="spark">
+        <p class="spark__headline">UB + WNY Battery Coalition &mdash; Buffalo, NY</p>
+        <p class="spark__meta">Aug 11, 2026 &middot; $1.35M &middot; Battery / energy storage workforce</p>
+        <p class="spark__body">NSF-backed Energy Storage Engine Scholars Initiative connecting K&ndash;12 &rarr; college &rarr; training &rarr; paid industry experience in batteries and energy storage. Regional coalition: University at Buffalo, Binghamton University, RIT, and Syracuse University. Represents the broader trend of universities formalizing workforce pathways rather than leaving industry connections ad hoc.</p>
+        <p class="spark__sources"><a href="https://www.buffalo.edu/partnerships/about/news-events.host.html/content/shared/www/partnerships/news/2026/UB-to-lead-WNY-coalition-in-1-million-battery-workforce-program.detail.html" rel="noopener">University at Buffalo &rarr;</a></p>
+      </div>
+    </li>
+
+    <li id="sealing-devices-golisano">
+      <div class="spark">
+        <p class="spark__headline">Sealing Devices + Golisano Institute &mdash; Buffalo, NY</p>
+        <p class="spark__meta">July 20, 2026 &middot; Manufacturing / business education</p>
+        <p class="spark__body">New partnership between the Lancaster, NY manufacturer and the Golisano Institute for Business &amp; Entrepreneurship. Students gain field experience and internships covering operations, supply chain, quality, sales, finance, HR, and other business functions at Sealing Devices' facility &mdash; an industry/education collaboration model that doesn&rsquo;t require a new building or government funding to execute.</p>
+        <p class="spark__sources"><a href="https://sealingdevices.com/blog/company-news/sealing-devices-partners-with-golisano-institute/" rel="noopener">Sealing Devices &rarr;</a></p>
+      </div>
+    </li>
+
+    <li id="wells-enterprises">
+      <div class="spark">
+        <p class="spark__headline">Wells Enterprises &mdash; Dunkirk, NY</p>
+        <p class="spark__meta">Aug 27, 2026 milestone &middot; $425M total &middot; Food manufacturing</p>
+        <p class="spark__body">Wells Enterprises marked a major production milestone at its $425 million Dunkirk facility transformation with a ribbon cutting for a new employee center and expanded production lines, including a first-of-its-kind on-site chocolate manufacturing facility for use in its ice cream and novelty products. The investment retains approximately 380 full-time jobs and adds 270 new ones. Wells, the maker of Blue Bunny and Halo Top, has anchored Dunkirk&rsquo;s economy for decades; this transformation is the largest capital commitment in Chautauqua County in recent memory, and one of the largest food-manufacturing investments in the full corridor. The chocolate facility in particular is a new production capability not previously present at the site.</p>
+        <p class="spark__sources">
+          <a href="https://www.wrfalp.com/wells-enterprises-cuts-ribbon-on-425-million-facility-expansion/" rel="noopener">WRFA-LP &rarr;</a>
+          <span class="spark__sources__sep">&middot;</span>
+          <a href="https://esd.ny.gov/esd-media-center/press-releases/governor-hochul-celebrates-wells-enterprises-significantly-expanded" rel="noopener">Empire State Development &rarr;</a>
+        </p>
+      </div>
+    </li>
+
+    <li id="ultrapak">
+      <div class="spark">
+        <p class="spark__headline">Ultrapak &mdash; Dunkirk, NY</p>
+        <p class="spark__meta">2026 &middot; $800K &middot; Label printing / packaging manufacturing</p>
+        <p class="spark__body">Acquisition of a high-capacity printing press imported from Japan, expected to double or triple Ultrapak&rsquo;s label-printing output over the next several years. Building renovations and equipment installation slated for completion by end of 2026; approximately 10 new skilled jobs created. A smaller story alongside the Wells investment but notable for what it represents: a family-scale Chautauqua County manufacturer investing in precision production equipment to grow market share. The type of capital decision &mdash; one machine, meaningful multiplier &mdash; that rarely surfaces in regional press but is exactly what the atlas is designed to track.</p>
+        <p class="spark__sources">
+          <a href="https://esd.ny.gov/esd-media-center/press-releases/esd-announces-ultrapak-expansion-and-modernization-dunkirk" rel="noopener">Empire State Development &rarr;</a>
+          <span class="spark__sources__sep">&middot;</span>
+          <a href="https://www.observertoday.com/news/top-stories/2026/03/state-announces-expansion-plans-for-city-labeling-facility/" rel="noopener">Observer Today &rarr;</a>
+        </p>
+      </div>
+    </li>
+
+  </ul>
+
+  <h2>Rochester &ndash; Finger Lakes</h2>
+
+  <ul class="sparks-list">
+
+    <li id="mcc-sydor-optics">
+      <div class="spark">
+        <p class="spark__headline">Monroe Community College + Sydor Optics &mdash; Rochester, NY</p>
+        <p class="spark__meta">Sept 15, 2026 &middot; $69.6M &middot; Optics / photonics / education infrastructure</p>
+        <p class="spark__body">New Sydor Optics Advanced Technology Center at Monroe Community College, representing the first U.S. community-college associate program in optical systems technology. Sydor Optics contributed $3M; SPIE and regional automotive partners also contributed. Supports optics, photonics, automotive, and advanced manufacturing. A purpose-built industrial education facility where an industry&rsquo;s actual technology ecosystem is embedded inside a college &mdash; a model worth watching closely for what Niagara Assembly is building toward.</p>
+        <p class="spark__sources"><a href="https://rbj.net/2026/09/15/mcc-opens-sydor-optics-advanced-technology-center-rochester/" rel="noopener">Rochester Business Journal &rarr;</a></p>
+      </div>
+    </li>
+
+    <li id="pfisterer">
+      <div class="spark">
+        <p class="spark__headline">PFISTERER &mdash; Rochester, NY</p>
+        <p class="spark__meta">Sept 10, 2026 &middot; $2.7M &middot; Electrical infrastructure manufacturing</p>
+        <p class="spark__body">Three new CNC lathes and production tooling to increase manufacturing capacity for SICON electrical connection components by 2.5&times;. The products &mdash; electrical connectors for critical infrastructure &mdash; serve the same underlying grid and industrial plant market as Niagara Power Transformer across the border.</p>
+        <p class="spark__sources"><a href="https://www.greaterrochesterchamber.com/2026/09/10/pfisterer-supports-growth-in-north-america-with-a-2-7-millioninvestment-in-its-rochester-facility/" rel="noopener">Greater Rochester Chamber of Commerce &rarr;</a></p>
+      </div>
+    </li>
+
+    <li id="qed-technologies">
+      <div class="spark">
+        <p class="spark__headline">QED Technologies &mdash; Rochester, NY</p>
+        <p class="spark__meta">Aug 5, 2026 &middot; $18.7M &middot; Optics / precision manufacturing / semiconductor</p>
+        <p class="spark__body">$18.7M expansion adding roughly 20,000 sq ft: R&amp;D center, precision optics fabrication, advanced finishing, and metrology for semiconductor, aerospace, and defence applications. Up to 72 new jobs. QED sits at the intersection of optics, photonics, precision manufacturing, and semiconductor equipment &mdash; a cluster that is particularly strong in Rochester and increasingly connected to the broader corridor.</p>
+        <p class="spark__sources"><a href="https://rochesterbiz.com/qed-technologies-completes-18-7-million-expansion-in-monroe-county/" rel="noopener">Greater Rochester Enterprise &rarr;</a></p>
+      </div>
+    </li>
+
+    <li id="fairlife">
+      <div class="spark">
+        <p class="spark__headline">fairlife / Coca-Cola &mdash; Webster, NY</p>
+        <p class="spark__meta">Aug 20, 2026 &middot; $650M &middot; Food manufacturing</p>
+        <p class="spark__body">$650M dairy processing facility ramping up production; 745,000 sq ft; approximately 380 full-time jobs already created; processing 5&ndash;6 million lb of milk per day at full production. A different sector from the optics and defence cluster, but significant when thinking about the full industrial economy &mdash; and one of the largest new food-manufacturing facilities in upstate New York.</p>
+        <p class="spark__sources"><a href="https://rbj.net/2026/08/20/fairlife-ramps-up-production-webster-dairy-facility/" rel="noopener">Rochester Business Journal &rarr;</a></p>
+      </div>
+    </li>
+
+    <li id="rtma-mechatronics">
+      <div class="spark">
+        <p class="spark__headline">RTMA + GCC + Manufacturers &mdash; Rochester / GLOW, NY</p>
+        <p class="spark__meta">Aug 26, 2026 &middot; Mechatronics pre-apprenticeship</p>
+        <p class="spark__body">Genesee Valley Mechatronics Pre-Apprenticeship Boot Camp: 96 hours of classroom training plus 100+ hours of paid work experience with local manufacturers including Oxbo, Tambe Electric, and UNC Dairy. Delivered through Genesee Community College and Genesee Valley BOCES, organized by RTMA. A low-friction, employer-defined pathway that gets people into paid manufacturing work quickly.</p>
+        <p class="spark__sources"><a href="https://rbj.net/2026/08/26/rochester-area-manufacturing-pipeline-gets-boost-from-pre-apprenticeship-program/" rel="noopener">Rochester Business Journal &rarr;</a></p>
+      </div>
+    </li>
+
+    <li id="sydor-optics-expansion">
+      <div class="spark">
+        <p class="spark__headline">Sydor Optics expansion &mdash; Chili, NY</p>
+        <p class="spark__meta">July 30, 2026 &middot; $32M &middot; Optics / photonics / precision manufacturing</p>
+        <p class="spark__body">New 100,000 sq ft manufacturing facility at Sydor&rsquo;s Jet View Drive location in Chili, representing $32 million in total investment. 36 new jobs over five years, 92 retained; operational target fall 2027. The same month, Sydor acquired Vertex Optics of Victor, NY &mdash; its first acquisition &mdash; expanding advanced manufacturing capabilities across the photonics supply chain. Taken with the Monroe Community College Advanced Technology Center (also in this Sparks issue), Sydor is simultaneously building production capacity and workforce infrastructure, a pattern that distinguishes the most durable players in the regional optics cluster.</p>
+        <p class="spark__sources">
+          <a href="https://rbj.net/2026/07/30/sydor-optics-expands-manufacturing-new-building-rochester/" rel="noopener">Rochester Business Journal &rarr;</a>
+          <span class="spark__sources__sep">&middot;</span>
+          <a href="https://www.esd.ny.gov/esd-media-center/press-releases/empire-state-development-announces-more-32-million-expansion" rel="noopener">Empire State Development &rarr;</a>
+        </p>
+      </div>
+    </li>
+
+  </ul>
+
+  <nav class="mag-foot" aria-label="Article navigation">
+    <a href="../an-open-home-for-hardware/">&larr; An open home for hardware.</a>
+    <a class="mag-foot__next" href="../">&uarr; START Issue 1</a>
+  </nav>
+
+</div>
+
+<dialog class="sparks-dialog sparks-map-dialog" id="sparks-map-dialog" aria-label="Sparks map — Niagara–Buffalo–Rochester corridor">
+  <div class="sparks-dialog__head">
+    <span class="sparks-dialog__title">Niagara&ndash;Buffalo&ndash;Rochester corridor &mdash; July&ndash;September 2026</span>
+    <form method="dialog">
+      <button class="sparks-dialog__close" aria-label="Close map">&times;</button>
+    </form>
+  </div>
+  <div class="sparks-dialog__body sparks-dialog__body--map">
+    <div id="sparks-map-large" class="sparks-map-large"></div>
+  </div>
+</dialog>
+
+<footer class="sitefoot">
+  <span>Niagara Assembly (unincorporated)</span>
+  <span class="sitefoot__sep" aria-hidden="true">-</span>
+  <a href="mailto:office@niagaraassembly.com">office@niagaraassembly.com</a>
+  <span class="sitefoot__sep" aria-hidden="true">-</span>
+  <a class="topnav__icon" href="https://discord.gg/kxacHHRmBC" rel="noopener" aria-label="Niagara Assembly on Discord">
+    <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M19.54 0c1.13 2.01 1.94 4.2 2.31 6.51a16.8 16.8 0 0 0-4.05-1.23c-.17-.03-.34.05-.43.2-.18.31-.38.64-.55.96a15.4 15.4 0 0 0-9.64 0c-.17-.32-.37-.65-.55-.96a.5.5 0 0 0-.43-.2C4.98 5.29 3.62 5.7 2.15 6.51A22.8 22.8 0 0 0 .46 19.04c1.93 1.43 3.8 2.3 5.64 2.87.14.04.3-.01.39-.13.43-.59.82-1.21 1.15-1.86.07-.14.01-.31-.13-.36a14.2 14.2 0 0 1-1.76-.84c-.17-.09-.18-.33-.02-.43.12-.08.25-.16.37-.24.08-.05.18-.06.27-.02 5.8 2.65 12.07 2.65 17.8 0 .09-.04.19-.03.27.02.12.08.25.16.37.24.16.1.15.34-.02.43-.56.31-1.15.59-1.76.84-.14.06-.2.22-.13.36.34.65.72 1.27 1.15 1.86.09.12.25.17.39.13 1.85-.57 3.72-1.44 5.64-2.87A22.8 22.8 0 0 0 19.54 0ZM8.03 15.22c-1.13 0-2.06-1.04-2.06-2.32s.91-2.32 2.06-2.32 2.08 1.04 2.06 2.32c0 1.28-.91 2.32-2.06 2.32Zm7.94 0c-1.13 0-2.06-1.04-2.06-2.32s.91-2.32 2.06-2.32 2.08 1.04 2.06 2.32c0 1.28-.91 2.32-2.06 2.32Z"/></svg>
+  </a>
+  <a href="https://github.com/niagaraassembly" rel="noopener" aria-label="Niagara Assembly on GitHub">
+    <svg viewBox="0 0 16 16" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+  </a>
+  <a href="https://x.com/niagaraassembly" rel="noopener" aria-label="Niagara Assembly on X">
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M17.5 3h3.1l-6.8 7.7L21.8 21h-6.2l-4.9-6.4L5.1 21H2l7.2-8.2L2.4 3h6.3l4.4 5.8L17.5 3Zm-1.1 16.1h1.7L7.7 4.8H5.9l10.5 14.3Z"/></svg>
+  </a>
+  <a href="https://linkedin.com/company/niagara-assembly" rel="noopener" aria-label="Niagara Assembly on LinkedIn">
+    <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+  </a>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+(function () {
+  if (typeof L === 'undefined') return;
+
+  /* One marker per city; popup lists every initiative at that location. */
+  var locations = [
+    {
+      coords: [43.159, -79.247],
+      label: 'St. Catharines, ON',
+      html: '<b>FBT Innovative Technologies</b> &mdash; $9.54M<br>Facility expansion + metalworking machinery; 20 new jobs'
+    },
+    {
+      coords: [42.992, -79.248],
+      label: 'Welland, ON',
+      html: '<b>Valbruna ASW</b> &mdash; $8.61M<br>New steelmaking equipment; defence + energy markets<br><br><b>Niagara College + CERRA</b><br>Defence Systems Engineering programs; 40+ inaugural students'
+    },
+    {
+      coords: [42.960, -79.068],
+      label: 'Stevensville, ON',
+      html: '<b>CMI Heavy Industries</b> &mdash; $5.95M<br>New boring mill; 10 new jobs'
+    },
+    {
+      coords: [43.220, -79.670],
+      label: 'Grassie (Hamilton area), ON',
+      html: '<b>Agri-Plastics Group</b> &mdash; $5.63M<br>Facility expansion + rotational-molding equipment'
+    },
+    {
+      coords: [43.198, -79.557],
+      label: 'Grimsby, ON',
+      html: '<b>VTR Feeder Solutions</b> &mdash; $3.5M federal / $6M total<br>Advanced machining + additive manufacturing; reshoring precision parts-feeding'
+    },
+    {
+      coords: [43.096, -79.038],
+      label: 'Niagara Falls, NY',
+      html: '<b>Moog</b> &mdash; ISO Class 8 clean room<br>+80% capacity for satellite propulsion systems<br><br><b>Americarb</b> &mdash; $29M DoD contract<br>Hypersonic/missile propulsion materials; 10&times; heat-treatment capacity'
+    },
+    {
+      coords: [42.886, -78.878],
+      label: 'Buffalo, NY',
+      html: '<b>Northland Workforce Training Center</b> &mdash; $4.2M<br>Clean Energy Experience Center + Training Lab<br><br><b>NY SMART I-Corridor</b> &mdash; $2.7M<br>CNC training pathway; ~10 manufacturers<br><br><b>UB + WNY Coalition</b> &mdash; $1.35M<br>Battery / energy storage workforce pipeline<br><br><b>Sealing Devices + Golisano Institute</b><br>Manufacturing / business education partnership'
+    },
+    {
+      coords: [42.891, -78.755],
+      label: 'Cheektowaga, NY',
+      html: '<b>Niagara Power Transformer</b> &mdash; $71M<br>+96,000 sq ft; 73 new jobs; +50% production'
+    },
+    {
+      coords: [42.832, -78.638],
+      label: 'Elma, NY',
+      html: '<b>Moog AIM</b> &mdash; $150M<br>150,000 sq ft; robotics + automation; 75 STEM scholarships'
+    },
+    {
+      coords: [42.998, -78.188],
+      label: 'Batavia / GLOW, NY',
+      html: '<b>RTMA + GCC + Manufacturers</b><br>Mechatronics pre-apprenticeship; 96 hrs classroom + 100+ hrs paid work'
+    },
+    {
+      coords: [43.157, -77.609],
+      label: 'Rochester, NY',
+      html: '<b>MCC + Sydor Optics</b> &mdash; $69.6M<br>Advanced Technology Center; first U.S. community-college optics program<br><br><b>PFISTERER</b> &mdash; $2.7M<br>3 new CNC lathes; 2.5&times; production capacity<br><br><b>QED Technologies</b> &mdash; $18.7M<br>Optics R&amp;D + fabrication; up to 72 jobs<br><br><b>Sydor Optics expansion</b> &mdash; $32M<br>New 100,000 sq ft facility + Vertex Optics acquisition; 36 new jobs'
+    },
+    {
+      coords: [43.224, -77.428],
+      label: 'Webster, NY',
+      html: '<b>fairlife / Coca-Cola</b> &mdash; $650M<br>745,000 sq ft dairy plant; ~380 jobs created'
+    },
+    {
+      coords: [43.255, -79.866],
+      label: 'Hamilton, ON',
+      html: '<b>Max Aicher North America</b> &mdash; $7M federal / $9.3M total<br>Rolling mill modernization; part of $12.5M FedDev batch covering 9 Hamilton manufacturers'
+    },
+    {
+      coords: [43.019, -78.880],
+      label: 'Tonawanda, NY',
+      html: '<b>IMA Life North America</b> &mdash; $30M<br>120,000 sq ft pharma equipment plant; freeze dryers for Pfizer, Moderna; 70 new hires'
+    },
+    {
+      coords: [42.493, -79.340],
+      label: 'Dunkirk, NY',
+      html: '<b>Wells Enterprises</b> &mdash; $425M total<br>Ice cream + new chocolate facility; 270 new jobs + 380 retained<br><br><b>Ultrapak</b> &mdash; $800K<br>New printing press; doubling label-printing output; 10 new jobs'
+    },
+    {
+      coords: [42.767, -78.741],
+      label: 'Orchard Park, NY',
+      html: '<b>Eaton Mission Systems</b> &mdash; $18.5M<br>Aerospace + military actuation systems; 50,000 sq ft; 77 new jobs'
+    }
+  ];
+
+  var CENTER = [42.95, -78.85];
+  var ZOOM   = 8;
+
+  function markerOpts() {
+    var dark = document.documentElement.dataset.theme === 'dark';
+    var c = dark ? '#e9e7e2' : '#17181a';
+    return { radius: 6, color: c, fillColor: c, fillOpacity: 0.75, weight: 1.5 };
+  }
+
+  function addMarkers(map) {
+    var opts = markerOpts();
+    locations.forEach(function (loc) {
+      L.circleMarker(loc.coords, opts)
+        .bindPopup('<strong>' + loc.label + '</strong><br><br>' + loc.html, { maxWidth: 280 })
+        .addTo(map);
+    });
+  }
+
+  /* Small inline map. */
+  var smallEl = document.getElementById('sparks-map-small');
+  if (!smallEl) return;
+
+  var sm = L.map('sparks-map-small', { scrollWheelZoom: false }).setView(CENTER, ZOOM);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(sm);
+  addMarkers(sm);
+
+  /* Expand to dialog. */
+  var expandBtn  = document.getElementById('sparks-map-expand');
+  var mapDialog  = document.getElementById('sparks-map-dialog');
+  var largeReady = false;
+  var lm;
+
+  if (expandBtn && mapDialog) {
+    expandBtn.addEventListener('click', function () {
+      mapDialog.showModal();
+      if (!largeReady) {
+        lm = L.map('sparks-map-large', { scrollWheelZoom: true }).setView(CENTER, ZOOM);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(lm);
+        addMarkers(lm);
+        largeReady = true;
+      } else {
+        lm.invalidateSize();
+      }
+    });
+    mapDialog.addEventListener('click', function (e) {
+      if (e.target === mapDialog) mapDialog.close();
+    });
+  }
+}());
+
+/* Sparks tabs + text filter */
+(function () {
+  var input   = document.getElementById('sparks-filter');
+  var countEl = document.getElementById('sparks-filter-count');
+  var tabBtns = Array.from(document.querySelectorAll('.sparks-tab[data-tab]'));
+  if (!input || !tabBtns.length) return;
+
+  var sections = Array.from(document.querySelectorAll('.sparks-list')).map(function (ul) {
+    var h2 = ul.previousElementSibling;
+    /* Assign region to each li based on its section heading. */
+    var text = h2 ? h2.textContent.toLowerCase() : '';
+    var region = text.indexOf('ontario') !== -1 ? 'on' : 'ny';
+    Array.from(ul.querySelectorAll('li')).forEach(function (li) { li.dataset.region = region; });
+    return { ul: ul, h2: (h2 && h2.tagName === 'H2') ? h2 : null };
+  });
+
+  var items  = Array.from(document.querySelectorAll('.sparks-list li'));
+  var total  = items.length;
+  var active = 'all';
+
+  function run() {
+    var q = input.value.trim().toLowerCase();
+    var visible = 0;
+
+    items.forEach(function (li) {
+      var regionOk = active === 'all' || li.dataset.region === active;
+      var textOk   = !q || li.textContent.toLowerCase().indexOf(q) !== -1;
+      var show = regionOk && textOk;
+      li.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+
+    sections.forEach(function (s) {
+      var any = Array.from(s.ul.querySelectorAll('li')).some(function (li) {
+        return li.style.display !== 'none';
+      });
+      s.ul.style.display = any ? '' : 'none';
+      if (s.h2) s.h2.style.display = any ? '' : 'none';
+    });
+
+    if (countEl) countEl.textContent = (q || active !== 'all') ? visible + '\u202fof\u202f' + total : '';
+  }
+
+  tabBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      active = btn.dataset.tab;
+      tabBtns.forEach(function (b) {
+        b.classList.toggle('is-active', b === btn);
+        b.setAttribute('aria-selected', b === btn ? 'true' : 'false');
+      });
+      run();
+    });
+  });
+
+  input.addEventListener('input', run);
+}());
+</script>
+<script src="/vendor/rough.min.js" defer></script>
+<script src="/assets/js/sketch.js" defer></script>
+<script type="module" src="/assets/js/sitenav.js"></script>
+<script type="module" src="/assets/js/theme.js"></script>
+</body>
+</html>
