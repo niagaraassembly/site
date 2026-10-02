@@ -21,6 +21,8 @@ python3 -m unittest tests/test_approve_request.py
 credentials exist — see [docs/SETUP.md](docs/SETUP.md) for the ordered
 runbook that wires it up.
 
+Regional subsites — how a region is profiled, addressed, and read — are specified in [docs/architecture/subsites.md](docs/architecture/subsites.md).
+
 Data flow:
 
 ```text
