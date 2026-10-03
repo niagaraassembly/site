@@ -1,11 +1,11 @@
 # Regional subsites
 
-- Recorded: 2026-10-02
+- Recorded: 2026-10-02. First subsite named Greater Niagara on 2026-10-03.
 - Status: decisions below were agreed with Morgen. Anything under **Open** is not decided.
 - Scope: how a regional subsite is organized, addressed, and read. Visual design follows this repository’s existing site. This document does not specify colour, typography, or layout implementation.
-- Subject of the first subsite: the binational Niagara area (New York and Ontario). That is a region grouping for the subsite. **Niagara Region** remains the name of the Ontario upper-tier municipality, as in [`atlas/GLOSSARY.md`](../../atlas/GLOSSARY.md). The atlas **study area** remains the name for data the atlas currently holds. The subsite’s grouping is wider than both.
+- Subject of the first subsite: **Greater Niagara** (`/site/greater-niagara/`). It spans the Niagara area across New York and Ontario. That span is a region grouping for the subsite. **Niagara Region** remains the name of the Ontario upper-tier municipality, as in [`atlas/GLOSSARY.md`](../../atlas/GLOSSARY.md). The atlas **study area** remains the name for data the atlas currently holds. Greater Niagara is wider than both.
 
-**Summary.** A subsite is a template for profiling a regional industrial ecosystem on niagaraassembly.com, with its own content and reading experience. The first subsite profiles the Niagara area across New York and Ontario; the same template will later profile other regions and support comparison across them. The focus is industrial sectors, and agriculture and food is a specialized sector with its own pages inside that focus. Decisions in this document were agreed with Morgen; open items are collected in §9.
+**Summary.** A subsite is a template for profiling a regional industrial ecosystem on niagaraassembly.com, with its own content and reading experience. The first subsite is Greater Niagara, covering the Niagara area across New York and Ontario; the same template will later profile other regions and support comparison across them. The focus is industrial sectors, and agriculture and food is a specialized sector with its own pages inside that focus. Decisions in this document were agreed with Morgen; open items are collected in §9.
 
 Source material for the first subsite is prepared outside this repository. It is not quoted or linked here. A piece from that material is published only after it meets the publishing rules in §7.
 
@@ -27,7 +27,7 @@ Places and regions are data. A subsite is a lens over that data.
 
 A piece appears in a subsite when its places fall inside that subsite’s regions. A piece that covers a whole region may tag the region directly. Renaming a region does not change its id and does not break existing addresses (§4).
 
-The first subsite’s landing slug is `ny-ontario`. The list of region ids inside that subsite waits on the place and region id scheme, which is open (§9).
+The first subsite’s display name is Greater Niagara. Its landing slug is `greater-niagara`. The list of region ids inside that subsite waits on the place and region id scheme, which is open (§9).
 
 ---
 
@@ -134,7 +134,7 @@ Subsite landing pages live at:
 https://niagaraassembly.com/site/<region-slug>/
 ```
 
-The first landing page is `https://niagaraassembly.com/site/ny-ontario/`.
+The first landing page is `https://niagaraassembly.com/site/greater-niagara/`.
 
 - The `/site/` prefix is permanent.
 - Region slugs are permanent, short, and lowercase.
@@ -319,7 +319,7 @@ These are unset. Do not invent values for them while following this document.
 - [ ] The exact canonical piece URL pattern. It should be stable and independent of any subsite.
 - [ ] The final shared global topic list. §3.1 is a placeholder.
 - [ ] The place and region id scheme, and where that data lives.
-- [ ] Which region ids belong to the `ny-ontario` subsite.
+- [ ] Which region ids belong to the `greater-niagara` subsite.
 - [ ] How margin items are authored: front matter, inline syntax, or something else.
 - [ ] How best to use the right margin, including how subsite margin items share that margin with the existing Apps panel.
 - [ ] The later formal approval workflow, and where the named approver is recorded once that workflow exists.
