@@ -23,7 +23,7 @@ runbook that wires it up.
 
 Regional subsites — how a region is profiled, addressed, and read — are specified in [docs/architecture/subsites.md](docs/architecture/subsites.md).
 
-Greater Niagara, the first subsite, is at `/site/greater-niagara/`. After editing a piece, rebuild, then serve:
+Greater Niagara, the first subsite, is at `/site/greater-niagara/`. HeavyMap, the second, is at `/site/heavymap/`. After editing a piece or a subsite definition, rebuild, then serve:
 
 ```bash
 node scripts/subsite/build.mjs

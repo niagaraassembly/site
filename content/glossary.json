@@ -11,18 +11,24 @@
     {
       "id": "niagara-region",
       "term": "Niagara Region",
-      "definition": "The official upper-tier municipality of twelve lower-tier municipalities in Ontario. Not a name for the wider Niagara area, and not the name of this subsite.",
-      "regions": ["region:greater-niagara"]
+      "definition": "The official upper-tier municipality of twelve lower-tier municipalities in Ontario. Not a name for the wider Niagara area, and not the name of a subsite.",
+      "regions": ["region:greater-niagara", "region:heavymap"]
     },
     {
       "id": "overlap",
       "term": "Overlap",
-      "definition": "A point where trends, characteristics, place assets, and pools of capital coincide so as to enable action, investment, and growth."
+      "definition": "The editorial name for opportunity: shared interests among parties that could enable action, investment, and growth. The Overlaps section is not a data-derived rule list, and a subsite may use it lightly."
     },
     {
       "id": "subsite",
       "term": "Subsite",
-      "definition": "A lens over shared place data: a set of regions, an optional topic selection, and a landing page."
+      "definition": "A lens over shared place data: a set of regions, a topic list, any extra sections that subsite defines, and a landing page."
+    },
+    {
+      "id": "heavymap",
+      "term": "HeavyMap",
+      "definition": "The name of this subsite. It is a technical scaffold for the HeavyMap tool: industrial intelligence for the cross-border Niagara area, assembled from public data. It is not Niagara Region, the Ontario upper-tier municipality.",
+      "regions": ["region:heavymap"]
     }
   ]
 }

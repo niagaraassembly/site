@@ -65,11 +65,13 @@ test('a town in New York is inside Greater Niagara and Canada is not', () => {
 
 test('every example is a draft and none are published', () => {
   const corpus = loadCorpus(root);
-  assert.equal(corpus.pieces.length, 11);
+  assert.equal(corpus.pieces.length, 19);
   for (const piece of corpus.pieces) {
     assert.equal(piece.data.status, 'draft', piece.file);
     assert.match(piece.data.title, /^Example:/);
   }
+  assert.ok(corpus.pieces.some((piece) => piece.slug === 'example-update'));
+  assert.ok(corpus.pieces.some((piece) => piece.slug === 'heavymap-example-claims'));
   assert.equal(publicPieces(corpus.pieces).length, 0);
   assert.equal(depthOf('overviews'), 'explanatory');
   assert.equal(depthOf('gathering'), 'technical');
@@ -187,6 +189,61 @@ test('the sidebar is two groups and pipeline detail stays on the bucket page', (
   assert.doesNotMatch(subNav, /Municipal records/);
   assert.match(sub.html, /<h1>Municipal records<\/h1>/);
   assert.match(subNav, /href="\/site\/greater-niagara\/gathering\/" aria-current="true"/);
+});
+
+test('HeavyMap is its own subsite and Greater Niagara nav is unchanged', () => {
+  const corpus = loadCorpus(root);
+  const heavy = corpus.subsites.find((item) => item.slug === 'heavymap');
+  assert.equal(heavy.title, 'HeavyMap');
+  assert.equal(heavy.landing, '/site/heavymap/');
+  assert.equal(heavy.topics.length, 9);
+  assert.equal(heavy.sections.length, 6);
+  assert.equal(heavy.pipeline.gathering.length, 3);
+  const places = new Map(corpus.geo.places.map((place) => [place.id, place]));
+  const region = corpus.geo.regions.find((item) => item.id === 'region:heavymap');
+  assert.equal(placeInRegion('town:buffalo', region, places), true);
+  assert.equal(placeInRegion('municipality:hamilton', region, places), false);
+  assert.equal(placeInRegion('town:rochester', region, places), false);
+  const overlap = corpus.pieces.find((piece) => piece.slug.startsWith('heavymap-') && piece.data.bucket === 'overlaps');
+  assert.equal(overlap, undefined);
+
+  const planned = pages(corpus);
+  const gn = planned.find((item) => item.path === 'site/greater-niagara/index.html').html;
+  const gnNav = gn.slice(gn.indexOf('<nav class="subsite-nav"'), gn.indexOf('</nav>') + 6);
+  assert.doesNotMatch(gnNav, /Zoning and land use|Layers and data catalogue|HeavyMap/);
+  assert.match(gnNav, />Manufacturing and supply chains</);
+
+  const landing = planned.find((item) => item.path === 'site/heavymap/index.html');
+  assert.match(landing.html, /href="\/site\/heavymap\/layers\/"/);
+  assert.match(landing.html, /Zoning and land use/);
+  assert.doesNotMatch(landing.html, /Manufacturing and supply chains/);
+  const hmNav = landing.html.slice(landing.html.indexOf('<nav class="subsite-nav"'), landing.html.indexOf('</nav>') + 6);
+  assert.doesNotMatch(hmNav, /Recon and source registry|not_in_coverage/);
+
+  const overlaps = planned.find((item) => item.path === 'site/heavymap/overlaps/index.html').html;
+  assert.match(overlaps, /not a list of data-derived overlap rules/);
+  assert.doesNotMatch(overlaps, /kind: trend|not_in_coverage/);
+
+  const claims = planned.find((item) => item.path === 'site/heavymap/claims-and-refusals/index.html').html;
+  assert.match(claims, /not_in_coverage/);
+  assert.match(claims, /not_licensed/);
+  assert.match(claims, /not_joined/);
+  assert.match(claims, /does not list them/);
+
+  const status = planned.find((item) => item.path === 'site/heavymap/status/index.html').html;
+  assert.match(status, /Numbered gates are not defined/);
+  assert.doesNotMatch(status, /G[1-6]/);
+
+  const gathering = planned.find((item) => item.path === 'site/heavymap/gathering/index.html').html;
+  assert.match(gathering, /Recon and source registry/);
+  assert.match(gathering, /Licence triage/);
+  const gatheringNav = gathering.slice(gathering.indexOf('<nav class="subsite-nav"'), gathering.indexOf('</nav>') + 6);
+  assert.doesNotMatch(gatheringNav, /Recon and source registry/);
+
+  for (const item of planned) {
+    assert.doesNotMatch(item.html, /Example:/);
+    assert.doesNotMatch(item.path, /^pieces\/heavymap-/);
+  }
 });
 
 test('the subsite name is not the retired slug', () => {

@@ -1,0 +1,37 @@
+{
+  "seed": true,
+  "id": "subsite:replace-me",
+  "slug": "replace-me",
+  "title": "Replace this title",
+  "summary": "One sentence on what this subsite is.",
+  "why": "Why it exists.",
+  "span": "Which places the seed region covers, and which official names it is not.",
+  "focus": "What this subsite is about. Say whether it is a regional profile or a technical tool.",
+  "glossaryTerm": "replace-me",
+  "topicNote": "Say that these topics belong to this subsite.",
+  "regions": ["region:replace-me"],
+  "topics": [
+    {"id": "example-topic", "title": "Example topic"}
+  ],
+  "landing": "/site/replace-me/",
+  "pipeline": {
+    "gathering": [{"slug": "example-source", "title": "Example source"}],
+    "processing": [{"slug": "example-normalize", "title": "Example normalize"}],
+    "packaging": [{"slug": "example-package", "title": "Example package"}],
+    "publishing": [{"slug": "example-release", "title": "Example release"}]
+  },
+  "bucketPages": {
+    "overlaps": {
+      "intro": "Overlaps is editorial. It is not a data-derived rule list.",
+      "paragraphs": ["Do not seed literal overlap rules here unless this subsite is meant to."]
+    }
+  },
+  "sections": [
+    {
+      "slug": "example-section",
+      "title": "Example section",
+      "summary": "One sentence.",
+      "paragraphs": ["What the reader finds on this page."]
+    }
+  ]
+}

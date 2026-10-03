@@ -1,11 +1,11 @@
 # Regional subsites
 
-- Recorded: 2026-10-02. First subsite named Greater Niagara on 2026-10-03.
+- Recorded: 2026-10-02. First subsite named Greater Niagara on 2026-10-03. Second subsite, HeavyMap, recorded the same day. Topic lists and extra sections are per subsite as of that date.
 - Status: decisions below were agreed with Morgen. Anything under **Open** is not decided.
 - Scope: how a regional subsite is organized, addressed, and read. Visual design follows this repository’s existing site. This document does not specify colour, typography, or layout implementation.
 - Subject of the first subsite: **Greater Niagara** (`/site/greater-niagara/`). It spans the Niagara area across New York and Ontario. That span is a region grouping for the subsite. **Niagara Region** remains the name of the Ontario upper-tier municipality, as in [`atlas/GLOSSARY.md`](../../atlas/GLOSSARY.md). The atlas **study area** remains the name for data the atlas currently holds. Greater Niagara is wider than both.
 
-**Summary.** A subsite is a template for profiling a regional industrial ecosystem on niagaraassembly.com, with its own content and reading experience. The first subsite is Greater Niagara, covering the Niagara area across New York and Ontario; the same template will later profile other regions and support comparison across them. The focus is industrial sectors, and agriculture and food is a specialized sector with its own pages inside that focus. Decisions in this document were agreed with Morgen; open items are collected in §9.
+**Summary.** A subsite is a lens on niagaraassembly.com, with its own content and reading experience. The first subsite is Greater Niagara, a non-technical profile of the industrial ecosystem across the Niagara area in New York and Ontario: existing companies, their activities, and investment. The second is HeavyMap, a technical scaffold for the HeavyMap tool, which reads public data for cross-border Niagara. The six section names are shared. The topic list, the pipeline subcategories, and any further sections are defined on each subsite. Comparison across subsites happens when two pieces use the same topic id, not because every subsite shares one navigation list. Agriculture and food remains a specialized sector with its own pages, not a lead topic of Greater Niagara. Decisions in this document were agreed with Morgen; open items are collected in §9.
 
 Source material for the first subsite is prepared outside this repository. It is not quoted or linked here. A piece from that material is published only after it meets the publishing rules in §7.
 
@@ -23,11 +23,11 @@ Places and regions are data. A subsite is a lens over that data.
 |---|---|
 | Place | A location in a shared hierarchy: town, county, province or state, country. Each place has a stable id. |
 | Region | A named grouping of places. A place may belong to more than one region. Regions may overlap. |
-| Subsite | A definition: a set of regions, an optional selection of topics, and a landing page. |
+| Subsite | A definition: a set of regions, a topic list (or the default list), any extra sections, and a landing page. |
 
 A piece appears in a subsite when its places fall inside that subsite’s regions. A piece that covers a whole region may tag the region directly. Renaming a region does not change its id and does not break existing addresses (§4).
 
-The first subsite’s display name is Greater Niagara. Its landing slug is `greater-niagara`. The list of region ids inside that subsite waits on the place and region id scheme, which is open (§9).
+The first subsite’s display name is Greater Niagara. Its landing slug is `greater-niagara`. Its seed region id is `region:greater-niagara` (§10). HeavyMap, the second subsite, uses `region:heavymap` (§11).
 
 ---
 
@@ -52,24 +52,26 @@ Types are filters. They are not the main navigation. Navigation is by bucket, th
 
 ## 3. Navigation
 
-**Decided.** The shared topic list in §3.1 is a proposed starting set and is still open to revision.
+**Decided, revised 2026-10-03.** Six section names are shared. Everything under them is per subsite. An earlier draft of this section treated the Overview topics as one global list and treated the four pipeline buckets as the same technical nav on every subsite. That is withdrawn. Greater Niagara and HeavyMap do not share a topic list, and HeavyMap adds sections Greater Niagara does not have. Greater Niagara’s navigation is unchanged until the owner decides otherwise.
 
-Navigation is bucket-first, then topic. Six buckets sit at the top of every subsite.
+Navigation is section-first, then topic. The shared sections:
 
-| Bucket | Reader | Organized by |
-|---|---|---|
-| Overviews | General reader | One shared global set of topics, so regions can be compared on the same themes |
-| Overlaps | General reader | No fixed subtopics. Tagged by ingredients (§3.2) |
-| Gathering | Technical | 2 to 4 local subcategories, chosen for that subsite’s real sources |
-| Processing | Technical | 2 to 4 local subcategories, same rule |
-| Packaging | Technical | 2 to 4 local subcategories, same rule |
-| Publishing | Technical | 2 to 4 local subcategories, same rule |
+| Section | Role |
+|---|---|
+| Overviews | The subsite’s own topics. The list is in that subsite’s config, not in one global nav. |
+| Overlaps | Editorial and conceptual. It shows opportunity as shared interests among parties. It is not a data-derived rule list, and a subsite may use it lightly or leave it empty (§3.2). |
+| Gathering | How sources were found. Local subcategories, defined for that subsite. |
+| Processing | How records were read and joined. Local subcategories, same rule. |
+| Packaging | How data was combined. Local subcategories, same rule. |
+| Publishing | What is published, and in what form. Local subcategories, same rule. |
+
+A subsite may add further sections. Those sections are not copied onto the others (§3.5).
 
 ### 3.1 Overviews
 
-Overviews are the plain picture of a region for a general reader. Topics are global: the same list is used on every subsite, so two regions can be set side by side on one theme.
+Overviews are organized by topic. Topics belong to the subsite. Two pieces can sit side by side when they use the same topic id. They do not sit side by side merely because both subsites have an Overviews section.
 
-Proposed starting topics, to be refined:
+Greater Niagara is the non-technical profile: companies, their activities, and investment, for a general reader. Its topics, still a placeholder, are the list in `content/topics.json` (`topics: null` on that subsite selects that file):
 
 - Manufacturing and supply chains
 - Research and innovation hubs
@@ -79,13 +81,25 @@ Proposed starting topics, to be refined:
 - Trade and logistics
 - Land, sites and facilities
 
-Agriculture and food is a specialized sector with its own pages. It is not one of these generic topics.
+Agriculture and food is a specialized sector with its own pages. It is not one of these topics.
+
+HeavyMap is technical. Its Overview topics are data kinds, stored on `content/subsites/heavymap.json`, not in `content/topics.json`:
+
+- Zoning and land use
+- Parcels and buildings
+- Business and employment registers
+- Facilities and permits
+- Rail, roads and truck routes
+- Ports, border and airports
+- Constraints and hazards
+- Brownfields and reuse
+- Servicing and terrain
 
 ### 3.2 Overlaps
 
-An overlap is this project’s term for opportunity. It is a point where trends, characteristics, place assets, and pools of capital coincide so as to enable action, investment, and growth.
+Overlaps is an editorial and conceptual section. It is meant to show opportunity arising from shared interests among various parties. It is not applied literally, and it is not data-derived, on every subsite. Each subsite may use it lightly or editorially. HeavyMap has the landing page and no seeded overlap rules.
 
-Overlaps have no fixed subtopics. Each overlap names its ingredients. Each ingredient has a kind and a link:
+When a subsite does publish an overlap, the piece has no fixed subtopics. It names ingredients. Each ingredient has a kind and a link:
 
 | Kind | Links to |
 |---|---|
@@ -94,33 +108,52 @@ Overlaps have no fixed subtopics. Each overlap names its ingredients. Each ingre
 | `place-asset` | An Overview topic, a place, an entity, or a dataset |
 | `capital` | An Overview topic, a place, an entity, or a dataset |
 
-Overlaps are the most claim-heavy content on a subsite. They need sources, and they need the same owner approval as every other piece (§7).
+An overlap that carries a claim needs sources, and it needs the same owner approval as every other piece (§7).
 
-Overlaps also feed cross-region views: where the same combination of ingredients appears in more than one region.
+Where two subsites both publish overlaps, a shared combination of ingredients can be read across them. That is optional. It is not a rule the build applies to HeavyMap.
 
-### 3.3 The four pipeline buckets
+### 3.3 The four pipeline sections
 
-Gathering, Processing, Packaging, and Publishing are the technical pipeline. They are the record of how the subsite’s evidence was found, read, combined, and released.
+Gathering, Processing, Packaging, and Publishing are the pipeline. On a technical subsite they are the record of how evidence was found, read, combined, and released. On Greater Niagara they are the same four section names, with that subsite’s own subcategory labels. The names of the sections are shared. The subcategories are not.
 
-| Bucket | What the reader finds there |
+| Section | What the reader finds there |
 |---|---|
 | Gathering | Discovering the available data, including difficulties and results |
 | Processing | What was found, and what is unique or interesting about different datasets |
 | Packaging | Decisions and techniques used to combine and package the data |
 | Publishing | The state of what is published, and in what forms, updated routinely |
 
-Each of the four has two to four local subcategories per subsite. Those subcategories follow that region’s real sources. They are not a second global list. A Gathering subcategory on one subsite might be “municipal records” or “company directories”; another region may need different names.
+Subcategories are a list on that subsite’s config. They follow that subsite’s real sources, or, while the page is still a scaffold, the placeholder names chosen for it. They are not a second global list. Greater Niagara’s seed labels include “municipal records” and “company directories”. HeavyMap’s are the tool’s steps (recon and source registry, fetch and cache, licence triage, and the rest in §11). Another subsite may need different names, and a different count.
 
 ### 3.4 Depth
 
-Depth follows the bucket. It does not need its own stored field when the bucket is known.
+Depth follows the section for the six shared names. It does not need its own stored field when the section is known.
 
-| Buckets | Depth | Reader |
+| Sections | Depth | Reader |
 |---|---|---|
-| Overviews, Overlaps | Explanatory | General reader |
-| Gathering, Processing, Packaging, Publishing | Technical | Data, formatting, zoning and land, methods |
+| Overviews, Overlaps | Explanatory | Whoever that subsite is written for. Greater Niagara’s reader is general. HeavyMap’s Overviews are still explanatory in form, and the subject is technical. |
+| Gathering, Processing, Packaging, Publishing | Technical | Data, formatting, methods |
 
-Explanatory pieces and technical deep dives stay separate. An explanatory piece links down to the technical pieces that back it. Those technical pieces link back up.
+An extra section says in its own page whether it is a method page or a short orientation. That is not stored as a `depth` field.
+
+Explanatory pieces and technical pieces stay linkable either way. An explanatory piece can link down to a technical piece. A technical piece can link back up.
+
+### 3.5 Extra sections
+
+**Decided.** Sections other than the six are per subsite. Different subsites have different focus, so they do not share one navigation tree.
+
+Greater Niagara has no extra sections. Its sidebar stays the six shared sections plus its seven topics. That redesign is waiting on the owner.
+
+HeavyMap adds six, all scaffold pages:
+
+| Section | What the page is for |
+|---|---|
+| Layers and data catalogue | Coverage of each dataset, per place. No rows are filled in. |
+| Claims and refusals | Method names: evidence grades, source stamps, refusal codes `not_in_coverage`, `not_licensed`, `not_joined`, and forbidden words. The scale, the stamp format, and the word list are not defined. The codes are not applied to a dataset. |
+| Licences and publication limits | A placeholder. Not a licence matrix, and not a release. |
+| Geography and coverage | The seed region `region:heavymap`, and the names it is not. |
+| Status and roadmap | A placeholder. Numbered gates are not defined. |
+| Glossary | Terms from `content/glossary.json` that apply to this subsite. |
 
 ---
 
@@ -175,7 +208,7 @@ A subsite landing page, in order:
 1. What the subject is, and why it matters.
 2. Latest updates.
 3. A few featured pieces.
-4. Entry points into Overviews, Overlaps, data, and the four pipeline buckets.
+4. Entry points into the six shared sections, that subsite’s topics, and any extra sections it defines.
 
 Every piece shows its status, its type, and its last-updated date. A data page says what the data is, where it came from, and how fresh it is. Updates form a running timeline.
 
@@ -185,7 +218,7 @@ Every piece shows its status, its type, and its last-updated date. A data page s
 
 **Decided** as the intended fields. **Open** as a storage format: this is a draft schema. It has not been validated against how this repository stores pages today. See §8 before treating any field name as already implemented.
 
-The same fields on every piece are what make a cross-region view possible. A piece appears side by side with pieces from other regions only when it uses a shared global topic. A data piece in that view also has `comparable: true`, and it shares units and geography levels with the pieces beside it.
+The same fields on every piece are what make a cross-subsite view possible. A piece appears side by side with a piece from another subsite only when both use the same topic id. There is not one global topic list. A data piece in that view also has `comparable: true`, and it shares units and geography levels with the pieces beside it.
 
 `depth` is not a stored field. It is derived from `bucket` (§3.4).
 
@@ -197,9 +230,9 @@ The same fields on every piece are what make a cross-region view possible. A pie
 | `updated` | required | every piece | Last-updated date. Equals `date` until the piece changes. |
 | `author` | required | every piece | Named author of the piece. |
 | `type` | required | every piece | `update`, `data`, `summary`, `explainer`, `post`, or `article`. |
-| `bucket` | required | every piece | `overviews`, `overlaps`, `gathering`, `processing`, `packaging`, or `publishing`. |
-| `topic` | required on Overviews | Overviews | One value from the shared global topic list (§3.1). |
-| `subcategory` | optional | the four pipeline buckets | A local subcategory for that subsite. Two to four per bucket. |
+| `bucket` | required | every piece | One of the six shared sections, or an extra section slug defined on a subsite that lists the piece (§3.5). |
+| `topic` | required on Overviews | Overviews | One id from that subsite’s topic list (§3.1). |
+| `subcategory` | optional | the four pipeline sections | A local subcategory slug from that subsite’s config. |
 | `places` | required | every piece | Place ids, region ids, or both. This is how a subsite claims the piece. |
 | `entities` | optional | every piece | Stable ids for firms, hubs, and other named things the piece covers. |
 | `tags` | optional | every piece | Extra labels. They do not replace `topic`. |
@@ -216,10 +249,10 @@ The same fields on every piece are what make a cross-region view possible. A pie
 
 Cross-region rule, restated:
 
-- Shared global `topic` is what puts a piece in a cross-region view.
+- The same topic id is what puts two pieces in a cross-subsite view. The id has to be one that both subsites actually use.
 - A data piece joins that view only when `comparable` is `true` and the other pieces use the same `units` and the same `geography` levels.
-- Local pipeline subcategories stay inside one subsite. They are not a global comparison key.
-- Overlaps compare across regions by shared ingredient combinations (§3.2).
+- Local pipeline subcategories stay inside one subsite. They are not a comparison key.
+- Overlaps are editorial. A shared ingredient combination can be read across subsites only when both subsites have published overlaps. It is not applied as a data rule (§3.2).
 
 ### Example
 
@@ -317,7 +350,8 @@ The form-approval Action already in this repository (`.github/workflows/approve-
 These are unset. Do not invent values for them while following this document.
 
 - [x] Canonical piece URL, for this repository: `/pieces/<slug>/`, slug = markdown filename. §4 and §10.
-- [ ] The final shared global topic list. §3.1 is a placeholder, stored for now in `content/topics.json`.
+- [x] Topic lists are per subsite, not one global nav. §3.1. Greater Niagara’s placeholder list remains `content/topics.json`. HeavyMap’s list is on its config. The contents of both lists are still placeholders.
+- [ ] The final topic list for each subsite. §3.1.
 - [x] Place and region ids, as seed data: `content/geo.json`. The scheme is in §10. It is not a finished gazetteer.
 - [x] Greater Niagara’s seed region id is `region:greater-niagara`, whose members are Ontario and New York. §10.
 - [x] Margin items are authored as `:::` fences in the markdown body. §10.
@@ -344,7 +378,21 @@ Differences from the draft schema, taken so the build matches this repository:
 | Margin syntax unset | Inline `:::note`, `:::quote`, `:::figure`, `:::definition`, and `:::deeper` fences, anchored where they sit in the body. |
 | `depth` stored or not | Not stored. It is derived from `bucket`. |
 | Editorial approval | Unchanged: Morgen approves. The build’s extra gate is mechanical: `draft` and `superseded` are not written to the public HTML. |
-| Side navigation and the right margin | The global top bar is unchanged. The subsite nav is two labelled groups in the left margin on a wide screen, using the same breakpoint and width as the Apps panel (`.appspanel--side` in `assets/css/site.css`). **Sections** lists the six buckets as top-level links. **Topics** lists the seven shared Overview topics. Local pipeline subcategories are not in the sidebar; each pipeline bucket page lists its own. On a narrower screen both groups stay visible and stack above the article. The current page is `aria-current="page"`; its parent bucket, when the page is a topic or a subcategory, is `aria-current="true"`. Margin items use the right margin on the wide screen and stay inline on a narrower one. |
+| Side navigation and the right margin | The global top bar is unchanged. The subsite nav is two labelled groups in the left margin on a wide screen, using the same breakpoint and width as the Apps panel (`.appspanel--side` in `assets/css/site.css`). **Sections** lists the six shared sections as top-level links, then any extra sections that subsite defines. **Topics** lists that subsite’s Overview topics. Greater Niagara defines none of the extra sections, so its sidebar is still the six sections and its seven topics. Local pipeline subcategories are not in the sidebar; each pipeline page lists its own. On a narrower screen both groups stay visible and stack above the article. The current page is `aria-current="page"`; its parent section, when the page is a topic or a subcategory, is `aria-current="true"`. Margin items use the right margin on the wide screen and stay inline on a narrower one. |
 | Where subsite pages come from | Generated HTML under `site/` and, once a piece is published, `pieces/`. The wordmark menu in `assets/js/sitenav.js` is not the subsite menu. |
 
-`content/geo.json`, `content/topics.json`, `content/glossary.json`, and `content/subsites/greater-niagara.json` are seed data. The topic list and the pipeline subcategory names are the placeholders from this document, not a finished survey.
+`content/geo.json`, `content/topics.json`, `content/glossary.json`, and `content/subsites/greater-niagara.json` are seed data. Greater Niagara’s topic list and pipeline subcategory names are placeholders, not a finished survey.
+
+---
+
+## 11. A second subsite, and how to generate one
+
+Recorded 2026-10-03. HeavyMap is at `/site/heavymap/`. It reuses the same generator, the same piece templates, and the same two-group sidebar. Greater Niagara’s generated navigation was not redesigned.
+
+HeavyMap’s seed region is `region:heavymap`. Members are Niagara Region (the Ontario upper-tier municipality), Niagara County, New York, and Erie County, New York. That is a coverage placeholder for the tool, not a finished map, and not a second name for Niagara Region. Greater Niagara’s region is still `region:greater-niagara`, whose members are Ontario and New York. A piece that names a town inside both regions can list on both subsites. The HeavyMap drafts name `region:heavymap` only.
+
+Overlaps on HeavyMap is the editorial landing page. No overlap piece is seeded.
+
+Status and roadmap is a placeholder page. It does not define gates.
+
+To generate another subsite, follow [content/templates/README.md](../../content/templates/README.md). Short version: copy `content/templates/subsite.example.json` to `content/subsites/<slug>.json`, add a region and a glossary term if needed, set that subsite’s topics, pipeline subcategories, and extra sections, copy piece templates into `content/pieces/` with `status: draft`, and run `node scripts/subsite/build.mjs`. Only `status: published` is written to the site, and publication still waits on Morgen.

@@ -1,6 +1,6 @@
 {
   "seed": true,
-  "note": "Placeholder shared Overview topics from the subsite guidance. Not the final list. Agriculture and food is not in this list.",
+  "note": "Greater Niagara's Overview topics. A subsite with topics set to null uses this list. Other subsites define their own topics in content/subsites/. This is not a single global navigation list, and it is not the final list. Agriculture and food is not in this list.",
   "topics": [
     {"id": "manufacturing-and-supply-chains", "title": "Manufacturing and supply chains"},
     {"id": "research-and-innovation-hubs", "title": "Research and innovation hubs"},
