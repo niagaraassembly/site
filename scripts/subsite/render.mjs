@@ -329,26 +329,35 @@ function sourceBlock(piece) {
 
 function nav(subsite, topics, current) {
   const base = `/site/${subsite.slug}`;
-  const item = (href, label, children = '') => {
-    const currentAttr = href === current ? ' aria-current="page"' : '';
-    return `<li><a href="${href}"${currentAttr}>${escapeHtml(label)}</a>${children}</li>`;
+  const mark = (href) => {
+    if (href === current) return ' aria-current="page"';
+    if (href !== `${base}/` && current.startsWith(href)) return ' aria-current="true"';
+    return '';
   };
-  const topicItems = topics.map((topic) =>
-    item(`${base}/overviews/${topic.id}/`, topic.title),
+  const link = (href, label) =>
+    `<li><a href="${href}"${mark(href)}>${escapeHtml(label)}</a></li>`;
+  const sections = BUCKETS.map((bucket) =>
+    link(`${base}/${bucket}/`, BUCKET_LABEL[bucket]),
   ).join('\n');
-  const pipeline = PIPELINE.map((bucket) => {
-    const subs = (subsite.pipeline?.[bucket] ?? []).map((sub) =>
-      item(`${base}/${bucket}/${sub.slug}/`, sub.title),
-    ).join('\n');
-    return item(`${base}/${bucket}/`, BUCKET_LABEL[bucket], `\n      <ul class="plain">\n        ${subs}\n      </ul>`);
-  }).join('\n');
+  const topicItems = topics.map((topic) =>
+    link(`${base}/overviews/${topic.id}/`, topic.title),
+  ).join('\n');
+  const sectionsId = `subsite-sections-${subsite.slug}`;
+  const topicsId = `subsite-topics-${subsite.slug}`;
   return `<nav class="subsite-nav" data-subsite="${escapeHtml(subsite.slug)}" aria-label="${escapeHtml(subsite.title)}">
-  <p class="subsite-nav__title"><a href="${base}/">${escapeHtml(subsite.title)}</a></p>
-  <ul class="plain">
-    ${item(`${base}/overviews/`, 'Overviews', `\n      <ul class="plain">\n        ${topicItems}\n      </ul>`)}
-    ${item(`${base}/overlaps/`, 'Overlaps')}
-    ${pipeline}
-  </ul>
+  <p class="subsite-nav__title"><a href="${base}/"${mark(`${base}/`)}>${escapeHtml(subsite.title)}</a></p>
+  <section class="subsite-nav__group" aria-labelledby="${sectionsId}">
+    <h2 id="${sectionsId}" class="subsite-nav__label">Sections</h2>
+    <ul class="plain">
+      ${sections}
+    </ul>
+  </section>
+  <section class="subsite-nav__group" aria-labelledby="${topicsId}">
+    <h2 id="${topicsId}" class="subsite-nav__label">Topics</h2>
+    <ul class="plain">
+      ${topicItems}
+    </ul>
+  </section>
 </nav>`;
 }
 

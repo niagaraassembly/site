@@ -715,19 +715,22 @@ a.cta:hover { background: var(--ink); color: var(--paper); }
 .subsite-nav { margin: 0 0 1.75rem; }
 .subsite-nav__title {
   font: 600 .8125rem/1.3 var(--sans);
-  margin: 0 0 .55rem;
+  margin: 0 0 .7rem;
 }
 .subsite-nav__title a { text-decoration: none; }
-.subsite-nav ul.plain { margin-bottom: .35rem; }
-.subsite-nav ul ul { margin: .2rem 0 .45rem; }
-.subsite-nav a { text-decoration: none; }
-.subsite-nav a[aria-current="page"] { font-weight: 600; }
-/* On a narrow screen the full tree would sit above the article. The six
-   buckets stay visible; each bucket page lists its own topics or
-   subcategories in the article. */
-@media (max-width: 68.99rem) {
-  .subsite-nav ul ul { display: none; }
+.subsite-nav__group { margin: 0 0 .85rem; }
+h2.subsite-nav__label {
+  font: .6875rem/1 var(--mono);
+  font-weight: 400;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 0 0 .35rem;
 }
+.subsite-nav ul.plain { margin: 0; }
+.subsite-nav a { text-decoration: none; }
+.subsite-nav a[aria-current="page"],
+.subsite-nav a[aria-current="true"] { font-weight: 600; }
 
 .filters a {
   font: .8125rem/1.4 var(--sans);

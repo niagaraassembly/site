@@ -140,6 +140,55 @@ test('type filter matches the query and hides other types', () => {
   assert.equal(pieceVisible('update', 'data'), false);
 });
 
+test('the sidebar is two groups and pipeline detail stays on the bucket page', () => {
+  const corpus = loadCorpus(root);
+  const planned = pages(corpus);
+  const landing = planned.find((item) => item.path === 'site/greater-niagara/index.html');
+  const nav = landing.html.slice(
+    landing.html.indexOf('<nav class="subsite-nav"'),
+    landing.html.indexOf('</nav>') + 6,
+  );
+  assert.match(nav, /aria-labelledby="subsite-sections-greater-niagara"/);
+  assert.match(nav, /id="subsite-sections-greater-niagara"[^>]*>Sections</);
+  assert.match(nav, /aria-labelledby="subsite-topics-greater-niagara"/);
+  assert.match(nav, /id="subsite-topics-greater-niagara"[^>]*>Topics</);
+  for (const label of ['Overviews', 'Overlaps', 'Gathering', 'Processing', 'Packaging', 'Publishing']) {
+    assert.match(nav, new RegExp(`>${label}</a>`));
+  }
+  for (const topic of [
+    'Manufacturing and supply chains',
+    'Research and innovation hubs',
+    'Workforce and training',
+    'Funding and programs',
+    'Technology adoption and automation',
+    'Trade and logistics',
+    'Land, sites and facilities',
+  ]) {
+    assert.match(nav, new RegExp(`>${topic}</a>`));
+  }
+  const lists = [...nav.matchAll(/<ul[\s\S]*?<\/ul>/g)].map((match) => match[0]);
+  assert.equal(lists.length, 2);
+  for (const list of lists) assert.equal((list.match(/<ul/g) || []).length, 1);
+  assert.doesNotMatch(nav, /Municipal records|Company directories|Employment series|Data files/);
+  assert.match(nav, /href="\/site\/greater-niagara\/" aria-current="page"/);
+
+  const gathering = planned.find((item) => item.path === 'site/greater-niagara/gathering/index.html');
+  assert.match(gathering.html, /href="\/site\/greater-niagara\/gathering\/" aria-current="page"/);
+  assert.match(gathering.html, /Municipal records/);
+  assert.match(gathering.html, /Company directories/);
+
+  const topic = planned.find((item) =>
+    item.path === 'site/greater-niagara/overviews/manufacturing-and-supply-chains/index.html');
+  assert.match(topic.html, /href="\/site\/greater-niagara\/overviews\/manufacturing-and-supply-chains\/" aria-current="page"/);
+  assert.match(topic.html, /href="\/site\/greater-niagara\/overviews\/" aria-current="true"/);
+
+  const sub = planned.find((item) => item.path === 'site/greater-niagara/gathering/municipal-records/index.html');
+  const subNav = sub.html.slice(sub.html.indexOf('<nav class="subsite-nav"'), sub.html.indexOf('</nav>') + 6);
+  assert.doesNotMatch(subNav, /Municipal records/);
+  assert.match(sub.html, /<h1>Municipal records<\/h1>/);
+  assert.match(subNav, /href="\/site\/greater-niagara\/gathering\/" aria-current="true"/);
+});
+
 test('the subsite name is not the retired slug', () => {
   const hits = [];
   const walk = (dir) => {
