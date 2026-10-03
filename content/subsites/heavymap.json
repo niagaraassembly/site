@@ -1,0 +1,131 @@
+{
+  "seed": true,
+  "id": "subsite:heavymap",
+  "slug": "heavymap",
+  "title": "HeavyMap",
+  "summary": "A technical scaffold for the HeavyMap tool: industrial intelligence for the cross-border Niagara area, assembled from public data.",
+  "why": "The tool reads different kinds of public data about the same places. This subsite is where that reading is explained. It is scaffolding, not a data release.",
+  "span": "HeavyMap is the name of this subsite. Its seed coverage is the cross-border Niagara area: Niagara Region, the Ontario upper-tier municipality, plus Niagara County and Erie County in New York. Niagara Region is one place inside that coverage, not the name of the whole.",
+  "focus": "This subsite is technical. It is about the HeavyMap tool and the public datasets that tool is built to read. It is not a profile of companies.",
+  "glossaryTerm": "heavymap",
+  "topicNote": "A data kind for this subsite. The list is seed scaffolding, not a finished catalogue.",
+  "regions": ["region:heavymap"],
+  "landing": "/site/heavymap/",
+  "topics": [
+    {"id": "zoning-and-land-use", "title": "Zoning and land use"},
+    {"id": "parcels-and-buildings", "title": "Parcels and buildings"},
+    {"id": "business-and-employment-registers", "title": "Business and employment registers"},
+    {"id": "facilities-and-permits", "title": "Facilities and permits"},
+    {"id": "rail-roads-and-truck-routes", "title": "Rail, roads and truck routes"},
+    {"id": "ports-border-and-airports", "title": "Ports, border and airports"},
+    {"id": "constraints-and-hazards", "title": "Constraints and hazards"},
+    {"id": "brownfields-and-reuse", "title": "Brownfields and reuse"},
+    {"id": "servicing-and-terrain", "title": "Servicing and terrain"}
+  ],
+  "pipeline": {
+    "gathering": [
+      {"slug": "recon-and-source-registry", "title": "Recon and source registry"},
+      {"slug": "fetch-and-cache", "title": "Fetch and cache"},
+      {"slug": "licence-triage", "title": "Licence triage"}
+    ],
+    "processing": [
+      {"slug": "normalize-and-field-maps", "title": "Normalize and field maps"},
+      {"slug": "spine-keys-and-joins", "title": "Spine keys and joins"},
+      {"slug": "place-joins-derive-and-enrich", "title": "Place joins/derive and enrich"}
+    ],
+    "packaging": [
+      {"slug": "layer-dispositions", "title": "Layer dispositions (ship, simplify, derive, tile, link)"},
+      {"slug": "claims-and-stamps", "title": "Claims and stamps"},
+      {"slug": "coverage-and-refusals", "title": "Coverage and refusals"}
+    ],
+    "publishing": [
+      {"slug": "dossier-and-selection", "title": "Dossier and selection"},
+      {"slug": "share-and-export", "title": "Share and export"},
+      {"slug": "public-release-controls", "title": "Public release controls"}
+    ]
+  },
+  "bucketPages": {
+    "overviews": {
+      "intro": "Data kinds for the HeavyMap tool. These topics belong to this subsite. They are not another subsite's topic list."
+    },
+    "overlaps": {
+      "intro": "Overlaps is the editorial and conceptual section. It is where opportunity can be written as shared interests among parties.",
+      "paragraphs": [
+        "This page is not a list of data-derived overlap rules. HeavyMap does not seed literal overlaps from datasets. A later editorial piece can use the overlap template if the owner approves it."
+      ]
+    },
+    "gathering": {
+      "intro": "How public sources for HeavyMap were found, fetched, and checked for licence. Scaffold names, not a finished registry."
+    },
+    "processing": {
+      "intro": "How records were normalized and joined. Scaffold names, not a finished field map."
+    },
+    "packaging": {
+      "intro": "How layers were packaged, stamped, and limited by coverage. Scaffold names, not a finished layer store."
+    },
+    "publishing": {
+      "intro": "How a selection is shared. Scaffold names, not a release."
+    }
+  },
+  "sections": [
+    {
+      "slug": "layers",
+      "title": "Layers and data catalogue",
+      "summary": "Coverage of each public dataset, stated per place. Nothing is catalogued yet.",
+      "paragraphs": [
+        "A layer entry will say which places it covers and which dataset it came from. This scaffold has no layer rows.",
+        "The places in the seed region are not a coverage map. An empty catalogue is not a claim that a place has no data."
+      ]
+    },
+    {
+      "slug": "claims-and-refusals",
+      "title": "Claims and refusals",
+      "summary": "Named method slots for how a claim is graded, stamped, or refused. No scale is defined here.",
+      "paragraphs": [
+        "Evidence grades are a named method slot. This scaffold does not define a scale.",
+        "Source stamps are a named method slot. This scaffold does not define a stamp format.",
+        "Refusal codes named for this scaffold are not_in_coverage, not_licensed, and not_joined. They are names only. They are not applied to a dataset on this page.",
+        "Forbidden words are a named method slot. This scaffold does not list them."
+      ]
+    },
+    {
+      "slug": "licences",
+      "title": "Licences and publication limits",
+      "summary": "What a later release may legally carry. No licence matrix is filled in.",
+      "paragraphs": [
+        "A data piece still names its own licence in front matter. This page does not substitute for that.",
+        "Publication limits are not written out here. Nothing on this subsite is a public data release."
+      ]
+    },
+    {
+      "slug": "geography",
+      "title": "Geography and coverage",
+      "summary": "The seed region for HeavyMap, and what it is not.",
+      "paragraphs": [
+        "The seed region id is region:heavymap. Its members are Niagara Region (the Ontario upper-tier municipality), Niagara County, New York, and Erie County, New York. Towns inside those members are inside the region.",
+        "Niagara Region is that Ontario municipality. It is not the name of this subsite and not the name of the whole coverage.",
+        "Greater Niagara is a different subsite. Its seed region is wider: Ontario and New York. Hamilton and Rochester are in the shared place file and are not members of region:heavymap.",
+        "The atlas study area is a separate coverage term for data the atlas holds. This page does not state that coverage."
+      ]
+    },
+    {
+      "slug": "status",
+      "kind": "roadmap",
+      "title": "Status and roadmap",
+      "summary": "A placeholder for later status. No gates are defined.",
+      "paragraphs": [
+        "This page will later say what is in progress and what is not. It does not do that yet.",
+        "Do not treat this scaffold as a roadmap. No gate list belongs here until one is decided."
+      ]
+    },
+    {
+      "slug": "glossary",
+      "kind": "glossary",
+      "title": "Glossary",
+      "summary": "Reader-facing terms for this subsite. The atlas jurisdiction glossary is a different file.",
+      "paragraphs": [
+        "Terms below come from content/glossary.json. A term limited to regions is included when one of those regions is region:heavymap. A term with no regions is included on every subsite."
+      ]
+    }
+  ]
+}

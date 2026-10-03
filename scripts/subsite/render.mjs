@@ -3,7 +3,7 @@ import path from 'node:path';
 import { escapeHtml } from '../../assets/js/escape.js';
 import { renderBody } from './markdown.mjs';
 import {
-  BUCKETS, PIPELINE, TYPES, canonicalPath, pieceInSubsite, subsitePieces,
+  BUCKETS, PIPELINE, TYPES, canonicalPath, extraSections, pieceInSubsite, subsitePieces, topicsFor,
 } from './model.mjs';
 
 const MARKER = '<!-- subsite-build -->';
@@ -77,6 +77,14 @@ export function pages(corpus) {
         }
       }
     }
+    for (const section of extraSections(subsite)) {
+      const inSection = pieces.filter((piece) => piece.data.bucket === section.slug);
+      out.push(pageFile(
+        `site/${subsite.slug}/${section.slug}/index.html`,
+        sectionPage(subsite, section, inSection, corpus),
+        footer,
+      ));
+    }
   }
   const seen = new Set();
   for (const subsite of corpus.subsites) {
@@ -143,10 +151,10 @@ function subsiteIndex(corpus) {
   ).join('\n');
   return {
     title: 'Subsites',
-    description: 'Regional industrial profiles on Niagara Assembly.',
+    description: 'Subsites on Niagara Assembly.',
     canonical: '/site/',
     body: `<h1>Subsites</h1>
-  <p>Each subsite is a lens: a set of regions, an optional topic selection, and a landing page.</p>
+  <p>Each subsite is a lens: a set of regions, its own topics and sections, and a landing page.</p>
   <ul class="plain">
     ${items}
   </ul>`,
@@ -157,10 +165,13 @@ function landing(subsite, topics, pieces, corpus) {
   const updates = pieces.filter((piece) => piece.data.type === 'update');
   const featured = pieces.filter((piece) => piece.data.type !== 'update').slice(0, 3);
   const path = `/site/${subsite.slug}/`;
-  const defined = renderBody(':::definition greater-niagara\n:::\n', {
+  const termId = subsite.glossaryTerm || 'greater-niagara';
+  const defined = renderBody(`:::definition ${termId}\n:::\n`, {
     glossary: new Map(corpus.glossary.map((term) => [term.id, term])),
     regionIds: subsite.regions,
   });
+  const focus = subsite.focus
+    || 'Industrial sectors are the subject. Agriculture and food is a specialized sector with its own pages, and it is not one of the shared Overview topics.';
   return {
     title: subsite.title,
     description: subsite.summary,
@@ -171,7 +182,7 @@ function landing(subsite, topics, pieces, corpus) {
   <p><b>${escapeHtml(subsite.summary)}</b> ${escapeHtml(subsite.why)}</p>
   <p>${escapeHtml(subsite.span)}</p>
   ${defined}
-  <p>Industrial sectors are the subject. Agriculture and food is a specialized sector with its own pages, and it is not one of the shared Overview topics.</p>
+  <p>${escapeHtml(focus)}</p>
 
   <h2>Latest updates</h2>
   ${pieceList(updates, 'No published updates yet. Approved updates form a running timeline here.')}
@@ -186,6 +197,8 @@ function landing(subsite, topics, pieces, corpus) {
 
 function bucketPage(subsite, bucket, topics, pieces, corpus) {
   const path = `/site/${subsite.slug}/${bucket}/`;
+  const intro = subsite.bucketPages?.[bucket]?.intro || BUCKET_INTRO[bucket];
+  const more = paragraphs(subsite.bucketPages?.[bucket]?.paragraphs);
   const extra = bucket === 'overviews'
     ? topicList(subsite, topics)
     : PIPELINE.includes(bucket)
@@ -193,11 +206,11 @@ function bucketPage(subsite, bucket, topics, pieces, corpus) {
       : '';
   return {
     title: `${BUCKET_LABEL[bucket]} — ${subsite.title}`,
-    description: BUCKET_INTRO[bucket],
+    description: intro,
     canonical: path,
     body: `${nav(subsite, topics, path)}
   <h1>${BUCKET_LABEL[bucket]}</h1>
-  <p>${escapeHtml(BUCKET_INTRO[bucket])}</p>
+  <p>${escapeHtml(intro)}</p>${more ? `\n  ${more}` : ''}
   ${extra}
   ${typeFilters(path)}
   ${pieceList(pieces, 'No published pieces in this bucket yet.')}`,
@@ -213,7 +226,7 @@ function topicPage(subsite, topic, pieces, corpus) {
     canonical: path,
     body: `${nav(subsite, topics, path)}
   <h1>${escapeHtml(topic.title)}</h1>
-  <p class="fineprint">Shared Overview topic. The list is still a placeholder.</p>
+  <p class="fineprint">${escapeHtml(subsite.topicNote || 'Shared Overview topic. The list is still a placeholder.')}</p>
   ${typeFilters(path)}
   ${pieceList(pieces, 'No published pieces on this topic yet.')}`,
   };
@@ -232,6 +245,44 @@ function subcategoryPage(subsite, bucket, sub, pieces, corpus) {
   ${typeFilters(path)}
   ${pieceList(pieces, 'No published pieces in this subcategory yet.')}`,
   };
+}
+
+function sectionPage(subsite, section, pieces, corpus) {
+  const path = `/site/${subsite.slug}/${section.slug}/`;
+  const topics = topicsFor(subsite, corpus.topics);
+  const glossary = section.kind === 'glossary' ? glossaryList(subsite, corpus) : '';
+  const roadmap = section.kind === 'roadmap'
+    ? '<p class="fineprint">Placeholder. Numbered gates are not defined on this page.</p>'
+    : '';
+  return {
+    title: `${section.title} — ${subsite.title}`,
+    description: section.summary,
+    canonical: path,
+    body: `${nav(subsite, topics, path)}
+  <h1>${escapeHtml(section.title)}</h1>
+  <p>${escapeHtml(section.summary)}</p>
+  ${paragraphs(section.paragraphs)}
+  ${roadmap}
+  ${glossary}
+  ${typeFilters(path)}
+  ${pieceList(pieces, 'No published pieces in this section yet.')}`,
+  };
+}
+
+function glossaryList(subsite, corpus) {
+  const terms = corpus.glossary.filter((term) => {
+    if (!term.regions || term.regions.length === 0) return true;
+    return term.regions.some((id) => subsite.regions.includes(id));
+  });
+  const items = terms.map((term) =>
+    `<li><b>${escapeHtml(term.term)}</b> — ${escapeHtml(term.definition)}</li>`,
+  ).join('\n');
+  return `<h2>Terms</h2>\n  <ul class="plain">\n    ${items}\n  </ul>`;
+}
+
+function paragraphs(list) {
+  if (!Array.isArray(list) || list.length === 0) return '';
+  return list.map((text) => `<p>${escapeHtml(text)}</p>`).join('\n  ');
 }
 
 function piecePage(piece, subsite, corpus) {
@@ -274,7 +325,7 @@ function metaLine(piece) {
   const bits = [
     labelType(piece.data.type),
     piece.data.status,
-    BUCKET_LABEL[piece.data.bucket],
+    BUCKET_LABEL[piece.data.bucket] || piece.data.bucket,
     `updated ${piece.data.updated}`,
   ];
   return bits.map((bit) => escapeHtml(bit)).join(' · ');
@@ -336,9 +387,10 @@ function nav(subsite, topics, current) {
   };
   const link = (href, label) =>
     `<li><a href="${href}"${mark(href)}>${escapeHtml(label)}</a></li>`;
-  const sections = BUCKETS.map((bucket) =>
-    link(`${base}/${bucket}/`, BUCKET_LABEL[bucket]),
-  ).join('\n');
+  const sections = [
+    ...BUCKETS.map((bucket) => link(`${base}/${bucket}/`, BUCKET_LABEL[bucket])),
+    ...extraSections(subsite).map((section) => link(`${base}/${section.slug}/`, section.title)),
+  ].join('\n');
   const topicItems = topics.map((topic) =>
     link(`${base}/overviews/${topic.id}/`, topic.title),
   ).join('\n');
@@ -367,8 +419,9 @@ function entryList(subsite, topics) {
     [`${base}/overviews/`, 'Overviews'],
     [`${base}/overlaps/`, 'Overlaps'],
     ...PIPELINE.map((bucket) => [`${base}/${bucket}/`, BUCKET_LABEL[bucket]]),
+    ...extraSections(subsite).map((section) => [`${base}/${section.slug}/`, section.title]),
   ];
-  const items = links.map(([href, label]) => `<li><a href="${href}">${label}</a></li>`).join('\n');
+  const items = links.map(([href, label]) => `<li><a href="${href}">${escapeHtml(label)}</a></li>`).join('\n');
   return `<ul class="plain">\n    ${items}\n  </ul>\n  ${topicList(subsite, topics)}`;
 }
 
@@ -406,12 +459,6 @@ function pieceList(pieces, empty) {
 
 function seedBanner(subsite) {
   return `<p class="fineprint">Seed data. Places, the region record, the topic list, and the pipeline subcategory names for ${escapeHtml(subsite.title)} are placeholders for the pipeline, not a finished gazetteer or a survey of sources.</p>`;
-}
-
-function topicsFor(subsite, topics) {
-  if (!Array.isArray(subsite.topics) || subsite.topics.length === 0) return topics;
-  const want = new Set(subsite.topics);
-  return topics.filter((topic) => want.has(topic.id));
 }
 
 function byUpdated(a, b) {

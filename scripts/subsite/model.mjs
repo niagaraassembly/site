@@ -27,6 +27,22 @@ export function depthOf(bucket) {
   return bucket === 'overviews' || bucket === 'overlaps' ? 'explanatory' : 'technical';
 }
 
+/** `topics: null` or `[]` keeps the catalog in content/topics.json.
+ *  A list of ids filters that catalog. A list of {id, title} is the subsite's own list. */
+export function topicsFor(subsite, catalog) {
+  const configured = subsite.topics;
+  if (!Array.isArray(configured) || configured.length === 0) return catalog;
+  if (typeof configured[0] === 'string') {
+    const want = new Set(configured);
+    return catalog.filter((topic) => want.has(topic.id));
+  }
+  return configured.map((topic) => ({ id: topic.id, title: topic.title }));
+}
+
+export function extraSections(subsite) {
+  return Array.isArray(subsite.sections) ? subsite.sections : [];
+}
+
 export function loadCorpus(root) {
   const geo = readJson(root, 'content/geo.json');
   const topicsDoc = readJson(root, 'content/topics.json');
@@ -46,6 +62,7 @@ export function loadCorpus(root) {
     root, geo, topics: topicsDoc.topics, glossary: glossaryDoc.terms, subsites, pieces,
   };
   const errors = [];
+  for (const subsite of subsites) errors.push(...validateSubsite(subsite));
   for (const piece of pieces) errors.push(...validatePiece(piece, corpus));
   if (errors.length) {
     const error = new Error(errors.join('\n'));
@@ -73,6 +90,23 @@ function loadPiece(root, name) {
   return { slug, file: name, data: parsed.data, body: parsed.body };
 }
 
+function validateSubsite(subsite) {
+  const errors = [];
+  const fail = (message) => errors.push(`${subsite.slug || subsite.id}: ${message}`);
+  const seen = new Set(BUCKETS);
+  for (const section of extraSections(subsite)) {
+    if (!SLUG.test(section.slug || '')) fail(`section slug "${section.slug}" must be lowercase words separated by hyphens`);
+    if (seen.has(section.slug)) fail(`section slug "${section.slug}" collides with another section or a shared bucket`);
+    seen.add(section.slug);
+    if (typeof section.title !== 'string' || !section.title.trim()) fail(`section ${section.slug} needs a title`);
+  }
+  for (const topic of topicsFor(subsite, [])) {
+    if (!SLUG.test(topic.id || '')) fail(`topic id "${topic.id}" must be lowercase words separated by hyphens`);
+    if (typeof topic.title !== 'string' || !topic.title.trim()) fail(`topic ${topic.id} needs a title`);
+  }
+  return errors;
+}
+
 export function validatePiece(piece, corpus) {
   const errors = [];
   const { data, file, slug } = piece;
@@ -89,17 +123,29 @@ export function validatePiece(piece, corpus) {
   if (data.date && !DATE.test(data.date)) fail('date must be YYYY-MM-DD');
   if (data.updated && !DATE.test(data.updated)) fail('updated must be YYYY-MM-DD');
   if (data.type && !TYPES.includes(data.type)) fail(`type must be one of ${TYPES.join(', ')}`);
-  if (data.bucket && !BUCKETS.includes(data.bucket)) fail(`bucket must be one of ${BUCKETS.join(', ')}`);
   if (data.status && !STATUSES.includes(data.status)) fail(`status must be one of ${STATUSES.join(', ')}`);
   if (data.status === 'superseded' && (typeof data.supersededBy !== 'string' || !data.supersededBy.trim())) {
     fail('supersededBy is required when status is superseded');
   }
 
+  const homes = corpus.subsites.filter((subsite) => pieceInSubsite(piece, subsite, corpus.geo));
+  const topicLists = homes.length
+    ? homes.map((subsite) => topicsFor(subsite, corpus.topics))
+    : [corpus.topics];
+  const knownTopic = (id) => topicLists.some((list) => list.some((topic) => topic.id === id));
+  const allowedBuckets = new Set([
+    ...BUCKETS,
+    ...homes.flatMap((subsite) => extraSections(subsite).map((section) => section.slug)),
+  ]);
+
+  if (data.bucket && !allowedBuckets.has(data.bucket)) {
+    fail(`bucket must be one of ${[...allowedBuckets].join(', ')}`);
+  }
   if (data.bucket === 'overviews') {
-    if (typeof data.topic !== 'string' || !corpus.topics.some((topic) => topic.id === data.topic)) {
-      fail('Overviews pieces need a topic id from content/topics.json');
+    if (typeof data.topic !== 'string' || !knownTopic(data.topic)) {
+      fail('Overviews pieces need a topic id from this subsite\'s topic list');
     }
-  } else if (data.topic !== undefined && !corpus.topics.some((topic) => topic.id === data.topic)) {
+  } else if (data.topic !== undefined && !knownTopic(data.topic)) {
     fail(`unknown topic ${data.topic}`);
   }
 
@@ -114,7 +160,6 @@ export function validatePiece(piece, corpus) {
   if (data.entities !== undefined && !stringList(data.entities)) fail('entities must be a list of ids');
   if (data.tags !== undefined && !stringList(data.tags)) fail('tags must be a list of labels');
 
-  const homes = corpus.subsites.filter((subsite) => pieceInSubsite(piece, subsite, corpus.geo));
   if (PIPELINE.includes(data.bucket) && data.subcategory !== undefined) {
     const allowed = new Set(homes.flatMap((subsite) => (subsite.pipeline?.[data.bucket] ?? []).map((item) => item.slug)));
     if (!allowed.has(data.subcategory)) fail(`subcategory "${data.subcategory}" is not one of this subsite's ${data.bucket} subcategories`);

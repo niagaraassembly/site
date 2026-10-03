@@ -1,6 +1,6 @@
 {
   "seed": true,
-  "note": "Seed place hierarchy for Greater Niagara. Not a finished gazetteer. Ids are stable strings, level:kebab-name. A place is inside a region when its id, or one of its parents, is in that region's members. Niagara Region is the Ontario upper-tier municipality. Greater Niagara is the subsite's region grouping and is wider than that municipality. The level municipality is a seed extension for single-tier and upper-tier municipalities, which are not towns.",
+  "note": "Seed place hierarchy. Not a finished gazetteer. Ids are stable strings, level:kebab-name. A place is inside a region when its id, or one of its parents, is in that region's members. Niagara Region is the Ontario upper-tier municipality. Greater Niagara is that subsite's region grouping and is wider than that municipality: its members are Ontario and New York. region:heavymap is a separate seed region for the HeavyMap subsite. Its members are cross-border Niagara places already in this file, not the whole of either province or state, and not Niagara Region as a name for the area. The level municipality is a seed extension for single-tier and upper-tier municipalities, which are not towns.",
   "places": [
     {"id": "country:ca", "name": "Canada", "level": "country", "parent": null},
     {"id": "country:us", "name": "United States", "level": "country", "parent": null},
@@ -24,6 +24,13 @@
       "slug": "greater-niagara",
       "members": ["province:on", "state:ny"],
       "note": "Seed region for the Greater Niagara subsite. It groups Ontario and New York so the subsite can span the Niagara area on both sides of the border. It is not Niagara Region, the Ontario upper-tier municipality."
+    },
+    {
+      "id": "region:heavymap",
+      "name": "HeavyMap coverage",
+      "slug": "heavymap",
+      "members": ["municipality:niagara-region", "county:niagara-ny", "county:erie-ny"],
+      "note": "Seed coverage for the HeavyMap subsite. Members are Niagara Region (the Ontario upper-tier municipality), Niagara County, New York, and Erie County, New York. Towns inside those members are inside this region. Hamilton and Rochester are in the place file and are not members. This is not a finished coverage map, and the region name is not Niagara Region."
     }
   ]
 }
