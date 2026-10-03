@@ -18,6 +18,7 @@ export function build(repoRoot = root) {
   for (const rel of generatedFiles(repoRoot)) {
     if (!keep.has(rel)) fs.rmSync(path.join(repoRoot, rel));
   }
+  for (const dir of ['site', 'pieces']) removeEmptyDirs(path.join(repoRoot, dir));
   return { written: planned.map((item) => item.path), drafts: corpus.pieces.filter((piece) => piece.data.status !== 'published').map((piece) => piece.file) };
 }
 
@@ -27,6 +28,14 @@ function generatedFiles(repoRoot) {
     walk(path.join(repoRoot, dir), repoRoot, found);
   }
   return found;
+}
+
+function removeEmptyDirs(dir) {
+  if (!fs.existsSync(dir)) return;
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (entry.isDirectory()) removeEmptyDirs(path.join(dir, entry.name));
+  }
+  if (fs.readdirSync(dir).length === 0) fs.rmdirSync(dir);
 }
 
 function walk(dir, repoRoot, found) {

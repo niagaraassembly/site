@@ -15,19 +15,56 @@ export function pieceVisible(pieceType, selected) {
   return selected === '' || pieceType === selected;
 }
 
-function applyTypeFilter() {
-  const selected = selectedType(location.search);
-  document.querySelectorAll('[data-type-filter]').forEach((link) => {
-    if (link.getAttribute('data-type-filter') === selected) {
-      link.setAttribute('aria-current', 'page');
-    } else {
-      link.removeAttribute('aria-current');
-    }
+export function selectedStage(search) {
+  return new URLSearchParams(search).get('stage') || '';
+}
+
+export function stageVisible(pieceStage, selected) {
+  return selected === '' || pieceStage === selected;
+}
+
+function markFilter(selector, attr, selected) {
+  document.querySelectorAll(selector).forEach((link) => {
+    if (link.getAttribute(attr) === selected) link.setAttribute('aria-current', 'page');
+    else link.removeAttribute('aria-current');
   });
+}
+
+function itemOn(item, type, stage) {
+  const typeOn = pieceVisible(item.getAttribute('data-piece-type'), type);
+  const pieceStage = item.getAttribute('data-piece-stage');
+  const stageOn = pieceStage == null || stageVisible(pieceStage, stage);
+  return typeOn && stageOn;
+}
+
+function applyTypeFilter() {
+  const type = selectedType(location.search);
+  const stage = selectedStage(location.search);
+  markFilter('[data-type-filter]', 'data-type-filter', type);
+  markFilter('[data-stage-filter]', 'data-stage-filter', stage);
+  document.querySelectorAll('[data-stage-group]').forEach((group) => {
+    const on = stage === '' || group.getAttribute('data-stage-group') === stage;
+    group.hidden = !on;
+  });
+  const blocks = [...document.querySelectorAll('[data-piece-block]')];
+  if (blocks.length > 0) {
+    for (const block of blocks) {
+      const items = [...block.querySelectorAll('[data-piece-type]')];
+      let shown = 0;
+      for (const item of items) {
+        const on = itemOn(item, type, stage);
+        item.hidden = !on;
+        if (on) shown += 1;
+      }
+      const empty = block.querySelector('[data-piece-empty]');
+      if (empty) empty.hidden = items.length === 0 || shown !== 0;
+    }
+    return;
+  }
   const items = [...document.querySelectorAll('[data-piece-type]')];
   let shown = 0;
   for (const item of items) {
-    const on = pieceVisible(item.getAttribute('data-piece-type'), selected);
+    const on = itemOn(item, type, stage);
     item.hidden = !on;
     if (on) shown += 1;
   }

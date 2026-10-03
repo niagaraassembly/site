@@ -23,13 +23,16 @@ author: "Niagara Assembly"
 # type — required. One of: update, data, summary, explainer, post, article.
 type: post
 
-# bucket — required. One of: overviews, overlaps, gathering, processing, packaging, publishing.
-# Depth is derived from the bucket: overviews and overlaps are explanatory;
-# the four pipeline buckets are technical. Do not add a depth field.
+# bucket — required. Pipeline-stage designation.
+# gathering, processing, packaging, and publishing stay valid. Greater Niagara lists them on Methods.
+# Do not add a depth field.
 bucket: packaging
 
 # topic — omit on this bucket unless the piece should also join a cross-region topic view.
 # topic: manufacturing-and-supply-chains
+
+# explore — Greater Niagara sidebar. companies, people-and-organizations, hubs-and-funders, or places.
+explore: places
 
 # subcategory — optional, and local to this subsite's pipeline bucket.
 # Use a slug from content/subsites/greater-niagara.json. These names are seed placeholders.

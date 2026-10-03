@@ -34,6 +34,7 @@ bucket: publishing
 # subcategory — optional, and local to this subsite's pipeline bucket.
 # Use a slug from content/subsites/greater-niagara.json. These names are seed placeholders.
 subcategory: site-pages
+explore: companies
 
 # places — required. One or more ids from content/geo.json.
 # A place id (town:buffalo) or a region id (region:greater-niagara).

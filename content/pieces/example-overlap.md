@@ -27,6 +27,7 @@ type: explainer
 # Depth is derived from the bucket: overviews and overlaps are explanatory;
 # the four pipeline buckets are technical. Do not add a depth field.
 bucket: overlaps
+theme: cross-border-links
 
 # topic — omit on this bucket unless the piece should also join a cross-region topic view.
 # topic: manufacturing-and-supply-chains

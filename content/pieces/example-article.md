@@ -31,6 +31,8 @@ bucket: overviews
 # topic — required on Overviews. An id from content/topics.json.
 # On other buckets, omit it unless this piece should join a cross-region view on that topic.
 topic: land-sites-and-facilities
+explore: places
+theme: agriculture-and-food
 
 # subcategory — omit here. Local subcategories belong to the four pipeline buckets only.
 # subcategory: municipal-records

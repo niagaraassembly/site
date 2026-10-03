@@ -32,6 +32,12 @@ bucket: overviews
 # On other buckets, omit it unless this piece should join a cross-region view on that topic.
 topic: manufacturing-and-supply-chains
 
+# explore — Greater Niagara sidebar. companies, people-and-organizations, hubs-and-funders, or places.
+explore: companies
+
+# theme — Greater Niagara Themes group. Not the HeavyMap topic list.
+theme: sectors-and-supply-chains
+
 # subcategory — omit here. Local subcategories belong to the four pipeline buckets only.
 # subcategory: municipal-records
 
