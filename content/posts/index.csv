@@ -1,0 +1,6 @@
+content_id,title,file_path,status,published_url
+HM-0001,"Claim and refusal contract, as specified",content/posts/items/hm-0001-claim-refusal-contract.md,draft,
+HM-0002,Licence triage across the dataset inventory,content/posts/items/hm-0002-licence-triage-inventory.md,draft,
+HM-0003,Public release controls: masking and local-first,content/posts/items/hm-0003-public-release-controls.md,draft,
+HM-0004,"Layer dispositions (ship, simplify, derive, tile, link)",content/posts/items/hm-0004-layer-dispositions.md,draft,
+HM-0005,Recon and source registry: what the ledger records,content/posts/items/hm-0005-recon-source-registry.md,draft,

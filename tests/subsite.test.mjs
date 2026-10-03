@@ -5,7 +5,7 @@ import path from 'node:path';
 import { splitDocument } from '../scripts/subsite/frontmatter.mjs';
 import { renderBody } from '../scripts/subsite/markdown.mjs';
 import {
-  canCompare, canonicalPath, depthOf, loadCorpus, pieceInSubsite, placeInRegion, publicPieces,
+  canCompare, canonicalPath, depthOf, loadCorpus, pieceInSubsite, placeInRegion, publicPieces, validatePiece,
 } from '../scripts/subsite/model.mjs';
 import { pages } from '../scripts/subsite/render.mjs';
 import { pieceVisible, selectedStage, selectedType, stageVisible } from '../assets/js/subsite.js';
@@ -269,4 +269,32 @@ test('the subsite name is not the retired slug', () => {
   const readme = fs.readFileSync(path.join(root, 'README.md'), 'utf8');
   if (readme.includes('ny-ontario')) hits.push('README.md');
   assert.deepEqual(hits, []);
+});
+
+test('content posts stay out of the build and the five drafts validate', () => {
+  const corpus = loadCorpus(root);
+  assert.equal(corpus.pieces.some((piece) => piece.data.content_id), false);
+  const planned = pages(corpus);
+  const html = planned.map((item) => item.html).join('\n');
+  assert.doesNotMatch(html, /HM-0001|licence_clearance|retain-and-mask/);
+
+  const dir = path.join(root, 'content/posts/items');
+  const names = fs.readdirSync(dir).filter((name) => name.endsWith('.md')).sort();
+  assert.equal(names.length, 5);
+  for (const name of names) {
+    const parsed = splitDocument(fs.readFileSync(path.join(dir, name), 'utf8'));
+    const slug = name.slice(0, -3);
+    const errors = validatePiece({
+      slug,
+      file: name,
+      data: parsed.data,
+      body: parsed.body,
+    }, corpus);
+    assert.deepEqual(errors, [], errors.join('\n'));
+    assert.equal(parsed.data.status, 'draft');
+    assert.equal(parsed.data.author_kind, 'agent');
+    assert.match(parsed.data.content_id, /^HM-000[1-5]$/);
+    assert.equal(parsed.data.type === 'post' || parsed.data.type === 'article', false);
+    assert.deepEqual(parsed.data.places, ['region:heavymap']);
+  }
 });

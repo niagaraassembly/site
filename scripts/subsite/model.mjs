@@ -13,7 +13,7 @@ const FIELDS = new Set([
   'title', 'summary', 'date', 'updated', 'author', 'type', 'bucket', 'topic',
   'subcategory', 'places', 'entities', 'tags', 'ingredients', 'status',
   'supersededBy', 'sources', 'licence', 'dataset', 'geography', 'period',
-  'units', 'comparable', 'explore', 'theme',
+  'units', 'comparable', 'explore', 'theme', 'content_id', 'author_kind',
 ]);
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
@@ -146,6 +146,12 @@ export function validatePiece(piece, corpus) {
     if (typeof data[key] !== 'string' || data[key].trim() === '') fail(`missing ${key}`);
   }
   if (data.author && data.author.includes('@')) fail('author must be a name, not a contact address');
+  if (data.content_id !== undefined && !/^HM-\d{4}$/.test(data.content_id)) {
+    fail('content_id must look like HM-0001');
+  }
+  if (data.author_kind !== undefined && data.author_kind !== 'agent' && data.author_kind !== 'human') {
+    fail('author_kind must be agent or human');
+  }
   if (data.date && !DATE.test(data.date)) fail('date must be YYYY-MM-DD');
   if (data.updated && !DATE.test(data.updated)) fail('updated must be YYYY-MM-DD');
   if (data.type && !TYPES.includes(data.type)) fail(`type must be one of ${TYPES.join(', ')}`);

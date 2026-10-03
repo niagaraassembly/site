@@ -1,0 +1,6 @@
+content_id,idea_id,title,subsite,section,type,status,file_path,created_date,published_date,author_kind,notes
+HM-0001,HM-0001,"Claim and refusal contract, as specified",heavymap,Claims and refusals,explainer,draft,content/posts/items/hm-0001-claim-refusal-contract.md,2026-10-03,,agent,Not published. Scaffold scale and stamp format still require owner approval.
+HM-0002,HM-0002,Licence triage across the dataset inventory,heavymap,Gathering / Licence triage,summary,draft,content/posts/items/hm-0002-licence-triage-inventory.md,2026-10-03,,agent,Observed, not cleared. No legal conclusion.
+HM-0003,HM-0003,Public release controls: masking and local-first,heavymap,Publishing / Public release controls,summary,draft,content/posts/items/hm-0003-public-release-controls.md,2026-10-03,,agent,No owner values. No tier design.
+HM-0004,HM-0004,"Layer dispositions (ship, simplify, derive, tile, link)",heavymap,Packaging / Layer dispositions,summary,draft,content/posts/items/hm-0004-layer-dispositions.md,2026-10-03,,agent,ship_status is repo state, not publication.
+HM-0005,HM-0005,Recon and source registry: what the ledger records,heavymap,Gathering / Recon and source registry,summary,draft,content/posts/items/hm-0005-recon-source-registry.md,2026-10-03,,agent,Ledger figures are dated 2026-08-23. Held locally, unpublished.

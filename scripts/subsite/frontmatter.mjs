@@ -36,7 +36,7 @@ function indentOf(line, lineNo) {
 }
 
 function splitKey(s) {
-  const m = s.match(/^([A-Za-z][A-Za-z0-9]*):(.*)$/);
+  const m = s.match(/^([A-Za-z][A-Za-z0-9_]*):(.*)$/);
   if (!m) return null;
   if (m[2] !== '' && !/^\s/.test(m[2])) return null;
   return [m[1], m[2].trim()];
