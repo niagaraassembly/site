@@ -1,0 +1,13 @@
+{
+  "seed": true,
+  "note": "Placeholder shared Overview topics from the subsite guidance. Not the final list. Agriculture and food is not in this list.",
+  "topics": [
+    {"id": "manufacturing-and-supply-chains", "title": "Manufacturing and supply chains"},
+    {"id": "research-and-innovation-hubs", "title": "Research and innovation hubs"},
+    {"id": "workforce-and-training", "title": "Workforce and training"},
+    {"id": "funding-and-programs", "title": "Funding and programs"},
+    {"id": "technology-adoption-and-automation", "title": "Technology adoption and automation"},
+    {"id": "trade-and-logistics", "title": "Trade and logistics"},
+    {"id": "land-sites-and-facilities", "title": "Land, sites and facilities"}
+  ]
+}

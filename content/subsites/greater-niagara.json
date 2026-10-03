@@ -1,0 +1,30 @@
+{
+  "seed": true,
+  "id": "subsite:greater-niagara",
+  "slug": "greater-niagara",
+  "title": "Greater Niagara",
+  "summary": "A profile of the industrial ecosystem across the Niagara area in New York and Ontario.",
+  "why": "The industrial system here crosses that border, and a shared set of topics is how the two sides can be read together.",
+  "span": "Greater Niagara is the name of this subsite. Niagara Region, the Ontario upper-tier municipality, is one place inside the area, not the name of the whole.",
+  "regions": ["region:greater-niagara"],
+  "topics": null,
+  "landing": "/site/greater-niagara/",
+  "pipeline": {
+    "gathering": [
+      {"slug": "municipal-records", "title": "Municipal records"},
+      {"slug": "company-directories", "title": "Company directories"}
+    ],
+    "processing": [
+      {"slug": "employment-series", "title": "Employment series"},
+      {"slug": "site-records", "title": "Site records"}
+    ],
+    "packaging": [
+      {"slug": "comparable-tables", "title": "Comparable tables"},
+      {"slug": "place-joins", "title": "Place joins"}
+    ],
+    "publishing": [
+      {"slug": "site-pages", "title": "Site pages"},
+      {"slug": "data-files", "title": "Data files"}
+    ]
+  }
+}

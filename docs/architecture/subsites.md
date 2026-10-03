@@ -126,7 +126,7 @@ Explanatory pieces and technical deep dives stay separate. An explanatory piece 
 
 ## 4. Addresses
 
-**Decided**, except the canonical piece URL pattern, which is open.
+**Decided.** The canonical piece URL pattern was settled for this repository on 2026-10-03. See §10.
 
 Subsite landing pages live at:
 
@@ -144,7 +144,7 @@ The first landing page is `https://niagaraassembly.com/site/greater-niagara/`.
 
 Each piece has one canonical URL. That URL does not depend on any subsite. A subsite lists the piece; it does not give the piece a second address. A reader who arrives from a subsite may see that subsite’s navigation as context. The address stays the canonical one.
 
-**Open.** The exact pattern for that canonical piece URL. Whatever is chosen at implementation should be stable, and should stay independent of the subsite that lists the piece.
+In this repository the canonical piece URL is `/pieces/<slug>/`. The slug is the piece’s markdown filename. It does not include the subsite. A published file keeps its filename; replacing the piece means a new file, `status: superseded` on the old one, and `supersededBy` pointing at the new canonical path.
 
 ---
 
@@ -316,13 +316,35 @@ The form-approval Action already in this repository (`.github/workflows/approve-
 
 These are unset. Do not invent values for them while following this document.
 
-- [ ] The exact canonical piece URL pattern. It should be stable and independent of any subsite.
-- [ ] The final shared global topic list. §3.1 is a placeholder.
-- [ ] The place and region id scheme, and where that data lives.
-- [ ] Which region ids belong to the `greater-niagara` subsite.
-- [ ] How margin items are authored: front matter, inline syntax, or something else.
-- [ ] How best to use the right margin, including how subsite margin items share that margin with the existing Apps panel.
-- [ ] The later formal approval workflow, and where the named approver is recorded once that workflow exists.
-- [ ] The home of the reader-facing glossary.
-- [ ] Validating §6 against real storage, and resolving the mismatches in §8.
-- [ ] How existing site sections (Updates, START, SECTOR, SOLO, and the `/places/` pages) relate to subsite pieces.
+- [x] Canonical piece URL, for this repository: `/pieces/<slug>/`, slug = markdown filename. §4 and §10.
+- [ ] The final shared global topic list. §3.1 is a placeholder, stored for now in `content/topics.json`.
+- [x] Place and region ids, as seed data: `content/geo.json`. The scheme is in §10. It is not a finished gazetteer.
+- [x] Greater Niagara’s seed region id is `region:greater-niagara`, whose members are Ontario and New York. §10.
+- [x] Margin items are authored as `:::` fences in the markdown body. §10.
+- [ ] How best to use the right margin. The first build reuses the Apps panel’s margin and leaves the notes inline on a narrow screen.
+- [ ] The later formal approval workflow, and where the named approver is recorded once that workflow exists. Until then, only `status: published` is written to the site, and publication still waits on Morgen.
+- [x] The reader-facing glossary lives at `content/glossary.json`. `atlas/GLOSSARY.md` stays the atlas jurisdiction glossary.
+- [x] §6 checked against this repository’s storage. Adaptations are in §10. The public pages are still static HTML.
+- [ ] How existing site sections (Updates, START, SECTOR, SOLO, and the `/places/` pages) relate to subsite pieces. They are unchanged. The subsite does not replace them.
+
+---
+
+## 10. First build in this repository
+
+Recorded 2026-10-03, when Greater Niagara was added at `/site/greater-niagara/`. The public site stays static HTML, which is how every other page here is stored. Markdown in `content/pieces/` is the authoring source. `node scripts/subsite/build.mjs` writes HTML only for `status: published`.
+
+Differences from the draft schema, taken so the build matches this repository:
+
+| Draft schema | What the build does |
+|---|---|
+| Canonical piece URL unset | `/pieces/<slug>/`. The slug is the markdown filename. |
+| `places` shown as `place:example-county` | Ids are strings from `content/geo.json`, such as `town:buffalo` and `region:greater-niagara`. A colon is part of the id. In front matter there is no space after that colon, so the id stays one string. |
+| Place levels: town, county, province or state, country | The seed adds `municipality` for single-tier and upper-tier municipalities. Hamilton and Niagara Region are municipalities, not towns. |
+| Glossary home unset | `content/glossary.json`. A `:::definition` fence uses the term’s id. |
+| Margin syntax unset | Inline `:::note`, `:::quote`, `:::figure`, `:::definition`, and `:::deeper` fences, anchored where they sit in the body. |
+| `depth` stored or not | Not stored. It is derived from `bucket`. |
+| Editorial approval | Unchanged: Morgen approves. The build’s extra gate is mechanical: `draft` and `superseded` are not written to the public HTML. |
+| Side navigation and the right margin | The global top bar is unchanged. The subsite nav is two labelled groups in the left margin on a wide screen, using the same breakpoint and width as the Apps panel (`.appspanel--side` in `assets/css/site.css`). **Sections** lists the six buckets as top-level links. **Topics** lists the seven shared Overview topics. Local pipeline subcategories are not in the sidebar; each pipeline bucket page lists its own. On a narrower screen both groups stay visible and stack above the article. The current page is `aria-current="page"`; its parent bucket, when the page is a topic or a subcategory, is `aria-current="true"`. Margin items use the right margin on the wide screen and stay inline on a narrower one. |
+| Where subsite pages come from | Generated HTML under `site/` and, once a piece is published, `pieces/`. The wordmark menu in `assets/js/sitenav.js` is not the subsite menu. |
+
+`content/geo.json`, `content/topics.json`, `content/glossary.json`, and `content/subsites/greater-niagara.json` are seed data. The topic list and the pipeline subcategory names are the placeholders from this document, not a finished survey.

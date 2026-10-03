@@ -1,0 +1,29 @@
+{
+  "seed": true,
+  "note": "Seed place hierarchy for Greater Niagara. Not a finished gazetteer. Ids are stable strings, level:kebab-name. A place is inside a region when its id, or one of its parents, is in that region's members. Niagara Region is the Ontario upper-tier municipality. Greater Niagara is the subsite's region grouping and is wider than that municipality. The level municipality is a seed extension for single-tier and upper-tier municipalities, which are not towns.",
+  "places": [
+    {"id": "country:ca", "name": "Canada", "level": "country", "parent": null},
+    {"id": "country:us", "name": "United States", "level": "country", "parent": null},
+    {"id": "province:on", "name": "Ontario", "level": "province", "parent": "country:ca"},
+    {"id": "state:ny", "name": "New York", "level": "state", "parent": "country:us"},
+    {"id": "municipality:niagara-region", "name": "Niagara Region", "level": "municipality", "parent": "province:on"},
+    {"id": "municipality:hamilton", "name": "Hamilton", "level": "municipality", "parent": "province:on"},
+    {"id": "county:niagara-ny", "name": "Niagara County", "level": "county", "parent": "state:ny"},
+    {"id": "county:erie-ny", "name": "Erie County", "level": "county", "parent": "state:ny"},
+    {"id": "county:monroe-ny", "name": "Monroe County", "level": "county", "parent": "state:ny"},
+    {"id": "town:st-catharines", "name": "St. Catharines", "level": "town", "parent": "municipality:niagara-region"},
+    {"id": "town:fort-erie", "name": "Fort Erie", "level": "town", "parent": "municipality:niagara-region"},
+    {"id": "town:buffalo", "name": "Buffalo", "level": "town", "parent": "county:erie-ny"},
+    {"id": "town:niagara-falls-ny", "name": "Niagara Falls, New York", "level": "town", "parent": "county:niagara-ny"},
+    {"id": "town:rochester", "name": "Rochester", "level": "town", "parent": "county:monroe-ny"}
+  ],
+  "regions": [
+    {
+      "id": "region:greater-niagara",
+      "name": "Greater Niagara",
+      "slug": "greater-niagara",
+      "members": ["province:on", "state:ny"],
+      "note": "Seed region for the Greater Niagara subsite. It groups Ontario and New York so the subsite can span the Niagara area on both sides of the border. It is not Niagara Region, the Ontario upper-tier municipality."
+    }
+  ]
+}
