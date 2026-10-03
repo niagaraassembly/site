@@ -3,7 +3,7 @@ import path from 'node:path';
 import { escapeHtml } from '../../assets/js/escape.js';
 import { renderBody } from './markdown.mjs';
 import {
-  BUCKETS, PIPELINE, TYPES, canonicalPath, extraSections, pieceInSubsite, subsitePieces, topicsFor,
+  BUCKETS, PIPELINE, TYPES, canonicalPath, extraSections, hasCustomNav, pieceInSubsite, subsitePieces, topicsFor,
 } from './model.mjs';
 
 const MARKER = '<!-- subsite-build -->';
@@ -48,32 +48,47 @@ export function pages(corpus) {
       landing(subsite, topics, pieces, corpus),
       footer,
     ));
-    for (const bucket of BUCKETS) {
-      const bucketPath = `/site/${subsite.slug}/${bucket}/`;
-      const inBucket = pieces.filter((piece) => piece.data.bucket === bucket);
-      out.push(pageFile(
-        `site/${subsite.slug}/${bucket}/index.html`,
-        bucketPage(subsite, bucket, topics, inBucket, corpus),
-        footer,
-      ));
-      if (bucket === 'overviews') {
-        for (const topic of topics) {
-          const inTopic = inBucket.filter((piece) => piece.data.topic === topic.id);
+    if (hasCustomNav(subsite)) {
+      for (const group of subsite.nav) {
+        for (const item of group.items ?? []) {
+          const matched = pieces.filter((piece) => navItemMatches(item, piece));
           out.push(pageFile(
-            `site/${subsite.slug}/overviews/${topic.id}/index.html`,
-            topicPage(subsite, topic, inTopic, corpus),
+            `site/${subsite.slug}/${item.slug}/index.html`,
+            item.stages
+              ? methodsPage(subsite, item, matched, corpus)
+              : navItemPage(subsite, item, matched, corpus),
             footer,
           ));
         }
       }
-      if (PIPELINE.includes(bucket)) {
-        for (const sub of subsite.pipeline?.[bucket] ?? []) {
-          const inSub = inBucket.filter((piece) => piece.data.subcategory === sub.slug);
-          out.push(pageFile(
-            `site/${subsite.slug}/${bucket}/${sub.slug}/index.html`,
-            subcategoryPage(subsite, bucket, sub, inSub, corpus),
-            footer,
-          ));
+    } else {
+      for (const bucket of BUCKETS) {
+        const bucketPath = `/site/${subsite.slug}/${bucket}/`;
+        const inBucket = pieces.filter((piece) => piece.data.bucket === bucket);
+        out.push(pageFile(
+          `site/${subsite.slug}/${bucket}/index.html`,
+          bucketPage(subsite, bucket, topics, inBucket, corpus),
+          footer,
+        ));
+        if (bucket === 'overviews') {
+          for (const topic of topics) {
+            const inTopic = inBucket.filter((piece) => piece.data.topic === topic.id);
+            out.push(pageFile(
+              `site/${subsite.slug}/overviews/${topic.id}/index.html`,
+              topicPage(subsite, topic, inTopic, corpus),
+              footer,
+            ));
+          }
+        }
+        if (PIPELINE.includes(bucket)) {
+          for (const sub of subsite.pipeline?.[bucket] ?? []) {
+            const inSub = inBucket.filter((piece) => piece.data.subcategory === sub.slug);
+            out.push(pageFile(
+              `site/${subsite.slug}/${bucket}/${sub.slug}/index.html`,
+              subcategoryPage(subsite, bucket, sub, inSub, corpus),
+              footer,
+            ));
+          }
         }
       }
     }
@@ -193,6 +208,67 @@ function landing(subsite, topics, pieces, corpus) {
   <h2>Start here</h2>
   ${entryList(subsite, topics)}`,
   };
+}
+
+function navItemMatches(item, piece) {
+  const match = item.match ?? {};
+  if (item.stages) return PIPELINE.includes(piece.data.bucket);
+  if (match.type && piece.data.type !== match.type) return false;
+  if (match.bucket) {
+    const buckets = Array.isArray(match.bucket) ? match.bucket : [match.bucket];
+    if (!buckets.includes(piece.data.bucket)) return false;
+  }
+  if (match.excludeBucket && piece.data.bucket === match.excludeBucket) return false;
+  if (match.explore && piece.data.explore !== match.explore) return false;
+  if (match.theme && piece.data.theme !== match.theme) return false;
+  return true;
+}
+
+function navItemPage(subsite, item, pieces, corpus) {
+  const path = `/site/${subsite.slug}/${item.slug}/`;
+  const topics = topicsFor(subsite, corpus.topics);
+  const summary = item.summary || '';
+  return {
+    title: `${item.title} — ${subsite.title}`,
+    description: summary,
+    canonical: path,
+    body: `${nav(subsite, topics, path)}
+  <h1>${escapeHtml(item.title)}</h1>
+  <p>${escapeHtml(summary)}</p>
+  ${typeFilters(path)}
+  ${pieceList(pieces, 'No published pieces here yet.')}`,
+  };
+}
+
+function methodsPage(subsite, item, pieces, corpus) {
+  const path = `/site/${subsite.slug}/${item.slug}/`;
+  const topics = topicsFor(subsite, corpus.topics);
+  const summary = item.summary || '';
+  const stages = PIPELINE.map((stage) => stageBlock(subsite, stage, pieces.filter((piece) => piece.data.bucket === stage))).join('\n  ');
+  return {
+    title: `${item.title} — ${subsite.title}`,
+    description: summary,
+    canonical: path,
+    body: `${nav(subsite, topics, path)}
+  <h1>${escapeHtml(item.title)}</h1>
+  <p>${escapeHtml(summary)}</p>
+  <p class="fineprint">Gathering, processing, packaging, and publishing stay the piece's stage in front matter. This page groups those pieces. It does not put the four stages in the sidebar.</p>
+  ${stageFilters(path)}
+  ${stages}
+  ${typeFilters(path)}`,
+  };
+}
+
+function stageBlock(subsite, stage, pieces) {
+  const names = (subsite.pipeline?.[stage] ?? []).map((sub) => sub.title);
+  const label = names.length ? names.join(', ') : 'none';
+  return `<section data-stage-group="${stage}">
+  <h2>${BUCKET_LABEL[stage]}</h2>
+  <p class="fineprint">Seed subcategories: ${escapeHtml(label)}. These names are placeholders, not a survey of sources.</p>
+  <div data-piece-block>
+  ${pieceList(pieces, 'No published pieces in this stage yet.', stage)}
+  </div>
+</section>`;
 }
 
 function bucketPage(subsite, bucket, topics, pieces, corpus) {
@@ -387,6 +463,22 @@ function nav(subsite, topics, current) {
   };
   const link = (href, label) =>
     `<li><a href="${href}"${mark(href)}>${escapeHtml(label)}</a></li>`;
+  if (hasCustomNav(subsite)) {
+    const groups = subsite.nav.map((group) => {
+      const id = `subsite-${group.id}-${subsite.slug}`;
+      const items = (group.items ?? []).map((item) => link(`${base}/${item.slug}/`, item.title)).join('\n');
+      return `<section class="subsite-nav__group" aria-labelledby="${id}">
+    <h2 id="${id}" class="subsite-nav__label">${escapeHtml(group.title)}</h2>
+    <ul class="plain">
+      ${items}
+    </ul>
+  </section>`;
+    }).join('\n  ');
+    return `<nav class="subsite-nav" data-subsite="${escapeHtml(subsite.slug)}" aria-label="${escapeHtml(subsite.title)}">
+  <p class="subsite-nav__title"><a href="${base}/"${mark(`${base}/`)}>${escapeHtml(subsite.title)}</a></p>
+  ${groups}
+</nav>`;
+  }
   const sections = [
     ...BUCKETS.map((bucket) => link(`${base}/${bucket}/`, BUCKET_LABEL[bucket])),
     ...extraSections(subsite).map((section) => link(`${base}/${section.slug}/`, section.title)),
@@ -415,6 +507,14 @@ function nav(subsite, topics, current) {
 
 function entryList(subsite, topics) {
   const base = `/site/${subsite.slug}`;
+  if (hasCustomNav(subsite)) {
+    return subsite.nav.map((group) => {
+      const items = (group.items ?? []).map((item) =>
+        `<li><a href="${base}/${item.slug}/">${escapeHtml(item.title)}</a></li>`,
+      ).join('\n');
+      return `<p><b>${escapeHtml(group.title)}</b></p>\n  <ul class="plain">\n    ${items}\n  </ul>`;
+    }).join('\n  ');
+  }
   const links = [
     [`${base}/overviews/`, 'Overviews'],
     [`${base}/overlaps/`, 'Overlaps'],
@@ -439,6 +539,15 @@ function subcategoryList(subsite, bucket) {
   return `<ul class="plain">\n    ${items}\n  </ul>`;
 }
 
+function stageFilters(basePath) {
+  const links = [['', 'All stages'], ...PIPELINE.map((stage) => [stage, BUCKET_LABEL[stage]])];
+  const html = links.map(([id, label]) => {
+    const href = id ? `${basePath}?stage=${id}` : basePath;
+    return `<a href="${href}" data-stage-filter="${id}">${label}</a>`;
+  }).join('\n    ');
+  return `<nav class="filters" aria-label="Pipeline stage" data-sketch="box">\n    ${html}\n  </nav>`;
+}
+
 function typeFilters(basePath) {
   const links = [['', 'All'], ...TYPES.map((type) => [type, TYPE_LABEL[type]])];
   const html = links.map(([id, label]) => {
@@ -448,9 +557,10 @@ function typeFilters(basePath) {
   return `<nav class="filters" aria-label="Content type" data-sketch="box">\n    ${html}\n  </nav>`;
 }
 
-function pieceList(pieces, empty) {
+function pieceList(pieces, empty, stage) {
   if (pieces.length === 0) return `<p class="board__empty">${escapeHtml(empty)}</p>`;
-  const items = pieces.map((piece) => `<li data-piece-type="${escapeHtml(piece.data.type)}">
+  const stageAttr = stage ? ` data-piece-stage="${escapeHtml(stage)}"` : '';
+  const items = pieces.map((piece) => `<li data-piece-type="${escapeHtml(piece.data.type)}"${stageAttr}>
       <a href="${canonicalPath(piece.slug)}"><b>${escapeHtml(piece.data.title)}</b></a>
       <span class="card__meta">${metaLine(piece)}</span>
     </li>`).join('\n    ');
@@ -458,7 +568,10 @@ function pieceList(pieces, empty) {
 }
 
 function seedBanner(subsite) {
-  return `<p class="fineprint">Seed data. Places, the region record, the topic list, and the pipeline subcategory names for ${escapeHtml(subsite.title)} are placeholders for the pipeline, not a finished gazetteer or a survey of sources.</p>`;
+  const labels = hasCustomNav(subsite)
+    ? 'the navigation labels and the pipeline stage names'
+    : 'the topic list, and the pipeline subcategory names';
+  return `<p class="fineprint">Seed data. Places, the region record, ${labels} for ${escapeHtml(subsite.title)} are placeholders for the pipeline, not a finished gazetteer or a survey of sources.</p>`;
 }
 
 function byUpdated(a, b) {

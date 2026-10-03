@@ -13,7 +13,7 @@ const FIELDS = new Set([
   'title', 'summary', 'date', 'updated', 'author', 'type', 'bucket', 'topic',
   'subcategory', 'places', 'entities', 'tags', 'ingredients', 'status',
   'supersededBy', 'sources', 'licence', 'dataset', 'geography', 'period',
-  'units', 'comparable',
+  'units', 'comparable', 'explore', 'theme',
 ]);
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
@@ -41,6 +41,21 @@ export function topicsFor(subsite, catalog) {
 
 export function extraSections(subsite) {
   return Array.isArray(subsite.sections) ? subsite.sections : [];
+}
+
+/** A subsite with `nav` draws its sidebar from that config.
+ *  Without it, the sidebar stays Sections plus Topics. */
+export function customNav(subsite) {
+  return Array.isArray(subsite.nav) ? subsite.nav : [];
+}
+
+export function hasCustomNav(subsite) {
+  return customNav(subsite).length > 0;
+}
+
+export function navGroupSlugs(subsite, groupId) {
+  const group = customNav(subsite).find((item) => item.id === groupId);
+  return (group?.items ?? []).map((item) => item.slug);
 }
 
 export function loadCorpus(root) {
@@ -104,6 +119,17 @@ function validateSubsite(subsite) {
     if (!SLUG.test(topic.id || '')) fail(`topic id "${topic.id}" must be lowercase words separated by hyphens`);
     if (typeof topic.title !== 'string' || !topic.title.trim()) fail(`topic ${topic.id} needs a title`);
   }
+  const itemSlugs = new Set();
+  for (const group of customNav(subsite)) {
+    if (!SLUG.test(group.id || '')) fail(`nav group id "${group.id}" must be lowercase words separated by hyphens`);
+    if (typeof group.title !== 'string' || !group.title.trim()) fail(`nav group ${group.id} needs a title`);
+    for (const item of group.items ?? []) {
+      if (!SLUG.test(item.slug || '')) fail(`nav item slug "${item.slug}" must be lowercase words separated by hyphens`);
+      if (itemSlugs.has(item.slug)) fail(`nav item slug "${item.slug}" is repeated`);
+      itemSlugs.add(item.slug);
+      if (typeof item.title !== 'string' || !item.title.trim()) fail(`nav item ${item.slug} needs a title`);
+    }
+  }
   return errors;
 }
 
@@ -140,6 +166,14 @@ export function validatePiece(piece, corpus) {
 
   if (data.bucket && !allowedBuckets.has(data.bucket)) {
     fail(`bucket must be one of ${[...allowedBuckets].join(', ')}`);
+  }
+  const exploreSlugs = new Set(homes.flatMap((subsite) => navGroupSlugs(subsite, 'explore')));
+  const themeSlugs = new Set(homes.flatMap((subsite) => navGroupSlugs(subsite, 'themes')));
+  if (data.explore !== undefined && (typeof data.explore !== 'string' || !exploreSlugs.has(data.explore))) {
+    fail(`explore must be one of ${[...exploreSlugs].join(', ') || '(no Explore group on this subsite)'}`);
+  }
+  if (data.theme !== undefined && (typeof data.theme !== 'string' || !themeSlugs.has(data.theme))) {
+    fail(`theme must be one of ${[...themeSlugs].join(', ') || '(no Themes group on this subsite)'}`);
   }
   if (data.bucket === 'overviews') {
     if (typeof data.topic !== 'string' || !knownTopic(data.topic)) {

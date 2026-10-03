@@ -23,9 +23,11 @@ author: "Niagara Assembly"
 # type — required. One of: update, data, summary, explainer, post, article.
 type: summary
 
-# bucket — required. One of: overviews, overlaps, gathering, processing, packaging, publishing.
-# Depth is derived from the bucket: overviews and overlaps are explanatory;
-# the four pipeline buckets are technical. Do not add a depth field.
+# bucket — required. Pipeline-stage designation.
+# Values: overviews, overlaps, gathering, processing, packaging, publishing.
+# gathering, processing, packaging, and publishing stay valid stages.
+# Greater Niagara lists those four on one Methods page. HeavyMap still has a sidebar section for each.
+# Do not add a depth field.
 bucket: overviews
 
 # topic — required on Overviews. An id from content/topics.json.
@@ -34,6 +36,12 @@ topic: workforce-and-training
 
 # subcategory — omit here. Local subcategories belong to the four pipeline buckets only.
 # subcategory: municipal-records
+
+# explore — optional. Greater Niagara only: companies, people-and-organizations, hubs-and-funders, places.
+# explore: companies
+
+# theme — optional. Greater Niagara only. An id from that subsite's Themes group, such as workforce-and-training.
+# theme: workforce-and-training
 
 # places — required. One or more ids from content/geo.json.
 # A place id (town:buffalo) or a region id (region:greater-niagara).

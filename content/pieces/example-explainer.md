@@ -31,6 +31,8 @@ bucket: overviews
 # topic — required on Overviews. An id from content/topics.json.
 # On other buckets, omit it unless this piece should join a cross-region view on that topic.
 topic: research-and-innovation-hubs
+explore: hubs-and-funders
+theme: technology-and-innovation
 
 # subcategory — omit here. Local subcategories belong to the four pipeline buckets only.
 # subcategory: municipal-records

@@ -24,8 +24,9 @@ author: "Niagara Assembly"
 type: summary
 
 # bucket — required. For a per-subsite section, use that section's slug from
-# content/subsites/<slug>.json. The shared buckets are still
+# content/subsites/<slug>.json. The stage values are still
 # overviews, overlaps, gathering, processing, packaging, publishing.
+# gathering, processing, packaging, and publishing stay valid stages.
 bucket: example-section
 
 # topic — omit unless the piece also carries an Overview topic id from this subsite.

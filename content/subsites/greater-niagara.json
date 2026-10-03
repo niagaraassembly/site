@@ -3,12 +3,58 @@
   "id": "subsite:greater-niagara",
   "slug": "greater-niagara",
   "title": "Greater Niagara",
-  "summary": "A profile of the industrial ecosystem across the Niagara area in New York and Ontario.",
-  "why": "The industrial system here crosses that border, and a shared set of topics is how the two sides can be read together.",
+  "summary": "A non-technical profile of existing companies, their activities, and investment across the Niagara area in New York and Ontario.",
+  "why": "The industrial system here crosses that border. This subsite brings the research to life for a general reader: who the companies are, what they do, and the investment around them.",
   "span": "Greater Niagara is the name of this subsite. Niagara Region, the Ontario upper-tier municipality, is one place inside the area, not the name of the whole.",
+  "focus": "Companies, their activities, and investment are the subject. Agriculture and food is one theme, not the lead subject. The record of how evidence was handled sits on one Methods page.",
   "regions": ["region:greater-niagara"],
   "topics": null,
   "landing": "/site/greater-niagara/",
+  "nav": [
+    {
+      "id": "explore",
+      "title": "Explore",
+      "items": [
+        {"slug": "companies", "title": "Companies", "summary": "Existing companies in the cross-border Niagara area.", "match": {"explore": "companies"}},
+        {"slug": "people-and-organizations", "title": "People and organizations", "summary": "People and organizations in the profile.", "match": {"explore": "people-and-organizations"}},
+        {"slug": "hubs-and-funders", "title": "Hubs and funders", "summary": "Hubs, programs, and sources of investment.", "match": {"explore": "hubs-and-funders"}},
+        {"slug": "places", "title": "Places", "summary": "Places in the cross-border Niagara area. Niagara Region, the Ontario upper-tier municipality, is one of those places, not the name of the whole.", "match": {"explore": "places"}}
+      ]
+    },
+    {
+      "id": "themes",
+      "title": "Themes",
+      "items": [
+        {"slug": "sectors-and-supply-chains", "title": "Sectors and supply chains", "summary": "Sectors and the supply chains that connect them.", "match": {"theme": "sectors-and-supply-chains"}},
+        {"slug": "investment-and-funding", "title": "Investment and funding", "summary": "Investment and funding around the companies in this profile.", "match": {"theme": "investment-and-funding"}},
+        {"slug": "workforce-and-training", "title": "Workforce and training", "summary": "Workforce and training.", "match": {"theme": "workforce-and-training"}},
+        {"slug": "technology-and-innovation", "title": "Technology and innovation", "summary": "Technology and innovation in the companies and hubs of this profile.", "match": {"theme": "technology-and-innovation"}},
+        {"slug": "cross-border-links", "title": "Cross-border links", "summary": "Links across the New York and Ontario sides of the Niagara area.", "match": {"theme": "cross-border-links"}},
+        {"slug": "agriculture-and-food", "title": "Agriculture and food", "summary": "Agriculture and food as a specialized sector. It is one theme, not the lead subject.", "match": {"theme": "agriculture-and-food"}}
+      ]
+    },
+    {
+      "id": "stories",
+      "title": "Stories",
+      "items": [
+        {"slug": "updates", "title": "Updates", "summary": "Ongoing project updates. They form the running timeline.", "match": {"type": "update"}},
+        {"slug": "overlaps", "title": "Overlaps", "summary": "Editorial notes on opportunity: shared interests among parties. Not a data-derived rule list.", "match": {"bucket": "overlaps"}},
+        {"slug": "explainers", "title": "Explainers", "summary": "Explanatory pieces for a general reader.", "match": {"type": "explainer", "excludeBucket": "overlaps"}}
+      ]
+    },
+    {
+      "id": "methods",
+      "title": "Methods",
+      "items": [
+        {
+          "slug": "methods",
+          "title": "Methods",
+          "summary": "How the profile's evidence was gathered, processed, packaged, and published.",
+          "stages": true
+        }
+      ]
+    }
+  ],
   "pipeline": {
     "gathering": [
       {"slug": "municipal-records", "title": "Municipal records"},

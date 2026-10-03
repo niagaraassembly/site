@@ -1,6 +1,6 @@
 {
   "seed": true,
-  "note": "Greater Niagara's Overview topics. A subsite with topics set to null uses this list. Other subsites define their own topics in content/subsites/. This is not a single global navigation list, and it is not the final list. Agriculture and food is not in this list.",
+  "note": "Topic ids for a subsite that still uses the default Overviews section and sets topics to null. Greater Niagara no longer uses this list as its sidebar. Its themes are on content/subsites/greater-niagara.json. HeavyMap defines its own topics. Agriculture and food is a Greater Niagara theme, not an entry here.",
   "topics": [
     {"id": "manufacturing-and-supply-chains", "title": "Manufacturing and supply chains"},
     {"id": "research-and-innovation-hubs", "title": "Research and innovation hubs"},
