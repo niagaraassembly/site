@@ -178,7 +178,8 @@ function subsiteIndex(corpus) {
 
 function landing(subsite, topics, pieces, corpus) {
   const updates = pieces.filter((piece) => piece.data.type === 'update');
-  const featured = pieces.filter((piece) => piece.data.type !== 'update').slice(0, 3);
+  const recent = [...pieces].sort(byDate);
+  const featured = pieces.filter((piece) => piece.data.featured === true).sort(byDate);
   const path = `/site/${subsite.slug}/`;
   const termId = subsite.glossaryTerm || 'greater-niagara';
   const defined = renderBody(`:::definition ${termId}\n:::\n`, {
@@ -201,6 +202,9 @@ function landing(subsite, topics, pieces, corpus) {
 
   <h2>Latest updates</h2>
   ${pieceList(updates, 'No published updates yet. Approved updates form a running timeline here.')}
+
+  <h2>Recent</h2>
+  ${pieceList(recent, 'No published pieces yet.')}
 
   <h2>Featured</h2>
   ${pieceList(featured, 'No featured pieces yet.')}
@@ -576,6 +580,12 @@ function seedBanner(subsite) {
 
 function byUpdated(a, b) {
   return b.data.updated.localeCompare(a.data.updated) || a.data.title.localeCompare(b.data.title);
+}
+
+function byDate(a, b) {
+  return b.data.date.localeCompare(a.data.date)
+    || b.data.updated.localeCompare(a.data.updated)
+    || a.slug.localeCompare(b.slug);
 }
 
 export { MARKER };
