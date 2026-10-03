@@ -23,6 +23,15 @@ runbook that wires it up.
 
 Regional subsites — how a region is profiled, addressed, and read — are specified in [docs/architecture/subsites.md](docs/architecture/subsites.md).
 
+Greater Niagara, the first subsite, is at `/site/greater-niagara/`. After editing a piece, rebuild, then serve:
+
+```bash
+node scripts/subsite/build.mjs
+python3 -m http.server 8019
+```
+
+Open `http://localhost:8019/site/greater-niagara/`. Templates and the paste-in steps are in [content/templates/README.md](content/templates/README.md).
+
 Data flow:
 
 ```text

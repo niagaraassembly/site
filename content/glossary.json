@@ -1,0 +1,28 @@
+{
+  "seed": true,
+  "note": "Reader-facing glossary for subsite margin definitions. One entry per term. atlas/GLOSSARY.md remains the atlas jurisdiction glossary and is not this file.",
+  "terms": [
+    {
+      "id": "greater-niagara",
+      "term": "Greater Niagara",
+      "definition": "The name of this subsite. It spans the Niagara area across New York and Ontario. It is not Niagara Region, the Ontario upper-tier municipality.",
+      "regions": ["region:greater-niagara"]
+    },
+    {
+      "id": "niagara-region",
+      "term": "Niagara Region",
+      "definition": "The official upper-tier municipality of twelve lower-tier municipalities in Ontario. Not a name for the wider Niagara area, and not the name of this subsite.",
+      "regions": ["region:greater-niagara"]
+    },
+    {
+      "id": "overlap",
+      "term": "Overlap",
+      "definition": "A point where trends, characteristics, place assets, and pools of capital coincide so as to enable action, investment, and growth."
+    },
+    {
+      "id": "subsite",
+      "term": "Subsite",
+      "definition": "A lens over shared place data: a set of regions, an optional topic selection, and a landing page."
+    }
+  ]
+}
