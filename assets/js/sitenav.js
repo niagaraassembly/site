@@ -29,7 +29,12 @@ export const NAV = [
       node('/services/', 'Training', ['Clark', 'Electronics', 'Manufacturing', 'Linux', 'Robotics', 'AI']),
       node('/services/', 'Events',   ['Meetups', 'Talks', 'Tours', 'Workshops', 'Launches', 'Demos']),
       node('/services/', 'Tools',    ['Board', 'HeavyMap', 'Environments', 'Gage']),
-      { ...node('/services/', 'News', ['Sector', 'Solo']), items: [...node('/services/', 'News', ['Sector', 'Solo']).items, { label: 'MAGs', path: '/mags/' }, { label: 'Research', path: '/MAGS/RESEARCH/' }] },
+      { label: 'News', path: '/services/news/', items: [
+        leaf('/services/news/', 'Sector'),
+        leaf('/services/news/', 'Solo'),
+        { label: 'MAGs', path: '/mags/' },
+        { label: 'Research', path: '/MAGS/RESEARCH/' }
+      ] },
       node('/services/', 'Grow',     ['Local', 'Site', 'Building', 'Market', 'Product']),
       node('/services/', 'NA*',      ['Interviews', 'Profiles', 'Edits'])
     ] },
@@ -58,14 +63,18 @@ export const NAV = [
    board is a full application at /board/; the menu's Tools > Board entry is
    a landing page that links to it, and the board itself should still show
    that trail. */
-const ALIASES = { '/board/': '/services/tools/board/' };
+const ALIASES = {
+  '/board/': '/services/tools/board/',
+  '/MAGS/START/': '/mags/'
+};
 
 const HOME = '/';
 
 const normalise = (pathname) => {
   let p = pathname.replace(/index\.html$/, '');
   if (!p.endsWith('/')) p += '/';
-  return ALIASES[p] ?? p;
+  const section = Object.keys(ALIASES).find((prefix) => p.startsWith(prefix));
+  return section ? ALIASES[section] : p;
 };
 
 /* The ancestry of a URL: which wordmark word owns it and the chain of items
@@ -73,14 +82,19 @@ const normalise = (pathname) => {
    is not in the menu (the home page, Call for Infrastructures). */
 export function trailFor(pathname) {
   const target = normalise(pathname);
+  // Articles inherit the nearest menu destination. Search every branch:
+  // magazine URLs need not share their parent's /services/news/ prefix.
   const walk = (items, chain) => {
+    let closest = null;
     for (const item of items) {
       const here = [...chain, item];
       if (item.path === target) return here;
+      if (target.startsWith(item.path) &&
+          (!closest || item.path.length > closest.at(-1).path.length)) closest = here;
       const found = item.items && walk(item.items, here);
-      if (found) return found;
+      if (found && (!closest || found.at(-1).path.length > closest.at(-1).path.length)) closest = found;
     }
-    return null;
+    return closest;
   };
   for (let word = 0; word < NAV.length; word++) {
     const chain = walk(NAV[word].items, []);
