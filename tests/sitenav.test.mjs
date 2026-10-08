@@ -106,18 +106,23 @@ test('the Apps panel starts with HeavyMap and every app is complete', () => {
 });
 
 // Articles use the same News menu as the magazine index, including future posts.
-test('Research articles inherit News and its MAGs and Research links', () => {
+test('Research articles inherit News and the MAGs index', () => {
   for (const path of ['/MAGS/RESEARCH/', '/MAGS/RESEARCH/industrial/',
                       '/MAGS/RESEARCH/residential/index.html', '/MAGS/RESEARCH/future-post/']) {
     const trail = trailFor(path);
-    assert.deepEqual(trail.chain.map((item) => item.label), ['Services', 'News', 'Research']);
+    assert.deepEqual(trail.chain.map((item) => item.label), ['Services', 'News', 'MAGs']);
     const newsRow = rowsFor(trail.word, trail.chain).at(-1);
-    assert.deepEqual(newsRow.items.map((item) => item.label), ['Sector', 'Solo', 'MAGs', 'Research']);
+    assert.deepEqual(newsRow.items.map((item) => item.label), ['Sector', 'Solo', 'MAGs', 'START']);
   }
 });
 
-test('START issues inherit the MAGs menu without article-specific aliases', () => {
+test('START issues inherit the direct START menu without article-specific aliases', () => {
   for (const path of ['/MAGS/START/', '/MAGS/START/issue-1-09-26/wny-corridor-brief/']) {
-    assert.deepEqual(trailFor(path).chain.map((item) => item.label), ['Services', 'News', 'MAGs']);
+    assert.deepEqual(trailFor(path).chain.map((item) => item.label), ['Services', 'News', 'START']);
   }
+});
+
+test('future magazines inherit MAGs without growing the News menu', () => {
+  assert.deepEqual(trailFor('/MAGS/FUTURE/first-article/').chain.map((item) => item.label),
+                   ['Services', 'News', 'MAGs']);
 });

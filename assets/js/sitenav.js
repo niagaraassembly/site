@@ -33,7 +33,7 @@ export const NAV = [
         leaf('/services/news/', 'Sector'),
         leaf('/services/news/', 'Solo'),
         { label: 'MAGs', path: '/mags/' },
-        { label: 'Research', path: '/MAGS/RESEARCH/' }
+        { label: 'START', path: '/MAGS/START/' }
       ] },
       node('/services/', 'Grow',     ['Local', 'Site', 'Building', 'Market', 'Product']),
       node('/services/', 'NA*',      ['Interviews', 'Profiles', 'Edits'])
@@ -65,7 +65,7 @@ export const NAV = [
    that trail. */
 const ALIASES = {
   '/board/': '/services/tools/board/',
-  '/MAGS/START/': '/mags/'
+  '/MAGS/': '/mags/'
 };
 
 const HOME = '/';
@@ -73,7 +73,10 @@ const HOME = '/';
 const normalise = (pathname) => {
   let p = pathname.replace(/index\.html$/, '');
   if (!p.endsWith('/')) p += '/';
-  const section = Object.keys(ALIASES).find((prefix) => p.startsWith(prefix));
+  // Listed sections such as START keep their own trail; other magazines
+  // inherit the MAGs index without adding each new magazine to the menu.
+  const listed = allPaths().some((path) => p.startsWith(path));
+  const section = !listed && Object.keys(ALIASES).find((prefix) => p.startsWith(prefix));
   return section ? ALIASES[section] : p;
 };
 
