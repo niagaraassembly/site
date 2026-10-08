@@ -29,7 +29,7 @@ export const NAV = [
       node('/services/', 'Training', ['Clark', 'Electronics', 'Manufacturing', 'Linux', 'Robotics', 'AI']),
       node('/services/', 'Events',   ['Meetups', 'Talks', 'Tours', 'Workshops', 'Launches', 'Demos']),
       node('/services/', 'Tools',    ['Board', 'HeavyMap', 'Environments', 'Gage']),
-      { ...node('/services/', 'News', ['Sector', 'Solo']), items: [...node('/services/', 'News', ['Sector', 'Solo']).items, { label: 'Research', path: '/MAGS/RESEARCH/' }] },
+      { ...node('/services/', 'News', ['Sector', 'Solo']), items: [...node('/services/', 'News', ['Sector', 'Solo']).items, { label: 'MAGs', path: '/mags/' }, { label: 'Research', path: '/MAGS/RESEARCH/' }] },
       node('/services/', 'Grow',     ['Local', 'Site', 'Building', 'Market', 'Product']),
       node('/services/', 'NA*',      ['Interviews', 'Profiles', 'Edits'])
     ] },
