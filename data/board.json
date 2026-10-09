@@ -38,5 +38,29 @@
     "description": "A walking field study of the Hertel industrial corridor and surrounding residential streets: company frontages, industrial reuse, freight and pedestrian crossings, and everyday residential routes. Research briefings, source links, two full PDF reports and an indexed parcel map are available in the Research MAG. This is a proposed reporting itinerary, with the exact meeting point still to be confirmed.",
     "link": "https:/\niagaraassembly.com/MAGS/RESEARCH/",
     "date": "2026-10-08"
+  },
+  {
+    "category": "events",
+    "kind": "talks",
+    "location": "Buffalo",
+    "title": "New York State Innovation Summit and Commercialization Competition",
+    "presenter": "FuzeHub and Empire State Development / NYSTAR",
+    "when": "2026-10-27 to 2026-10-28",
+    "where": "Buffalo Convention Center, Buffalo, New York",
+    "contact": "FuzeHub — https://nysinnovationsummit.com/",
+    "description": "Manufacturers, researchers, entrepreneurs and investors gather in Buffalo for technology showcases and discussions on commercialization, advanced materials, energy innovation, biotechnology and artificial intelligence. Nine startup finalists will compete for four awards totaling $430,000 to advance prototypes and go-to-market plans. Registration and the agenda are available through the organizer. Awards have not yet been decided.",
+    "link": "https://nysinnovationsummit.com/",
+    "date": "2026-10-09",
+    "id": "b-0004"
+  },
+  {
+    "category": "news",
+    "kind": "new projects",
+    "location": "Buffalo",
+    "title": "Axenica Bioscience advances viral reference-material manufacturing project",
+    "description": "Buffalo-based Axenica Bioscience is a finalist in New York State's 2026 Commercialization Competition. Its project develops characterized, traceable viral reference materials to help diagnostic developers and laboratories evaluate tests against contemporary strains. The company will compete at the October 27–28 Innovation Summit in Buffalo. Finalist selection was announced September 30; it is not an award of funding or an announcement of a new company formation.",
+    "link": "https://esd.ny.gov/esd-media-center/press-releases/esd-announces-2026-commercialization-competition-finalists",
+    "date": "2026-10-09",
+    "id": "b-0005"
   }
 ]
