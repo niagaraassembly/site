@@ -201,7 +201,8 @@ export function companiesInNews(items, entities) {
     counts.set(item.entity_id, (counts.get(item.entity_id) ?? 0) + 1);
   }
   return [...counts]
-    .map(([id, count]) => ({ ...(byId.get(id) ?? { id, name: items.find((i) => i.entity_id === id)?.entity_name }), count }))
+    .map(([id, count]) => ({ ...(byId.get(id) ?? { id, name: items.find((i) => i.entity_id === id)?.entity_name }), count,
+      first: items.find((i) => i.entity_id === id)?.id }))
     .filter((e) => e.name)
     .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
 }
@@ -331,13 +332,15 @@ export function renderMoneyGroups(lines) {
 
 export function renderCompanies(companies) {
   return companies.map((c) => {
+    /* The organisation's website when the research has one; otherwise its
+       story on this page, so every name leads somewhere. */
     const url = safeHttpUrl(c.website);
-    const name = url
-      ? `<a href="${escapeHtml(url)}" rel="noopener">${escapeHtml(c.name)}</a>`
+    const href = url ?? (c.first ? `#wny-${c.first}` : null);
+    const name = href
+      ? `<a href="${escapeHtml(href)}"${url ? ' rel="noopener"' : ''}>${escapeHtml(c.name)}</a>`
       : escapeHtml(c.name);
-    const count = `${c.count} ${c.count === 1 ? 'story' : 'stories'}`;
     return `<li class="wny-company"><span class="wny-company__name">${name}</span>`
-      + `<span class="wny-company__meta">${[c.city, count].filter(Boolean).map(escapeHtml).join(' · ')}</span></li>`;
+      + `<span class="wny-company__meta">${[c.city, String(c.count)].filter(Boolean).map(escapeHtml).join(' · ')}</span></li>`;
   }).join('');
 }
 
@@ -361,7 +364,8 @@ export function mentionsFor(people, items) {
 
 export function renderMentions(mentions) {
   return mentions.map((m) =>
-    `<li class="wny-company"><span class="wny-company__name">${escapeHtml(m.name)}</span>`
+    `<li class="wny-company"><span class="wny-company__name">${m.events?.[0]
+      ? `<a href="#wny-${escapeHtml(m.events[0])}">${escapeHtml(m.name)}</a>` : escapeHtml(m.name)}</span>`
     + `<span class="wny-company__meta">${[m.role, m.organization].filter(Boolean).map(escapeHtml).join(', ')}</span></li>`
   ).join('');
 }
@@ -451,6 +455,71 @@ function mountTicker(root, items) {
   line.addEventListener('focusout', () => hold(false));
   el.hidden = false;
   run();
+}
+
+/* ---- county band -------------------------------------------------------------
+   A two-row quilt of the region's county outlines under the title. The page
+   names its outline file (data-county-band), so another MAG can use its own;
+   scripts/wny/counties.py builds the file from Census TIGERweb outlines. */
+
+/** SVG path data for a county's rings (coordinates already fitted to 0-100). */
+export function countyPath(county) {
+  return (county.rings ?? []).map((ring) =>
+    `M${ring.map(([x, y]) => `${x} ${y}`).join('L')}Z`).join('');
+}
+
+/** Tiles grow with their county's width-to-height ratio, so each row fills
+    the band exactly; very tall or very wide counties are held to a range. */
+export function tileGrow(county) {
+  const ratio = (county.width || 1) / (county.height || 1);
+  return Math.min(1.8, Math.max(0.7, ratio)).toFixed(3);
+}
+
+async function mountCountyBand(root) {
+  const band = root.querySelector('[data-county-band]');
+  if (!band) return;
+  const src = band.getAttribute('data-county-band');
+  if (!/^\/data\/[\w/-]+\.json$/.test(src)) return;
+  let geo;
+  try {
+    const res = await fetch(src);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    geo = await res.json();
+  } catch (err) {
+    console.error('county outlines failed to load', err);
+    return;  // the band stays hidden; nothing else depends on it
+  }
+  let index = 0;
+  band.innerHTML = (geo.rows ?? []).map((row) =>
+    `<ul class="county-band__row">${row.map((name) => {
+      const c = geo.counties?.[name];
+      if (!c) return '';
+      return `<li class="county-band__tile" style="flex-grow:${tileGrow(c)}" data-county="${escapeHtml(name)}" data-seed="${index++}" title="${escapeHtml(name)} County">`
+        + `<svg viewBox="-4 -4 ${c.width + 8} ${c.height + 8}" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false"></svg>`
+        + `<span class="county-band__name">${escapeHtml(name)}</span></li>`;
+    }).join('')}</ul>`).join('');
+
+  /* Hand-drawn like the frame and the corridor line: fixed seeds so the
+     wobble never re-rolls, hachure fill for the quilt's stitching, and
+     currentColor so the theme toggle recolours without a redraw. */
+  for (const tile of band.querySelectorAll('.county-band__tile')) {
+    const c = geo.counties[tile.dataset.county];
+    const svg = tile.querySelector('svg');
+    const d = countyPath(c);
+    if (typeof rough !== 'undefined') {
+      svg.appendChild(rough.svg(svg).path(d, {
+        stroke: 'currentColor', strokeWidth: 1.2, roughness: 0.6, bowing: 0.4,
+        fill: 'currentColor', fillStyle: 'hachure', hachureGap: 5, fillWeight: 0.5,
+        seed: 2026 + Number(tile.dataset.seed),
+      }));
+    } else {
+      const path = document.createElementNS(SVG_NS, 'path');
+      Object.entries({ d, fill: 'none', stroke: 'currentColor', 'stroke-width': 1.2, 'vector-effect': 'non-scaling-stroke' })
+        .forEach(([k, v]) => path.setAttribute(k, v));
+      svg.appendChild(path);
+    }
+  }
+  band.hidden = false;
 }
 
 /* ---- corridor line ------------------------------------------------------ */
@@ -758,6 +827,7 @@ export async function mountFront(root = document) {
     return;
   }
   const items = byNewest(publishable(data.items));
+  mountCountyBand(root);
   drawCorridor(root, items);
   mountTicker(root, items);
   mountSignup(root);

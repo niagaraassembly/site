@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-10T16:39:08+00:00",
+  "generated_at": "2026-10-10T16:52:50+00:00",
   "source": {
     "repo": "niagaraassembly/na-research",
-    "commit": "f31ecf6"
+    "commit": "67e81ad"
   },
   "items": [
     {
@@ -559,7 +559,26 @@
       "conflicts": []
     }
   ],
-  "people": [],
+  "people": [
+    {
+      "event_id": "IEVT-2026-000001",
+      "name": "Ryan Hulse",
+      "role": "Senior Director for R&D",
+      "organization": "Solstice Advanced Materials",
+      "entity_id": "E0144",
+      "source": "Governor Kathy Hochul newsroom",
+      "url": "https://www.governor.ny.gov/news/governor-hochul-announces-solstice-advanced-materials-expand-buffalo"
+    },
+    {
+      "event_id": "IEVT-2026-000001",
+      "name": "Tom Isberg",
+      "role": "Vice President, R&D",
+      "organization": "Solstice Advanced Materials",
+      "entity_id": "E0144",
+      "source": "PR Newswire",
+      "url": "https://finance.yahoo.com/technology/articles/solstice-announces-49-million-investment-153200194.html"
+    }
+  ],
   "entities": [
     {
       "id": "E0034",
@@ -573,21 +592,21 @@
       "name": "Solstice Advanced Materials",
       "type": "company",
       "city": "Morris Plains",
-      "website": "solstice.com"
+      "website": "https://solstice.com"
     },
     {
       "id": "E0145",
       "name": "Constellation Brands",
       "type": "company",
       "city": "Rochester",
-      "website": "constellationbrands.com"
+      "website": "https://constellationbrands.com"
     },
     {
       "id": "E0147",
       "name": "Wilbert's Premium Auto Parts",
       "type": "company",
       "city": "unresolved Penfield or Webster",
-      "website": "wilberts.com"
+      "website": "https://wilberts.com"
     },
     {
       "id": "E0148",

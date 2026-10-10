@@ -142,6 +142,13 @@ class ExportTest(unittest.TestCase):
         data = self.run_with([event("A")])
         self.assertEqual([e["id"] for e in data["entities"]], ["E1"])
 
+    def test_websites_become_full_addresses(self):
+        self.assertEqual(export.website_of("solstice.com"), "https://solstice.com")
+        self.assertEqual(export.website_of("https://www.goodyear.com"), "https://www.goodyear.com")
+        self.assertEqual(export.website_of(""), "")
+        self.assertEqual(export.website_of("javascript:alert(1)"), "")
+        self.assertEqual(export.website_of("not a site"), "")
+
     def test_changes_report_added_changed_removed(self):
         old = {"items": [{"id": "A", "v": 1}, {"id": "B", "v": 1}]}
         new = {"items": [{"id": "A", "v": 2}, {"id": "C", "v": 1}]}

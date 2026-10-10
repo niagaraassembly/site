@@ -97,6 +97,18 @@ def county_of(location: str) -> str | None:
     return match.group(1) if match else None
 
 
+DOMAIN = re.compile(r"^[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}(/\S*)?$", re.IGNORECASE)
+
+
+def website_of(raw: str) -> str:
+    """A full https address. Bare domains in entities.csv ("solstice.com")
+    gain https://; anything that is neither a URL nor a domain is dropped."""
+    value = (raw or "").strip()
+    if re.match(r"^https?://", value, re.IGNORECASE):
+        return value
+    return f"https://{value}" if DOMAIN.match(value) else ""
+
+
 def money(raw: str) -> float | None:
     try:
         value = float(raw.replace(",", ""))
@@ -220,7 +232,7 @@ def build(research: Path) -> dict:
         "people": people,
         "entities": [
             {"id": eid, "name": e["name"], "type": e.get("entity_type", ""),
-             "city": e.get("hq_city", ""), "website": e.get("website", "")}
+             "city": e.get("hq_city", ""), "website": website_of(e.get("website", ""))}
             for eid, e in entities.items() if eid in used
         ],
     }

@@ -4,7 +4,8 @@ import { readFileSync } from 'node:fs';
 import {
   LANES, STAGES, FLAGS, publishable, byNewest, flagText, moneyLines, corridorPosition, corridorMarks,
   filterItems, filterOptions, parseFilters, filterQuery, moneyTotals, moneyByStage, renderMoneyTotal, tickerLine,
-  moneyGroups, moneyKind, renderMoneyGroups, mentionsFor, renderMentions,
+  moneyGroups, moneyKind, renderMoneyGroups, mentionsFor, renderMentions, renderCompanies,
+  countyPath, tileGrow,
   investmentLines, filterInvestments, investmentOptions, renderInvestments,
   formatAmount, companiesInNews, renderItem, renderCompact,
 } from '../assets/js/wny.js';
@@ -241,4 +242,35 @@ test('the investments page lists every stated amount; totals count production on
   assert.doesNotMatch(html, /Proposed total|Grants total/, 'developing and corridor kinds have nothing to count');
   assert.equal(moneyKind({ amount_type: 'charge' }), 'charges');
   assert.deepEqual(investmentOptions(lines).kind.map(([v]) => v), ['building', 'contracts', 'deals', 'grants', 'proposed']);
+});
+
+test('every organisation name links: its website when known, else its story; counts are bare numbers', () => {
+  const html = renderCompanies([
+    { name: 'Has Site', website: 'https://example.com', count: 2, first: 'S1', city: 'Buffalo' },
+    { name: 'No Site', website: '', count: 1, first: 'S2', city: '' },
+  ]);
+  assert.match(html, /<a href="https:\/\/example\.com" rel="noopener">Has Site<\/a>/);
+  assert.match(html, /<a href="#wny-S2">No Site<\/a>/);
+  assert.match(html, /Buffalo · 2</);
+  assert.doesNotMatch(html, /stor(y|ies)/);
+});
+
+test('mentions link each person to their story', () => {
+  assert.match(renderMentions([{ name: 'Ryan Hulse', role: 'r', organization: 'o', events: ['IEVT-1'] }]), /href="#wny-IEVT-1"/);
+});
+
+test('county band data covers the 21 counties in two rows, with drawable outlines', () => {
+  const geo = JSON.parse(readFileSync(new URL('../data/geo/wny-counties.json', import.meta.url)));
+  const names = geo.rows.flat();
+  assert.equal(names.length, 21);
+  assert.equal(new Set(names).size, 21);
+  for (const name of ['Erie', 'Niagara', 'Monroe', 'Onondaga', 'Chautauqua']) assert.ok(names.includes(name), name);
+  for (const name of names) {
+    const c = geo.counties[name];
+    assert.ok(c.rings.length >= 1 && c.rings[0].length >= 4, `${name} has an outline`);
+    assert.match(countyPath(c), /^M[\d. ]+(L[\d. ]+)+Z/);
+    const grow = Number(tileGrow(c));
+    assert.ok(grow >= 0.7 && grow <= 1.8, `${name} grow ${grow}`);
+  }
+  assert.match(geo.source, /Census/);
 });
