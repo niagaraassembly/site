@@ -15,9 +15,9 @@ SPEC.loader.exec_module(export)
 
 EVENT_FIELDS = ["event_id", "event_candidate_id", "entity_id", "event_type", "event_date", "published_date",
                 "headline", "summary", "amount", "currency", "amount_type", "ceiling_amount", "location", "county", "public_headline",
-                "jurisdiction", "source_url", "article_id", "source_article_ids", "confidence", "public_note",
+                "jurisdiction", "region_id", "source_url", "article_id", "source_article_ids", "confidence", "public_note",
                 "publish_status", "lane", "stage", "flags", "integrated_at", "integration_run_id"]
-ENTITY_FIELDS = ["entity_id", "name", "entity_type", "hq_city", "website"]
+ENTITY_FIELDS = ["entity_id", "name", "entity_type", "hq_city", "website", "hq_iso", "hq_region_id"]
 CONFLICT_FIELDS = ["conflict_value_id", "event_id", "conflict_field", "value", "source_name", "source_url", "article_id"]
 ARTICLE_FIELDS = ["article_id", "canonical_url", "title", "source_name", "article_type"]
 
@@ -34,7 +34,7 @@ def write(path, fields, rows):
 def event(eid, status="approved", location="Buffalo, NY", **kw):
     row = {"event_id": eid, "entity_id": "E1", "event_type": "facility_expansion", "event_date": "2026-10-06",
            "headline": f"Headline {eid}", "summary": "internal summary", "currency": "USD",
-           "location": location, "jurisdiction": "NY", "source_url": "https://example.com/x",
+           "location": location, "jurisdiction": "US-NY", "region_id": "wny", "source_url": "https://example.com/x",
            "article_id": "ART-1", "publish_status": status, "lane": "production", "stage": "announced"}
     row.update(kw)
     return row
@@ -66,10 +66,28 @@ class ExportTest(unittest.TestCase):
                               event("D", "eligible"), event("F", "drafted")])
         self.assertEqual([i["id"] for i in data["items"]], ["A", "B"])
 
-    def test_only_jurisdiction_ny_is_exported(self):
-        data = self.run_with([event("NY"), event("ON", location="Hamilton", jurisdiction="ON"),
-                              event("BLANK", jurisdiction="")])
-        self.assertEqual([i["id"] for i in data["items"]], ["NY"])
+    def test_only_the_regions_events_are_exported(self):
+        data = self.run_with([event("WNY"), event("ON", location="Hamilton", jurisdiction="CA-ON", region_id="niagara-brant"),
+                              event("BLANK", region_id="")])
+        self.assertEqual([i["id"] for i in data["items"]], ["WNY"])
+
+    def test_home_region_from_iso_and_region_id(self):
+        e = lambda iso, rid: {"hq_iso": iso, "hq_region_id": rid}
+        self.assertEqual(export.hq_region_of(e("US-NY", "wny"), "wny"), "wny")
+        self.assertEqual(export.hq_region_of(e("US-NY", ""), "wny"), "elsewhere")
+        self.assertEqual(export.hq_region_of(e("CA-ON", "niagara-brant"), "wny"), "ontario")
+        self.assertEqual(export.hq_region_of(e("PL-02", ""), "wny"), "elsewhere")
+        self.assertIsNone(export.hq_region_of(e("", ""), "wny"))
+
+    def test_an_empty_export_never_replaces_published_stories(self):
+        write(self.root / "intel" / "entity_events.csv", EVENT_FIELDS, [event("A")])
+        out = self.root / "site" / "wny.json"
+        out.parent.mkdir()
+        self.assertEqual(export.main(["--research", str(self.root), "--out", str(out)]), 0)
+        write(self.root / "intel" / "entity_events.csv", EVENT_FIELDS, [event("A", region_id="other")])
+        before = out.read_text()
+        self.assertEqual(export.main(["--research", str(self.root), "--out", str(out)]), 3)
+        self.assertEqual(out.read_text(), before, "the published file is left as it was")
 
     def test_excluded_never_exports_and_explainers_are_required(self):
         data = self.run_with([

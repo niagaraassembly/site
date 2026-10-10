@@ -1,8 +1,14 @@
 {
-  "generated_at": "2026-10-10T22:44:06+00:00",
+  "generated_at": "2026-10-10T23:03:33+00:00",
+  "region": {
+    "id": "wny",
+    "name": "Western New York",
+    "iso": "US-NY",
+    "definition": "New York State from Greater Syracuse west to the Niagara River, Lake Ontario south to the Pennsylvania border; classify by county. Edge counties Oswego, Cortland and Broome not yet settled."
+  },
   "source": {
     "repo": "niagaraassembly/na-research",
-    "commit": "8e08aa4"
+    "commit": "2a441be"
   },
   "items": [
     {
@@ -962,6 +968,7 @@
       "type": "university",
       "city": "Ithaca",
       "website": "https://www.cornell.edu",
+      "hq_iso": "US-NY",
       "hq_region": "wny"
     },
     {
@@ -970,6 +977,7 @@
       "type": "company",
       "city": "Morris Plains",
       "website": "https://solstice.com",
+      "hq_iso": "US-NJ",
       "hq_region": "elsewhere"
     },
     {
@@ -978,6 +986,7 @@
       "type": "company",
       "city": "Rochester",
       "website": "https://constellationbrands.com",
+      "hq_iso": "US-NY",
       "hq_region": "wny"
     },
     {
@@ -986,6 +995,7 @@
       "type": "company",
       "city": "unresolved Penfield or Webster",
       "website": "https://wilberts.com",
+      "hq_iso": "US-NY",
       "hq_region": "wny"
     },
     {
@@ -994,6 +1004,7 @@
       "type": "company",
       "city": "Akron, Ohio",
       "website": "https://www.goodyear.com",
+      "hq_iso": "US-OH",
       "hq_region": "elsewhere"
     },
     {
@@ -1002,6 +1013,7 @@
       "type": "business division",
       "city": "",
       "website": "https://www.lockheedmartin.com",
+      "hq_iso": null,
       "hq_region": null
     },
     {
@@ -1010,6 +1022,7 @@
       "type": "company",
       "city": "",
       "website": "https://www.lockheedmartin.com",
+      "hq_iso": null,
       "hq_region": null
     },
     {
@@ -1018,6 +1031,7 @@
       "type": "company",
       "city": "",
       "website": "https://www.criterioncorporation.com",
+      "hq_iso": null,
       "hq_region": null
     },
     {
@@ -1026,6 +1040,7 @@
       "type": "company",
       "city": "Wroclaw, Poland",
       "website": "https://gekkophotonics.com",
+      "hq_iso": "PL-02",
       "hq_region": "elsewhere"
     },
     {
@@ -1034,6 +1049,7 @@
       "type": "company",
       "city": "Syracuse",
       "website": "https://www.srcinc.com",
+      "hq_iso": "US-NY",
       "hq_region": "wny"
     }
   ]

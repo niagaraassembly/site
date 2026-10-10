@@ -23,8 +23,9 @@ site data contract (na-research f31ecf6):
 - amount is money committed or stated; ceiling_amount is a contract's maximum
   and is kept separate so it never enters a total.
 
-The Western New York MAG admits any approved New York State record
-(atlas/GLOSSARY.md): jurisdiction NY.
+A MAG takes the events of its region: entity_events.region_id equals the
+region (default "wny"), as defined in intel/regions.csv (na-research's global
+regions model, 2026-10-10). Jurisdictions are ISO 3166-2 codes ("US-NY").
 
 Each run prints what changed against the previous data/wny.json and the
 na-research commit it was built from, so a weekly pull shows what is new.
@@ -218,7 +219,18 @@ def conflicts_for(event_id: str, flags: list[dict[str, str]], rows: list[dict[st
     return out
 
 
-def build(research: Path) -> dict:
+def hq_region_of(entity: dict[str, str], region: str) -> str | None:
+    """Where an organisation is based, for the page's groups: in this region,
+    in Ontario, elsewhere, or unknown (from hq_region_id and hq_iso)."""
+    if entity.get("hq_region_id", "").strip() == region:
+        return "wny" if region == "wny" else region
+    iso = entity.get("hq_iso", "").strip()
+    if iso == "CA-ON":
+        return "ontario"
+    return "elsewhere" if iso else None
+
+
+def build(research: Path, region: str = "wny") -> dict:
     intel = research / "intel"
     events = read_csv(intel / "entity_events.csv")
     entities = {e["entity_id"]: e for e in read_csv(intel / "entities.csv")}
@@ -236,7 +248,7 @@ def build(research: Path) -> dict:
             continue
         if lane in NEEDS_EXPLAINER and not note:
             continue
-        if ev.get("jurisdiction", "").strip() != "NY":
+        if ev.get("region_id", "").strip() != region:
             continue
         location = ev.get("location", "")
         entity = entities.get(ev.get("entity_id", ""))
@@ -324,8 +336,12 @@ def build(research: Path) -> dict:
         if i.get("mag") == "WNY" and i.get("publish_status", "").strip() in PUBLISHABLE
     ]
 
+    region_row = next((r for r in read_csv(intel / "regions.csv") if r.get("region_id") == region), {})
+
     return {
         "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
+        "region": {"id": region, "name": region_row.get("name", ""), "iso": region_row.get("parent_iso", ""),
+                   "definition": region_row.get("definition", "")},
         "source": {"repo": "niagaraassembly/na-research", "commit": commit_of(research)},
         "items": items,
         "people": people,
@@ -333,7 +349,8 @@ def build(research: Path) -> dict:
         "entities": [
             {"id": eid, "name": e["name"], "type": e.get("entity_type", ""),
              "city": e.get("hq_city", ""), "website": website_of(e.get("website", "")),
-             "hq_region": e.get("hq_region", "").strip() or None}
+             "hq_iso": e.get("hq_iso", "").strip() or None,
+             "hq_region": hq_region_of(e, region)}
             for eid, e in entities.items() if eid in used
         ],
     }
@@ -364,6 +381,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--research", type=Path, required=True, help="path to an na-research checkout")
     parser.add_argument("--out", type=Path, default=SITE / "data" / "wny.json")
     parser.add_argument("--issue", help="also write data/wny/issue-ISSUE.json for an issue page, e.g. one")
+    parser.add_argument("--region", default="wny", help="region_id from na-research intel/regions.csv (default wny)")
     args = parser.parse_args(argv)
     if not (args.research / "intel" / "entity_events.csv").exists():
         print(f"error: {args.research} has no intel/entity_events.csv; is it an na-research checkout?",
@@ -376,7 +394,13 @@ def main(argv: list[str] | None = None) -> int:
         old = json.loads(args.out.read_text(encoding="utf-8"))
     except (OSError, ValueError):
         old = {}
-    data = build(args.research)
+    data = build(args.research, args.region)
+    if not data["items"] and old.get("items"):
+        # A schema change upstream can silently filter everything out; refuse
+        # to replace published stories with nothing.
+        print(f"error: 0 items for region {args.region!r} (previous export had {len(old['items'])}); "
+              "check na-research's region_id values. Nothing written.", file=sys.stderr)
+        return 3
     text = json.dumps(data, indent=2, ensure_ascii=False) + "\n"
     args.out.write_text(text, encoding="utf-8")
 
