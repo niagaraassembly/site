@@ -812,7 +812,17 @@ dialog.sparks-dialog::backdrop {
 .mag-title--flag img { height: .62em; width: auto; outline: 1px solid var(--rule); }
 
 /* The issue line sits right under the title, above the county band. */
-.mag-title + .issue-stamp { margin: -.6rem 0 1rem; }
+/* The issue line and the print button share one row: stamp left, button right. */
+.issue-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .25rem 1rem;
+  margin: -.6rem 0 1rem;
+}
+.issue-line .issue-stamp { margin: 0; }
+.issue-line [data-print] { margin-left: auto; }  /* stays right when it wraps on phones */
 .county-band { margin-top: 0; }
 .county-band + .wny-ticker { margin-top: 0; }
 
