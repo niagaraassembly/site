@@ -57,3 +57,16 @@ test('sources group under their most specific coverage', () => {
   const html = renderRegistry(groups);
   assert.match(html, /Mirror <span class="sources__note">\(not an original publisher\)/);
 });
+
+test('an unknown source type is escaped, never rendered as markup', () => {
+  const html = renderRegistry(groupRegistry([{ name: 'X', domain: 'x.org', type: '<img src=x onerror=alert(1)>', coverage: ['US'], cited: false }], {}));
+  assert.ok(!html.includes('<img'));
+  assert.match(html, /&lt;img/);
+});
+
+test('the site and the exporter agree on the known source types', () => {
+  const py = readFileSync(new URL('../scripts/wny/export.py', import.meta.url), 'utf8');
+  const block = py.slice(py.indexOf('SOURCE_TYPES = {'), py.indexOf('}', py.indexOf('SOURCE_TYPES = {')));
+  const pyTypes = [...block.matchAll(/"([a-z_]+)"/g)].map((m) => m[1]).sort();
+  assert.deepEqual(pyTypes, Object.keys(TYPE_LABELS).sort());
+});

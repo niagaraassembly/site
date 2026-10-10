@@ -211,6 +211,16 @@ class ExportTest(unittest.TestCase):
                          "a name inside a longer name is not counted twice")
         self.assertIsNone(export.districts_of("Somewhere, NY", table))
 
+    def test_source_registry_skips_unknown_types_and_bad_domains(self):
+        write(self.root / "research" / "news" / "exports" / "public-source-registry.csv",
+              ["public_name", "public_domain", "public_source_type", "coverage", "language", "cited_in_published_story"], [
+                  {"public_name": "Good", "public_domain": "good.org", "public_source_type": "news", "coverage": "wny", "language": "en", "cited_in_published_story": "yes"},
+                  {"public_name": "Odd", "public_domain": "odd.org", "public_source_type": "<script>", "coverage": "US", "language": "en", "cited_in_published_story": "no"},
+                  {"public_name": "Bad", "public_domain": "javascript:x", "public_source_type": "news", "coverage": "US", "language": "en", "cited_in_published_story": "no"},
+              ])
+        reg = export.build_sources(self.root)
+        self.assertEqual([s["name"] for s in reg["sources"]], ["Good"])
+
     def test_changes_report_added_changed_removed(self):
         old = {"items": [{"id": "A", "v": 1}, {"id": "B", "v": 1}]}
         new = {"items": [{"id": "A", "v": 2}, {"id": "C", "v": 1}]}

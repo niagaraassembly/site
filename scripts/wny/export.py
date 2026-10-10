@@ -356,6 +356,15 @@ def build(research: Path, region: str = "wny") -> dict:
     }
 
 
+# public_source_type values the site knows how to label (assets/js/sources.js
+# TYPE_LABELS); a row with any other type is skipped, not rendered raw.
+SOURCE_TYPES = {
+    "news", "business_news", "broadcast", "newswire", "government", "regulatory_filings",
+    "economic_development", "company", "university", "union", "industry_association",
+    "procurement", "public_notices", "directory", "aggregator", "mirror",
+}
+
+
 def build_sources(research: Path) -> dict | None:
     """The public source registry for /research/sources/, read from
     na-research's generated research/news/exports/public-source-registry.csv
@@ -370,6 +379,9 @@ def build_sources(research: Path) -> dict | None:
         if not DOMAIN.match(domain):
             dropped.append(domain or r.get("public_name", "?"))
             continue
+        if r.get("public_source_type", "").strip() not in SOURCE_TYPES:
+            dropped.append(f"{domain} (unknown type {r.get('public_source_type', '')!r})")
+            continue
         sources.append({
             "name": r.get("public_name", "").strip(),
             "domain": domain,
@@ -379,7 +391,7 @@ def build_sources(research: Path) -> dict | None:
             "cited": r.get("cited_in_published_story", "").strip() == "yes",
         })
     for d in dropped:
-        print(f"  source registry: dropped malformed domain {d!r}", file=sys.stderr)
+        print(f"  source registry: dropped {d}", file=sys.stderr)
     regions = {r["region_id"]: r.get("name", r["region_id"]) for r in read_csv(research / "intel" / "regions.csv")}
     return {"generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
             "source": {"repo": "niagaraassembly/na-research", "commit": commit_of(research),

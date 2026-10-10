@@ -117,7 +117,7 @@ export function renderRegistry(groups, citedIndex = new Map()) {
       const cited = stories?.length
         ? stories.map((st) => `<a href="${escapeHtml(st.href)}">${escapeHtml(st.headline)}</a>`).join('; ')
         : (src.cited ? 'Cited' : '');
-      const type = (TYPE_LABELS[src.type] ?? src.type)
+      const type = escapeHtml(TYPE_LABELS[src.type] ?? src.type)
         + (NOT_ORIGINAL.has(src.type) ? ' <span class="sources__note">(not an original publisher)</span>' : '');
       return `<tr><td>${escapeHtml(src.name)}</td><td class="sources__root">${escapeHtml(src.domain)}</td>`
         + `<td>${type}</td><td>${src.also.map(escapeHtml).join(', ')}</td><td>${cited}</td></tr>`;
