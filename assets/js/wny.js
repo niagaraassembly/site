@@ -302,6 +302,33 @@ export function districtKeys(item) {
   return CHAMBERS.flatMap((c) => (item.districts?.[c.id] ?? []).map((d) => `${c.id}:${d}`));
 }
 
+/** Districts with stories, by chamber, in district-number order. */
+export function storiesByDistrict(items) {
+  return CHAMBERS.map((c) => {
+    const by = new Map();
+    for (const item of items) {
+      for (const d of item.districts?.[c.id] ?? []) {
+        const list = by.get(d) ?? [];
+        list.push(item);
+        by.set(d, list);
+      }
+    }
+    const districts = [...by].sort((a, b) => Number(a[0]) - Number(b[0]))
+      .map(([d, list]) => ({ key: `${c.id}:${d}`, name: c.name(d), items: list }));
+    return { id: c.id, label: c.label, districts };
+  }).filter((c) => c.districts.length);
+}
+
+export function renderDistricts(chambers, allArticles = '/MAGS/WNY/posts/') {
+  return chambers.map((c) =>
+    `<li class="wny-company-group"><h3 class="wny-money__kind">${escapeHtml(c.label)}</h3><ul class="wny-district-list">`
+    + c.districts.map((d) =>
+      `<li class="wny-district"><a class="wny-district__name" href="${escapeHtml(allArticles)}?district=${encodeURIComponent(d.key)}">${escapeHtml(d.name)}</a>`
+      + `<span class="wny-district__count">${d.items.length}</span>`
+      + `<span class="wny-district__stories">${d.items.map((i) => `<a href="#wny-${escapeHtml(i.id)}">${escapeHtml(i.headline)}</a>`).join('; ')}</span></li>`).join('')
+    + '</ul></li>').join('');
+}
+
 function incentiveText(inc, currency) {
   return [formatAmount(inc.amount, currency), words(inc.type), inc.program ? `(${inc.program})` : '']
     .filter(Boolean).join(' ');
@@ -1282,6 +1309,11 @@ export async function mountFront(root = document) {
       bar.querySelector('.wny-allbar__count').textContent = `${items.length} ${items.length === 1 ? 'article' : 'articles'}`;
       bar.querySelector('ul').innerHTML = items.map(renderCompact).join('');
       bar.hidden = false;
+    }
+    const districts = storiesByDistrict(items);
+    if (districts.length) {
+      show(root.querySelector('[data-wny="districts-list"]'), renderDistricts(districts));
+      show(root.querySelector('[data-wny="districts"]'));
     }
     const companies = companiesInNews(items, data.entities);
     if (companies.length) {

@@ -9,6 +9,7 @@ import {
   newsTone, partialDate, comingUp, renderJobs, renderIncentives,
   districtText, districtKeys, renderCompanyGroups, storyUrl,
   moneyCells, renderMoneyCells, regionEquation, renderRegionEquation, articleFor,
+  storiesByDistrict, renderDistricts,
   investmentLines, filterInvestments, investmentOptions, renderInvestments,
   formatAmount, companiesInNews, renderItem, renderCompact,
 } from '../assets/js/wny.js';
@@ -400,4 +401,20 @@ test('the region equation adds announced investment and committed contract money
 
 test('the article before an amount follows how it is said', () => {
   assert.deepEqual(['$11.2M', '$18.9M', '$8M', '$80M', '$1.4M', '$110M', '$49M'].map(articleFor), ['an', 'an', 'an', 'an', 'a', 'a', 'a']);
+});
+
+test('by district groups stories per chamber in number order, linking the district filter', () => {
+  const items = [
+    { id: 'A', headline: 'a', districts: { congress: ['26'], senate: ['63', '61'], assembly: ['149'] } },
+    { id: 'B', headline: 'b', districts: { congress: ['26'], senate: ['62'], assembly: [] } },
+    { id: 'C', headline: 'c', districts: { congress: ['25'], senate: [], assembly: ['135'] } },
+    { id: 'D', headline: 'd' },
+  ];
+  const chambers = storiesByDistrict(items);
+  assert.deepEqual(chambers.map((c) => c.id), ['congress', 'senate', 'assembly']);
+  assert.deepEqual(chambers[0].districts.map((d) => [d.name, d.items.map((i) => i.id)]), [['NY-25', ['C']], ['NY-26', ['A', 'B']]]);
+  assert.deepEqual(chambers[1].districts.map((d) => d.name), ['Senate 61', 'Senate 62', 'Senate 63']);
+  const html = renderDistricts(chambers);
+  assert.match(html, /href="\/MAGS\/WNY\/posts\/\?district=congress%3A26">NY-26<\/a><span class="wny-district__count">2</);
+  assert.match(html, /href="#wny-A">a<\/a>; <a href="#wny-B">b<\/a>/);
 });
