@@ -1,0 +1,840 @@
+{
+ "generated_at": "2026-10-10T23:09:39+00:00",
+ "source": {
+  "repo": "niagaraassembly/na-research",
+  "commit": "805fbc2",
+  "file": "research/news/exports/public-source-registry.csv"
+ },
+ "regions": {
+  "wny": "Western New York",
+  "niagara-brant": "Niagara Peninsula and Brant"
+ },
+ "sources": [
+  {
+   "name": "Allegany County IDA",
+   "domain": "acida.org",
+   "type": "government",
+   "coverage": [
+    "wny"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "American Factory Tracker",
+   "domain": "americanfactorytracker.com",
+   "type": "directory",
+   "coverage": [
+    "US"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "Buffalo Business First",
+   "domain": "bizjournals.com",
+   "type": "business_news",
+   "coverage": [
+    "wny"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "Buffalo Toronto Public Media",
+   "domain": "btpm.org",
+   "type": "news",
+   "coverage": [
+    "wny"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": true
+  },
+  {
+   "name": "Canadian Heritage",
+   "domain": "canada.ca",
+   "type": "government",
+   "coverage": [
+    "niagara-brant"
+   ],
+   "language": [
+    "en",
+    "fr"
+   ],
+   "cited": false
+  },
+  {
+   "name": "CenterState CEO",
+   "domain": "centerstateceo.com",
+   "type": "economic_development",
+   "coverage": [
+    "wny"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "Chautauqua County",
+   "domain": "chautauquacountyny.gov",
+   "type": "government",
+   "coverage": [
+    "wny"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "Chemung County IDA",
+   "domain": "chemungcountyida.com",
+   "type": "economic_development",
+   "coverage": [
+    "wny"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "City of Brantford",
+   "domain": "brantford.ca",
+   "type": "government",
+   "coverage": [
+    "niagara-brant"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "City of Burlington",
+   "domain": "burlington.ca",
+   "type": "government",
+   "coverage": [
+    "niagara-brant"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "ClearanceJobs",
+   "domain": "news.clearancejobs.com",
+   "type": "news",
+   "coverage": [
+    "US"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "Cleveland-Cliffs",
+   "domain": "clevelandcliffs.com",
+   "type": "company",
+   "coverage": [
+    "niagara-brant",
+    "US"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "Cornell Chronicle",
+   "domain": "news.cornell.edu",
+   "type": "university",
+   "coverage": [
+    "wny"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": true
+  },
+  {
+   "name": "County of Brant",
+   "domain": "brant.ca",
+   "type": "government",
+   "coverage": [
+    "niagara-brant"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "County of Chautauqua IDA",
+   "domain": "ccida.com",
+   "type": "economic_development",
+   "coverage": [
+    "wny"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "Dailywise",
+   "domain": "dailywise.com",
+   "type": "aggregator",
+   "coverage": [
+    "US-NY"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "ECIDA",
+   "domain": "ecidany.com",
+   "type": "economic_development",
+   "coverage": [
+    "wny"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "Empire State Development",
+   "domain": "esd.ny.gov",
+   "type": "government",
+   "coverage": [
+    "US-NY"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "EnvZone",
+   "domain": "envzone.com",
+   "type": "procurement",
+   "coverage": [
+    "US"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "Erie News Now",
+   "domain": "erienewsnow.com",
+   "type": "news",
+   "coverage": [
+    "wny",
+    "US-PA"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "FedDev Ontario",
+   "domain": "canada.ca",
+   "type": "government",
+   "coverage": [
+    "CA-ON"
+   ],
+   "language": [
+    "en",
+    "fr"
+   ],
+   "cited": false
+  },
+  {
+   "name": "Finger Lakes 1",
+   "domain": "fingerlakes1.com",
+   "type": "news",
+   "coverage": [
+    "wny"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "Forth (DoD contract announcements mirror)",
+   "domain": "forth.news",
+   "type": "mirror",
+   "coverage": [
+    "US"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": true
+  },
+  {
+   "name": "Gannett public notices",
+   "domain": "classifieds.gannettclassifieds.com",
+   "type": "public_notices",
+   "coverage": [
+    "wny"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "Gekko Photonics",
+   "domain": "gekkophotonics.com",
+   "type": "company",
+   "coverage": [
+    "wny"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": true
+  },
+  {
+   "name": "GlobalSecurity",
+   "domain": "globalsecurity.org",
+   "type": "mirror",
+   "coverage": [
+    "US"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "GlobeNewswire",
+   "domain": "globenewswire.com",
+   "type": "newswire",
+   "coverage": [
+    "niagara-brant"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "Governor Kathy Hochul newsroom",
+   "domain": "governor.ny.gov",
+   "type": "government",
+   "coverage": [
+    "wny",
+    "US-NY"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": true
+  },
+  {
+   "name": "Greater Rochester Enterprise",
+   "domain": "rochesterbiz.com",
+   "type": "economic_development",
+   "coverage": [
+    "wny"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "Grow-NY",
+   "domain": "grow-ny.com",
+   "type": "economic_development",
+   "coverage": [
+    "wny"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "HigherGov",
+   "domain": "highergov.com",
+   "type": "procurement",
+   "coverage": [
+    "US"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": true
+  },
+  {
+   "name": "Invest Buffalo Niagara",
+   "domain": "buffaloniagara.org",
+   "type": "economic_development",
+   "coverage": [
+    "wny"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "Invest Burlington",
+   "domain": "investburlington.ca",
+   "type": "economic_development",
+   "coverage": [
+    "niagara-brant"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "Invest in Brantford",
+   "domain": "investinbrantford.ca",
+   "type": "economic_development",
+   "coverage": [
+    "niagara-brant"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "Invest in Hamilton",
+   "domain": "investinhamilton.ca",
+   "type": "economic_development",
+   "coverage": [
+    "niagara-brant"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "L3Harris",
+   "domain": "l3harris.com",
+   "type": "company",
+   "coverage": [
+    "global",
+    "wny"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "Living Rochester Suburbs",
+   "domain": "livingrochestersuburbs.com",
+   "type": "news",
+   "coverage": [
+    "wny"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "Lockheed Martin",
+   "domain": "lockheedmartin.com",
+   "type": "company",
+   "coverage": [
+    "wny"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "Lockport Union-Sun & Journal",
+   "domain": "lockportjournal.com",
+   "type": "news",
+   "coverage": [
+    "wny"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "Lynch Fluid Controls media",
+   "domain": "lynch.ca",
+   "type": "company",
+   "coverage": [
+    "wny",
+    "niagara-brant"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "MACNY",
+   "domain": "macny.org",
+   "type": "industry_association",
+   "coverage": [
+    "wny"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "New York DOL WARN dashboard",
+   "domain": "dol.ny.gov",
+   "type": "government",
+   "coverage": [
+    "US-NY"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "New York State open data (entity filings)",
+   "domain": "data.ny.gov",
+   "type": "government",
+   "coverage": [
+    "US-NY"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "News 4 Buffalo / WIVB",
+   "domain": "wivb.com",
+   "type": "news",
+   "coverage": [
+    "wny"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "News 8 WROC / RochesterFirst",
+   "domain": "rochesterfirst.com",
+   "type": "news",
+   "coverage": [
+    "wny"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "Niagara Economic Development",
+   "domain": "niagaracanada.com",
+   "type": "economic_development",
+   "coverage": [
+    "niagara-brant"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "Niagara Gazette",
+   "domain": "niagara-gazette.com",
+   "type": "news",
+   "coverage": [
+    "wny"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": true
+  },
+  {
+   "name": "Niagara-on-the-Lake Local",
+   "domain": "notllocal.com",
+   "type": "news",
+   "coverage": [
+    "CA-ON"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "Norfolk County",
+   "domain": "norfolkcounty.ca",
+   "type": "government",
+   "coverage": [
+    "niagara-brant"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "NoticeRegistry",
+   "domain": "noticeregistry.com",
+   "type": "public_notices",
+   "coverage": [
+    "US-NY"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "Ontario Newsroom API",
+   "domain": "news.ontario.ca",
+   "type": "government",
+   "coverage": [
+    "CA-ON"
+   ],
+   "language": [
+    "en",
+    "fr"
+   ],
+   "cited": false
+  },
+  {
+   "name": "PR Newswire",
+   "domain": "prnewswire.com",
+   "type": "newswire",
+   "coverage": [
+    "global",
+    "US"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": true
+  },
+  {
+   "name": "Rochester Business Journal",
+   "domain": "rbj.net",
+   "type": "business_news",
+   "coverage": [
+    "wny"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": true
+  },
+  {
+   "name": "Roustan Capital",
+   "domain": "roustan.com",
+   "type": "company",
+   "coverage": [
+    "niagara-brant",
+    "CA"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "SEC EDGAR",
+   "domain": "sec.gov",
+   "type": "regulatory_filings",
+   "coverage": [
+    "US"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": true
+  },
+  {
+   "name": "Southern Tier regional portal",
+   "domain": "so-tier.com",
+   "type": "economic_development",
+   "coverage": [
+    "wny"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "Spectrum News",
+   "domain": "spectrumlocalnews.com",
+   "type": "news",
+   "coverage": [
+    "wny"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": true
+  },
+  {
+   "name": "SRC, Inc.",
+   "domain": "srcinc.com",
+   "type": "company",
+   "coverage": [
+    "wny"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": true
+  },
+  {
+   "name": "T&T Materials",
+   "domain": "tandt-materials.com",
+   "type": "company",
+   "coverage": [
+    "wny"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "U.S. Department of War contract announcements",
+   "domain": "war.gov",
+   "type": "government",
+   "coverage": [
+    "US"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "U.S. Government Accountability Office",
+   "domain": "gao.gov",
+   "type": "government",
+   "coverage": [
+    "US"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "University of Rochester (NY SMART I-Corridor)",
+   "domain": "rochester.edu",
+   "type": "university",
+   "coverage": [
+    "wny"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "USW Local 1005",
+   "domain": "uswa1005.ca",
+   "type": "union",
+   "coverage": [
+    "niagara-brant"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "WBEN",
+   "domain": "audacy.com",
+   "type": "news",
+   "coverage": [
+    "wny"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": true
+  },
+  {
+   "name": "WGRZ",
+   "domain": "wgrz.com",
+   "type": "news",
+   "coverage": [
+    "wny"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  },
+  {
+   "name": "WKBW",
+   "domain": "wkbw.com",
+   "type": "news",
+   "coverage": [
+    "wny"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": true
+  },
+  {
+   "name": "Womyn Owned",
+   "domain": "womynowned.com",
+   "type": "directory",
+   "coverage": [
+    "US"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": true
+  },
+  {
+   "name": "WSYR / LocalSYR",
+   "domain": "localsyr.com",
+   "type": "broadcast",
+   "coverage": [
+    "wny"
+   ],
+   "language": [
+    "en"
+   ],
+   "cited": false
+  }
+ ]
+}

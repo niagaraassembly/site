@@ -1,10 +1,14 @@
 /* Sources pages: every root domain the published research cites.
  *
- * An issue's page (data-sources-file) lists the domains behind that issue;
- * /research/sources/ (data-sources-all) combines the latest data of every
- * MAG in data/mags.json, so the collection grows as MAGs are added. Only
- * published material is read: story sources, the sources behind conflicting
- * values, and the sources for people named.
+ * An issue's page (data-sources-file) lists the domains its published
+ * stories cite: story sources, the sources behind conflicting values, and the
+ * sources for people named.
+ *
+ * /research/sources/ (data-sources-registry) lists every source the research
+ * draws on, from na-research's approved public source registry (exported to
+ * data/sources.json), grouped by each source's most specific coverage. Each
+ * row links the published stories that cite it, from every MAG's latest data
+ * in data/mags.json.
  */
 
 import { escapeHtml, safeHttpUrl } from './escape.js';
@@ -66,6 +70,64 @@ export function renderSources(index, { storyHref = (s) => `#wny-${s.item.id}`, s
   }).join('');
 }
 
+/* ---- the public source registry -------------------------------------------- */
+
+const ISO_NAMES = { US: 'United States', CA: 'Canada', 'US-NY': 'New York', 'US-PA': 'Pennsylvania', 'CA-ON': 'Ontario' };
+
+export const TYPE_LABELS = {
+  news: 'News', business_news: 'Business news', broadcast: 'Broadcast', newswire: 'Newswire',
+  government: 'Government', regulatory_filings: 'Regulatory filings', economic_development: 'Economic development',
+  company: 'Company', university: 'University', union: 'Union', industry_association: 'Industry association',
+  procurement: 'Procurement', public_notices: 'Public notices', directory: 'Directory', aggregator: 'Aggregator', mirror: 'Mirror',
+};
+/* Shown with their type so readers can see they are not original publishers. */
+export const NOT_ORIGINAL = new Set(['directory', 'aggregator', 'mirror']);
+
+/** 0 region, 1 state or province, 2 country, 3 global. */
+export function coverageRank(code, regions) {
+  if (code === 'global') return 3;
+  if (regions?.[code]) return 0;
+  return /^[A-Z]{2}-[A-Z0-9]+$/.test(code) ? 1 : 2;
+}
+
+export function coverageLabel(code, regions) {
+  if (code === 'global') return 'Global';
+  return regions?.[code] ?? ISO_NAMES[code] ?? code;
+}
+
+/** Sources grouped under their most specific coverage, most specific groups first. */
+export function groupRegistry(sources, regions) {
+  const groups = new Map();
+  for (const src of sources ?? []) {
+    const codes = src.coverage?.length ? src.coverage : ['global'];
+    const home = [...codes].sort((a, b) => coverageRank(a, regions) - coverageRank(b, regions))[0];
+    const g = groups.get(home) ?? { code: home, label: coverageLabel(home, regions), rank: coverageRank(home, regions), sources: [] };
+    g.sources.push({ ...src, also: codes.filter((c) => c !== home).map((c) => coverageLabel(c, regions)) });
+    groups.set(home, g);
+  }
+  return [...groups.values()]
+    .sort((a, b) => a.rank - b.rank || a.label.localeCompare(b.label))
+    .map((g) => ({ ...g, sources: g.sources.sort((a, b) => Number(b.cited) - Number(a.cited) || a.name.localeCompare(b.name)) }));
+}
+
+export function renderRegistry(groups, citedIndex = new Map()) {
+  return groups.map((g) => {
+    const rows = g.sources.map((src) => {
+      const stories = citedIndex.get(rootDomain(src.domain));
+      const cited = stories?.length
+        ? stories.map((st) => `<a href="${escapeHtml(st.href)}">${escapeHtml(st.headline)}</a>`).join('; ')
+        : (src.cited ? 'Cited' : '');
+      const type = (TYPE_LABELS[src.type] ?? src.type)
+        + (NOT_ORIGINAL.has(src.type) ? ' <span class="sources__note">(not an original publisher)</span>' : '');
+      return `<tr><td>${escapeHtml(src.name)}</td><td class="sources__root">${escapeHtml(src.domain)}</td>`
+        + `<td>${type}</td><td>${src.also.map(escapeHtml).join(', ')}</td><td>${cited}</td></tr>`;
+    }).join('');
+    return `<h2 class="sources__group">${escapeHtml(g.label)} <span class="sources__n">${g.sources.length}</span></h2>`
+      + `<table class="data sources"><thead><tr><th>Source</th><th>Domain</th><th>Type</th><th>Also covers</th>`
+      + `<th>Cited in our stories</th></tr></thead><tbody>${rows}</tbody></table>`;
+  }).join('');
+}
+
 async function json(path) {
   if (!/^\/data\/[\w/-]+\.json$/.test(path)) throw new Error(`refused ${path}`);
   const res = await fetch(path, { cache: 'no-store' });
@@ -73,29 +135,53 @@ async function json(path) {
   return res.json();
 }
 
+/** Published stories citing each root domain, across every MAG's latest data. */
+async function citedIndex() {
+  const out = new Map();
+  const mags = await json('/data/mags.json');
+  for (const mag of mags.mags ?? []) {
+    if (!mag.data) continue;
+    for (const c of citations(await json(mag.data))) {
+      const root = rootDomain(new URL(c.url).hostname);
+      const list = out.get(root) ?? [];
+      if (!list.some((x) => x.id === c.item.id)) list.push({ id: c.item.id, headline: c.item.headline, href: `${mag.href}posts/#wny-${c.item.id}` });
+      out.set(root, list);
+    }
+  }
+  return out;
+}
+
+async function mountRegistry(el) {
+  const count = document.querySelector('[data-sources-count]');
+  try {
+    const reg = await json('/data/sources.json');
+    const groups = groupRegistry(reg.sources, reg.regions);
+    let cited = new Map();
+    try { cited = await citedIndex(); } catch (err) { console.error('story citations failed to load', err); }
+    el.innerHTML = renderRegistry(groups, cited);
+    const n = reg.sources.length, c = reg.sources.filter((x) => x.cited).length;
+    if (count) count.textContent = `${n} sources · ${c} cited in published stories`;
+    el.hidden = false;
+  } catch (err) {
+    console.error('sources.json failed to load', err);
+    if (count) count.textContent = 'The sources didn’t load. Reload the page to try again.';
+  }
+}
+
 export async function mountSources(root = document) {
-  const table = root.querySelector('[data-sources-file], [data-sources-all]');
+  const registry = root.querySelector('[data-sources-registry]');
+  if (registry) { await mountRegistry(registry); return; }
+  const table = root.querySelector('[data-sources-file]');
   if (!table) return;
   const body = table.querySelector('tbody');
   const count = root.querySelector('[data-sources-count]');
   try {
     let index, opts = {};
-    if (table.hasAttribute('data-sources-file')) {
+    {
       const data = await json(table.getAttribute('data-sources-file'));
       const base = table.getAttribute('data-stories-page') ?? '';
       index = sourcesIndex(citations(data));
       opts = { storyHref: (s) => `${base}#wny-${s.item.id}` };
-    } else {
-      const registry = await json('/data/mags.json');
-      const entries = [];
-      for (const mag of registry.mags ?? []) {
-        if (!mag.data) continue;
-        const data = await json(mag.data);
-        for (const c of citations(data)) entries.push({ ...c, mag });
-      }
-      index = sourcesIndex(entries);
-      /* Stories link to their card on the MAG's all-articles page. */
-      opts = { showMags: true, storyHref: (s) => `${s.mag.href}posts/#wny-${s.item.id}` };
     }
     body.innerHTML = renderSources(index, opts);
     if (count) count.textContent = `${index.length} ${index.length === 1 ? 'source domain' : 'source domains'}`;
