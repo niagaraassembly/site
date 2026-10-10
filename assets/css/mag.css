@@ -700,7 +700,7 @@ dialog.sparks-dialog::backdrop {
   max-width: none;
   text-align: justify;
   hyphens: auto;
-  font: 1rem/1.6 var(--sans);
+  font: 1.3rem/1.45 var(--sans);
   display: flex;
   align-items: center;
 }
@@ -977,3 +977,6 @@ dialog.sparks-dialog::backdrop {
 .wny-districts__chamber { font: 600 .875rem/1.5 var(--sans); }
 .wny-districts__names { font: .9375rem/1.6 var(--mono); }
 @media (max-width: 34rem) { .wny-districts__row { grid-template-columns: 1fr; gap: .1rem; } }
+.wny-signup__pitch { flex-wrap: wrap; align-content: center; }
+.wny-signup__lead { display: block; width: 100%; margin-bottom: .45rem; font-size: 1.55rem; line-height: 1.25; letter-spacing: -0.01em; text-align: left; }
+@media (max-width: 34rem) { .wny-signup__pitch { font-size: 1.1rem; } .wny-signup__lead { font-size: 1.3rem; } }
