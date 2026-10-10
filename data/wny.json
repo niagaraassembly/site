@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-10T17:15:36+00:00",
+  "generated_at": "2026-10-10T17:27:45+00:00",
   "source": {
     "repo": "niagaraassembly/na-research",
     "commit": "f44415d"
@@ -27,6 +27,25 @@
       "place": "Peabody Street, Buffalo",
       "county": "Erie",
       "county_source": "record",
+      "districts": {
+        "places": [
+          "Buffalo"
+        ],
+        "congress": [
+          "26"
+        ],
+        "senate": [
+          "63",
+          "61"
+        ],
+        "assembly": [
+          "149",
+          "141",
+          "142",
+          "140",
+          "143"
+        ]
+      },
       "lng": -78.88,
       "amount": 49000000.0,
       "amount_type": "investment",
@@ -121,6 +140,23 @@
       "place": "Rochester (buyer HQ)",
       "county": "Monroe",
       "county_source": "record",
+      "districts": {
+        "places": [
+          "Rochester"
+        ],
+        "congress": [
+          "25"
+        ],
+        "senate": [
+          "56",
+          "55"
+        ],
+        "assembly": [
+          "137",
+          "136",
+          "138"
+        ]
+      },
       "lng": -77.61,
       "amount": 75000000.0,
       "amount_type": "transaction",
@@ -173,6 +209,22 @@
       "place": "Salt Road, Penfield or Webster",
       "county": "Monroe",
       "county_source": "record",
+      "districts": {
+        "places": [
+          "Penfield",
+          "Webster"
+        ],
+        "congress": [
+          "25"
+        ],
+        "senate": [
+          "55"
+        ],
+        "assembly": [
+          "135",
+          "130"
+        ]
+      },
       "lng": -77.47,
       "amount": 6000000.0,
       "amount_type": "proposed",
@@ -249,6 +301,20 @@
       "place": "Niagara Falls, Niagara County",
       "county": "Niagara",
       "county_source": "record",
+      "districts": {
+        "places": [
+          "Niagara Falls"
+        ],
+        "congress": [
+          "26"
+        ],
+        "senate": [
+          "62"
+        ],
+        "assembly": [
+          "145"
+        ]
+      },
       "lng": -79.05,
       "amount": null,
       "amount_type": null,
@@ -376,6 +442,20 @@
       "place": "Liverpool, Onondaga County",
       "county": "Onondaga",
       "county_source": "record",
+      "districts": {
+        "places": [
+          "Liverpool"
+        ],
+        "congress": [
+          "22"
+        ],
+        "senate": [
+          "50"
+        ],
+        "assembly": [
+          "128"
+        ]
+      },
       "lng": -76.21,
       "amount": 18899971.0,
       "amount_type": "obligated",
@@ -436,6 +516,20 @@
       "place": "Liverpool, Lithuania",
       "county": "Onondaga",
       "county_source": "record",
+      "districts": {
+        "places": [
+          "Liverpool"
+        ],
+        "congress": [
+          "22"
+        ],
+        "senate": [
+          "50"
+        ],
+        "assembly": [
+          "128"
+        ]
+      },
       "lng": -76.21,
       "amount": 11236734.0,
       "amount_type": "obligated",
@@ -504,6 +598,20 @@
       "place": "Niagara Falls, Niagara County",
       "county": "Niagara",
       "county_source": "record",
+      "districts": {
+        "places": [
+          "Niagara Falls"
+        ],
+        "congress": [
+          "26"
+        ],
+        "senate": [
+          "62"
+        ],
+        "assembly": [
+          "145"
+        ]
+      },
       "lng": -79.05,
       "amount": 14317.0,
       "amount_type": "obligated",
@@ -570,6 +678,21 @@
       "place": "Syracuse, Onondaga County",
       "county": "Onondaga",
       "county_source": "record",
+      "districts": {
+        "places": [
+          "Syracuse"
+        ],
+        "congress": [
+          "22"
+        ],
+        "senate": [
+          "48"
+        ],
+        "assembly": [
+          "129",
+          "128"
+        ]
+      },
       "lng": -76.15,
       "amount": 37000000.0,
       "amount_type": "award",
@@ -626,6 +749,20 @@
       "place": "Ithaca, Tompkins County",
       "county": "Tompkins",
       "county_source": "record",
+      "districts": {
+        "places": [
+          "Ithaca"
+        ],
+        "congress": [
+          "19"
+        ],
+        "senate": [
+          "52"
+        ],
+        "assembly": [
+          "125"
+        ]
+      },
       "lng": -76.5,
       "amount": 1350000.0,
       "amount_type": "grant",
@@ -675,6 +812,23 @@
       "place": "Rochester, Finger Lakes",
       "county": "Monroe",
       "county_source": "record",
+      "districts": {
+        "places": [
+          "Rochester"
+        ],
+        "congress": [
+          "25"
+        ],
+        "senate": [
+          "56",
+          "55"
+        ],
+        "assembly": [
+          "137",
+          "136",
+          "138"
+        ]
+      },
       "lng": -77.61,
       "amount": null,
       "amount_type": null,
@@ -807,70 +961,80 @@
       "name": "Cornell University",
       "type": "university",
       "city": "Ithaca",
-      "website": "https://www.cornell.edu"
+      "website": "https://www.cornell.edu",
+      "hq_region": "wny"
     },
     {
       "id": "E0144",
       "name": "Solstice Advanced Materials",
       "type": "company",
       "city": "Morris Plains",
-      "website": "https://solstice.com"
+      "website": "https://solstice.com",
+      "hq_region": "elsewhere"
     },
     {
       "id": "E0145",
       "name": "Constellation Brands",
       "type": "company",
       "city": "Rochester",
-      "website": "https://constellationbrands.com"
+      "website": "https://constellationbrands.com",
+      "hq_region": "wny"
     },
     {
       "id": "E0147",
       "name": "Wilbert's Premium Auto Parts",
       "type": "company",
       "city": "unresolved Penfield or Webster",
-      "website": "https://wilberts.com"
+      "website": "https://wilberts.com",
+      "hq_region": "wny"
     },
     {
       "id": "E0148",
       "name": "The Goodyear Tire & Rubber Company",
       "type": "company",
       "city": "Akron, Ohio",
-      "website": "https://www.goodyear.com"
+      "website": "https://www.goodyear.com",
+      "hq_region": "elsewhere"
     },
     {
       "id": "E0149",
       "name": "Lockheed Martin Rotary and Mission Systems",
       "type": "business division",
       "city": "",
-      "website": "https://www.lockheedmartin.com"
+      "website": "https://www.lockheedmartin.com",
+      "hq_region": null
     },
     {
       "id": "E0150",
       "name": "Lockheed Martin Global Inc.",
       "type": "company",
       "city": "",
-      "website": "https://www.lockheedmartin.com"
+      "website": "https://www.lockheedmartin.com",
+      "hq_region": null
     },
     {
       "id": "E0151",
       "name": "Criterion Corporation",
       "type": "company",
       "city": "",
-      "website": "https://www.criterioncorporation.com"
+      "website": "https://www.criterioncorporation.com",
+      "hq_region": null
     },
     {
       "id": "E0152",
       "name": "Gekko Photonics",
       "type": "company",
       "city": "Wroclaw, Poland",
-      "website": "https://gekkophotonics.com"
+      "website": "https://gekkophotonics.com",
+      "hq_region": "elsewhere"
     },
     {
       "id": "E0153",
       "name": "SRC, Inc.",
       "type": "company",
       "city": "Syracuse",
-      "website": "https://www.srcinc.com"
+      "website": "https://www.srcinc.com",
+      "hq_region": "wny"
     }
   ]
 }

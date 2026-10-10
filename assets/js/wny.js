@@ -280,6 +280,28 @@ export function partialDate(value) {
   return /^\d{4}-\d{2}-\d{2}$/.test(v) ? apDate(v) : '';
 }
 
+/* Legislative districts, from Census lines for the places a story names. */
+const CHAMBERS = [
+  { id: 'congress', label: 'Congress', name: (d) => `NY-${d}` },
+  { id: 'senate', label: 'State Senate', name: (d) => `Senate ${d}` },
+  { id: 'assembly', label: 'Assembly', name: (d) => `Assembly ${d}` },
+];
+
+/** "NY-26 · Senate 63, 61 · Assembly 149, 141 (Buffalo)". */
+export function districtText(districts) {
+  if (!districts) return '';
+  const parts = CHAMBERS.filter((c) => districts[c.id]?.length)
+    .map((c) => (c.id === 'congress'
+      ? districts[c.id].map(c.name).join(', ')
+      : `${c.label === 'State Senate' ? 'Senate' : 'Assembly'} ${districts[c.id].join(', ')}`));
+  return parts.length ? `${parts.join(' · ')} (${(districts.places ?? []).join(', ')})` : '';
+}
+
+/** Filter values like "assembly:135" for every district a story touches. */
+export function districtKeys(item) {
+  return CHAMBERS.flatMap((c) => (item.districts?.[c.id] ?? []).map((d) => `${c.id}:${d}`));
+}
+
 function incentiveText(inc, currency) {
   return [formatAmount(inc.amount, currency), words(inc.type), inc.program ? `(${inc.program})` : '']
     .filter(Boolean).join(' ');
@@ -297,6 +319,8 @@ function factsHtml(item) {
   if (item.next_step?.text) {
     rows.push(['Next', escapeHtml([item.next_step.text, partialDate(item.next_step.date)].filter(Boolean).join(', '))]);
   }
+  const districts = districtText(item.districts);
+  if (districts) rows.push(['Districts', escapeHtml(districts)]);
   const steps = (item.stage_history ?? []).filter((h) => STAGES[h.stage]);
   if (steps.length) {
     rows.push(['Stage', steps.map((h) => escapeHtml([STAGES[h.stage], apDate(h.date)].filter(Boolean).join(' '))).join(' → ')]);
@@ -367,6 +391,7 @@ export function renderItem(item) {
     + flagsHtml(item)
     + conflictsHtml(item)
     + sourcesHtml(item)
+    + `<p class="wny-item__tools"><button type="button" class="wny-filters__clear" data-copy-link="wny-${escapeHtml(item.id)}">Copy link</button></p>`
     + '</li>';
 }
 
@@ -410,17 +435,39 @@ export function renderMoneyGroups(lines) {
     + '</li>').join('');
 }
 
+/* Where an organisation is based (na-research hq_region). Outside capital
+   is part of the story, so the list is grouped by it; blank stays blank. */
+export const HQ_GROUPS = [
+  { id: 'wny', label: 'Based in the region' },
+  { id: 'ontario', label: 'Based in Ontario' },
+  { id: 'elsewhere', label: 'Based outside the region' },
+  { id: '', label: 'Headquarters not stated' },
+];
+
+function companyLine(c) {
+  /* The organisation's website when the research has one; otherwise its
+     story on this page, so every name leads somewhere. */
+  const url = safeHttpUrl(c.website);
+  const href = url ?? (c.first ? `#wny-${c.first}` : null);
+  const name = href
+    ? `<a href="${escapeHtml(href)}"${url ? ' rel="noopener"' : ''}>${escapeHtml(c.name)}</a>`
+    : escapeHtml(c.name);
+  return `<li class="wny-company"><span class="wny-company__name">${name}</span>`
+    + `<span class="wny-company__meta">${[c.city, String(c.count)].filter(Boolean).map(escapeHtml).join(' · ')}</span></li>`;
+}
+
 export function renderCompanies(companies) {
-  return companies.map((c) => {
-    /* The organisation's website when the research has one; otherwise its
-       story on this page, so every name leads somewhere. */
-    const url = safeHttpUrl(c.website);
-    const href = url ?? (c.first ? `#wny-${c.first}` : null);
-    const name = href
-      ? `<a href="${escapeHtml(href)}"${url ? ' rel="noopener"' : ''}>${escapeHtml(c.name)}</a>`
-      : escapeHtml(c.name);
-    return `<li class="wny-company"><span class="wny-company__name">${name}</span>`
-      + `<span class="wny-company__meta">${[c.city, String(c.count)].filter(Boolean).map(escapeHtml).join(' · ')}</span></li>`;
+  return companies.map(companyLine).join('');
+}
+
+/** The list grouped by home region; empty groups are left out. */
+export function renderCompanyGroups(companies) {
+  return HQ_GROUPS.map((g) => {
+    const inGroup = companies.filter((c) => (HQ_GROUPS.some((x) => x.id === c.hq_region) ? c.hq_region : '') === g.id);
+    return inGroup.length
+      ? `<li class="wny-company-group"><h3 class="wny-money__kind">${escapeHtml(g.label)}</h3>`
+        + `<ul class="wny-company-list">${inGroup.map(companyLine).join('')}</ul></li>`
+      : '';
   }).join('');
 }
 
@@ -777,7 +824,7 @@ function drawCorridor(root, items) {
 
 /* ---- search and filters (all-articles page) ------------------------------ */
 
-export const FILTER_KEYS = ['q', 'lane', 'stage', 'type', 'flag', 'amount'];
+export const FILTER_KEYS = ['q', 'lane', 'stage', 'type', 'flag', 'district', 'amount'];
 
 /** Filter state from a query string; unknown keys are ignored. */
 export function parseFilters(search = '') {
@@ -813,6 +860,7 @@ export function filterItems(items, state) {
     && (!state.stage || item.stage === state.stage)
     && (!state.type || item.type === state.type)
     && (!state.flag || (item.flags ?? []).some((f) => f.type === state.flag))
+    && (!state.district || districtKeys(item).includes(state.district))
     && (!state.amount || formatAmount(item.amount, item.currency))
     && (!words.length || words.every((w) => haystack(item).includes(w))));
 }
@@ -824,7 +872,11 @@ export function filterOptions(items) {
   const stages = has((i) => [i.stage]);
   const types = has((i) => [i.type]);
   const flags = has((i) => (i.flags ?? []).map((f) => f.type));
+  const districts = has(districtKeys);
+  const byNumber = (a, b) => Number(a.split(':')[1]) - Number(b.split(':')[1]);
   return {
+    district: CHAMBERS.flatMap((c) => [...districts].filter((k) => k.startsWith(`${c.id}:`)).sort(byNumber)
+      .map((k) => [k, c.name(k.split(':')[1])])),
     lane: LANES.filter((l) => lanes.has(l.id)).map((l) => [l.id, l.label]),
     stage: Object.keys(STAGES).filter((k) => stages.has(k)).map((k) => [k, STAGES[k]]),
     type: Object.keys(TYPE_LABELS).filter((k) => types.has(k)).map((k) => [k, TYPE_LABELS[k]])
@@ -937,6 +989,37 @@ export async function mountInvestments(root = document) {
   render();
 }
 
+/* ---- story links and printing ---------------------------------------------- */
+
+/** A link straight to one story on this page. */
+export function storyUrl(base, id) {
+  return `${String(base).replace(/#.*$/, '')}#${id}`;
+}
+
+/* One listener for every "Copy link" and "Print" button on the page. The
+   copied link points at the story's card; when the clipboard is not
+   available, the address bar is set to it instead and the button says so. */
+function mountTools(root) {
+  root.addEventListener('click', async (e) => {
+    const print = e.target.closest?.('[data-print]');
+    if (print) { window.print(); return; }
+    const button = e.target.closest?.('[data-copy-link]');
+    if (!button) return;
+    const url = storyUrl(location.href, button.dataset.copyLink);
+    const done = (text) => {
+      button.textContent = text;
+      setTimeout(() => { button.textContent = 'Copy link'; }, 2500);
+    };
+    try {
+      await navigator.clipboard.writeText(url);
+      done('Link copied');
+    } catch {
+      history.replaceState(null, '', url);
+      done('Link is in the address bar');
+    }
+  });
+}
+
 /* ---- mounting ------------------------------------------------------------ */
 
 /* The fictional sample file is for previewing the design on a local server
@@ -1010,6 +1093,7 @@ export async function mountFront(root = document) {
   const members = new Set(issue?.events ?? []);
   const items = byNewest(publishable(data.items)).filter((i) => !members.size || members.has(i.id));
   mountIssue(root, issue);
+  mountTools(root);
   mountCountyBand(root, items);
   drawCorridor(root, items);
   mountTicker(root, items);
@@ -1051,7 +1135,7 @@ export async function mountFront(root = document) {
     }
     const companies = companiesInNews(items, data.entities);
     if (companies.length) {
-      show(root.querySelector('[data-wny="companies-list"]'), renderCompanies(companies));
+      show(root.querySelector('[data-wny="companies-list"]'), renderCompanyGroups(companies));
       show(root.querySelector('[data-wny="companies"]'));
     }
   }
@@ -1074,6 +1158,7 @@ export async function mountAll(root = document) {
   }
   const items = byNewest(publishable(data.items));
   updated(root, data);
+  mountTools(root);
   if (!items.length) {
     show(root.querySelector('[data-wny="empty"]'));
     return;
@@ -1082,8 +1167,8 @@ export async function mountAll(root = document) {
   let state = parseFilters(location.search);
   if (form) {
     const options = filterOptions(items);
-    for (const key of ['lane', 'stage', 'type', 'flag']) fillSelect(form.elements[key], options[key], state[key]);
-    state = { ...state, ...Object.fromEntries(['lane', 'stage', 'type', 'flag'].map((k) => [k, form.elements[k].value])) };
+    for (const key of ['lane', 'stage', 'type', 'flag', 'district']) fillSelect(form.elements[key], options[key], state[key]);
+    state = { ...state, ...Object.fromEntries(['lane', 'stage', 'type', 'flag', 'district'].map((k) => [k, form.elements[k].value])) };
     form.elements.q.value = state.q;
     form.elements.amount.checked = state.amount === '1';
     show(form);
@@ -1114,6 +1199,7 @@ export async function mountAll(root = document) {
     stage: form.elements.stage.value,
     type: form.elements.type.value,
     flag: form.elements.flag.value,
+    district: form.elements.district.value,
     amount: form.elements.amount.checked ? '1' : '',
   });
   const apply = () => {

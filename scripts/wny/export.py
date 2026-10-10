@@ -133,6 +133,34 @@ def website_of(raw: str) -> str:
     return f"https://{value}" if DOMAIN.match(value) else ""
 
 
+def load_districts() -> dict:
+    """Place -> districts, built by scripts/wny/districts.py (Census TIGERweb)."""
+    path = SITE / "data" / "geo" / "wny-districts.json"
+    try:
+        return json.loads(path.read_text(encoding="utf-8")).get("places", {})
+    except (OSError, ValueError):
+        return {}
+
+
+def districts_of(location: str, table: dict) -> dict | None:
+    """Districts covering every known place the location names, merged and
+    ordered by how much of the places each covers. A location that names no
+    known place gets none rather than a guess."""
+    named = [name for _, _, name in sorted((location.find(n), -len(n), n) for n in table if n in location)]
+    # "Niagara Falls" also contains "Niagara"-like substrings of other names; drop names inside longer ones.
+    named = [n for n in named if not any(n != m and n in m for m in named)]
+    if not named:
+        return None
+    out = {"places": named}
+    for chamber in ("congress", "senate", "assembly"):
+        weight: dict[str, float] = {}
+        for n in named:
+            for d in table[n].get(chamber, []):
+                weight[d["id"]] = weight.get(d["id"], 0) + d["share"]
+        out[chamber] = [k for k, _ in sorted(weight.items(), key=lambda kv: -kv[1])]
+    return out
+
+
 def money(raw: str) -> float | None:
     try:
         value = float(raw.replace(",", ""))
@@ -196,6 +224,7 @@ def build(research: Path) -> dict:
     entities = {e["entity_id"]: e for e in read_csv(intel / "entities.csv")}
     conflict_rows = read_csv(intel / "event_conflicts.csv")
     history = read_csv(intel / "event_stage_history.csv")
+    district_table = load_districts()
     articles = {a["article_id"]: a for a in read_csv(research / "research" / "news" / "inbox" / "articles.csv")}
 
     items, used = [], set()
@@ -242,6 +271,8 @@ def build(research: Path) -> dict:
             "place": place,
             "county": county,
             "county_source": county_source,
+            # Site-derived from Census district lines for the named places (not research data).
+            "districts": districts_of(location, district_table),
             "lng": lng,
             "amount": money(ev.get("amount", "")),
             "amount_type": ev.get("amount_type", "").strip() or None,
@@ -301,7 +332,8 @@ def build(research: Path) -> dict:
         "issues": issues,
         "entities": [
             {"id": eid, "name": e["name"], "type": e.get("entity_type", ""),
-             "city": e.get("hq_city", ""), "website": website_of(e.get("website", ""))}
+             "city": e.get("hq_city", ""), "website": website_of(e.get("website", "")),
+             "hq_region": e.get("hq_region", "").strip() or None}
             for eid, e in entities.items() if eid in used
         ],
     }

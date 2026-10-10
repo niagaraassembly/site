@@ -1,0 +1,811 @@
+{
+ "source": "U.S. Census Bureau, TIGERweb (public domain): 119th Congressional Districts; 2024 State Legislative Districts (upper and lower); place outlines from County Subdivisions or Incorporated Places",
+ "fetched": "2026-10-10",
+ "method": "40x40 grid sampled inside each place; districts covering at least 2% kept",
+ "places": {
+  "Amherst": {
+   "county": "Erie",
+   "kind": "county subdivision",
+   "samples": 1284,
+   "congress": [
+    {
+     "id": "26",
+     "name": "Congressional District 26",
+     "share": 1.0
+    }
+   ],
+   "senate": [
+    {
+     "id": "61",
+     "name": "State Senate District 61",
+     "share": 1.0
+    }
+   ],
+   "assembly": [
+    {
+     "id": "146",
+     "name": "Assembly District 146",
+     "share": 1.0
+    }
+   ],
+   "changes_next": {}
+  },
+  "Auburn": {
+   "county": "Cayuga",
+   "kind": "county subdivision",
+   "samples": 1146,
+   "congress": [
+    {
+     "id": "22",
+     "name": "Congressional District 22",
+     "share": 1.0
+    }
+   ],
+   "senate": [
+    {
+     "id": "48",
+     "name": "State Senate District 48",
+     "share": 1.0
+    }
+   ],
+   "assembly": [
+    {
+     "id": "126",
+     "name": "Assembly District 126",
+     "share": 1.0
+    }
+   ],
+   "changes_next": {}
+  },
+  "Batavia": {
+   "county": "Genesee",
+   "kind": "county subdivision",
+   "samples": 1590,
+   "congress": [
+    {
+     "id": "24",
+     "name": "Congressional District 24",
+     "share": 1.0
+    }
+   ],
+   "senate": [
+    {
+     "id": "57",
+     "name": "State Senate District 57",
+     "share": 1.0
+    }
+   ],
+   "assembly": [
+    {
+     "id": "139",
+     "name": "Assembly District 139",
+     "share": 1.0
+    }
+   ],
+   "changes_next": {}
+  },
+  "Buffalo": {
+   "county": "Erie",
+   "kind": "county subdivision",
+   "samples": 1054,
+   "congress": [
+    {
+     "id": "26",
+     "name": "Congressional District 26",
+     "share": 1.0
+    }
+   ],
+   "senate": [
+    {
+     "id": "63",
+     "name": "State Senate District 63",
+     "share": 0.816
+    },
+    {
+     "id": "61",
+     "name": "State Senate District 61",
+     "share": 0.184
+    }
+   ],
+   "assembly": [
+    {
+     "id": "149",
+     "name": "Assembly District 149",
+     "share": 0.4
+    },
+    {
+     "id": "141",
+     "name": "Assembly District 141",
+     "share": 0.325
+    },
+    {
+     "id": "142",
+     "name": "Assembly District 142",
+     "share": 0.181
+    },
+    {
+     "id": "140",
+     "name": "Assembly District 140",
+     "share": 0.061
+    },
+    {
+     "id": "143",
+     "name": "Assembly District 143",
+     "share": 0.032
+    }
+   ],
+   "changes_next": {}
+  },
+  "Canandaigua": {
+   "county": "Ontario",
+   "kind": "county subdivision",
+   "samples": 1335,
+   "congress": [
+    {
+     "id": "24",
+     "name": "Congressional District 24",
+     "share": 1.0
+    }
+   ],
+   "senate": [
+    {
+     "id": "54",
+     "name": "State Senate District 54",
+     "share": 1.0
+    }
+   ],
+   "assembly": [
+    {
+     "id": "131",
+     "name": "Assembly District 131",
+     "share": 1.0
+    }
+   ],
+   "changes_next": {}
+  },
+  "Cheektowaga": {
+   "county": "Erie",
+   "kind": "county subdivision",
+   "samples": 1467,
+   "congress": [
+    {
+     "id": "26",
+     "name": "Congressional District 26",
+     "share": 1.0
+    }
+   ],
+   "senate": [
+    {
+     "id": "63",
+     "name": "State Senate District 63",
+     "share": 1.0
+    }
+   ],
+   "assembly": [
+    {
+     "id": "143",
+     "name": "Assembly District 143",
+     "share": 1.0
+    }
+   ],
+   "changes_next": {}
+  },
+  "Corning": {
+   "county": "Steuben",
+   "kind": "county subdivision",
+   "samples": 1331,
+   "congress": [
+    {
+     "id": "23",
+     "name": "Congressional District 23",
+     "share": 1.0
+    }
+   ],
+   "senate": [
+    {
+     "id": "58",
+     "name": "State Senate District 58",
+     "share": 1.0
+    }
+   ],
+   "assembly": [
+    {
+     "id": "132",
+     "name": "Assembly District 132",
+     "share": 1.0
+    }
+   ],
+   "changes_next": {}
+  },
+  "Dunkirk": {
+   "county": "Chautauqua",
+   "kind": "county subdivision",
+   "samples": 879,
+   "congress": [
+    {
+     "id": "23",
+     "name": "Congressional District 23",
+     "share": 1.0
+    }
+   ],
+   "senate": [
+    {
+     "id": "57",
+     "name": "State Senate District 57",
+     "share": 1.0
+    }
+   ],
+   "assembly": [
+    {
+     "id": "150",
+     "name": "Assembly District 150",
+     "share": 1.0
+    }
+   ],
+   "changes_next": {}
+  },
+  "Elmira": {
+   "county": "Chemung",
+   "kind": "county subdivision",
+   "samples": 1128,
+   "congress": [
+    {
+     "id": "23",
+     "name": "Congressional District 23",
+     "share": 1.0
+    }
+   ],
+   "senate": [
+    {
+     "id": "58",
+     "name": "State Senate District 58",
+     "share": 1.0
+    }
+   ],
+   "assembly": [
+    {
+     "id": "124",
+     "name": "Assembly District 124",
+     "share": 1.0
+    }
+   ],
+   "changes_next": {}
+  },
+  "Geneva": {
+   "county": "Ontario",
+   "kind": "county subdivision",
+   "samples": 1271,
+   "congress": [
+    {
+     "id": "24",
+     "name": "Congressional District 24",
+     "share": 1.0
+    }
+   ],
+   "senate": [
+    {
+     "id": "54",
+     "name": "State Senate District 54",
+     "share": 1.0
+    }
+   ],
+   "assembly": [
+    {
+     "id": "131",
+     "name": "Assembly District 131",
+     "share": 1.0
+    }
+   ],
+   "changes_next": {}
+  },
+  "Grand Island": {
+   "county": "Erie",
+   "kind": "county subdivision",
+   "samples": 1004,
+   "congress": [
+    {
+     "id": "26",
+     "name": "Congressional District 26",
+     "share": 1.0
+    }
+   ],
+   "senate": [
+    {
+     "id": "61",
+     "name": "State Senate District 61",
+     "share": 1.0
+    }
+   ],
+   "assembly": [
+    {
+     "id": "145",
+     "name": "Assembly District 145",
+     "share": 1.0
+    }
+   ],
+   "changes_next": {}
+  },
+  "Henrietta": {
+   "county": "Monroe",
+   "kind": "county subdivision",
+   "samples": 1161,
+   "congress": [
+    {
+     "id": "25",
+     "name": "Congressional District 25",
+     "share": 1.0
+    }
+   ],
+   "senate": [
+    {
+     "id": "56",
+     "name": "State Senate District 56",
+     "share": 0.999
+    }
+   ],
+   "assembly": [
+    {
+     "id": "138",
+     "name": "Assembly District 138",
+     "share": 1.0
+    }
+   ],
+   "changes_next": {}
+  },
+  "Ithaca": {
+   "county": "Tompkins",
+   "kind": "county subdivision",
+   "samples": 1493,
+   "congress": [
+    {
+     "id": "19",
+     "name": "Congressional District 19",
+     "share": 1.0
+    }
+   ],
+   "senate": [
+    {
+     "id": "52",
+     "name": "State Senate District 52",
+     "share": 1.0
+    }
+   ],
+   "assembly": [
+    {
+     "id": "125",
+     "name": "Assembly District 125",
+     "share": 1.0
+    }
+   ],
+   "changes_next": {}
+  },
+  "Jamestown": {
+   "county": "Chautauqua",
+   "kind": "county subdivision",
+   "samples": 1243,
+   "congress": [
+    {
+     "id": "23",
+     "name": "Congressional District 23",
+     "share": 1.0
+    }
+   ],
+   "senate": [
+    {
+     "id": "57",
+     "name": "State Senate District 57",
+     "share": 1.0
+    }
+   ],
+   "assembly": [
+    {
+     "id": "150",
+     "name": "Assembly District 150",
+     "share": 1.0
+    }
+   ],
+   "changes_next": {}
+  },
+  "Lackawanna": {
+   "county": "Erie",
+   "kind": "county subdivision",
+   "samples": 1365,
+   "congress": [
+    {
+     "id": "26",
+     "name": "Congressional District 26",
+     "share": 1.0
+    }
+   ],
+   "senate": [
+    {
+     "id": "63",
+     "name": "State Senate District 63",
+     "share": 1.0
+    }
+   ],
+   "assembly": [
+    {
+     "id": "142",
+     "name": "Assembly District 142",
+     "share": 0.642
+    },
+    {
+     "id": "149",
+     "name": "Assembly District 149",
+     "share": 0.358
+    }
+   ],
+   "changes_next": {}
+  },
+  "Liverpool": {
+   "county": "Onondaga",
+   "kind": "incorporated place",
+   "samples": 787,
+   "congress": [
+    {
+     "id": "22",
+     "name": "Congressional District 22",
+     "share": 1.0
+    }
+   ],
+   "senate": [
+    {
+     "id": "50",
+     "name": "State Senate District 50",
+     "share": 1.0
+    }
+   ],
+   "assembly": [
+    {
+     "id": "128",
+     "name": "Assembly District 128",
+     "share": 1.0
+    }
+   ],
+   "changes_next": {}
+  },
+  "Lockport": {
+   "county": "Niagara",
+   "kind": "county subdivision",
+   "samples": 1295,
+   "congress": [
+    {
+     "id": "24",
+     "name": "Congressional District 24",
+     "share": 0.58
+    },
+    {
+     "id": "23",
+     "name": "Congressional District 23",
+     "share": 0.42
+    }
+   ],
+   "senate": [
+    {
+     "id": "62",
+     "name": "State Senate District 62",
+     "share": 0.999
+    }
+   ],
+   "assembly": [
+    {
+     "id": "144",
+     "name": "Assembly District 144",
+     "share": 1.0
+    }
+   ],
+   "changes_next": {}
+  },
+  "Newark": {
+   "county": "Wayne",
+   "kind": "incorporated place",
+   "samples": 695,
+   "congress": [
+    {
+     "id": "24",
+     "name": "Congressional District 24",
+     "share": 1.0
+    }
+   ],
+   "senate": [
+    {
+     "id": "54",
+     "name": "State Senate District 54",
+     "share": 1.0
+    }
+   ],
+   "assembly": [
+    {
+     "id": "130",
+     "name": "Assembly District 130",
+     "share": 1.0
+    }
+   ],
+   "changes_next": {}
+  },
+  "Niagara Falls": {
+   "county": "Niagara",
+   "kind": "county subdivision",
+   "samples": 885,
+   "congress": [
+    {
+     "id": "26",
+     "name": "Congressional District 26",
+     "share": 1.0
+    }
+   ],
+   "senate": [
+    {
+     "id": "62",
+     "name": "State Senate District 62",
+     "share": 0.999
+    }
+   ],
+   "assembly": [
+    {
+     "id": "145",
+     "name": "Assembly District 145",
+     "share": 0.999
+    }
+   ],
+   "changes_next": {}
+  },
+  "North Tonawanda": {
+   "county": "Niagara",
+   "kind": "county subdivision",
+   "samples": 1130,
+   "congress": [
+    {
+     "id": "26",
+     "name": "Congressional District 26",
+     "share": 1.0
+    }
+   ],
+   "senate": [
+    {
+     "id": "62",
+     "name": "State Senate District 62",
+     "share": 1.0
+    }
+   ],
+   "assembly": [
+    {
+     "id": "140",
+     "name": "Assembly District 140",
+     "share": 0.667
+    },
+    {
+     "id": "145",
+     "name": "Assembly District 145",
+     "share": 0.333
+    }
+   ],
+   "changes_next": {}
+  },
+  "Olean": {
+   "county": "Cattaraugus",
+   "kind": "county subdivision",
+   "samples": 1600,
+   "congress": [
+    {
+     "id": "23",
+     "name": "Congressional District 23",
+     "share": 1.0
+    }
+   ],
+   "senate": [
+    {
+     "id": "57",
+     "name": "State Senate District 57",
+     "share": 1.0
+    }
+   ],
+   "assembly": [
+    {
+     "id": "148",
+     "name": "Assembly District 148",
+     "share": 1.0
+    }
+   ],
+   "changes_next": {}
+  },
+  "Penfield": {
+   "county": "Monroe",
+   "kind": "county subdivision",
+   "samples": 1490,
+   "congress": [
+    {
+     "id": "25",
+     "name": "Congressional District 25",
+     "share": 1.0
+    }
+   ],
+   "senate": [
+    {
+     "id": "55",
+     "name": "State Senate District 55",
+     "share": 1.0
+    }
+   ],
+   "assembly": [
+    {
+     "id": "135",
+     "name": "Assembly District 135",
+     "share": 1.0
+    }
+   ],
+   "changes_next": {}
+  },
+  "Rochester": {
+   "county": "Monroe",
+   "kind": "county subdivision",
+   "samples": 598,
+   "congress": [
+    {
+     "id": "25",
+     "name": "Congressional District 25",
+     "share": 1.0
+    }
+   ],
+   "senate": [
+    {
+     "id": "56",
+     "name": "State Senate District 56",
+     "share": 0.604
+    },
+    {
+     "id": "55",
+     "name": "State Senate District 55",
+     "share": 0.396
+    }
+   ],
+   "assembly": [
+    {
+     "id": "137",
+     "name": "Assembly District 137",
+     "share": 0.39
+    },
+    {
+     "id": "136",
+     "name": "Assembly District 136",
+     "share": 0.318
+    },
+    {
+     "id": "138",
+     "name": "Assembly District 138",
+     "share": 0.293
+    }
+   ],
+   "changes_next": {}
+  },
+  "Syracuse": {
+   "county": "Onondaga",
+   "kind": "county subdivision",
+   "samples": 884,
+   "congress": [
+    {
+     "id": "22",
+     "name": "Congressional District 22",
+     "share": 1.0
+    }
+   ],
+   "senate": [
+    {
+     "id": "48",
+     "name": "State Senate District 48",
+     "share": 1.0
+    }
+   ],
+   "assembly": [
+    {
+     "id": "129",
+     "name": "Assembly District 129",
+     "share": 0.707
+    },
+    {
+     "id": "128",
+     "name": "Assembly District 128",
+     "share": 0.293
+    }
+   ],
+   "changes_next": {}
+  },
+  "Tonawanda": {
+   "county": "Erie",
+   "kind": "county subdivision",
+   "samples": 166,
+   "congress": [
+    {
+     "id": "26",
+     "name": "Congressional District 26",
+     "share": 0.946
+    },
+    {
+     "id": "23",
+     "name": "Congressional District 23",
+     "share": 0.054
+    }
+   ],
+   "senate": [
+    {
+     "id": "61",
+     "name": "State Senate District 61",
+     "share": 0.946
+    },
+    {
+     "id": "60",
+     "name": "State Senate District 60",
+     "share": 0.054
+    }
+   ],
+   "assembly": [
+    {
+     "id": "140",
+     "name": "Assembly District 140",
+     "share": 0.946
+    },
+    {
+     "id": "139",
+     "name": "Assembly District 139",
+     "share": 0.054
+    }
+   ],
+   "changes_next": {}
+  },
+  "Victor": {
+   "county": "Ontario",
+   "kind": "county subdivision",
+   "samples": 1570,
+   "congress": [
+    {
+     "id": "25",
+     "name": "Congressional District 25",
+     "share": 1.0
+    }
+   ],
+   "senate": [
+    {
+     "id": "54",
+     "name": "State Senate District 54",
+     "share": 1.0
+    }
+   ],
+   "assembly": [
+    {
+     "id": "133",
+     "name": "Assembly District 133",
+     "share": 1.0
+    }
+   ],
+   "changes_next": {}
+  },
+  "Webster": {
+   "county": "Monroe",
+   "kind": "county subdivision",
+   "samples": 1248,
+   "congress": [
+    {
+     "id": "25",
+     "name": "Congressional District 25",
+     "share": 1.0
+    }
+   ],
+   "senate": [
+    {
+     "id": "55",
+     "name": "State Senate District 55",
+     "share": 1.0
+    }
+   ],
+   "assembly": [
+    {
+     "id": "130",
+     "name": "Assembly District 130",
+     "share": 1.0
+    }
+   ],
+   "changes_next": {}
+  }
+ }
+}

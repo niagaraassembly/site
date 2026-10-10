@@ -726,7 +726,7 @@ dialog.sparks-dialog::backdrop {
    edge like a quilt. Hairlines between tiles are the seams; each tile's
    width follows its county's proportions so the rows always fill. */
 .county-band {
-  margin: -.35rem 0 1.25rem;
+  margin: 0 0 1.25rem;
   border-top: 1px solid var(--ink);
   border-left: 1px solid var(--ink);
   color: var(--ink);
@@ -810,3 +810,30 @@ dialog.sparks-dialog::backdrop {
 /* A state page's title carries its flag. */
 .mag-title--flag { display: flex; align-items: center; gap: .9rem; }
 .mag-title--flag img { height: .62em; width: auto; outline: 1px solid var(--rule); }
+
+/* The issue line sits right under the title, above the county band. */
+.mag-title + .issue-stamp { margin: -.6rem 0 1rem; }
+.county-band { margin-top: 0; }
+.county-band + .wny-ticker { margin-top: 0; }
+
+/* "Who these stories are about", grouped by where each is based. */
+.wny-company-groups { list-style: none; padding: 0; margin: 0; }
+.wny-company-group + .wny-company-group { margin-top: 1.2rem; }
+
+.wny-item__tools { margin: .35rem 0 0; }
+
+/* Print and PDF: the issue as a plain single-column document. Navigation,
+   menus, sign-up, ticker controls and the interactive bar are dropped;
+   stories print one per column and stay whole; source links show their
+   address so a printed copy can still be checked. */
+@media print {
+  .topnav, .sitefoot, .mag-flag__menu, .wny-ticker, .wny-allbar, .wny-signup,
+  .wny-item__tools, [data-print], .corridor__marks, .wny-filters, .wny-recent__head a { display: none !important; }
+  body { padding: 0; background: #fff; }
+  .frame { max-width: none; border: 0; padding: 0; }
+  .sketch-svg { display: none; }
+  .wny-cards { display: block; }
+  .wny-lane, .wny-item, .wny-money__group, .wny-company-group { break-inside: avoid; }
+  .wny-lane { border: 1px solid #999; }
+  .wny-item__via a[href^="http"]::after { content: " (" attr(href) ")"; font-size: .75em; word-break: break-all; }
+}

@@ -180,6 +180,19 @@ class ExportTest(unittest.TestCase):
         data = self.run_with([event("A"), event("HELD", "not_ready")])
         self.assertEqual([(i["id"], i["events"], i["summary"]) for i in data["issues"]], [("WNY-1", ["A"], "Sum.")])
 
+    def test_districts_merge_every_named_place_and_skip_unknown(self):
+        table = {"Penfield": {"congress": [{"id": "25", "share": 1}], "senate": [{"id": "55", "share": 1}],
+                              "assembly": [{"id": "135", "share": 1}]},
+                 "Webster": {"congress": [{"id": "25", "share": 1}], "senate": [{"id": "55", "share": 1}],
+                             "assembly": [{"id": "130", "share": 1}]},
+                 "Tonawanda": {"congress": [{"id": "26", "share": 1}]},
+                 "North Tonawanda": {"congress": [{"id": "26", "share": 1}]}}
+        d = export.districts_of("Salt Road, Penfield or Webster, NY", table)
+        self.assertEqual((d["places"], d["assembly"]), (["Penfield", "Webster"], ["135", "130"]))
+        self.assertEqual(export.districts_of("North Tonawanda, NY", table)["places"], ["North Tonawanda"],
+                         "a name inside a longer name is not counted twice")
+        self.assertIsNone(export.districts_of("Somewhere, NY", table))
+
     def test_changes_report_added_changed_removed(self):
         old = {"items": [{"id": "A", "v": 1}, {"id": "B", "v": 1}]}
         new = {"items": [{"id": "A", "v": 2}, {"id": "C", "v": 1}]}

@@ -7,6 +7,7 @@ import {
   moneyGroups, moneyKind, renderMoneyGroups, mentionsFor, renderMentions, renderCompanies,
   countyPath, tileGrow, storiesByCounty, coverageText, issueFor, apDate,
   newsTone, partialDate, comingUp, renderJobs, renderIncentives,
+  districtText, districtKeys, renderCompanyGroups, storyUrl,
   investmentLines, filterInvestments, investmentOptions, renderInvestments,
   formatAmount, companiesInNews, renderItem, renderCompact,
 } from '../assets/js/wny.js';
@@ -332,4 +333,26 @@ test('coming up lists dated next steps soonest first; jobs and support render', 
   assert.match(card, /<dt>Public support<\/dt><dd>\$1\.4M tax credit \(Excelsior\)<\/dd>/);
   assert.match(card, /<dt>Next<\/dt><dd>12 new full-time jobs due, June 2027<\/dd>/);
   assert.match(card, /<dt>Stage<\/dt><dd>Announced Oct\. 9, 2026<\/dd>/);
+});
+
+test('districts read naturally and drive the district filter', () => {
+  const d = { places: ['Penfield', 'Webster'], congress: ['25'], senate: ['55'], assembly: ['135', '130'] };
+  assert.equal(districtText(d), 'NY-25 · Senate 55 · Assembly 135, 130 (Penfield, Webster)');
+  assert.equal(districtText(null), '');
+  const items = [{ id: 'A', districts: d }, { id: 'B', districts: { places: ['Buffalo'], congress: ['26'], senate: [], assembly: ['149'] } }];
+  assert.deepEqual(districtKeys(items[0]), ['congress:25', 'senate:55', 'assembly:135', 'assembly:130']);
+  assert.deepEqual(filterItems(items, { district: 'assembly:135' }).map((i) => i.id), ['A']);
+  assert.deepEqual(filterOptions(items).district.map(([, label]) => label), ['NY-25', 'NY-26', 'Senate 55', 'Assembly 130', 'Assembly 135', 'Assembly 149']);
+});
+
+test('who-list groups by home region; unknown stays its own group', () => {
+  const html = renderCompanyGroups([
+    { name: 'Local', hq_region: 'wny', count: 1 }, { name: 'Away', hq_region: 'elsewhere', count: 1 }, { name: 'Unknown', hq_region: null, count: 1 }]);
+  assert.ok(html.indexOf('Based in the region') < html.indexOf('Based outside the region'));
+  assert.match(html, /Headquarters not stated[\s\S]*Unknown/);
+  assert.doesNotMatch(html, /Based in Ontario/, 'empty groups are left out');
+});
+
+test('a story link points at its card', () => {
+  assert.equal(storyUrl('https://x.org/MAGS/WNY/issue/one/#old', 'wny-IEVT-1'), 'https://x.org/MAGS/WNY/issue/one/#wny-IEVT-1');
 });
