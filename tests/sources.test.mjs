@@ -70,3 +70,29 @@ test('the site and the exporter agree on the known source types', () => {
   const pyTypes = [...block.matchAll(/"([a-z_]+)"/g)].map((m) => m[1]).sort();
   assert.deepEqual(pyTypes, Object.keys(TYPE_LABELS).sort());
 });
+
+import { filterRegistry, registryOptions, filterIndex } from '../assets/js/sources.js';
+
+test('registry search and filters combine', () => {
+  const regions = { wny: 'Western New York' };
+  const sources = [
+    { name: 'Buffalo News', domain: 'buffalonews.com', type: 'news', coverage: ['wny'], cited: false },
+    { name: 'SEC EDGAR', domain: 'sec.gov', type: 'regulatory_filings', coverage: ['US'], cited: true },
+    { name: 'Mirror Site', domain: 'mirror.example', type: 'mirror', coverage: ['US', 'wny'], cited: true },
+  ];
+  assert.deepEqual(filterRegistry(sources, { q: 'buffalo' }, regions).map((s) => s.name), ['Buffalo News']);
+  assert.deepEqual(filterRegistry(sources, { coverage: 'wny' }, regions).map((s) => s.name), ['Buffalo News', 'Mirror Site'], 'any of a source’s areas');
+  assert.deepEqual(filterRegistry(sources, { cited: '1', type: 'mirror' }, regions).map((s) => s.name), ['Mirror Site']);
+  assert.deepEqual(filterRegistry(sources, { q: 'western new york news' }, regions).map((s) => s.name), ['Buffalo News'], 'coverage and type words are searchable');
+  const opts = registryOptions(sources, regions);
+  assert.deepEqual(opts.coverage.map(([v]) => v), ['wny', 'US']);
+  assert.ok(opts.type.some(([v, l]) => v === 'regulatory_filings' && l === 'Regulatory filings'));
+});
+
+test('issue sources filter by search and kind', () => {
+  const data = JSON.parse(readFileSync(new URL('../data/wny/issue-one.json', import.meta.url)));
+  const index = sourcesIndex(citations(data));
+  assert.ok(filterIndex(index, { kind: 'primary source' }).every((r) => r.kinds.has('primary source')));
+  assert.deepEqual(filterIndex(index, { q: 'goodyear sec' }).map((r) => r.root), ['sec.gov']);
+  assert.equal(filterIndex(index, {}).length, index.length);
+});

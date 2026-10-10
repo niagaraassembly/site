@@ -128,6 +128,79 @@ export function renderRegistry(groups, citedIndex = new Map()) {
   }).join('');
 }
 
+/* ---- search and filters ----------------------------------------------------- */
+
+const words = (q) => String(q ?? '').toLowerCase().split(/\s+/).filter(Boolean);
+
+/** Registry sources matching search (name, domain, type), type, coverage
+    (any of a source's areas) and "cited in our stories". */
+export function filterRegistry(sources, state, regions) {
+  const w = words(state.q);
+  return (sources ?? []).filter((s) => {
+    const hay = [s.name, s.domain, TYPE_LABELS[s.type] ?? s.type, ...(s.coverage ?? []).map((c) => coverageLabel(c, regions))]
+      .join(' ').toLowerCase();
+    return (!state.type || s.type === state.type)
+      && (!state.coverage || (s.coverage ?? []).includes(state.coverage))
+      && (!state.cited || s.cited)
+      && w.every((x) => hay.includes(x));
+  });
+}
+
+export function registryOptions(sources, regions) {
+  const types = new Set((sources ?? []).map((s) => s.type));
+  const cover = new Set((sources ?? []).flatMap((s) => s.coverage ?? []));
+  return {
+    type: Object.keys(TYPE_LABELS).filter((t) => types.has(t)).map((t) => [t, TYPE_LABELS[t]]),
+    coverage: [...cover].sort((a, b) => coverageRank(a, regions) - coverageRank(b, regions)
+      || coverageLabel(a, regions).localeCompare(coverageLabel(b, regions))).map((c) => [c, coverageLabel(c, regions)]),
+  };
+}
+
+/** Issue sources matching search (domain, publisher, story headline) and kind. */
+export function filterIndex(index, state) {
+  const w = words(state.q);
+  return index.filter((r) => {
+    const hay = [r.root, ...r.publishers, ...[...r.stories.values()].map((s) => s.item.headline)].join(' ').toLowerCase();
+    return (!state.kind || r.kinds.has(state.kind)) && w.every((x) => hay.includes(x));
+  });
+}
+
+function fill(select, options, value) {
+  if (!select) return;
+  const first = select.querySelector('option');
+  select.replaceChildren(first, ...options.map(([v, label]) => new Option(label, v)));
+  select.value = options.some(([v]) => v === value) ? value : '';
+}
+
+/* Wire a filter form: read its state from the URL, keep the URL in step
+   without adding history entries, and re-render on every change. */
+function wireFilters(form, keys, render) {
+  const params = new URLSearchParams(location.search);
+  for (const k of keys) {
+    const el = form.elements[k];
+    if (!el) continue;
+    if (el.type === 'checkbox') el.checked = params.get(k) === '1';
+    else if (el.tagName !== 'SELECT') el.value = params.get(k) ?? '';
+  }
+  const read = () => Object.fromEntries(keys.map((k) => {
+    const el = form.elements[k];
+    return [k, el.type === 'checkbox' ? (el.checked ? '1' : '') : String(el.value).trim()];
+  }));
+  const apply = () => {
+    const state = read();
+    const qs = new URLSearchParams(Object.entries(state).filter(([, v]) => v)).toString();
+    history.replaceState(null, '', `${location.pathname}${qs ? `?${qs}` : ''}`);
+    form.querySelector('[data-clear]').hidden = !Object.values(state).some(Boolean);
+    render(state);
+  };
+  form.addEventListener('submit', (e) => e.preventDefault());
+  form.addEventListener('input', apply);
+  form.addEventListener('change', apply);
+  form.querySelector('[data-clear]')?.addEventListener('click', () => { form.reset(); apply(); });
+  form.hidden = false;
+  apply();
+}
+
 async function json(path) {
   if (!/^\/data\/[\w/-]+\.json$/.test(path)) throw new Error(`refused ${path}`);
   const res = await fetch(path, { cache: 'no-store' });
@@ -155,13 +228,27 @@ async function mountRegistry(el) {
   const count = document.querySelector('[data-sources-count]');
   try {
     const reg = await json('/data/sources.json');
-    const groups = groupRegistry(reg.sources, reg.regions);
     let cited = new Map();
     try { cited = await citedIndex(); } catch (err) { console.error('story citations failed to load', err); }
-    el.innerHTML = renderRegistry(groups, cited);
     const n = reg.sources.length, c = reg.sources.filter((x) => x.cited).length;
-    if (count) count.textContent = `${n} sources · ${c} cited in published stories`;
-    el.hidden = false;
+    const form = document.querySelector('[data-sources-filters]');
+    const params = new URLSearchParams(location.search);
+    const opts = registryOptions(reg.sources, reg.regions);
+    if (form) {
+      fill(form.elements.type, opts.type, params.get('type') ?? '');
+      fill(form.elements.coverage, opts.coverage, params.get('coverage') ?? '');
+    }
+    const render = (state) => {
+      const shown = filterRegistry(reg.sources, state, reg.regions);
+      el.innerHTML = shown.length
+        ? renderRegistry(groupRegistry(shown, reg.regions), cited)
+        : '<p class="wny-note">No sources match these filters.</p>';
+      const active = Object.values(state).some(Boolean);
+      if (count) count.textContent = active ? `Showing ${shown.length} of ${n} sources` : `${n} sources · ${c} cited in published stories`;
+      el.hidden = false;
+    };
+    if (form) wireFilters(form, ['q', 'type', 'coverage', 'cited'], render);
+    else render({});
   } catch (err) {
     console.error('sources.json failed to load', err);
     if (count) count.textContent = 'The sources didn’t load. Reload the page to try again.';
@@ -183,9 +270,23 @@ export async function mountSources(root = document) {
       index = sourcesIndex(citations(data));
       opts = { storyHref: (s) => `${base}#wny-${s.item.id}` };
     }
-    body.innerHTML = renderSources(index, opts);
-    if (count) count.textContent = `${index.length} ${index.length === 1 ? 'source domain' : 'source domains'}`;
-    table.hidden = false;
+    const form = document.querySelector('[data-sources-filters]');
+    const kinds = [...new Set(index.flatMap((r) => [...r.kinds]))].sort();
+    if (form) fill(form.elements.kind, kinds.map((k) => [k, k.charAt(0).toUpperCase() + k.slice(1)]),
+      new URLSearchParams(location.search).get('kind') ?? '');
+    const render = (state) => {
+      const shown = filterIndex(index, state);
+      body.innerHTML = renderSources(shown, opts);
+      const active = Object.values(state).some(Boolean);
+      if (count) {
+        count.textContent = active
+          ? `Showing ${shown.length} of ${index.length} source domains`
+          : `${index.length} ${index.length === 1 ? 'source domain' : 'source domains'}`;
+      }
+      table.hidden = !shown.length;
+    };
+    if (form) wireFilters(form, ['q', 'kind'], render);
+    else render({});
   } catch (err) {
     console.error('sources failed to load', err);
     if (count) count.textContent = 'The sources didn’t load. Reload the page to try again.';

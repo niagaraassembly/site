@@ -8,7 +8,7 @@ import {
   countyPath, tileGrow, storiesByCounty, coverageText, issueFor, apDate,
   newsTone, partialDate, comingUp, renderJobs, renderIncentives,
   districtText, districtKeys, renderCompanyGroups, storyUrl,
-  moneyCells, renderMoneyCells, regionEquation, renderRegionEquation,
+  moneyCells, renderMoneyCells, regionEquation, renderRegionEquation, articleFor,
   investmentLines, filterInvestments, investmentOptions, renderInvestments,
   formatAmount, companiesInNews, renderItem, renderCompact,
 } from '../assets/js/wny.js';
@@ -373,22 +373,31 @@ test('money cells: one per kind, counted sums, muted when nothing counts', () =>
   assert.match(renderMoneyCells(cells), /wny-cell--muted/);
 });
 
-test('the region equation adds investment and committed contract money only, starring undisclosed shares', () => {
+test('the region equation adds announced investment and committed contract money, leaving out undisclosed shares', () => {
   const items = [
     { id: 'I', lane: 'production', stage: 'announced', amount: 49e6, currency: 'USD', amount_type: 'investment' },
-    { id: 'C1', lane: 'production', stage: 'award', amount: 18.9e6, currency: 'USD', amount_type: 'obligated' },
-    { id: 'C2', lane: 'production', stage: 'award', amount: 11.2e6, currency: 'USD', amount_type: 'obligated',
+    { id: 'C1', lane: 'production', stage: 'award', amount: 18.9e6, currency: 'USD', amount_type: 'obligated',
+      flags: [{ type: 'secondary_source', detail: '' }] },
+    { id: 'C2', lane: 'production', stage: 'award', amount: 11.2e6, currency: 'USD', amount_type: 'obligated', place: 'Liverpool, Lithuania',
       flags: [{ type: 'gap', detail: 'regional_share' }] },
     { id: 'A', lane: 'production', stage: 'award', amount: 37e6, currency: 'USD', amount_type: 'award' },
     { id: 'D', lane: 'production', stage: 'completed', amount: 75e6, currency: 'USD', amount_type: 'transaction' },
     { id: 'X', lane: 'corridor', stage: 'award', amount: 14317, currency: 'USD', amount_type: 'obligated' },
   ].map((i) => ({ ...i, publish_status: 'approved', headline: i.id }));
   const eq = regionEquation(items);
-  assert.deepEqual(eq.terms.map((t) => t.id), ['I', 'C1', 'C2'], 'no awards, deals or corridor money');
-  assert.equal(eq.total, '$79.1M');
+  assert.deepEqual(eq.terms.map((t) => t.id), ['I', 'C1'], 'no awards, deals, corridor money or undisclosed shares');
+  assert.equal(eq.total, '$67.9M');
   const html = renderRegionEquation(eq);
-  assert.match(html, /\$49M<\/a> <span class="wny-eq__kind">investment<\/span> \+ /);
-  assert.match(html, /\$11\.2M\*/);
-  assert.match(html, /Part of \$11\.2M is for work outside the region/);
+  assert.match(html, /Announced investment and committed contract money tied to work in the region/);
+  assert.match(html, /\$49M<\/a> <span class="wny-eq__kind">announced investment<\/span> \+ /);
+  assert.match(html, /plus an undisclosed share of an <a href="#wny-C2">\$11\.2M contract<\/a> \(Liverpool, Lithuania\)/);
+  assert.match(html, /secondary listing/);
+  const withShare = regionEquation(items.map((i) => (i.id === 'C2' ? { ...i, regional_amount: 4e6 } : i)));
+  assert.equal(withShare.total, '$71.9M', 'a recorded regional_amount is counted');
+  assert.equal(withShare.left.length, 0);
   assert.equal(regionEquation(items.slice(3)), null, 'nothing to add, no equation');
+});
+
+test('the article before an amount follows how it is said', () => {
+  assert.deepEqual(['$11.2M', '$18.9M', '$8M', '$80M', '$1.4M', '$110M', '$49M'].map(articleFor), ['an', 'an', 'an', 'an', 'a', 'a', 'a']);
 });

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Research sources — Niagara Assembly</title>
+<title>Sources — Niagara Assembly</title>
 <meta name="description" content="Every source domain cited across Niagara Assembly’s regional MAGs.">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('na-theme')||'light'}catch(e){document.documentElement.dataset.theme='light'}</script>
 <link rel="stylesheet" href="/assets/css/site.css">
@@ -15,8 +15,15 @@
 
 <div class="frame frame--board" data-sketch="frame">
 <p class="mag-kicker">Methods / Sources</p>
-<h1>Our sources</h1>
+<h1>Sources</h1>
 <p class="issue-intro">Every source our research draws on, across all our regional MAGs, grouped by what each one covers. The list is published from our research system and grows as new sources are added. Directories, aggregators and mirrors are marked, because they republish rather than report. How sources are found and weighed is explained in <a href="/research/methods/news/#sources">our methods</a>.</p>
+<form class="filters wny-filters" data-sources-filters data-sketch="box" role="search" hidden>
+<input type="search" name="q" placeholder="Search sources" aria-label="Search sources">
+<select name="type" aria-label="Type"><option value="">Any type</option></select>
+<select name="coverage" aria-label="Coverage"><option value="">Anywhere</option></select>
+<label class="check"><input type="checkbox" name="cited" value="1"> Cited in our stories</label>
+<button type="button" class="wny-filters__clear" data-clear hidden>Clear</button>
+</form>
 <p class="board__count" data-sources-count aria-live="polite"></p>
 <div data-sources-registry hidden></div>
 <noscript><p class="wny-note">This list needs JavaScript.</p></noscript>

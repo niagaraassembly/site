@@ -289,6 +289,8 @@ def build(research: Path, region: str = "wny") -> dict:
             "amount": money(ev.get("amount", "")),
             "amount_type": ev.get("amount_type", "").strip() or None,
             "ceiling_amount": money(ev.get("ceiling_amount", "")),
+            # The regional share of a split contract, once na-research records one.
+            "regional_amount": money(ev.get("regional_amount", "")),
             "currency": ev.get("currency", "") or None,
             "entity_id": ev.get("entity_id") or None,
             "entity_name": (entity or {}).get("name"),

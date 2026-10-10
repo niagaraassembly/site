@@ -1002,27 +1002,40 @@ export function renderMoneyCells(cells) {
    reported awards are headline values, not spending here, so they stay out. */
 export const REGION_KINDS = ['investment', 'committed'];
 
-/** "Money tied to work in the region": investment and committed contract
-    money from investment-and-industry stories. An amount whose regional
-    share is undisclosed is starred and footnoted rather than dropped. */
+/** "Money tied to work in the region": announced investment and committed
+    contract money from investment-and-industry stories. An amount whose
+    regional share is undisclosed is left out of the sum and named beneath it
+    (counting the whole of it would count work outside the region); when the
+    research records a regional_amount, that amount is used instead. */
 export function regionEquation(items) {
-  const terms = investmentLines(items)
+  const lines = investmentLines(items)
     .filter((i) => i.lane === 'production' && REGION_KINDS.includes(moneyKind(i)))
     .sort((a, b) => REGION_KINDS.indexOf(moneyKind(a)) - REGION_KINDS.indexOf(moneyKind(b)));
-  if (terms.length < 2) return null;
-  const currencies = new Set(terms.map((i) => i.currency || 'USD'));
+  const undisclosed = (i) => i.regional_amount == null && (i.flags ?? []).some((f) => f.type === 'gap' && f.detail === 'regional_share');
+  const terms = lines.filter((i) => !undisclosed(i));
+  const left = lines.filter(undisclosed);
+  if (!terms.length || terms.length + left.length < 2) return null;
+  const currencies = new Set(lines.map((i) => i.currency || 'USD'));
   if (currencies.size > 1) return null;  // never add across currencies
-  const total = terms.reduce((sum, i) => sum + Number(i.amount), 0);
+  const value = (i) => Number(i.regional_amount ?? i.amount);
+  const currency = [...currencies][0];
   return {
-    terms: terms.map((i) => ({
-      id: i.id, value: formatAmount(i.amount, i.currency), kind: moneyKind(i), tone: AMOUNT_TONES[i.stage] ?? '',
-      starred: (i.flags ?? []).some((f) => f.type === 'gap' && f.detail === 'regional_share'),
-    })),
-    total: formatAmount(total, [...currencies][0]),
+    terms: terms.map((i) => ({ id: i.id, value: formatAmount(value(i), currency), kind: moneyKind(i), tone: AMOUNT_TONES[i.stage] ?? '' })),
+    total: formatAmount(terms.reduce((sum, i) => sum + value(i), 0), currency),
+    left: left.map((i) => ({ id: i.id, value: formatAmount(i.amount, currency), place: i.place })),
+    secondary: lines.some((i) => (i.flags ?? []).some((f) => f.type === 'secondary_source')),
   };
 }
 
-const TERM_WORDS = { investment: 'investment', committed: 'contract money committed' };
+const TERM_WORDS = { investment: 'announced investment', committed: 'committed contract money' };
+
+/** "a" or "an" for an amount as it is said aloud: "an $11.2M" (eleven),
+    "an $8M", "an $18.9M", "a $1.4M", "a $110M". */
+export function articleFor(amount) {
+  const digits = String(amount).replace(/^[^\d]*/, '').split('.')[0];
+  if (digits.startsWith('8')) return 'an';
+  return digits.length === 2 && (digits === '11' || digits === '18') ? 'an' : 'a';
+}
 
 export function renderRegionEquation(eq) {
   if (!eq) return '';
@@ -1030,12 +1043,14 @@ export function renderRegionEquation(eq) {
   const parts = eq.terms.map((t, i) => {
     const next = eq.terms[i + 1];
     const label = !next || next.kind !== t.kind ? ` <span class="wny-eq__kind">${escapeHtml(TERM_WORDS[t.kind])}</span>` : '';
-    return `<a class="wny-eq__term${t.tone ? ` wny-amount--${t.tone}` : ''}" href="#wny-${escapeHtml(t.id)}">${escapeHtml(t.value)}${t.starred ? '*' : ''}</a>${label}`;
+    return `<a class="wny-eq__term${t.tone ? ` wny-amount--${t.tone}` : ''}" href="#wny-${escapeHtml(t.id)}">${escapeHtml(t.value)}</a>${label}`;
   });
-  const starred = eq.terms.filter((t) => t.starred).map((t) => t.value);
-  return `<p class="wny-eq__title">Money tied to work in the region</p>`
+  const left = eq.left.map((l) =>
+    `an undisclosed share of ${articleFor(l.value)} <a href="#wny-${escapeHtml(l.id)}">${escapeHtml(l.value)} contract</a>${l.place ? ` (${escapeHtml(l.place)})` : ''}`);
+  return `<p class="wny-eq__title">Announced investment and committed contract money tied to work in the region</p>`
     + `<p class="wny-eq__line">${parts.join(' + ')} = <b class="wny-eq__total">${escapeHtml(eq.total)}</b></p>`
-    + (starred.length ? `<p class="wny-eq__note">* Part of ${starred.map(escapeHtml).join(' and ')} is for work outside the region; the regional share isn’t disclosed.</p>` : '');
+    + (left.length ? `<p class="wny-eq__plus">plus ${left.join(', and ')}</p>` : '')
+    + (eq.secondary ? '<p class="wny-eq__note">Contract amounts come from a secondary listing; the original notice wasn’t accessed.</p>' : '');
 }
 
 /** Every money list, by kind. Each kind ends with its own total line, always:
