@@ -415,6 +415,7 @@ test('by district groups stories per chamber in number order, linking the distri
   assert.deepEqual(chambers[0].districts.map((d) => [d.name, d.items.map((i) => i.id)]), [['NY-25', ['C']], ['NY-26', ['A', 'B']]]);
   assert.deepEqual(chambers[1].districts.map((d) => d.name), ['Senate 61', 'Senate 62', 'Senate 63']);
   const html = renderDistricts(chambers);
-  assert.match(html, /href="\/MAGS\/WNY\/posts\/\?district=congress%3A26">NY-26<\/a><span class="wny-district__count">2</);
-  assert.match(html, /href="#wny-A">a<\/a>; <a href="#wny-B">b<\/a>/);
+  assert.match(html, /<span class="wny-districts__chamber">Congress<\/span><span class="wny-districts__names"><a href="\/MAGS\/WNY\/posts\/\?district=congress%3A25">NY-25<\/a> · <a href="\/MAGS\/WNY\/posts\/\?district=congress%3A26">NY-26<\/a>/);
+  assert.match(html, />State Senate<\/span><span class="wny-districts__names"><a [^>]*senate%3A61">61<\/a> · /, 'numbers only under a chamber label');
+  assert.doesNotMatch(html, /#wny-A/, 'no story lists');
 });

@@ -319,14 +319,13 @@ export function storiesByDistrict(items) {
   }).filter((c) => c.districts.length);
 }
 
+/** One line per chamber: the districts active in the issue, each linking to
+    All articles filtered to that district. */
 export function renderDistricts(chambers, allArticles = '/MAGS/WNY/posts/') {
   return chambers.map((c) =>
-    `<li class="wny-company-group"><h3 class="wny-money__kind">${escapeHtml(c.label)}</h3><ul class="wny-district-list">`
-    + c.districts.map((d) =>
-      `<li class="wny-district"><a class="wny-district__name" href="${escapeHtml(allArticles)}?district=${encodeURIComponent(d.key)}">${escapeHtml(d.name)}</a>`
-      + `<span class="wny-district__count">${d.items.length}</span>`
-      + `<span class="wny-district__stories">${d.items.map((i) => `<a href="#wny-${escapeHtml(i.id)}">${escapeHtml(i.headline)}</a>`).join('; ')}</span></li>`).join('')
-    + '</ul></li>').join('');
+    `<li class="wny-districts__row"><span class="wny-districts__chamber">${escapeHtml(c.label)}</span>`
+    + `<span class="wny-districts__names">${c.districts.map((d) =>
+      `<a href="${escapeHtml(allArticles)}?district=${encodeURIComponent(d.key)}">${escapeHtml(d.name.replace(/^(Senate|Assembly) /, ''))}</a>`).join(' · ')}</span></li>`).join('');
 }
 
 function incentiveText(inc, currency) {
