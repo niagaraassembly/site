@@ -24,6 +24,14 @@ export const VISIBILITY = ['public', 'private', 'both'];
    shell command in .github/workflows/approve-request.yml. */
 export const GH_USER = /^[A-Za-z0-9](?:[A-Za-z0-9]|-(?=[A-Za-z0-9])){0,38}$/;
 
+/* The mailing-list form (Google Form -> Apps Script -> Kit), shared by the
+   homepage and the MAG sign-ups. Entry ids are read from FB_PUBLIC_LOAD_DATA_
+   in the live form's page source (docs/SETUP.md). */
+export const JOIN_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLScFaiJNiyegV3F-J_5fHMfKjgKnWA7to6dC2OrLE1gmF-kigw/formResponse';
+export const JOIN_MAP = { name:  'entry.1137859152',
+                          email: 'entry.1220624572',
+                          level: 'entry.1083496865' };
+
 export function buildFormBody(values, entryMap) {
   const body = new URLSearchParams();
   for (const [field, entryId] of Object.entries(entryMap)) {

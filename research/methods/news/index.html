@@ -19,38 +19,125 @@
 <h1>How we research the news</h1>
 <p class="mag-date">Methods · Updated 10 October 2026</p>
 
-<p>Every story on our news pages has passed through one research system, kept in the repository <a href="https://github.com/niagaraassembly/na-research" rel="noopener">niagaraassembly/na-research</a>. This page explains how that system works, from the first search to the story you read here, and what each label on a story means.</p>
+<p>Every story on our news pages has passed through one research system, kept in the repository <a href="https://github.com/niagaraassembly/na-research" rel="noopener">niagaraassembly/na-research</a>. This page explains that system in full: where news comes from, how it is recorded, how it is checked, how it is approved, and exactly what reaches this site. It also explains every label you will see on a story.</p>
 
-<p>The short version: AI research agents find and record news, every finding is reviewed under a person’s authority, approved findings are merged into our research database once a week, and only then can an editor clear them for publication. Nothing skips a step, and the steps never run in reverse.</p>
+<p>The short version: AI research agents find and record news. Every finding is reviewed under a person’s authority. Approved findings are merged into our research database once a week. Only then can an editor clear a story for publication. Nothing skips a step, and the steps never run in reverse.</p>
 
-<h2>The principles</h2>
+<h2 id="contents">On this page</h2>
 <ul>
-<li><b>Nothing is invented.</b> A missing fact is shown as missing. A scan that finds nothing is a valid result.</li>
-<li><b>Every fact keeps its source.</b> Each claim records where it came from, so it can be checked again later.</li>
-<li><b>People approve; scores don’t.</b> The system scores matches and sources to help reviewers, but a score never approves anything.</li>
-<li><b>Disagreement is kept, not resolved by guessing.</b> When sources differ, we show each value with its source. We never average them or pick one.</li>
-<li><b>Everything is auditable.</b> Decisions are added to a log, not written over. Rejected and conflicting records stay on file.</li>
+<li><a href="#principles">The principles</a></li>
+<li><a href="#layers">The four layers of the system</a></li>
+<li><a href="#sources">Where news comes from</a></li>
+<li><a href="#dossiers">Article dossiers</a></li>
+<li><a href="#records">Breaking a story into records</a></li>
+<li><a href="#identity">Matching companies and organizations</a></li>
+<li><a href="#scores">Scores, and why they never approve anything</a></li>
+<li><a href="#review">Review</a></li>
+<li><a href="#follow-up">Follow-up research</a></li>
+<li><a href="#integration">Weekly integration</a></li>
+<li><a href="#classification">How a story is classified</a></li>
+<li><a href="#marked">How a story is marked</a></li>
+<li><a href="#money">Money and totals</a></li>
+<li><a href="#publishing">The publishing gate</a></li>
+<li><a href="#site">What reaches this site, and what never does</a></li>
+<li><a href="#issues">Issues, updates and corrections</a></li>
+<li><a href="#automation">Automation and its safeguards</a></li>
+<li><a href="#ids">Record IDs</a></li>
 </ul>
 
-<h2>From search to story</h2>
-<p>A finding moves through eight steps:</p>
-<ol>
-<li><b>Discover.</b> Research agents run regional searches most days, with a final scan on Saturday before the weekly review. Anyone on the team can also submit a single link by hand. Both paths use the same intake, duplicate checks and record formats.</li>
-<li><b>Write a dossier.</b> Each article we keep gets one permanent file, with an ID like <code>ART-2026-000027</code>. It holds a factual summary, why the story matters to the region, the organizations named, the events and individual claims it contains, conflicts, and open questions. We never store a full copyrighted article, only short paraphrases and pointers to the source.</li>
-<li><b>Break it into records.</b> The dossier is split into structured rows: the article, each organization mentioned, each event (an expansion, a contract, a closure), each individual claim (a dollar figure, a job count, a date), and relationships between organizations.</li>
-<li><b>Match identities.</b> Each organization mentioned is compared with the companies already in our database, so one company isn’t recorded twice under two names. Matching weighs the name, known aliases, website, location, parent company and line of business. We never match on a name alone when two organizations could share it.</li>
-<li><b>Review.</b> Every record is reviewed and given one of eight decisions (listed below). A person makes each decision, or authorizes an agent to record it, and the log names who recorded it. Decisions are appended to a single log; review never edits the original evidence.</li>
-<li><b>Follow up.</b> Records marked for follow-up or with conflicting evidence become narrow research tasks, answered before the record can move on.</li>
-<li><b>Weekly integration.</b> On Saturday, only records a person approved, and whose company identity is settled, are merged into the research database. The merge is first run as a dry run and checked, then proposed for review rather than merged automatically.</li>
-<li><b>Publish.</b> Only after integration can an editor clear a story for the public. That clearance is a separate decision, made by a person, and it is the only thing that puts a story on this site.</li>
-</ol>
+<h2 id="principles">The principles</h2>
+<ul>
+<li><b>Nothing is invented.</b> A missing fact is shown as missing. A scan that finds nothing is a valid result, and an agent must never invent findings to fill a quota.</li>
+<li><b>Every fact keeps its source.</b> Each claim records where it came from, down to a locator in the source, so it can be checked again later.</li>
+<li><b>People approve; scores don’t.</b> The system scores matches, sources and searches to help reviewers. A score never approves anything.</li>
+<li><b>Disagreement is kept, not resolved by guessing.</b> When sources differ, we show each value with its source. We never average them, pick one, or round them together.</li>
+<li><b>Everything is auditable.</b> Decisions are added to a log, never written over. Rejected and conflicting records stay on file.</li>
+<li><b>A blank is not a no.</b> A record with no decision is unreviewed, not rejected, and it never appears here.</li>
+<li><b>We report what records say.</b> We do not conclude that a site is vacant, that a named business is underperforming, or that an owner is neglecting a property.</li>
+</ul>
 
-<h2>Review decisions</h2>
+<h2 id="layers">The four layers of the system</h2>
+<p>The research is kept in plain files, each with one job. When two layers disagree, the higher one in this list wins.</p>
+<table class="data">
+<thead><tr><th>Layer</th><th>What it holds</th><th>Who writes it</th></tr></thead>
+<tbody>
+<tr><td>Research database</td><td>The approved, merged record of organizations, people, relationships, events, conflicting values and market figures. This is the source of truth.</td><td>Only the weekly integration, from approved records</td></tr>
+<tr><td>Article dossiers</td><td>One file per article: what it says, why it matters, and how we read it.</td><td>Research agents, updated by follow-up research</td></tr>
+<tr><td>Inbox and decision log</td><td>Candidate records waiting for review, the log of every review decision, and the record of every scan run.</td><td>Research agents (candidates); reviewers (decisions)</td></tr>
+<tr><td>Publications</td><td>Exports such as this site’s data, mapping exports and newsletter drafts. Always derived, never edited by hand.</td><td>Generated after integration</td></tr>
+</tbody>
+</table>
+<p>Spreadsheets are also generated for offline review, but they are only an editing surface: just the documented review columns flow back into the decision log.</p>
+
+<h2 id="sources">Where news comes from</h2>
+<p>As of 10 October 2026 the system tracks 78 sources of 38 kinds. They include government newsrooms and bulletins, economic development agencies, industrial development agencies, county and municipal governments, planning records and public notices, regulatory filings, procurement publications, company newsrooms and wires, universities, unions, trade and manufacturing associations, regional business publications, local newspapers and television.</p>
+<p>Each source has a record of its kind, the places and sectors it covers, how often it is scanned, and running counts: results seen, relevant articles, approved events, duplicates and false positives.</p>
+<p>Searching is driven by 196 saved queries in 21 families. Some run against web search, some against sources we check on a schedule, and some against government dashboards. Each query has a geography, a sector and a cadence. Every run records what it found, how much of it was relevant, how much was approved, and how long review took, so searches that produce noise can be retired.</p>
+<p>A scan can start in five ways: on a schedule, by hand for a region, from a single submitted link, as follow-up research, or as part of the weekly integration. All five use the same intake, the same duplicate checks and the same record formats. A link submitted by hand never skips review.</p>
+<p>The agents work from versioned instruction files, one per routine (daily regional discovery, follow-up, weekly resolution and publishing), so every run of a routine follows the same written instructions. 36 scan runs have been recorded so far.</p>
+
+<h2 id="dossiers">Article dossiers</h2>
+<p>Each article we keep gets one permanent file with an ID like <code>ART-2026-000027</code>. It records the article’s address, outlet, dates, how it was found, and its tags. Its body covers:</p>
+<ul>
+<li>a factual summary;</li>
+<li>why the story matters to the region;</li>
+<li>each organization named that could be its own record;</li>
+<li>the events in the story, and each individual claim;</li>
+<li>how organizations were matched, and why;</li>
+<li>conflicts with other sources;</li>
+<li>open questions for follow-up;</li>
+<li>considerations before publishing.</li>
+</ul>
+<p>We never store a full copyrighted article: only concise paraphrases, short excerpts where essential, and pointers to the source. Dossier prose can inform later writing, but the approved facts in the research database always control what is published.</p>
+
+<h2 id="records">Breaking a story into records</h2>
+<p>The dossier is split into structured rows, each reviewed on its own:</p>
+<table class="data">
+<thead><tr><th>Record</th><th>What it captures</th></tr></thead>
+<tbody>
+<tr><td>Article</td><td>Address, outlet, dates, author, type (news report, company release, government release, regulatory filing, announcement, media advisory), places and sectors.</td></tr>
+<tr><td>Mention</td><td>Each organization named, as the article names it, with its role and location.</td></tr>
+<tr><td>Event</td><td>Something that happened or was announced: an expansion, a contract, a closure. It gets a type, a date, a location, and a rating of how material it is (high, medium or low).</td></tr>
+<tr><td>Claim</td><td>One fact inside an event: a dollar figure, a job count, a date, a square footage. Each claim carries its value, its unit, where in the source it appears, and a confidence rating.</td></tr>
+<tr><td>Relationship</td><td>A link between two organizations, such as supplier, funder, partner or parent company.</td></tr>
+<tr><td>New organization</td><td>An organization not yet in the database, proposed with its legal name, type, headquarters and website.</td></tr>
+</tbody>
+</table>
+<p>Events use a fixed list of 21 types: startup formation, capital investment, facility opening, facility expansion, facility closure, equipment investment, manufacturing capacity, funding round, grant or incentive, acquisition, divestiture, ownership change, major contract, production partnership, research commercialization, certification, workforce expansion, layoff, bankruptcy or restructuring, product or process launch, and other material update.</p>
+<p>Confidence is always one of low, medium or high.</p>
+
+<h2 id="identity">Matching companies and organizations</h2>
+<p>Each organization mentioned is compared with the organizations already in the database, so one company isn’t recorded twice under two names, and two companies with similar names aren’t merged. Matching weighs the evidence:</p>
+<table class="data">
+<thead><tr><th>Evidence</th><th>Points</th></tr></thead>
+<tbody>
+<tr><td>Exact canonical name</td><td>20</td></tr>
+<tr><td>Known alias or former name</td><td>15</td></tr>
+<tr><td>Exact website domain</td><td>25</td></tr>
+<tr><td>Compatible location</td><td>20</td></tr>
+<tr><td>Compatible parent company</td><td>up to 10</td></tr>
+<tr><td>Compatible line of business</td><td>up to 5</td></tr>
+<tr><td>Executive or registration corroboration</td><td>up to 5</td></tr>
+</tbody>
+</table>
+<p>Contradictions subtract points: normally 25 for a conflicting domain, 30 for an incompatible jurisdiction, 40 for an incompatible registration and 20 for incompatible business. Missing evidence scores zero, not a penalty, and every component is shown to the reviewer.</p>
+<p>A match is one of: proposed, unresolved, no match, a new organization, a facility of a known organization, an alias, or an incidental mention. Name collisions, mergers, contradictory websites and parent-or-facility questions always go to a person, whatever the score. New organization IDs are only assigned during the weekly integration.</p>
+
+<h2 id="scores">Scores, and why they never approve anything</h2>
+<ul>
+<li><b>Identity match</b> is the evidence score above. It measures who an organization is, never how good an article is.</li>
+<li><b>Source quality</b> is planned as 35% approved-event rate, 25% primary-evidence rate, 20% novelty, 10% geographic relevance and 10% accessibility. Until every part can be measured, the score is left blank rather than estimated.</li>
+<li><b>Search yield</b> tracks relevant and approved results per result inspected, new sources, new organizations, duplicates, false positives and reviewer minutes. The aim is more approved, material findings, not more results.</li>
+</ul>
+<p>Every formula carries a version number. When a formula changes, the version goes up, and past scores are not quietly recalculated.</p>
+
+<h2 id="review">Review</h2>
+<p>Every record is reviewed and given one of eight decisions. A person makes each decision, or authorizes an agent to record it, and the log names who recorded it. Reviewers work in a local review desk, which runs only on the reviewer’s own computer, or in a generated spreadsheet. Both write to the same decision log.</p>
 <table class="data">
 <thead><tr><th>Code</th><th>Decision</th><th>What happens next</th></tr></thead>
 <tbody>
 <tr><td>A</td><td>Approve</td><td>Eligible for the weekly integration.</td></tr>
-<tr><td>E</td><td>Edit or correct</td><td>The correction is logged beside the original.</td></tr>
+<tr><td>E</td><td>Edit or correct</td><td>The correction is logged beside the original value.</td></tr>
 <tr><td>R</td><td>Reject</td><td>Kept on file, never integrated.</td></tr>
 <tr><td>D</td><td>Retain with doubt</td><td>Kept, with the doubt stated.</td></tr>
 <tr><td>F</td><td>Follow-up research</td><td>Becomes a research task.</td></tr>
@@ -59,11 +146,43 @@
 <tr><td>N</td><td>Not applicable</td><td>Out of scope for this record.</td></tr>
 </tbody>
 </table>
-<p>A record with no decision is <em>unreviewed</em>, not rejected, and never appears on this site.</p>
+<p>Decisions are made field by field. A reviewer can settle one organization in an article while holding another, and an event or claim moves forward only when the records it depends on are settled. Review never changes the original evidence; it only adds decisions.</p>
+<p>Each record has two kinds of note. A <b>reviewer note</b> is internal and never published. A <b>public note</b> is written for readers, and becomes usable only after its record passes integration and the publishing gate.</p>
 
-<h2>How a story is marked</h2>
-<p>Each published story carries four markings that describe it, plus the publishing decision itself. They answer different questions, so they are kept apart.</p>
+<h2 id="follow-up">Follow-up research</h2>
+<p>Records marked F or X become narrow research tasks: the question, the evidence so far, the evidence missing, and suggested sources. Each task is open, assigned, resolved or cancelled. Agents answer them from a versioned instruction template, and the task row records the run and the result. Follow-up research updates dossiers and candidate records, never the research database directly.</p>
 
+<h2 id="integration">Weekly integration</h2>
+<p>Once a week, on Saturday, approved findings are merged into the research database:</p>
+<ol>
+<li>Import reviewed spreadsheets and validate every decision.</li>
+<li>Run and review high-priority follow-ups.</li>
+<li>Resolve duplicate articles and events, identities, relationships and conflicts.</li>
+<li>Assign IDs to approved new organizations and aliases.</li>
+<li>Run the integration as a dry run, and inspect its manifest.</li>
+<li>Merge only approved records, then regenerate the review spreadsheets.</li>
+<li>Validate, and propose the result for review rather than merging it automatically.</li>
+<li>After it is accepted, generate publishing and export packages.</li>
+</ol>
+<p>Only records a person approved, and whose organization identity is settled, are merged. Each merged event gets a permanent ID like <code>IEVT-2026-000004</code>. A failed export is recorded and retried; it never rolls back or damages the database.</p>
+
+<h2 id="classification">How a story is classified</h2>
+<p>At integration, each event is given these fields. They describe the story; none of them authorizes publication.</p>
+<table class="data">
+<thead><tr><th>Field</th><th>Answers</th><th>Values</th></tr></thead>
+<tbody>
+<tr><td>Section (lane)</td><td>Which section does it belong in?</td><td>Investment and industry, In development, Corridor news, or excluded</td></tr>
+<tr><td>Stage</td><td>How real is the underlying fact?</td><td>Stated intent, Application only, Announced, Plan approved, Contract or award, Under way, Completed, Reported</td></tr>
+<tr><td>Flags</td><td>What must the reader be warned about?</td><td>Listed below</td></tr>
+<tr><td>Amount and kind</td><td>What money is stated, and what kind?</td><td>An amount with its currency and kind; a contract’s ceiling is kept separately</td></tr>
+<tr><td>Jurisdiction</td><td>Which state or province?</td><td>NY or ON</td></tr>
+<tr><td>Sources</td><td>Which articles support it?</td><td>Every article for the event, the primary one first</td></tr>
+<tr><td>Conflicting values</td><td>Where do sources disagree?</td><td>One row per value, each with its source</td></tr>
+</tbody>
+</table>
+<p>Duplicate reports of the same event become extra sources on one story; they are never separate stories.</p>
+
+<h2 id="marked">How a story is marked</h2>
 <h3>Section: where the story belongs</h3>
 <table class="data">
 <tbody>
@@ -72,7 +191,7 @@
 <tr><td>Corridor news</td><td>Real regional news outside direct investment and hiring, such as research grants or base-support contracts. Good news, but never added to an investment or jobs total.</td></tr>
 </tbody>
 </table>
-<p>Some findings are excluded altogether and never published.</p>
+<p>Some findings are excluded altogether and never published. A story in development or in corridor news must also have a public note before it can appear.</p>
 
 <h3>Stage: how real the underlying fact is</h3>
 <p>One badge per story, from earliest to latest: <b>Stated intent</b>, <b>Application only</b>, <b>Announced</b>, <b>Plan approved</b>, <b>Contract or award</b>, <b>Under way</b>, <b>Completed</b>. A story we know only from a report, with no stage confirmed, is marked <b>Reported</b>.</p>
@@ -91,21 +210,73 @@
 <tr><td>Not counted in production totals</td><td>Kept out of any regional production figures.</td></tr>
 </tbody>
 </table>
+<p>Warnings (sources disagree, identity being confirmed) and notes about the source (company-reported, research funding) appear as labels. The rest are folded into one sentence under the story.</p>
 
 <h3>Explainer and sources</h3>
-<p>The line under each headline is the reviewer’s note written for readers, one or two sentences on what the story does and doesn’t establish. Where it is blank, we show nothing rather than generate one. Each story links its sources, marked as a <b>primary source</b> (a government release or regulatory filing), a <b>company source</b>, or a <b>news report</b>. When several outlets covered the same event, they are listed as extra sources on one story, not as separate stories.</p>
+<p>The line under each headline is the public note, written for readers: one or two sentences on what the story does and doesn’t establish. Where it is blank, we show nothing rather than generate one. Each story links its sources, marked as a <b>primary source</b> (a government release or regulatory filing), a <b>company source</b>, or a <b>news report</b>.</p>
 
-<h3>What we never publish</h3>
-<p>Internal reviewer notes, the reasons behind a claim’s uncertainty, dossier prose and unreviewed records stay inside the research system.</p>
+<h2 id="money">Money and totals</h2>
+<p>Dollar figures come only from amounts recorded as data, never from prose. Each amount has a kind:</p>
+<table class="data">
+<thead><tr><th>Kind</th><th>Recorded as</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td>Building and equipment</td><td>investment</td><td>Money stated for facilities, equipment or expansion.</td></tr>
+<tr><td>Contracts</td><td>obligated, award</td><td>Money committed under a contract, or the value of an award.</td></tr>
+<tr><td>Deals</td><td>transaction</td><td>A purchase or sale price.</td></tr>
+<tr><td>Grants</td><td>grant</td><td>Grant funding.</td></tr>
+<tr><td>Proposed</td><td>proposed</td><td>An amount in a plan or application not yet approved.</td></tr>
+<tr><td>Charges</td><td>charge</td><td>A cost a company books, such as a closure charge.</td></tr>
+</tbody>
+</table>
+<p>A contract’s <b>ceiling</b>, the most it could ever be worth, is recorded separately. It is shown on its story, labelled as a ceiling, and never counted.</p>
+<p>Totals follow three rules. They count investment and industry stories only. Each kind of money is totalled on its own. And the kinds are never added together, because a purchase price or a contract award is not money spent building in the region. Amounts are coloured by stage: green when completed, dark yellow when only announced.</p>
 
-<h2>Money and totals</h2>
-<p>Dollar figures come only from investment and industry stories, and only where an amount was recorded as data. They are grouped by kind of money: building and equipment, contracts, and deals. Each kind has its own total, and the kinds are never added together, because a purchase price or a contract award is not money spent building in the region. A contract’s ceiling, the most it could ever be worth, is shown on its story but never counted.</p>
+<h2 id="publishing">The publishing gate</h2>
+<p>Every merged event carries a publishing status that only a person can change:</p>
+<table class="data">
+<tbody>
+<tr><td>Not ready</td><td>Merged into the database, not yet considered for publication.</td></tr>
+<tr><td>Eligible</td><td>Could be published.</td></tr>
+<tr><td>Drafted</td><td>Written up in a draft.</td></tr>
+<tr><td>Approved</td><td>Cleared for the public by an editor.</td></tr>
+<tr><td>Published</td><td>Out in the world.</td></tr>
+</tbody>
+</table>
+<p>Only approved and published stories reach this site. The classification fields never authorize publication; only this status does. Generated briefs and newsletters are drafts, and sending or deploying them needs its own approval.</p>
 
-<h2>How this site is updated</h2>
-<p>Once a week, after the Saturday integration is merged, we export the approved stories from the research database to this site. The export reads the research data and never changes it. Each run reports which stories were added, changed or removed since the last one, and the research version it came from, so every update to this site can be traced to the research behind it.</p>
+<h2 id="site">What reaches this site, and what never does</h2>
+<p>This site reads an export of the research database. The export reads the research and never changes it. For each approved story it carries the headline, the public note, the date, the place as the record states it, the organization, the section, the stage, the flags, the amounts and their kinds, any ceiling, the sources and the conflicting values.</p>
+<p>It never carries reviewer notes, the reasons behind a claim’s uncertainty, internal summaries, dossier prose, unreviewed records, or anything from the inbox. People named in a story are listed only from approved records attached to a published story.</p>
 
-<h2>What is planned, not yet running</h2>
-<p>A single scheduled wrapper for the research agents, so every routine runs the same way under a lock with a full run record, is specified but not yet switched on. Scans currently run as agent research sessions that each propose their changes for review. No routine merges its own work.</p>
+<h2 id="issues">Issues, updates and corrections</h2>
+<p>Once a week, after the integration is accepted, we export the approved stories. Each run reports which stories were added, changed or removed since the last one, and the research version it came from, so every update can be traced to the research behind it.</p>
+<p>A magazine issue is a frozen copy of that export: it does not change when next week’s news arrives. Lists of all articles and all dollar figures always read the latest export. When a published fact is corrected in the research, the next export carries the correction, and an affected issue is republished from the corrected data.</p>
+
+<h2 id="automation">Automation and its safeguards</h2>
+<p>Every routine, whether started by a person, a scheduler or a hosted agent, calls the same scripts, so there is only one path for data. The rules for running them:</p>
+<ul>
+<li>Each run works in its own clean copy and on its own branch, and proposes its changes for review. No routine merges its own work.</li>
+<li>Discovery writes only to the inbox and dossiers, never to the research database.</li>
+<li>The weekly integration stops if human approval is missing; publishing stops if the integration record is missing.</li>
+<li>A lock prevents two runs from changing the same copy at once, and a retry must not duplicate IDs, addresses or branches.</li>
+<li>Each run records its trigger, instruction version, research version, outcome and any errors.</li>
+<li>Credentials stay outside the research, with the least access needed. Logs never hold credentials or copyrighted full text.</li>
+</ul>
+<p><b>Planned, not yet running:</b> a single scheduled wrapper that runs every routine under a lock with a full run record is specified but not yet switched on. Scans currently run as agent research sessions that each propose their changes for review.</p>
+
+<h2 id="ids">Record IDs</h2>
+<table class="data">
+<tbody>
+<tr><td><code>ART-</code></td><td>Article dossier</td></tr>
+<tr><td><code>MEN-</code></td><td>An organization mentioned in an article</td></tr>
+<tr><td><code>EVT-</code></td><td>An event awaiting or under review</td></tr>
+<tr><td><code>CLM-</code></td><td>A single claim</td></tr>
+<tr><td><code>E</code>####</td><td>An organization in the research database</td></tr>
+<tr><td><code>IEVT-</code></td><td>An event merged into the research database (the IDs used on this site)</td></tr>
+<tr><td><code>ICV-</code></td><td>One sourced value in a disagreement</td></tr>
+<tr><td><code>DEC-</code></td><td>A review decision</td></tr>
+</tbody>
+</table>
 </article>
 </div>
 <footer class="sitefoot">

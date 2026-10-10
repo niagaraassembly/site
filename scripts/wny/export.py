@@ -14,6 +14,9 @@ site data contract (na-research f31ecf6):
   need a public_note, the reader-facing explainer.
 - Emitted text is headline and public_note. The internal summary, reviewer
   notes and dossier prose are never emitted.
+- People come only from intel/event_people.csv (event_id, person_name,
+  role, organization, entity_id, source_name, source_url, article_id), and
+  only for exported events. Names in unreviewed inbox mentions are never read.
 - amount is money committed or stated; ceiling_amount is a contract's maximum
   and is kept separate so it never enters a total.
 
@@ -201,10 +204,20 @@ def build(research: Path) -> dict:
         if entity:
             used.add(entity["entity_id"])
 
+    exported = {i["id"] for i in items}
+    people = [
+        {"event_id": p["event_id"], "name": p.get("person_name", "").strip(), "role": p.get("role", "").strip(),
+         "organization": p.get("organization", "").strip(), "entity_id": p.get("entity_id", "") or None,
+         "source": p.get("source_name", ""), "url": p.get("source_url", "")}
+        for p in read_csv(intel / "event_people.csv")
+        if p.get("event_id") in exported and p.get("person_name", "").strip()
+    ]
+
     return {
         "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
         "source": {"repo": "niagaraassembly/na-research", "commit": commit_of(research)},
         "items": items,
+        "people": people,
         "entities": [
             {"id": eid, "name": e["name"], "type": e.get("entity_type", ""),
              "city": e.get("hq_city", ""), "website": e.get("website", "")}

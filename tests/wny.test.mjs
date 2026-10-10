@@ -4,7 +4,8 @@ import { readFileSync } from 'node:fs';
 import {
   LANES, STAGES, FLAGS, publishable, byNewest, flagText, moneyLines, corridorPosition, corridorMarks,
   filterItems, filterOptions, parseFilters, filterQuery, moneyTotals, moneyByStage, renderMoneyTotal, tickerLine,
-  moneyGroups, moneyKind, renderMoneyGroups,
+  moneyGroups, moneyKind, renderMoneyGroups, mentionsFor, renderMentions,
+  investmentLines, filterInvestments, investmentOptions, renderInvestments,
   formatAmount, companiesInNews, renderItem, renderCompact,
 } from '../assets/js/wny.js';
 
@@ -212,4 +213,32 @@ test('warning and info markings stay chips; plain ones fold into one sentence', 
   assert.match(html, /wny-flag--warn">Sources disagree on local job count/);
   assert.match(html, /wny-flags__plain">Contract ceiling, not money committed or spent\. From a secondary listing; original notice not accessed\.</);
   assert.doesNotMatch(html, /wny-flag--plain/);
+});
+
+test('mentions list people on published stories only, one entry per person and organization', () => {
+  const items = publishable(sample.items);
+  const people = [
+    { event_id: 'S1', name: 'Ryan Hulse', role: 'Senior Director for R&D', organization: 'Sample Materials Co.' },
+    { event_id: 'S2', name: 'Ryan Hulse', role: 'Senior Director for R&D', organization: 'Sample Materials Co.' },
+    { event_id: 'S9', name: 'Held Back', role: 'x', organization: 'y' },
+    { event_id: 'S4', name: 'Ana Bell', role: 'Plant manager', organization: 'Demo Chemical' },
+  ];
+  const m = mentionsFor(people, items);
+  assert.deepEqual(m.map((p) => [p.name, p.events.length]), [['Ana Bell', 1], ['Ryan Hulse', 2]]);
+  assert.match(renderMentions([{ name: '<b>x</b>', role: 'r', organization: 'o' }]), /&lt;b&gt;x&lt;\/b&gt;/);
+  assert.deepEqual(mentionsFor(undefined, items), []);
+});
+
+test('the investments page lists every stated amount; totals count production only, per kind', () => {
+  const lines = investmentLines(publishable(sample.items));
+  assert.deepEqual(lines.map((i) => i.id).sort(), ['S1', 'S2', 'S3', 'S5', 'S8']);
+  assert.deepEqual(filterInvestments(lines, { kind: 'contracts' }).map((i) => i.id), ['S5']);
+  assert.deepEqual(filterInvestments(lines, { lane: 'developing' }).map((i) => i.id), ['S3']);
+  assert.deepEqual(filterInvestments(lines, { q: 'rochester' }).map((i) => i.id), ['S2', 'S5']);
+  const html = renderInvestments(lines);
+  assert.match(html, /href="\/MAGS\/WNY\/posts\/#wny-S5"/);
+  assert.match(html, /ceiling \$20\.7B/);
+  assert.doesNotMatch(html, /Proposed total|Grants total/, 'developing and corridor kinds have nothing to count');
+  assert.equal(moneyKind({ amount_type: 'charge' }), 'charges');
+  assert.deepEqual(investmentOptions(lines).kind.map(([v]) => v), ['building', 'contracts', 'deals', 'grants', 'proposed']);
 });

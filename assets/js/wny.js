@@ -13,6 +13,7 @@
  */
 
 import { escapeHtml, safeHttpUrl } from './escape.js';
+import { JOIN_ACTION, JOIN_MAP, buildFormBody, submitTo, validateJoin } from './submit.js';
 
 export const RECENT_LIMIT = 5;
 export const PUBLISHABLE = new Set(['approved', 'published']);
@@ -123,6 +124,9 @@ export const MONEY_KINDS = [
   { id: 'building', label: 'Building and equipment', types: ['investment'] },
   { id: 'contracts', label: 'Contracts', types: ['obligated', 'award'] },
   { id: 'deals', label: 'Deals', types: ['transaction'] },
+  { id: 'grants', label: 'Grants', types: ['grant'] },
+  { id: 'proposed', label: 'Proposed', types: ['proposed'] },
+  { id: 'charges', label: 'Charges', types: ['charge'] },
   { id: 'other', label: 'Other amounts', types: [] },
 ];
 
@@ -337,9 +341,65 @@ export function renderCompanies(companies) {
   }).join('');
 }
 
+/* ---- mentions -------------------------------------------------------------- */
+
+/** People named in the issue's stories, from intel/event_people.csv via the
+    export. Only people on a published story are listed; one entry per name
+    and organisation, with every story they appear in. */
+export function mentionsFor(people, items) {
+  const shown = new Set(items.map((i) => i.id));
+  const byKey = new Map();
+  for (const p of people ?? []) {
+    if (!p.name || !shown.has(p.event_id)) continue;
+    const key = `${p.name}|${p.organization ?? ''}`;
+    const entry = byKey.get(key) ?? { name: p.name, role: p.role ?? '', organization: p.organization ?? '', events: [] };
+    entry.events.push(p.event_id);
+    byKey.set(key, entry);
+  }
+  return [...byKey.values()].sort((a, b) => a.name.localeCompare(b.name));
+}
+
+export function renderMentions(mentions) {
+  return mentions.map((m) =>
+    `<li class="wny-company"><span class="wny-company__name">${escapeHtml(m.name)}</span>`
+    + `<span class="wny-company__meta">${[m.role, m.organization].filter(Boolean).map(escapeHtml).join(', ')}</span></li>`
+  ).join('');
+}
+
+/* ---- sign-up ----------------------------------------------------------------
+   The homepage's mailing-list form as is: Google Form -> Apps Script -> Kit
+   (tag na-list). Level is fixed to List; nothing else is sent. */
+
+function mountSignup(root) {
+  const form = root.querySelector('[data-wny="signup"]');
+  if (!form) return;
+  const status = form.querySelector('.status');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const values = { ...Object.fromEntries(new FormData(form).entries()), level: 'List' };
+    const errors = validateJoin(values);
+    if (errors.length || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(values.email ?? '')) {
+      status.dataset.state = 'error';
+      status.textContent = errors.includes('name') ? 'Add your name.' : 'Add an email address, like name@example.com.';
+      return;
+    }
+    status.dataset.state = 'sending';
+    status.textContent = 'Subscribing…';
+    try {
+      await submitTo(JOIN_ACTION, buildFormBody(values, JOIN_MAP));
+      form.reset();
+      status.dataset.state = 'done';
+      status.textContent = 'Subscribed. Check your inbox to confirm.';
+    } catch {
+      status.dataset.state = 'error';
+      status.textContent = 'That didn’t go through. Check your connection and try again.';
+    }
+  });
+}
+
 /* ---- headline ticker ------------------------------------------------------ */
 
-export const TICKER_MS = 5000;
+export const TICKER_MS = 3500;
 
 /** One line: place, then headline, linking to the story's card. */
 export function tickerLine(item) {
@@ -566,6 +626,103 @@ function fillSelect(select, options, value) {
   select.value = options.some(([v]) => v === value) ? value : '';
 }
 
+/* ---- investments page ------------------------------------------------------ */
+
+export const INVEST_KEYS = ['q', 'kind', 'stage', 'lane'];
+
+/** Every published item with a stated amount, newest first. */
+export function investmentLines(items) {
+  return byNewest(items.filter((i) => formatAmount(i.amount, i.currency)));
+}
+
+export function filterInvestments(lines, state) {
+  return filterItems(lines, { q: state.q, stage: state.stage, lane: state.lane })
+    .filter((i) => !state.kind || moneyKind(i) === state.kind);
+}
+
+export function investmentOptions(lines) {
+  const kinds = new Set(lines.map(moneyKind));
+  const base = filterOptions(lines);
+  return { kind: MONEY_KINDS.filter((k) => kinds.has(k.id)).map((k) => [k.id, k.label]), stage: base.stage, lane: base.lane };
+}
+
+/** Lines grouped by kind; each kind totals its investment-and-industry lines
+    only (other sections are listed but never counted), and kinds are never
+    added together. */
+export function renderInvestments(lines) {
+  return moneyGroups(lines).map((group) => {
+    const counted = group.lines.filter((i) => i.lane === 'production');
+    const rows = group.lines.map((i) =>
+      `<li class="wny-money__line" data-item="${escapeHtml(i.id)}">`
+      + `<span class="wny-money__amount${toneClass(i.stage)}">${escapeHtml(formatAmount(i.amount, i.currency))}</span>`
+      + `<a class="wny-money__what" href="/MAGS/WNY/posts/#wny-${escapeHtml(i.id)}">${escapeHtml(i.headline)}</a>`
+      + `<span class="wny-money__meta">${[STAGES[i.stage], words(i.amount_type), i.place,
+        i.lane === 'production' ? '' : LANES.find((l) => l.id === i.lane)?.label,
+        formatAmount(i.ceiling_amount, i.currency) ? `ceiling ${formatAmount(i.ceiling_amount, i.currency)}` : '']
+        .filter(Boolean).map(escapeHtml).join(' · ')}</span></li>`).join('');
+    const total = counted.length > 1 || (counted.length === 1 && group.lines.length > 1)
+      ? `<p class="wny-money__line wny-money__total">${renderMoneyTotal(counted, `${group.label} total, investment and industry only`)}</p>`
+      : '';
+    return `<li class="wny-money__group"><h3 class="wny-money__kind">${escapeHtml(group.label)}</h3>`
+      + `<ul class="wny-money__list">${rows}</ul>${total}</li>`;
+  }).join('');
+}
+
+export async function mountInvestments(root = document) {
+  const list = root.querySelector('[data-wny="investments"]');
+  const form = root.querySelector('[data-wny="filters"]');
+  const count = root.querySelector('[data-wny="count"]');
+  const none = root.querySelector('[data-wny="no-match"]');
+  let data;
+  try {
+    data = await loadData();
+  } catch (err) {
+    console.error('wny.json failed to load', err);
+    show(root.querySelector('[data-wny="error"]'));
+    return;
+  }
+  const lines = investmentLines(publishable(data.items));
+  updated(root, data);
+  if (!lines.length) {
+    show(root.querySelector('[data-wny="empty"]'));
+    return;
+  }
+  const params = new URLSearchParams(location.search);
+  let state = Object.fromEntries(INVEST_KEYS.map((k) => [k, params.get(k) ?? '']));
+  const options = investmentOptions(lines);
+  for (const key of ['kind', 'stage', 'lane']) fillSelect(form.elements[key], options[key], state[key]);
+  state = { ...state, kind: form.elements.kind.value, stage: form.elements.stage.value, lane: form.elements.lane.value };
+  form.elements.q.value = state.q;
+  show(form);
+
+  const render = () => {
+    const shown = filterInvestments(lines, state);
+    list.innerHTML = renderInvestments(shown);
+    list.hidden = !shown.length;
+    none.hidden = shown.length > 0;
+    const active = INVEST_KEYS.some((k) => state[k]);
+    count.textContent = active
+      ? `Showing ${shown.length} of ${lines.length} dollar figures`
+      : `${lines.length} dollar figures`;
+    count.hidden = false;
+    form.querySelector('[data-wny="clear"]').hidden = !active;
+    window.NASketch?.redraw();
+  };
+  const apply = () => {
+    state = Object.fromEntries(INVEST_KEYS.map((k) => [k, String(form.elements[k].value).trim()]));
+    const qs = new URLSearchParams(Object.entries(state).filter(([, v]) => v)).toString();
+    history.replaceState(null, '', `${location.pathname}${qs ? `?${qs}` : ''}`);
+    render();
+  };
+  form.addEventListener('submit', (e) => e.preventDefault());
+  form.addEventListener('input', apply);
+  form.addEventListener('change', apply);
+  for (const button of [form.querySelector('[data-wny="clear"]'), none.querySelector('button')]) {
+    button?.addEventListener('click', () => { form.reset(); apply(); form.elements.q.focus(); });
+  }
+  render();
+}
+
 /* ---- mounting ------------------------------------------------------------ */
 
 /* The fictional sample file is for previewing the design on a local server
@@ -603,6 +760,7 @@ export async function mountFront(root = document) {
   const items = byNewest(publishable(data.items));
   drawCorridor(root, items);
   mountTicker(root, items);
+  mountSignup(root);
 
   if (!items.length) {
     show(root.querySelector('[data-wny="empty"]'));
@@ -621,6 +779,17 @@ export async function mountFront(root = document) {
     if (money.length) {
       show(root.querySelector('[data-wny="money-list"]'), renderMoneyGroups(money));
       show(root.querySelector('[data-wny="money"]'));
+    }
+    const mentions = mentionsFor(data.people, items);
+    if (mentions.length) {
+      show(root.querySelector('[data-wny="mentions-list"]'), renderMentions(mentions));
+      show(root.querySelector('[data-wny="mentions"]'));
+    }
+    const bar = root.querySelector('[data-wny="issue-list"]');
+    if (bar) {
+      bar.querySelector('.wny-allbar__count').textContent = `${items.length} ${items.length === 1 ? 'article' : 'articles'}`;
+      bar.querySelector('ul').innerHTML = items.map(renderCompact).join('');
+      bar.hidden = false;
     }
     const companies = companiesInNews(items, data.entities);
     if (companies.length) {

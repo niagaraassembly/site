@@ -165,7 +165,8 @@
 <script type="module" src="assets/js/theme.js"></script>
 <script type="module">
   import { buildFormBody, submitTo, MAX_TEXT,
-           validateJoin, validateBoard, validateRegister } from './assets/js/submit.js';
+           validateJoin, validateBoard, validateRegister,
+           JOIN_ACTION, JOIN_MAP } from './assets/js/submit.js';
   import { CATEGORIES, CATEGORY_LABELS, KINDS,
            REQUIRED, OPTIONAL } from './assets/js/nav.js';
 
@@ -176,10 +177,6 @@
   /* Read from FB_PUBLIC_LOAD_DATA_ in each live form's page source, not
      from a pre-filled link — that method yields ids that look right and
      silently drop values for some question types. */
-  const JOIN_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLScFaiJNiyegV3F-J_5fHMfKjgKnWA7to6dC2OrLE1gmF-kigw/formResponse';
-  const JOIN_MAP = { name:  'entry.1137859152',
-                     email: 'entry.1220624572',
-                     level: 'entry.1083496865' };
 
   const BOARD_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLSfD9HocHkf_2xZOtT0_Jr358bqlx2SAa70AaADSfdv_i0CDJw/formResponse';
   const BOARD_MAP = { category:    'entry.572165348',

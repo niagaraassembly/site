@@ -111,6 +111,19 @@ class ExportTest(unittest.TestCase):
                          "only flagged fields, only this event, no empty tables")
         self.assertEqual([v["value"] for v in item["conflicts"][0]["values"]], ["About 85", "60 local jobs"])
 
+    def test_people_come_only_from_event_people_for_exported_events(self):
+        write(self.root / "intel" / "event_people.csv",
+              ["event_id", "person_name", "role", "organization", "entity_id", "source_name", "source_url", "article_id"], [
+                  {"event_id": "A", "person_name": "Ryan Hulse", "role": "Senior Director for R&D", "organization": "Solstice"},
+                  {"event_id": "HELD", "person_name": "Not Shown", "role": "x", "organization": "y"},
+                  {"event_id": "A", "person_name": " ", "role": "blank name", "organization": "z"},
+              ])
+        data = self.run_with([event("A"), event("HELD", "not_ready")])
+        self.assertEqual([p["name"] for p in data["people"]], ["Ryan Hulse"])
+
+    def test_no_people_file_means_no_people(self):
+        self.assertEqual(self.run_with([event("A")])["people"], [])
+
     def test_flags_parse_into_type_and_detail(self):
         item = self.run_with([event("A", flags="conflict:local_job_count;company_reported")])["items"][0]
         self.assertEqual(item["flags"], [{"type": "conflict", "detail": "local_job_count"},

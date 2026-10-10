@@ -3,38 +3,36 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>All Western New York articles — Niagara Assembly</title>
-<meta name="description" content="Every reviewed Western New York story, newest first, with search and filters.">
+<title>Western New York dollar figures — Niagara Assembly</title>
+<meta name="description" content="Every dollar figure in reviewed Western New York stories, by kind of money, with search and filters.">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('na-theme')||'light'}catch(e){document.documentElement.dataset.theme='light'}</script>
 <link rel="stylesheet" href="/assets/css/site.css">
 <link rel="stylesheet" href="/assets/css/mag.css">
 </head>
 <body>
 
-<header class="topnav" data-sitenav></header>
+<header class="topnav topnav--board" data-sitenav></header>
 
-<div class="frame" data-sketch="frame">
+<div class="frame frame--board" data-sketch="frame">
 <p class="mag-kicker"><a href="/MAGS/WNY/">Western New York</a></p>
-<h1>All articles</h1>
-<p class="wny-source">Looking for the money? See <a href="/MAGS/WNY/investments/">all dollar figures</a>.</p>
-<p class="wny-note" data-wny="empty" hidden>No approved Western New York news yet. Stories appear here after they pass review.</p>
-<p class="wny-note" data-wny="error" hidden>The news list didn’t load. Reload the page to try again.</p>
-<noscript><p class="wny-note">This page needs JavaScript to show the news.</p></noscript>
+<h1>Dollar figures</h1>
+<p class="issue-intro">Every amount stated in an approved Western New York story, grouped by kind of money. Totals count investment and industry stories only, each kind on its own; contract ceilings are shown but never counted. <a href="/research/methods/news/#money">How we count money</a>.</p>
 <form class="filters wny-filters" data-wny="filters" data-sketch="box" role="search" hidden>
-<input type="search" name="q" placeholder="Search stories" aria-label="Search stories">
-<select name="lane" aria-label="Section"><option value="">All sections</option></select>
+<input type="search" name="q" placeholder="Search dollar figures" aria-label="Search dollar figures">
+<select name="kind" aria-label="Kind of money"><option value="">All kinds of money</option></select>
 <select name="stage" aria-label="Stage"><option value="">Any stage</option></select>
-<select name="type" aria-label="Type of news"><option value="">Any type</option></select>
-<select name="flag" aria-label="Marking"><option value="">Any marking</option></select>
-<label class="check"><input type="checkbox" name="amount"> Has a stated amount</label>
+<select name="lane" aria-label="Section"><option value="">All sections</option></select>
 <button type="button" class="wny-filters__clear" data-wny="clear" hidden>Clear</button>
 </form>
 <p class="board__count" data-wny="count" aria-live="polite" hidden></p>
+<p class="wny-note" data-wny="empty" hidden>No approved dollar figures yet.</p>
+<p class="wny-note" data-wny="error" hidden>The figures didn’t load. Reload the page to try again.</p>
+<noscript><p class="wny-note">This page needs JavaScript to show the figures.</p></noscript>
 <div class="wny-no-match" data-wny="no-match" hidden>
-<p class="wny-note">No stories match these filters.</p>
+<p class="wny-note">No dollar figures match these filters.</p>
 <button type="button" class="wny-filters__clear">Clear filters</button>
 </div>
-<ul class="issue-list" data-wny="all" hidden></ul>
+<ul class="wny-money__groups" data-wny="investments" hidden></ul>
 <p class="wny-updated" data-wny="updated" hidden></p>
 </div>
 <footer class="sitefoot">
@@ -61,6 +59,6 @@
 <script type="module" src="/assets/js/sitenav.js"></script>
 <script type="module" src="/assets/js/theme.js"></script>
 <script type="module" src="/assets/js/subsite.js"></script>
-<script type="module">import { mountAll } from '/assets/js/wny.js'; mountAll();</script>
+<script type="module">import { mountInvestments } from '/assets/js/wny.js'; mountInvestments();</script>
 </body>
 </html>

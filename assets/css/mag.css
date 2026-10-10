@@ -539,7 +539,9 @@ dialog.sparks-dialog::backdrop {
 .wny-money__list { list-style: none; padding: 0; margin: 0; }
 .wny-money__line {
   display: grid;
-  grid-template-columns: 6.5rem minmax(0, 1fr) auto;
+  /* The details column is capped and wraps, so it can never run over the
+     headline (it did, at 46rem, when it was nowrap). */
+  grid-template-columns: 6.5rem minmax(0, 1fr) minmax(0, 20rem);
   gap: 1rem;
   align-items: baseline;
   padding: .5rem 0;
@@ -567,7 +569,7 @@ dialog.sparks-dialog::backdrop {
 .wny-money__part { white-space: nowrap; }
 .wny-money__what { font-weight: 600; text-decoration: none; }
 .wny-money__what:hover, .wny-money__line.is-pointed .wny-money__what { text-decoration: underline; }
-.wny-money__meta { font: .75rem/1.4 var(--sans); color: var(--ink-soft); white-space: nowrap; }
+.wny-money__meta { font: .75rem/1.4 var(--sans); color: var(--ink-soft); text-align: right; }
 @media (max-width: 34rem) {
   .wny-money__line { grid-template-columns: 5.5rem minmax(0, 1fr); }
   .wny-money__meta { grid-column: 2; white-space: normal; }
@@ -664,4 +666,21 @@ dialog.sparks-dialog::backdrop {
 /* Plain markings, folded into one quiet sentence under the warning chips. */
 .wny-flags__plain { margin: .5rem 0 0; font: .8125rem/1.5 var(--sans); color: var(--ink-soft); }
 
-.corridor__key { margin: .25rem 0 0; font: .8125rem/1.4 var(--sans); color: var(--ink-soft); }
+.corridor__key { margin: .2rem 0 0; font: .6875rem/1.4 var(--sans); color: var(--ink-soft); }
+
+/* "All articles in this issue": a full-width bar under the corridor line
+   that opens in place to the issue's one-line index. */
+.wny-allbar { margin: -1.25rem 0 2.5rem; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+.wny-allbar summary {
+  padding: .6rem 0;
+  font: 600 .9375rem/1.4 var(--sans);
+  cursor: pointer;
+}
+.wny-allbar summary:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.wny-allbar__count { font-weight: 400; color: var(--ink-soft); margin-left: .35rem; }
+.wny-allbar .issue-list { margin: 0 0 .5rem; }
+.wny-allbar .issue-list__item:first-child { border-top: 1px solid var(--rule); }
+.wny-allbar .issue-list__item:last-child { border-bottom: 0; }
+
+/* Issue sign-up: the homepage's mailing-list form, compact. */
+.wny-signup { margin: 0 0 2.5rem; max-width: 34rem; }
