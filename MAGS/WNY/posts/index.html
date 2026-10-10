@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MAGs — Niagara Assembly</title>
-<meta name="description" content="Niagara Assembly magazines: START and Research.">
+<title>All Western New York articles — Niagara Assembly</title>
+<meta name="description" content="Every reviewed Western New York story, newest first.">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('na-theme')||'light'}catch(e){document.documentElement.dataset.theme='light'}</script>
 <link rel="stylesheet" href="/assets/css/site.css">
 <link rel="stylesheet" href="/assets/css/mag.css">
@@ -14,14 +14,13 @@
 <header class="topnav" data-sitenav></header>
 
 <div class="frame" data-sketch="frame">
-<p class="mag-kicker mag-kicker--pub">Niagara Assembly MAGs</p>
-<h1>Magazines</h1>
-<p class="issue-intro">Ideas, places and source-backed investigations across the Niagara–Buffalo–Rochester corridor.</p>
-<ul class="issue-list">
-<li class="issue-list__item"><a class="issue-list__title" href="/MAGS/START/">START</a><p class="issue-list__meta">The ideas, models and places shaping what we’re building. Read Issue 1, September 2026.</p></li>
-<li class="issue-list__item"><a class="issue-list__title" href="/MAGS/WNY/front/">Western New York</a><p class="issue-list__meta">Reviewed news on investment, facilities, jobs and new ventures from the Niagara River to Syracuse.</p></li>
-<li class="issue-list__item"><a class="issue-list__title" href="/MAGS/RESEARCH/">Research</a><p class="issue-list__meta">Source-backed investigations of places across the corridor: articles, reports, maps and fieldwork.</p></li>
-</ul>
+<p class="mag-kicker"><a href="/MAGS/WNY/front/">Western New York</a></p>
+<h1>All articles</h1>
+<p class="wny-note" data-wny="empty" hidden>No approved Western New York news yet. Stories appear here after they pass review.</p>
+<p class="wny-note" data-wny="error" hidden>The news list didn’t load. Reload the page to try again.</p>
+<noscript><p class="wny-note">This page needs JavaScript to show the news.</p></noscript>
+<ul class="issue-list" data-wny="all" hidden></ul>
+<p class="wny-updated" data-wny="updated" hidden></p>
 </div>
 <footer class="sitefoot">
   <span>Niagara Assembly (unincorporated)</span>
@@ -47,5 +46,6 @@
 <script type="module" src="/assets/js/sitenav.js"></script>
 <script type="module" src="/assets/js/theme.js"></script>
 <script type="module" src="/assets/js/subsite.js"></script>
+<script type="module">import { mountAll } from '/assets/js/wny.js'; mountAll();</script>
 </body>
 </html>

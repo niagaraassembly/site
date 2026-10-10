@@ -391,3 +391,114 @@ dialog.sparks-dialog::backdrop {
   color: var(--ink-soft);
 }
 
+/* Western New York front ---------------------------------------------- */
+
+/* The corridor line: Niagara River to Syracuse, drawn west to east, with
+   a mark for each approved story placed by longitude. The drawing is SVG
+   (assets/js/wny.js); marks and town names are HTML laid over it so they
+   can take focus and wrap like text. Strokes use currentColor, so the
+   theme toggle recolours the line without a redraw. */
+.corridor { margin: 0 0 2.75rem; color: var(--ink); }
+.corridor__plot { position: relative; }
+.corridor__line { display: block; width: 100%; height: 64px; overflow: visible; }
+.corridor__marks { position: absolute; inset: 0; }
+.corridor__mark {
+  position: absolute;
+  width: 22px; height: 22px;
+  margin: 0 0 -11px -11px;
+  border-radius: 50%;
+}
+.corridor__mark:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
+.corridor__mark.is-pointed { box-shadow: 0 0 0 2px var(--paper), 0 0 0 3.5px var(--ink); }
+.corridor__towns {
+  position: relative;
+  height: 1.1rem;
+  margin: 0 8px;
+  font: 1rem/1 var(--hand);
+  color: var(--ink-soft);
+}
+.corridor__towns span { position: absolute; transform: translateX(-50%); white-space: nowrap; }
+.corridor__towns span:last-child { transform: translateX(-100%); }
+.corridor__caption {
+  margin: .9rem 0 0;
+  min-height: 1.4em;
+  font: .875rem/1.4 var(--sans);
+  color: var(--ink-soft);
+}
+@media (max-width: 34rem) {
+  .corridor__towns { font-size: .875rem; }
+}
+
+.wny-note { color: var(--ink-soft); }
+
+.wny-recent { margin: 0 0 2.5rem; }
+.wny-recent__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.wny-recent__head h2 { margin: 0 0 .75rem; }
+.wny-recent__head a { font: .8125rem/1.4 var(--sans); color: var(--ink-soft); }
+.wny-recent__head a:hover { color: var(--ink); }
+
+/* Section boxes are drawn by sketch.js (data-sketch="card"); the plain
+   border is its fallback, as everywhere on the site. */
+.wny-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+  align-items: start;   /* each box is as tall as its stories, not its neighbour's */
+  gap: 1.5rem;
+  margin: 0 0 2.5rem;
+}
+.wny-group {
+  position: relative;
+  padding: 1.1rem 1.25rem .4rem;
+  border: 1.4px solid var(--rule);
+}
+.sketched .wny-group { border-color: transparent; }
+.wny-group h2 { margin: 0 0 .75rem; font: 700 1.15rem/1.2 var(--hand); }
+.wny-group .issue-list { margin: 0; }
+.wny-group .issue-list__item:last-child { border-bottom: 0; }
+
+.wny-item.is-pointed .issue-list__title { text-decoration: underline; }
+.wny-item--compact { padding: .7rem 0; }
+.wny-item__amount {
+  margin: 0 0 .2rem;
+  font: 700 1.35rem/1.1 var(--mono);
+  letter-spacing: -0.02em;
+}
+.wny-item .issue-list__meta { line-height: 1.4; }
+.wny-item__summary { margin: .45rem 0 0; font-size: .9375rem; line-height: 1.55; }
+/* Reviewer caveats from na-research (public_note): what is still unresolved. */
+.wny-item__note {
+  margin: .4rem 0 0;
+  padding-left: .7rem;
+  border-left: 2px solid var(--rule);
+  font: .8125rem/1.5 var(--sans);
+  color: var(--ink-soft);
+}
+.wny-item__via { margin: .3rem 0 0; font: .75rem/1.4 var(--sans); color: var(--ink-soft); }
+
+.wny-companies { margin: 0 0 2rem; }
+.wny-company-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  columns: 2 16rem;
+  column-gap: 2rem;
+}
+.wny-company {
+  break-inside: avoid;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .45rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+.wny-company__name { font-weight: 600; }
+.wny-company__name a { text-decoration: none; }
+.wny-company__name a:hover { text-decoration: underline; }
+.wny-company__meta { font: .75rem/1.6 var(--mono); color: var(--ink-soft); white-space: nowrap; }
+
+.wny-updated { font: .75rem/1.4 var(--sans); color: var(--ink-soft); margin: 0; }

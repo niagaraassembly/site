@@ -1,0 +1,24 @@
+{
+  "_note": "FICTIONAL SAMPLE for design preview and tests only. Every company, amount and story here is invented. Never copy into data/wny.json.",
+  "generated_at": "2026-10-10T12:00:00Z",
+  "source": { "repo": "sample", "commit": "sample" },
+  "items": [
+    { "id": "S1", "type": "capital_investment", "publish_status": "approved", "date": "2026-10-09", "place": "Buffalo", "lng": -78.87, "amount": 49000000, "currency": "USD", "entity_id": "X1", "entity_name": "Sample Materials Co.", "headline": "Sample Materials Co. expands its Buffalo lab", "summary": "Sample text: a placeholder expansion used to preview the layout.", "sources": [{ "publisher": "Sample Daily", "url": "https://example.com/1" }] },
+    { "id": "S2", "type": "acquisition", "publish_status": "approved", "date": "2026-10-06", "place": "Rochester", "lng": -77.61, "amount": 75000000, "currency": "USD", "entity_id": "X2", "entity_name": "Example Brands", "headline": "Example Brands acquires a sample beverage maker", "summary": "Sample text: a placeholder acquisition.", "sources": [{ "publisher": "Sample Business Journal", "url": "https://example.com/2" }] },
+    { "id": "S3", "type": "facility_expansion", "publish_status": "published", "date": "2026-10-06", "place": "Penfield", "lng": -77.47, "amount": 6000000, "currency": "USD", "entity_id": "X3", "entity_name": "Placeholder Parts", "headline": "Placeholder Parts plans a larger plant in Penfield", "summary": "Sample text: a placeholder planning-board application.", "sources": [{ "publisher": "Sample Town Record", "url": "https://example.com/3" }] },
+    { "id": "S4", "type": "facility_closure", "publish_status": "approved", "date": "2026-10-01", "place": "Niagara Falls", "lng": -79.03, "entity_id": "X4", "entity_name": "Demo Chemical", "headline": "Demo Chemical to close its Niagara Falls site", "summary": "Sample text: a placeholder closure.", "sources": [{ "publisher": "Sample Gazette", "url": "https://example.com/4" }] },
+    { "id": "S5", "type": "major_contract", "publish_status": "approved", "date": "2026-09-28", "place": "Rochester", "lng": -77.6, "amount": 20700000000, "currency": "USD", "entity_id": "X2", "entity_name": "Example Brands", "headline": "Sample contract award to a Rochester supplier", "sources": [{ "publisher": "Sample Wire", "url": "https://example.com/5" }] },
+    { "id": "S6", "type": "workforce_expansion", "publish_status": "approved", "date": "2026-09-25", "place": "Syracuse", "lng": -76.15, "entity_id": "X5", "entity_name": "Mock Microsystems", "headline": "Mock Microsystems adds a second shift in Syracuse", "summary": "Sample text: a placeholder hiring story.", "sources": [] },
+    { "id": "S7", "type": "startup_formation", "publish_status": "approved", "date": "2026-09-20", "place": "Ithaca", "lng": -76.5, "entity_id": "X6", "entity_name": "Sample Robotics", "headline": "Sample Robotics spins out of a university lab", "sources": [{ "publisher": "Sample Campus News", "url": "https://example.com/7" }] },
+    { "id": "S8", "type": "grant_or_incentive", "publish_status": "approved", "date": "2026-09-18", "place": "Albany", "lng": -73.75, "amount": 500000000, "currency": "USD", "headline": "Sample state fund opens a new round", "summary": "Sample text: a New York State item east of the corridor, listed but not marked on the line.", "sources": [{ "publisher": "Sample State Release", "url": "https://example.com/8" }] },
+    { "id": "S9", "type": "layoff", "publish_status": "not_ready", "date": "2026-10-10", "place": "Buffalo", "lng": -78.88, "headline": "UNAPPROVED sample: must never render", "sources": [] }
+  ],
+  "entities": [
+    { "id": "X1", "name": "Sample Materials Co.", "city": "Buffalo", "website": "https://example.com" },
+    { "id": "X2", "name": "Example Brands", "city": "Rochester" },
+    { "id": "X3", "name": "Placeholder Parts", "city": "Penfield" },
+    { "id": "X4", "name": "Demo Chemical", "city": "Niagara Falls" },
+    { "id": "X5", "name": "Mock Microsystems", "city": "Syracuse" },
+    { "id": "X6", "name": "Sample Robotics", "city": "Ithaca" }
+  ]
+}

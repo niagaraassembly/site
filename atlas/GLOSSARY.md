@@ -44,6 +44,18 @@ Includes Stoney Creek, Ancaster, Dundas, Waterdown and Flamborough.
 A **single-tier** municipality on the western peninsula. Publishes 425 GIS
 items; verified 2026-08-23; not yet fetched.
 
+### Western New York (WNY)
+**A geography, not a jurisdiction.** New York State from **Syracuse west to
+the Niagara River** (US side) and **south to the Pennsylvania border**:
+Syracuse and Onondaga, the Finger Lakes, Rochester and Monroe, Buffalo and
+Erie, Niagara Falls NY, and the Southern Tier west of Syracuse. Set by the
+project lead 2026-10-10. Border counties (Oswego, Cortland, Broome) are not
+yet ruled on.
+
+The Western New York MAG currently admits **any approved New York State
+record**, a deliberately looser bound than this definition; the bound is
+editorial, not the data's.
+
 ### Study area
 What the atlas currently *holds data for*: Niagara Region + Hamilton, plus the
 New York side already in `data/`. Narrower than the peninsula. Say "study area"
