@@ -622,3 +622,34 @@ dialog.sparks-dialog::backdrop {
 .wny-filters__clear:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 .wny-no-match { margin: 0 0 2rem; }
 .wny-no-match .wny-note { margin-bottom: .4rem; }
+
+/* Headline ticker: one full-width line under the issue stamp, between two
+   rules. Text only; the item swaps in place (no sliding), and the line is
+   cut with an ellipsis rather than wrapping. */
+.wny-ticker {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin: -1.25rem 0 2rem;
+  padding: .55rem 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+.wny-ticker__line {
+  flex: 1;
+  min-width: 0;
+  max-width: none;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font: .9375rem/1.4 var(--sans);
+}
+.wny-ticker__item { text-decoration: none; }
+.wny-ticker__item:hover, .wny-ticker__item:focus-visible { text-decoration: underline; }
+.wny-ticker__place { color: var(--ink-soft); }
+.wny-ticker__toggle { flex: none; }
+
+/* Bylines run the full width of the card or list, not the 40rem prose cap,
+   so short company names don't fold onto a second line. */
+.wny-item .issue-list__meta { max-width: none; }

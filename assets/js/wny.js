@@ -299,6 +299,62 @@ export function renderCompanies(companies) {
   }).join('');
 }
 
+/* ---- headline ticker ------------------------------------------------------ */
+
+export const TICKER_MS = 5000;
+
+/** One line: place, then headline, linking to the story's card. */
+export function tickerLine(item) {
+  return `<a class="wny-ticker__item" href="#wny-${escapeHtml(item.id)}">`
+    + (item.place ? `<span class="wny-ticker__place">${escapeHtml(item.place)}</span> ` : '')
+    + `${escapeHtml(item.headline)}</a>`;
+}
+
+/* Cycles the issue's headlines on one line. Pauses while pointed at or
+   focused, and on its own button (auto-changing content must be stoppable).
+   With reduced motion it never changes by itself; the button steps instead. */
+function mountTicker(root, items) {
+  const el = root.querySelector('[data-wny="ticker"]');
+  if (!el || !items.length) return;
+  const line = el.querySelector('.wny-ticker__line');
+  const button = el.querySelector('.wny-ticker__toggle');
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let index = 0, paused = still, held = false, timer = null;
+
+  const showAt = (i) => {
+    index = (i + items.length) % items.length;
+    line.innerHTML = tickerLine(items[index]);
+  };
+  const label = () => {
+    if (!button) return;
+    button.textContent = still ? 'Next' : paused ? 'Play' : 'Pause';
+    button.setAttribute('aria-label', still ? 'Next headline' : paused ? 'Play headlines' : 'Pause headlines');
+  };
+  const run = () => {
+    clearInterval(timer);
+    timer = paused || held || items.length < 2 ? null : setInterval(() => showAt(index + 1), TICKER_MS);
+  };
+
+  showAt(0);
+  label();
+  if (button) {
+    button.hidden = items.length < 2;
+    button.addEventListener('click', () => {
+      if (still) { showAt(index + 1); return; }
+      paused = !paused;
+      label();
+      run();
+    });
+  }
+  const hold = (on) => { held = on; run(); };
+  line.addEventListener('pointerenter', () => hold(true));
+  line.addEventListener('pointerleave', () => hold(false));
+  line.addEventListener('focusin', () => hold(true));
+  line.addEventListener('focusout', () => hold(false));
+  el.hidden = false;
+  run();
+}
+
 /* ---- corridor line ------------------------------------------------------ */
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
@@ -498,6 +554,7 @@ export async function mountFront(root = document) {
   }
   const items = byNewest(publishable(data.items));
   drawCorridor(root, items);
+  mountTicker(root, items);
 
   if (!items.length) {
     show(root.querySelector('[data-wny="empty"]'));

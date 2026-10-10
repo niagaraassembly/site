@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import {
   LANES, STAGES, FLAGS, publishable, byNewest, flagText, moneyLines, corridorPosition, corridorMarks,
-  filterItems, filterOptions, parseFilters, filterQuery, moneyTotals, moneyByStage, renderMoneyTotal,
+  filterItems, filterOptions, parseFilters, filterQuery, moneyTotals, moneyByStage, renderMoneyTotal, tickerLine,
   formatAmount, companiesInNews, renderItem, renderCompact,
 } from '../assets/js/wny.js';
 
@@ -181,4 +181,11 @@ test('the money total sums the money list, one total per currency', () => {
   assert.deepEqual(moneyTotals(moneyLines(publishable(sample.items))), [{ currency: 'USD', amount: 126000000 }]);
   assert.deepEqual(moneyTotals([{ amount: 5e6, currency: 'USD' }, { amount: 2e6, currency: 'CAD' }, { amount: 1e6 }]),
                    [{ currency: 'USD', amount: 6e6 }, { currency: 'CAD', amount: 2e6 }]);
+});
+
+test('the ticker line is place then headline, escaped, linking to the card', () => {
+  const html = tickerLine({ id: 'S1', place: '<b>Buffalo</b>', headline: 'Lab <i>expands</i>' });
+  assert.match(html, /href="#wny-S1"/);
+  assert.ok(!html.includes('<b>') && !html.includes('<i>'));
+  assert.doesNotMatch(tickerLine({ id: 'S2', headline: 'No place' }), /wny-ticker__place/);
 });
