@@ -460,7 +460,7 @@ dialog.sparks-dialog::backdrop {
   column-gap: 2rem;
   margin: 0;
 }
-.wny-cards .issue-list__item:first-child { border-top: 0; }
+/* Every card opens with the same rule, so cards in a row line up. */
 .wny-cards .issue-list__item { border-bottom: 0; border-top: 1px solid var(--rule); }
 
 /* Flag tones. Two muted accents only, so a warning reads as a warning
@@ -980,3 +980,5 @@ dialog.sparks-dialog::backdrop {
 .wny-signup__pitch { flex-wrap: wrap; align-content: center; }
 .wny-signup__lead { display: block; width: 100%; margin-bottom: .45rem; font-size: 1.55rem; line-height: 1.25; letter-spacing: -0.01em; text-align: left; }
 @media (max-width: 34rem) { .wny-signup__pitch { font-size: 1.1rem; } .wny-signup__lead { font-size: 1.3rem; } }
+/* A card's top row (stage, amount) spans the card, past the 40rem prose cap. */
+.wny-item__top { max-width: none; }
