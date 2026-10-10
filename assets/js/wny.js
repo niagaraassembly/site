@@ -958,6 +958,86 @@ export function investmentOptions(lines) {
   return { kind: MONEY_KINDS.filter((k) => kinds.has(k.id)).map((k) => [k.id, k.label]), stage: base.stage, lane: base.lane };
 }
 
+/* ---- money at a glance: one cell per kind, and one equation ----------------- */
+
+/* What each kind's figure is, in a reader's words. */
+const KIND_CAPTIONS = {
+  investment: 'Investment', committed: 'Contract money committed', awards: 'Award, as the company reports it',
+  deals: 'Purchase price', grants: 'Grant', proposed: 'Proposed spending', charges: 'Charge', other: 'Other amount',
+};
+const NOT_COUNTED_WHY = { corridor: 'corridor news', developing: 'in development' };
+
+/** One cell per kind present: the counted sum (investment and industry
+    stories only), or, when nothing in the kind counts, its listed sum marked
+    as not counted. A cell takes a stage tone when all its counted lines share one. */
+export function moneyCells(items) {
+  return moneyGroups(investmentLines(items)).map((group) => {
+    const counted = group.lines.filter((i) => i.lane === 'production');
+    const use = counted.length ? counted : group.lines;
+    const currency = use[0].currency || 'USD';
+    const amount = use.reduce((sum, i) => sum + Number(i.amount), 0);
+    const tones = new Set(counted.map((i) => AMOUNT_TONES[i.stage] ?? ''));
+    const stages = [...new Set(counted.map((i) => STAGES[i.stage]).filter(Boolean))];
+    const why = [...new Set(group.lines.map((i) => NOT_COUNTED_WHY[i.lane]).filter(Boolean))];
+    return {
+      kind: group.id,
+      value: formatAmount(amount, currency),
+      tone: counted.length && tones.size === 1 ? [...tones][0] : '',
+      counted: counted.length > 0,
+      caption: KIND_CAPTIONS[group.id] ?? group.label,
+      detail: counted.length ? stages.join(', ').toLowerCase() : `not counted${why.length ? `: ${why.join(', ')}` : ''}`,
+    };
+  });
+}
+
+export function renderMoneyCells(cells) {
+  return cells.map((c) =>
+    `<li class="wny-cell${c.counted ? '' : ' wny-cell--muted'}">`
+    + `<span class="wny-cell__value${c.tone ? ` wny-amount--${c.tone}` : ''}">${escapeHtml(c.value)}</span>`
+    + `<span class="wny-cell__caption">${escapeHtml(c.caption)}</span>`
+    + `<span class="wny-cell__detail">${escapeHtml(c.detail)}</span></li>`).join('');
+}
+
+/* The kinds that are money for work in the region. Purchase prices and
+   reported awards are headline values, not spending here, so they stay out. */
+export const REGION_KINDS = ['investment', 'committed'];
+
+/** "Money tied to work in the region": investment and committed contract
+    money from investment-and-industry stories. An amount whose regional
+    share is undisclosed is starred and footnoted rather than dropped. */
+export function regionEquation(items) {
+  const terms = investmentLines(items)
+    .filter((i) => i.lane === 'production' && REGION_KINDS.includes(moneyKind(i)))
+    .sort((a, b) => REGION_KINDS.indexOf(moneyKind(a)) - REGION_KINDS.indexOf(moneyKind(b)));
+  if (terms.length < 2) return null;
+  const currencies = new Set(terms.map((i) => i.currency || 'USD'));
+  if (currencies.size > 1) return null;  // never add across currencies
+  const total = terms.reduce((sum, i) => sum + Number(i.amount), 0);
+  return {
+    terms: terms.map((i) => ({
+      id: i.id, value: formatAmount(i.amount, i.currency), kind: moneyKind(i), tone: AMOUNT_TONES[i.stage] ?? '',
+      starred: (i.flags ?? []).some((f) => f.type === 'gap' && f.detail === 'regional_share'),
+    })),
+    total: formatAmount(total, [...currencies][0]),
+  };
+}
+
+const TERM_WORDS = { investment: 'investment', committed: 'contract money committed' };
+
+export function renderRegionEquation(eq) {
+  if (!eq) return '';
+  /* Consecutive terms of one kind share a single label after the last. */
+  const parts = eq.terms.map((t, i) => {
+    const next = eq.terms[i + 1];
+    const label = !next || next.kind !== t.kind ? ` <span class="wny-eq__kind">${escapeHtml(TERM_WORDS[t.kind])}</span>` : '';
+    return `<a class="wny-eq__term${t.tone ? ` wny-amount--${t.tone}` : ''}" href="#wny-${escapeHtml(t.id)}">${escapeHtml(t.value)}${t.starred ? '*' : ''}</a>${label}`;
+  });
+  const starred = eq.terms.filter((t) => t.starred).map((t) => t.value);
+  return `<p class="wny-eq__title">Money tied to work in the region</p>`
+    + `<p class="wny-eq__line">${parts.join(' + ')} = <b class="wny-eq__total">${escapeHtml(eq.total)}</b></p>`
+    + (starred.length ? `<p class="wny-eq__note">* Part of ${starred.map(escapeHtml).join(' and ')} is for work outside the region; the regional share isn’t disclosed.</p>` : '');
+}
+
 /** Every money list, by kind. Each kind ends with its own total line, always:
     it counts investment-and-industry stories only (the data owner's rule),
     says how many other lines it leaves out, and is never added to another
@@ -1167,6 +1247,9 @@ export async function mountFront(root = document) {
     const money = investmentLines(items);
     if (money.length) {
       show(root.querySelector('[data-wny="money-list"]'), renderInvestments(investmentLines(items), { linkBase: '' }));
+      show(root.querySelector('[data-wny="money-cells"]'), renderMoneyCells(moneyCells(items)));
+      const eq = renderRegionEquation(regionEquation(items));
+      if (eq) show(root.querySelector('[data-wny="money-equation"]'), eq);
       show(root.querySelector('[data-wny="money"]'));
     }
     for (const [key, html] of [['coming', renderComingUp(items)], ['jobs', renderJobs(items)], ['support', renderIncentives(items)]]) {

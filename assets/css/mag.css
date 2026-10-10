@@ -920,3 +920,39 @@ dialog.sparks-dialog::backdrop {
 /* site.css sizes form inputs to full width; email choices are compact chips. */
 .wny-choice { white-space: nowrap; margin: 0; }
 .wny-choice input { width: auto; margin: 0; flex: none; }
+
+/* Money at a glance: a single row of cells, one per kind, figures on top
+   and what they are below; muted cells are listed but not counted. */
+.wny-cells {
+  list-style: none;
+  margin: .4rem 0 .35rem;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--ink);
+}
+.wny-cell {
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+  padding: .6rem .7rem .55rem;
+  border-right: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+.wny-cell__value { font: 700 1.5rem/1.1 var(--mono); letter-spacing: -0.02em; }
+.wny-cell__caption { font: .8125rem/1.3 var(--sans); }
+.wny-cell__detail { font: .75rem/1.3 var(--sans); color: var(--ink-soft); }
+.wny-cell--muted .wny-cell__value, .wny-cell--muted .wny-cell__caption { color: var(--ink-soft); }
+.wny-cells__note { margin: 0 0 1rem; font: .75rem/1.4 var(--sans); color: var(--ink-soft); }
+@media (max-width: 34rem) { .wny-cells { grid-template-columns: repeat(3, 1fr); } .wny-cell__value { font-size: 1.15rem; } }
+
+/* The one equation: money tied to work in the region. */
+.wny-eq { margin: 0 0 1.4rem; }
+.wny-eq__title { margin: 0 0 .15rem; font: 600 .875rem/1.4 var(--sans); }
+.wny-eq__line { margin: 0; max-width: none; font: 1.05rem/1.6 var(--mono); }
+.wny-eq__term { font-weight: 700; text-decoration: none; }
+.wny-eq__term:hover { text-decoration: underline; }
+.wny-eq__kind { font: .875rem/1.4 var(--sans); color: var(--ink-soft); }
+.wny-eq__total { font-size: 1.15rem; }
+.wny-eq__note { margin: .2rem 0 0; font: .75rem/1.4 var(--sans); color: var(--ink-soft); }
