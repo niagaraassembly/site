@@ -29,11 +29,12 @@ export const NAV = [
       node('/services/', 'Training', ['Clark', 'Electronics', 'Manufacturing', 'Linux', 'Robotics', 'AI']),
       node('/services/', 'Events',   ['Meetups', 'Talks', 'Tours', 'Workshops', 'Launches', 'Demos']),
       node('/services/', 'Tools',    ['Board', 'HeavyMap', 'Environments', 'Gage']),
+      /* Labels are plural; the Sector and Solo URLs predate that and stay put. */
       { label: 'News', path: '/services/news/', items: [
-        leaf('/services/news/', 'Sector'),
-        leaf('/services/news/', 'Solo'),
-        { label: 'MAGs', path: '/mags/' },
-        { label: 'START', path: '/MAGS/START/' }
+        { label: 'Starts', path: '/MAGS/START/' },
+        { label: 'Sectors', path: '/services/news/sector/' },
+        { label: 'Solos', path: '/services/news/solo/' },
+        { label: 'MAGS', path: '/mags/' }
       ] },
       node('/services/', 'Grow',     ['Local', 'Site', 'Building', 'Market', 'Product']),
       node('/services/', 'NA*',      ['Interviews', 'Profiles', 'Edits'])

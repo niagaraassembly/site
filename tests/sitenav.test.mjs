@@ -111,19 +111,19 @@ test('Research articles inherit News and the MAGs index', () => {
                       '/MAGS/RESEARCH/residential/index.html', '/MAGS/RESEARCH/future-post/',
                       '/MAGS/RESEARCH/posts/', '/MAGS/RESEARCH/places/pierce-arrow-hertel/']) {
     const trail = trailFor(path);
-    assert.deepEqual(trail.chain.map((item) => item.label), ['Services', 'News', 'MAGs']);
+    assert.deepEqual(trail.chain.map((item) => item.label), ['Services', 'News', 'MAGS']);
     const newsRow = rowsFor(trail.word, trail.chain).at(-1);
-    assert.deepEqual(newsRow.items.map((item) => item.label), ['Sector', 'Solo', 'MAGs', 'START']);
+    assert.deepEqual(newsRow.items.map((item) => item.label), ['Starts', 'Sectors', 'Solos', 'MAGS']);
   }
 });
 
 test('START issues inherit the direct START menu without article-specific aliases', () => {
   for (const path of ['/MAGS/START/', '/MAGS/START/issue-1-09-26/wny-corridor-brief/']) {
-    assert.deepEqual(trailFor(path).chain.map((item) => item.label), ['Services', 'News', 'START']);
+    assert.deepEqual(trailFor(path).chain.map((item) => item.label), ['Services', 'News', 'Starts']);
   }
 });
 
 test('future magazines inherit MAGs without growing the News menu', () => {
   assert.deepEqual(trailFor('/MAGS/FUTURE/first-article/').chain.map((item) => item.label),
-                   ['Services', 'News', 'MAGs']);
+                   ['Services', 'News', 'MAGS']);
 });
