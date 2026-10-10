@@ -534,6 +534,9 @@ dialog.sparks-dialog::backdrop {
 }
 .wny-money__line:first-child { border-top: 1px solid var(--rule); }
 .wny-money__amount { font: 700 1.1rem/1.2 var(--mono); }
+/* The total: a double rule above, as a ledger closes a column. */
+.wny-money__total { margin: 0; max-width: none; border-bottom: 0; border-top: 3px double var(--ink); }  /* a <p>: lift site.css's 40rem prose cap */
+.wny-money__total .wny-money__what { font-weight: 400; }
 .wny-money__what { font-weight: 600; text-decoration: none; }
 .wny-money__what:hover, .wny-money__line.is-pointed .wny-money__what { text-decoration: underline; }
 .wny-money__meta { font: .75rem/1.4 var(--sans); color: var(--ink-soft); white-space: nowrap; }

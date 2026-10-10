@@ -114,6 +114,16 @@ export function moneyLines(items) {
     && !(i.flags ?? []).some((f) => f.type === 'ceiling_not_obligation'));
 }
 
+/** Sum of the money list, one total per currency (never mixed). */
+export function moneyTotals(lines) {
+  const totals = new Map();
+  for (const i of lines) {
+    const currency = i.currency || 'USD';
+    totals.set(currency, (totals.get(currency) ?? 0) + Number(i.amount));
+  }
+  return [...totals].map(([currency, amount]) => ({ currency, amount }));
+}
+
 /** Position along the corridor, 0 (Niagara River) to 1 (Syracuse); null if off the line. */
 export function corridorPosition(lng, corridor = CORRIDOR) {
   if (typeof lng !== 'number' || Number.isNaN(lng)) return null;
@@ -463,6 +473,11 @@ export async function mountFront(root = document) {
     const money = moneyLines(items);
     if (money.length) {
       show(root.querySelector('[data-wny="money-list"]'), renderMoney(money));
+      const total = moneyTotals(money).map((t) => formatAmount(t.amount, t.currency)).join(' + ');
+      show(root.querySelector('[data-wny="money-total"]'),
+        `<span class="wny-money__amount">${escapeHtml(total)}</span>`
+        + `<span class="wny-money__what">Total of stated amounts</span>`
+        + `<span class="wny-money__meta">${money.length} ${money.length === 1 ? 'story' : 'stories'}</span>`);
       show(root.querySelector('[data-wny="money"]'));
     }
     const companies = companiesInNews(items, data.entities);

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import {
   LANES, STAGES, FLAGS, publishable, byNewest, flagText, moneyLines, corridorPosition, corridorMarks,
-  filterItems, filterOptions, parseFilters, filterQuery,
+  filterItems, filterOptions, parseFilters, filterQuery, moneyTotals,
   formatAmount, companiesInNews, renderItem, renderCompact,
 } from '../assets/js/wny.js';
 
@@ -153,4 +153,10 @@ test('front page section headings match the lane labels', () => {
   for (const lane of LANES) {
     assert.match(html, new RegExp(`data-wny-lane="${lane.id}"[^>]*>\\s*<h2>${lane.label}</h2>`), lane.id);
   }
+});
+
+test('the money total sums the money list, one total per currency', () => {
+  assert.deepEqual(moneyTotals(moneyLines(publishable(sample.items))), [{ currency: 'USD', amount: 124000000 }]);
+  assert.deepEqual(moneyTotals([{ amount: 5e6, currency: 'USD' }, { amount: 2e6, currency: 'CAD' }, { amount: 1e6 }]),
+                   [{ currency: 'USD', amount: 6e6 }, { currency: 'CAD', amount: 2e6 }]);
 });
