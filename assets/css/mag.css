@@ -695,14 +695,14 @@ dialog.sparks-dialog::backdrop {
   border: 1.4px solid var(--ink);
 }
 .sketched .wny-signup { border-color: transparent; }
+/* The pitch: lead line above, explanation below, as two stacked blocks
+   (a column, not a row, so the lead can never sit beside the text). */
 .wny-signup__pitch {
-  margin: 0;
-  max-width: none;
-  text-align: justify;
-  hyphens: auto;
-  font: 1.3rem/1.45 var(--sans);
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  gap: .5rem;
+  margin: 0;
 }
 .wny-signup__fields { display: grid; gap: .6rem; }
 .wny-signup__fields > label { display: grid; gap: .2rem; margin: 0; font: .8125rem/1.3 var(--sans); }
@@ -977,8 +977,8 @@ dialog.sparks-dialog::backdrop {
 .wny-districts__chamber { font: 600 .875rem/1.5 var(--sans); }
 .wny-districts__names { font: .9375rem/1.6 var(--mono); }
 @media (max-width: 34rem) { .wny-districts__row { grid-template-columns: 1fr; gap: .1rem; } }
-.wny-signup__pitch { flex-wrap: wrap; align-content: center; }
-.wny-signup__lead { display: block; width: 100%; margin-bottom: .45rem; font-size: 1.55rem; line-height: 1.25; letter-spacing: -0.01em; text-align: left; }
-@media (max-width: 34rem) { .wny-signup__pitch { font-size: 1.1rem; } .wny-signup__lead { font-size: 1.3rem; } }
+.wny-signup__lead { margin: 0; max-width: none; font: 700 1.55rem/1.25 var(--sans); letter-spacing: -0.01em; }
+.wny-signup__text { margin: 0; max-width: none; font: 1.3rem/1.45 var(--sans); text-align: justify; hyphens: auto; }
+@media (max-width: 34rem) { .wny-signup__lead { font-size: 1.3rem; } .wny-signup__text { font-size: 1.1rem; } }
 /* A card's top row (stage, amount) spans the card, past the 40rem prose cap. */
 .wny-item__top { max-width: none; }
