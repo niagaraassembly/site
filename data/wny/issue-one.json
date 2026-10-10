@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-10T17:06:25+00:00",
+  "generated_at": "2026-10-10T17:10:22+00:00",
   "source": {
     "repo": "niagaraassembly/na-research",
     "commit": "cfd12b5"
@@ -36,6 +36,24 @@
       "entity_name": "Solstice Advanced Materials",
       "headline": "Solstice to invest $49M expanding Buffalo R&D center",
       "note": "Solstice will invest $49M to expand its Buffalo R&D center, adding 12 jobs, with up to $1.4M in state Excelsior tax credits. The governor's and company's announcements quote different spokespeople and name forms.",
+      "jobs_added": 12,
+      "jobs_lost": null,
+      "incentive": {
+        "program": "Excelsior Jobs Program",
+        "amount": 1400000.0,
+        "type": "tax_credit"
+      },
+      "next_step": {
+        "text": "12 new full-time jobs due",
+        "date": "2027-06"
+      },
+      "stage_history": [
+        {
+          "stage": "announced",
+          "date": "2026-10-09",
+          "url": "https://www.governor.ny.gov/news/governor-hochul-announces-solstice-advanced-materials-expand-buffalo"
+        }
+      ],
       "sources": [
         {
           "article_id": "ART-2026-000027",
@@ -112,6 +130,20 @@
       "entity_name": "Constellation Brands",
       "headline": "Constellation Brands buys SpikedAde for $75M",
       "note": "SpikedAde production location not disclosed.",
+      "jobs_added": null,
+      "jobs_lost": null,
+      "incentive": null,
+      "next_step": {
+        "text": "SpikedAde team moves into Constellation's Beer Division",
+        "date": ""
+      },
+      "stage_history": [
+        {
+          "stage": "completed",
+          "date": "2026-10-07",
+          "url": "https://rbj.net/2026/10/07/constellation-brands-acquires-spikedade-rochester/"
+        }
+      ],
       "sources": [
         {
           "article_id": "ART-2026-000026",
@@ -150,6 +182,20 @@
       "entity_name": "Wilbert's Premium Auto Parts",
       "headline": "Wilbert's seeks approval for $6M Salt Road expansion",
       "note": "Not an approved or under-construction project as of source date.",
+      "jobs_added": null,
+      "jobs_lost": null,
+      "incentive": null,
+      "next_step": {
+        "text": "Penfield Planning Board decision on the application",
+        "date": ""
+      },
+      "stage_history": [
+        {
+          "stage": "application",
+          "date": "2026-10-06",
+          "url": "https://rbj.net/2026/10/06/wilberts-expands-auto-parts-facility-penfield"
+        }
+      ],
       "sources": [
         {
           "article_id": "ART-2026-000025",
@@ -212,6 +258,20 @@
       "entity_name": "The Goodyear Tire & Rubber Company",
       "headline": "Goodyear to close Niagara Falls chemical plant",
       "note": "Goodyear plans to close its Niagara Falls chemical plant, with production expected to end Oct. 31, 2026. Sources differ on jobs: about 85 across two sites (SEC filing) vs. 60 local (Niagara Gazette).",
+      "jobs_added": null,
+      "jobs_lost": null,
+      "incentive": null,
+      "next_step": {
+        "text": "Production ends; decommissioning follows",
+        "date": "2026-10-31"
+      },
+      "stage_history": [
+        {
+          "stage": "approved_plan",
+          "date": "2026-10-01",
+          "url": "https://www.sec.gov/Archives/edgar/data/42582/000162828026064270/gt-20260929.htm"
+        }
+      ],
       "sources": [
         {
           "article_id": "ART-2026-000007",
@@ -325,6 +385,20 @@
       "entity_name": "Lockheed Martin Rotary and Mission Systems",
       "headline": "Lockheed Martin's Liverpool radar work gets $18.9M contract change",
       "note": "An $18.9M change to an existing Air Force radar contract with work in Liverpool. The ~$1B figure is the contract ceiling, not new spending.",
+      "jobs_added": null,
+      "jobs_lost": null,
+      "incentive": null,
+      "next_step": {
+        "text": "Contract work expected to finish",
+        "date": "2029-06-30"
+      },
+      "stage_history": [
+        {
+          "stage": "award",
+          "date": "2026-09-28",
+          "url": "https://www.forth.news/lists/dod/CfWYYiypPGyjdvtXbEB1x"
+        }
+      ],
       "sources": [
         {
           "article_id": "ART-2026-000022",
@@ -371,6 +445,20 @@
       "entity_name": "Lockheed Martin Global Inc.",
       "headline": "$11.2M radar-parts contract splits work between Liverpool and Lithuania",
       "note": "An $11.2M radar-parts contract change with work in Liverpool and Lithuania; the Liverpool share is not disclosed.",
+      "jobs_added": null,
+      "jobs_lost": null,
+      "incentive": null,
+      "next_step": {
+        "text": "Contract work expected to finish",
+        "date": "2030-03-30"
+      },
+      "stage_history": [
+        {
+          "stage": "award",
+          "date": "2026-09-28",
+          "url": "https://www.forth.news/lists/dod/CfWYYiypPGyjdvtXbEB1x"
+        }
+      ],
       "sources": [
         {
           "article_id": "ART-2026-000022",
@@ -425,6 +513,20 @@
       "entity_name": "Criterion Corporation",
       "headline": "Niagara Air Reserve Station awards base-support contract",
       "note": "Base maintenance and logistics contract at Niagara Air Reserve Station: $38.8M ceiling, $14,317 obligated so far. Contractor identity is still being confirmed.",
+      "jobs_added": null,
+      "jobs_lost": null,
+      "incentive": null,
+      "next_step": {
+        "text": "Contract work expected to finish",
+        "date": "2031-11-30"
+      },
+      "stage_history": [
+        {
+          "stage": "award",
+          "date": "2026-09-28",
+          "url": "https://www.forth.news/lists/dod/CfWYYiypPGyjdvtXbEB1x"
+        }
+      ],
       "sources": [
         {
           "article_id": "ART-2026-000022",
@@ -477,6 +579,20 @@
       "entity_name": "SRC, Inc.",
       "headline": "SRC reports $37M Air Force prototype award",
       "note": "SRC reports a $37M Air Force prototype award for its Ghost Mantis technology. No production commitment or local job count disclosed.",
+      "jobs_added": null,
+      "jobs_lost": null,
+      "incentive": null,
+      "next_step": {
+        "text": "Air Force prototype evaluation",
+        "date": ""
+      },
+      "stage_history": [
+        {
+          "stage": "award",
+          "date": "2026-10-01",
+          "url": "https://www.srcinc.com/news-and-events/press/2026/20261001-contract-airforce-lass-ghost-mantis-gen3.html"
+        }
+      ],
       "sources": [
         {
           "article_id": "ART-2026-000029",
@@ -519,6 +635,17 @@
       "entity_name": "Cornell University",
       "headline": "Cornell's Peter McMahon receives $1.35M photonics research award",
       "note": "Research grant, not a production or hiring commitment: $1.35M over five years for programmable photonic chip research at Cornell.",
+      "jobs_added": null,
+      "jobs_lost": null,
+      "incentive": null,
+      "next_step": null,
+      "stage_history": [
+        {
+          "stage": "award",
+          "date": "2026-10-01",
+          "url": "https://news.cornell.edu/stories/2026/10/mcmahon-gets-moore-foundation-award-programmable-photonic-chips"
+        }
+      ],
       "sources": [
         {
           "article_id": "ART-2026-000030",
@@ -557,6 +684,24 @@
       "entity_name": "Gekko Photonics",
       "headline": "Gekko Photonics confirms Rochester office, plans local hiring",
       "note": "Gekko Photonics says it has a Rochester office and plans local engineering hires and regional suppliers; no headcount or facility announced yet.",
+      "jobs_added": null,
+      "jobs_lost": null,
+      "incentive": {
+        "program": "Luminate NY (state-backed accelerator)",
+        "amount": 1000000.0,
+        "type": "accelerator_award"
+      },
+      "next_step": {
+        "text": "Local engineering and support hiring (no headcount given)",
+        "date": ""
+      },
+      "stage_history": [
+        {
+          "stage": "intent",
+          "date": "2026-10-02",
+          "url": "https://gekkophotonics.com/en/gekko-photonics-company-of-the-year"
+        }
+      ],
       "sources": [
         {
           "article_id": "ART-2026-000031",

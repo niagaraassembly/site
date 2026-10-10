@@ -6,6 +6,7 @@ import {
   filterItems, filterOptions, parseFilters, filterQuery, moneyTotals, moneyByStage, renderMoneyTotal, tickerLine,
   moneyGroups, moneyKind, renderMoneyGroups, mentionsFor, renderMentions, renderCompanies,
   countyPath, tileGrow, storiesByCounty, coverageText, issueFor, apDate,
+  newsTone, partialDate, comingUp, renderJobs, renderIncentives,
   investmentLines, filterInvestments, investmentOptions, renderInvestments,
   formatAmount, companiesInNews, renderItem, renderCompact,
 } from '../assets/js/wny.js';
@@ -279,7 +280,7 @@ test('county band data covers the 21 counties in two rows, with drawable outline
 
 test('stories are counted per county, linking to the newest', () => {
   const by = storiesByCounty([{ id: 'A', county: 'Erie' }, { id: 'B', county: 'Monroe' }, { id: 'C', county: 'Erie' }, { id: 'D' }]);
-  assert.deepEqual([...by], [['Erie', { count: 2, first: 'A' }], ['Monroe', { count: 1, first: 'B' }]]);
+  assert.deepEqual([...by], [['Erie', { count: 2, first: 'A', tones: { news: 2 } }], ['Monroe', { count: 1, first: 'B', tones: { news: 1 } }]]);
 });
 
 test('coverage dates read in AP style, the year once when shared', () => {
@@ -295,4 +296,40 @@ test('an issue page finds its issue record', () => {
   assert.equal(issueFor(data, 'WNY-2026-001').events[0], 'S1');
   assert.equal(issueFor(data, 'WNY-2099-001'), null);
   assert.equal(issueFor(data, null), null);
+});
+
+test('county tones: completed green, announced yellow, everything else other news', () => {
+  const by = storiesByCounty([
+    { id: 'A', county: 'Monroe', stage: 'completed' }, { id: 'B', county: 'Monroe', stage: 'application' },
+    { id: 'C', county: 'Monroe', stage: 'intent' }, { id: 'D', county: 'Erie', stage: 'announced' }]);
+  assert.deepEqual(by.get('Monroe').tones, { done: 1, news: 2 });
+  assert.deepEqual(by.get('Erie').tones, { announced: 1 });
+  assert.equal(newsTone({ stage: 'award' }), 'news');
+});
+
+test('partial dates read naturally and malformed ones are dropped', () => {
+  assert.equal(partialDate('2027'), '2027');
+  assert.equal(partialDate('2027-06'), 'June 2027');
+  assert.equal(partialDate('2026-10-31'), 'Oct. 31, 2026');
+  assert.equal(partialDate('soon'), '');
+});
+
+test('coming up lists dated next steps soonest first; jobs and support render', () => {
+  const items = [
+    { id: 'A', headline: 'a', next_step: { text: 'Later', date: '2029-06-30' } },
+    { id: 'B', headline: 'b', next_step: { text: 'Soon', date: '2026-10-31' } },
+    { id: 'C', headline: 'c', next_step: { text: 'Undated', date: '' } },
+    { id: 'D', headline: 'Solstice', jobs_added: 12, incentive: { program: 'Excelsior', amount: 1400000, type: 'tax_credit' }, currency: 'USD' },
+    { id: 'E', headline: 'Goodyear', flags: [{ type: 'conflict', detail: 'jobs_lost' }] },
+  ];
+  assert.deepEqual(comingUp(items).map((i) => i.id), ['B', 'A']);
+  assert.match(renderJobs(items), /\+12<\/span>/);
+  assert.match(renderJobs(items), /Goodyear: sources disagree on jobs/);
+  assert.match(renderIncentives(items), /\$1\.4M[\s\S]*Excelsior[\s\S]*tax credit/);
+  const card = renderItem({ ...items[3], lane: 'production', stage: 'announced', stage_history: [{ stage: 'announced', date: '2026-10-09' }],
+    next_step: { text: '12 new full-time jobs due', date: '2027-06' } });
+  assert.match(card, /<dt>Jobs<\/dt><dd>12 added<\/dd>/);
+  assert.match(card, /<dt>Public support<\/dt><dd>\$1\.4M tax credit \(Excelsior\)<\/dd>/);
+  assert.match(card, /<dt>Next<\/dt><dd>12 new full-time jobs due, June 2027<\/dd>/);
+  assert.match(card, /<dt>Stage<\/dt><dd>Announced Oct\. 9, 2026<\/dd>/);
 });

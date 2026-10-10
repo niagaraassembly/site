@@ -753,8 +753,11 @@ dialog.sparks-dialog::backdrop {
 /* Counties with a story in the issue stay at full strength, stitched more
    densely, with their count; the rest fall back. The tile is a link to the
    county's first story. */
-.county-band__tile:not(.county-band__tile--news) { color: var(--ink-soft); }
-.county-band__tile:not(.county-band__tile--news) svg { opacity: .55; }
+/* Hatch colours: amounts' green and yellow come from --amount-*; other news
+   is dark grey; counties without a story get one light grey hatch. */
+:root { --county-news: #4b4d52; --county-quiet: #b9b6ae; }
+:root[data-theme="dark"] { --county-news: #c4c1ba; --county-quiet: #55575c; }
+.county-band__tile:not(.county-band__tile--news) .county-band__name { color: var(--ink-soft); }
 .county-band__tile--news .county-band__name { color: var(--ink); }
 .county-band__count { font: 700 .6875rem/1 var(--sans); margin-left: .1rem; }
 .county-band__link {
@@ -768,8 +771,23 @@ dialog.sparks-dialog::backdrop {
 .county-band__link:hover .county-band__name,
 .county-band__link:focus-visible .county-band__name { text-decoration: underline; }
 .county-band__link:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-.county-band__key { margin: -1rem 0 1.25rem; font: .6875rem/1.4 var(--sans); color: var(--ink-soft); }
 
 /* The issue's approved summary: the opening paragraph, a step larger than
    the standing intro that follows it. */
 .wny-lede { margin: 0 0 1rem; max-width: 42rem; font: 1.125rem/1.6 var(--sans); }
+
+/* Story facts: jobs, public support, next step, stage history. */
+.wny-facts {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: .15rem .75rem;
+  margin: .55rem 0 0;
+  font: .8125rem/1.45 var(--sans);
+}
+.wny-facts dt { color: var(--ink-soft); }
+.wny-facts dd { margin: 0; }
+.wny-coming__date { font: 700 .875rem/1.3 var(--mono); white-space: nowrap; }
+[data-wny="coming-list"] .wny-money__line { grid-template-columns: 9rem minmax(0, 1fr) minmax(0, 20rem); }
+@media (max-width: 34rem) {
+  [data-wny="coming-list"] .wny-money__line { grid-template-columns: 7.5rem minmax(0, 1fr); }
+}

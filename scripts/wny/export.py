@@ -141,6 +141,18 @@ def money(raw: str) -> float | None:
     return value if value > 0 else None
 
 
+def count_of(raw: str) -> int | None:
+    """A stated whole-number count (jobs), else None."""
+    try:
+        value = int(str(raw).replace(",", "").strip())
+    except ValueError:
+        return None
+    return value if value >= 0 else None
+
+
+PARTIAL_DATE = re.compile(r"^\d{4}(-\d{2}(-\d{2})?)?$")
+
+
 def flags_of(raw: str) -> list[dict[str, str]]:
     """'conflict:municipality;company_reported' -> [{type, detail}, ...]."""
     out = []
@@ -183,6 +195,7 @@ def build(research: Path) -> dict:
     events = read_csv(intel / "entity_events.csv")
     entities = {e["entity_id"]: e for e in read_csv(intel / "entities.csv")}
     conflict_rows = read_csv(intel / "event_conflicts.csv")
+    history = read_csv(intel / "event_stage_history.csv")
     articles = {a["article_id"]: a for a in read_csv(research / "research" / "news" / "inbox" / "articles.csv")}
 
     items, used = [], set()
@@ -238,6 +251,23 @@ def build(research: Path) -> dict:
             "entity_name": (entity or {}).get("name"),
             "headline": ev.get("public_headline", "").strip() or ev.get("headline", ""),
             "note": note,
+            "jobs_added": count_of(ev.get("jobs_added", "")),
+            "jobs_lost": count_of(ev.get("jobs_lost", "")),
+            # Public money is kept apart from amount and never added to it.
+            "incentive": {
+                "program": ev.get("incentive_program", "").strip(),
+                "amount": money(ev.get("incentive_amount", "")),
+                "type": ev.get("incentive_type", "").strip(),
+            } if ev.get("incentive_program", "").strip() else None,
+            "next_step": {
+                "text": ev.get("next_step", "").strip(),
+                # YYYY, YYYY-MM or YYYY-MM-DD; anything else is dropped, not guessed.
+                "date": ev.get("next_step_date", "").strip() if PARTIAL_DATE.match(ev.get("next_step_date", "").strip()) else "",
+            } if ev.get("next_step", "").strip() else None,
+            "stage_history": sorted(
+                ({"stage": h["stage"], "date": h.get("as_of_date", ""), "url": h.get("source_url", "")}
+                 for h in history if h.get("event_id") == ev["event_id"]),
+                key=lambda h: h["date"]),
             "sources": sources,
             "conflicts": conflicts_for(ev["event_id"], flags, conflict_rows),
         })

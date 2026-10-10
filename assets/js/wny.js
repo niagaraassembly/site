@@ -271,6 +271,82 @@ function sourcesHtml(item) {
   return links.length ? `<p class="wny-item__via">${links.length > 1 ? 'Sources' : 'Source'}: ${links.join('; ')}</p>` : '';
 }
 
+/** "2027" / "June 2027" / "Oct. 31, 2026" from YYYY, YYYY-MM or YYYY-MM-DD. */
+export function partialDate(value) {
+  const v = String(value ?? '');
+  if (/^\d{4}$/.test(v)) return v;
+  const m = v.match(/^(\d{4})-(\d{2})$/);
+  if (m) return `${['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][Number(m[2]) - 1] ?? ''} ${m[1]}`.trim();
+  return /^\d{4}-\d{2}-\d{2}$/.test(v) ? apDate(v) : '';
+}
+
+function incentiveText(inc, currency) {
+  return [formatAmount(inc.amount, currency), words(inc.type), inc.program ? `(${inc.program})` : '']
+    .filter(Boolean).join(' ');
+}
+
+/** Jobs, public support, next step and stage history, where the research has them. */
+function factsHtml(item) {
+  const rows = [];
+  const jobs = [
+    item.jobs_added != null ? `${item.jobs_added} added` : '',
+    item.jobs_lost != null ? `${item.jobs_lost} lost` : '',
+  ].filter(Boolean).join(', ');
+  if (jobs) rows.push(['Jobs', escapeHtml(jobs)]);
+  if (item.incentive) rows.push(['Public support', escapeHtml(incentiveText(item.incentive, item.currency))]);
+  if (item.next_step?.text) {
+    rows.push(['Next', escapeHtml([item.next_step.text, partialDate(item.next_step.date)].filter(Boolean).join(', '))]);
+  }
+  const steps = (item.stage_history ?? []).filter((h) => STAGES[h.stage]);
+  if (steps.length) {
+    rows.push(['Stage', steps.map((h) => escapeHtml([STAGES[h.stage], apDate(h.date)].filter(Boolean).join(' '))).join(' → ')]);
+  }
+  return rows.length
+    ? `<dl class="wny-facts">${rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>`
+    : '';
+}
+
+/** Dated next steps, soonest first. */
+export function comingUp(items) {
+  return items.filter((i) => i.next_step?.text && partialDate(i.next_step.date))
+    .sort((a, b) => a.next_step.date.localeCompare(b.next_step.date) || a.id.localeCompare(b.id));
+}
+
+export function renderComingUp(items) {
+  return comingUp(items).map((i) =>
+    `<li class="wny-money__line" data-item="${escapeHtml(i.id)}">`
+    + `<span class="wny-coming__date">${escapeHtml(partialDate(i.next_step.date))}</span>`
+    + `<a class="wny-money__what" href="#wny-${escapeHtml(i.id)}">${escapeHtml(i.next_step.text)}</a>`
+    + `<span class="wny-money__meta">${[i.entity_name, i.place].filter(Boolean).map(escapeHtml).join(' · ')}</span></li>`).join('');
+}
+
+/** Stated job figures, and stories where sources disagree on jobs. */
+export function jobLines(items) {
+  return items.filter((i) => i.jobs_added != null || i.jobs_lost != null
+    || (i.flags ?? []).some((f) => f.type === 'conflict' && /^jobs_(added|lost)$/.test(f.detail)));
+}
+
+export function renderJobs(items) {
+  return jobLines(items).map((i) => {
+    const figure = i.jobs_added != null ? `+${i.jobs_added}` : i.jobs_lost != null ? `−${i.jobs_lost}` : 'Disputed';
+    const tone = i.jobs_added != null ? ' wny-amount--done' : '';
+    const what = i.jobs_added != null || i.jobs_lost != null ? i.headline : `${i.headline}: sources disagree on jobs`;
+    return `<li class="wny-money__line" data-item="${escapeHtml(i.id)}">`
+      + `<span class="wny-money__amount${tone}">${escapeHtml(figure)}</span>`
+      + `<a class="wny-money__what" href="#wny-${escapeHtml(i.id)}">${escapeHtml(what)}</a>`
+      + `<span class="wny-money__meta">${[STAGES[i.stage], i.place].filter(Boolean).map(escapeHtml).join(' · ')}</span></li>`;
+  }).join('');
+}
+
+/** Public incentives; never added to the dollar figures, never summed. */
+export function renderIncentives(items) {
+  return items.filter((i) => i.incentive).map((i) =>
+    `<li class="wny-money__line" data-item="${escapeHtml(i.id)}">`
+    + `<span class="wny-money__amount">${escapeHtml(formatAmount(i.incentive.amount, i.currency) || '—')}</span>`
+    + `<a class="wny-money__what" href="#wny-${escapeHtml(i.id)}">${escapeHtml(i.incentive.program || i.headline)}</a>`
+    + `<span class="wny-money__meta">${[words(i.incentive.type), i.entity_name].filter(Boolean).map(escapeHtml).join(' · ')}</span></li>`).join('');
+}
+
 /** A full story card: stage, meta, headline, explainer, flags, conflicts, sources. */
 export function renderItem(item) {
   const amount = formatAmount(item.amount, item.currency);
@@ -287,6 +363,7 @@ export function renderItem(item) {
     + titleHtml(item)
     + `<p class="issue-list__meta">${metaHtml(item)}</p>`
     + (item.note ? `<p class="wny-item__note">${escapeHtml(item.note)}</p>` : '')
+    + factsHtml(item)
     + flagsHtml(item)
     + conflictsHtml(item)
     + sourcesHtml(item)
@@ -478,17 +555,34 @@ export function tileGrow(county) {
   return Math.min(1.8, Math.max(0.7, ratio)).toFixed(3);
 }
 
-/** Stories per county, newest story first, from the items' county field. */
+/** A story's colour in the county band: the amount tones (completed green,
+    announced yellow), or "news" (dark grey) for every other stage. */
+export function newsTone(item) {
+  return AMOUNT_TONES[item.stage] ?? 'news';
+}
+export const TONE_WORDS = { done: 'completed', announced: 'announced', news: 'other news' };
+
+/** Stories per county: count, newest story, and how many of each tone. */
 export function storiesByCounty(items) {
   const out = new Map();
   for (const item of items) {
     if (!item.county) continue;
-    const entry = out.get(item.county) ?? { count: 0, first: item.id };
+    const entry = out.get(item.county) ?? { count: 0, first: item.id, tones: {} };
     entry.count += 1;
+    const tone = newsTone(item);
+    entry.tones[tone] = (entry.tones[tone] ?? 0) + 1;
     out.set(item.county, entry);
   }
   return out;
 }
+
+/* One hatch layer per tone present, each at its own angle, so a county with
+   mixed news reads as a cross-hatch of those colours. */
+const HATCH = [
+  { tone: 'done', angle: -45 },
+  { tone: 'announced', angle: 45 },
+  { tone: 'news', angle: 0 },
+];
 
 async function mountCountyBand(root, items = []) {
   const band = root.querySelector('[data-county-band]');
@@ -511,10 +605,12 @@ async function mountCountyBand(root, items = []) {
       const c = geo.counties?.[name];
       if (!c) return '';
       const here = stories.get(name);
-      const label = here ? `${name} County: ${here.count} ${here.count === 1 ? 'story' : 'stories'} in this issue` : `${name} County`;
+      const mix = here ? HATCH.filter((h) => here.tones[h.tone]).map((h) => `${here.tones[h.tone]} ${TONE_WORDS[h.tone]}`).join(', ') : '';
+      const label = here ? `${name} County: ${here.count} ${here.count === 1 ? 'story' : 'stories'} in this issue (${mix})` : `${name} County`;
       const inner = `<svg viewBox="-4 -4 ${c.width + 8} ${c.height + 8}" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false"></svg>`
         + `<span class="county-band__name">${escapeHtml(name)}${here ? ` <b class="county-band__count">${here.count}</b>` : ''}</span>`;
-      return `<li class="county-band__tile${here ? ' county-band__tile--news' : ''}" style="flex-grow:${tileGrow(c)}" data-county="${escapeHtml(name)}" data-seed="${index++}" title="${escapeHtml(label)}">`
+      const tones = here ? HATCH.filter((h) => here.tones[h.tone]).map((h) => h.tone).join(' ') : '';
+      return `<li class="county-band__tile${here ? ' county-band__tile--news' : ''}" style="flex-grow:${tileGrow(c)}" data-county="${escapeHtml(name)}" data-tones="${tones}" data-seed="${index++}" title="${escapeHtml(label)}">`
         + (here ? `<a class="county-band__link" href="#wny-${escapeHtml(here.first)}" aria-label="${escapeHtml(label)}">${inner}</a>` : inner)
         + '</li>';
     }).join('')}</ul>`).join('');
@@ -526,19 +622,34 @@ async function mountCountyBand(root, items = []) {
     const c = geo.counties[tile.dataset.county];
     const svg = tile.querySelector('svg');
     const d = countyPath(c);
-    const news = tile.classList.contains('county-band__tile--news');
-    if (typeof rough !== 'undefined') {
-      svg.appendChild(rough.svg(svg).path(d, {
-        stroke: 'currentColor', strokeWidth: news ? 1.5 : 1.1, roughness: 0.6, bowing: 0.4,
-        fill: 'currentColor', fillStyle: 'hachure', hachureGap: news ? 2.4 : 5, fillWeight: news ? 0.8 : 0.5,
-        seed: 2026 + Number(tile.dataset.seed),
-      }));
-    } else {
+    const seed = 2026 + Number(tile.dataset.seed);
+    const tones = (tile.dataset.tones || '').split(' ').filter(Boolean);
+    if (typeof rough === 'undefined') {
       const path = document.createElementNS(SVG_NS, 'path');
       Object.entries({ d, fill: 'none', stroke: 'currentColor', 'stroke-width': 1.2, 'vector-effect': 'non-scaling-stroke' })
         .forEach(([k, v]) => path.setAttribute(k, v));
       svg.appendChild(path);
+      continue;
     }
+    const rc = rough.svg(svg);
+    const base = { roughness: 0.6, bowing: 0.4 };
+    const layer = (opts, colour) => {
+      const node = rc.path(d, { ...base, ...opts });
+      node.style.color = colour;
+      svg.appendChild(node);
+    };
+    if (!tones.length) {
+      /* No story: one light grey hatch and outline. */
+      layer({ stroke: 'currentColor', strokeWidth: 1, fill: 'currentColor', fillStyle: 'hachure',
+        hachureGap: 5, fillWeight: 0.5, seed }, 'var(--county-quiet)');
+      continue;
+    }
+    HATCH.filter((h) => tones.includes(h.tone)).forEach((h, i) => layer({
+      /* Mixed counties get wider, heavier lines so each colour stays legible. */
+      stroke: 'none', fill: 'currentColor', fillStyle: 'hachure', hachureAngle: h.angle,
+      hachureGap: tones.length > 1 ? 4.5 : 3, fillWeight: tones.length > 1 ? 1.4 : 1, seed: seed + 100 * (i + 1),
+    }, h.tone === 'news' ? 'var(--county-news)' : `var(--amount-${h.tone})`));
+    layer({ stroke: 'currentColor', strokeWidth: 1.5, fill: undefined, seed }, 'var(--ink)');
   }
   band.hidden = false;
 }
@@ -908,6 +1019,11 @@ export async function mountFront(root = document) {
     if (money.length) {
       show(root.querySelector('[data-wny="money-list"]'), renderMoneyGroups(money));
       show(root.querySelector('[data-wny="money"]'));
+    }
+    for (const [key, html] of [['coming', renderComingUp(items)], ['jobs', renderJobs(items)], ['support', renderIncentives(items)]]) {
+      if (!html) continue;
+      show(root.querySelector(`[data-wny="${key}-list"]`), html);
+      show(root.querySelector(`[data-wny="${key}"]`));
     }
     const mentions = mentionsFor(data.people, items);
     if (mentions.length) {
