@@ -366,3 +366,28 @@ dialog.sparks-dialog::backdrop {
   body { transition: padding-right .35s ease; }
   body.panel-open { padding-right: 42vw; }
 }
+
+/* Publication title on a MAG's own index (e.g. Research): heavier and
+   larger than the default h1, since it stands without a subtitle. */
+.mag-title {
+  font: 700 clamp(2.4rem, 8vw, 3.4rem)/1.05 var(--sans);
+  letter-spacing: -0.025em;
+  margin: 0 0 1.25rem;
+}
+
+/* "All posts" link under a shortened list. */
+.issue-list__more {
+  font: .8125rem/1.4 var(--sans);
+  margin: -1.5rem 0 2.5rem;
+}
+.issue-list__more a { color: var(--ink-soft); }
+.issue-list__more a:hover { color: var(--ink); }
+
+/* Sections on a Research place page: articles, reports, maps, activities. */
+.place-section { margin: 0 0 2.5rem; }
+.place-section h2 { margin-top: 0; }
+.place-section__empty {
+  font: .8125rem/1.4 var(--sans);
+  color: var(--ink-soft);
+}
+

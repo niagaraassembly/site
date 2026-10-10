@@ -108,7 +108,8 @@ test('the Apps panel starts with HeavyMap and every app is complete', () => {
 // Articles use the same News menu as the magazine index, including future posts.
 test('Research articles inherit News and the MAGs index', () => {
   for (const path of ['/MAGS/RESEARCH/', '/MAGS/RESEARCH/industrial/',
-                      '/MAGS/RESEARCH/residential/index.html', '/MAGS/RESEARCH/future-post/']) {
+                      '/MAGS/RESEARCH/residential/index.html', '/MAGS/RESEARCH/future-post/',
+                      '/MAGS/RESEARCH/posts/', '/MAGS/RESEARCH/places/pierce-arrow-hertel/']) {
     const trail = trailFor(path);
     assert.deepEqual(trail.chain.map((item) => item.label), ['Services', 'News', 'MAGs']);
     const newsRow = rowsFor(trail.word, trail.chain).at(-1);

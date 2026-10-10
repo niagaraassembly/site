@@ -1,0 +1,26 @@
+{
+  "places": [
+    {
+      "id": "pierce-arrow-hertel",
+      "name": "Pierce-Arrow / Hertel",
+      "href": "/MAGS/RESEARCH/places/pierce-arrow-hertel/",
+      "summary": "Buffalo’s Hertel Avenue industrial corridor and the residential streets around it."
+    }
+  ],
+  "posts": [
+    {
+      "title": "Hertel: a working industrial corridor",
+      "href": "/MAGS/RESEARCH/industrial/",
+      "date": "2026-10-08",
+      "place": "pierce-arrow-hertel",
+      "summary": "Manufacturers, creative production, changing industrial space and documented cleanup sites."
+    },
+    {
+      "title": "Living beside Hertel’s industrial corridor",
+      "href": "/MAGS/RESEARCH/residential/",
+      "date": "2026-10-08",
+      "place": "pierce-arrow-hertel",
+      "summary": "Housing stock, neighborhood context, daily walking routes and the questions to ask residents."
+    }
+  ]
+}
