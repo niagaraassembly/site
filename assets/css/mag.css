@@ -684,3 +684,26 @@ dialog.sparks-dialog::backdrop {
 
 /* Issue sign-up: the homepage's mailing-list form, compact. */
 .wny-signup { margin: 0 0 2.5rem; max-width: 34rem; }
+
+/* A MAG's flags, top right inside the drawn frame with a little padding.
+   Part of the MAG template: each MAG lists its own in its markup. A hairline
+   keeps white stripes from dissolving into the paper. */
+.mag-flags {
+  position: absolute;
+  top: 1.1rem;
+  right: 1.25rem;
+  display: flex;
+  gap: .4rem;
+  margin: 0;
+  max-width: none;
+}
+.mag-flags img {
+  display: block;
+  height: 1.25rem;
+  width: auto;
+  outline: 1px solid var(--rule);
+}
+@media (max-width: 34rem) {
+  .mag-flags { top: .8rem; right: .8rem; }
+  .mag-flags img { height: 1rem; }
+}
