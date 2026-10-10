@@ -576,13 +576,8 @@ export function storiesByCounty(items) {
   return out;
 }
 
-/* One hatch layer per tone present, each at its own angle, so a county with
-   mixed news reads as a cross-hatch of those colours. */
-const HATCH = [
-  { tone: 'done', angle: -45 },
-  { tone: 'announced', angle: 45 },
-  { tone: 'news', angle: 0 },
-];
+/* Tone order for the county stripes: completed, announced, other news. */
+const HATCH = [{ tone: 'done' }, { tone: 'announced' }, { tone: 'news' }];
 
 async function mountCountyBand(root, items = []) {
   const band = root.querySelector('[data-county-band]');
@@ -632,28 +627,42 @@ async function mountCountyBand(root, items = []) {
       continue;
     }
     const rc = rough.svg(svg);
-    const base = { roughness: 0.6, bowing: 0.4 };
-    /* Spacing is in the outline's 0-100 units, not pixels: a tile draws a
-       county about 44px tall, so one unit is about 0.44px. These values give
-       roughly 4px between lines for one colour and 5.7px per colour when
-       colours share a county, so all of them stay visible. */
-    const GAP_ONE = 9, GAP_MIXED = 13, WEIGHT = 2;
-    const layer = (opts, colour) => {
-      const node = rc.path(d, { ...base, ...opts });
-      node.style.color = colour;
-      svg.appendChild(node);
-    };
-    if (!tones.length) {
-      /* No story: one light grey hatch and outline. */
-      layer({ stroke: 'currentColor', strokeWidth: 1.6, fill: 'currentColor', fillStyle: 'hachure',
-        hachureGap: GAP_ONE, fillWeight: 1.4, seed }, 'var(--county-quiet)');
-      continue;
+    /* Every county is striped on the same 45-degree diagonal. A county with
+       several kinds of news alternates their colours stripe by stripe, so
+       each colour keeps its direction and stays easy to pick out. Stripes
+       are hand-drawn lines clipped to the outline; the outline is drawn on
+       top. Units are the outline's 0-100 box (about 0.44px each on screen):
+       a 10-unit step puts stripes about 4.4px apart, so neighbouring colours
+       never blur together; each colour repeats every 10 x (number of
+       colours) units. */
+    const STEP = 10;
+    const colours = tones.length
+      ? HATCH.filter((h) => tones.includes(h.tone)).map((h) => (h.tone === 'news' ? 'var(--county-news)' : `var(--amount-${h.tone})`))
+      : ['var(--county-quiet)'];
+    const clipId = `county-clip-${tile.dataset.seed}`;
+    const defs = document.createElementNS(SVG_NS, 'defs');
+    const clip = document.createElementNS(SVG_NS, 'clipPath');
+    clip.setAttribute('id', clipId);
+    const clipPath = document.createElementNS(SVG_NS, 'path');
+    clipPath.setAttribute('d', d);
+    clip.appendChild(clipPath);
+    defs.appendChild(clip);
+    svg.appendChild(defs);
+    const stripes = document.createElementNS(SVG_NS, 'g');
+    stripes.setAttribute('clip-path', `url(#${clipId})`);
+    const w = c.width, h = c.height;
+    for (let k = 0, x = -h; x <= w; k += 1, x += STEP) {
+      /* A line from (x, h) up to (x + h, 0): 45 degrees in the outline's units. */
+      const line = rc.line(x, h + 2, x + h + 2, 0, {
+        stroke: 'currentColor', strokeWidth: tones.length ? 3 : 1.8, roughness: 0.5, bowing: 0.3, seed: seed + k,
+      });
+      line.style.color = colours[k % colours.length];
+      stripes.appendChild(line);
     }
-    HATCH.filter((h) => tones.includes(h.tone)).forEach((h, i) => layer({
-      stroke: 'none', fill: 'currentColor', fillStyle: 'hachure', hachureAngle: h.angle,
-      hachureGap: tones.length > 1 ? GAP_MIXED : GAP_ONE, fillWeight: WEIGHT, seed: seed + 100 * (i + 1),
-    }, h.tone === 'news' ? 'var(--county-news)' : `var(--amount-${h.tone})`));
-    layer({ stroke: 'currentColor', strokeWidth: 2.4, fill: undefined, seed }, 'var(--ink)');
+    svg.appendChild(stripes);
+    const outline = rc.path(d, { stroke: 'currentColor', strokeWidth: tones.length ? 2.4 : 1.6, roughness: 0.6, bowing: 0.4, seed });
+    outline.style.color = tones.length ? 'var(--ink)' : 'var(--county-quiet)';
+    svg.appendChild(outline);
   }
   band.hidden = false;
 }
