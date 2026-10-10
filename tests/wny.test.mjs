@@ -5,7 +5,7 @@ import {
   LANES, STAGES, FLAGS, publishable, byNewest, flagText, moneyLines, corridorPosition, corridorMarks,
   filterItems, filterOptions, parseFilters, filterQuery, moneyTotals, moneyByStage, renderMoneyTotal, tickerLine,
   moneyGroups, moneyKind, renderMoneyGroups, mentionsFor, renderMentions, renderCompanies,
-  countyPath, tileGrow,
+  countyPath, tileGrow, storiesByCounty,
   investmentLines, filterInvestments, investmentOptions, renderInvestments,
   formatAmount, companiesInNews, renderItem, renderCompact,
 } from '../assets/js/wny.js';
@@ -197,14 +197,16 @@ test('dollar figures group by kind of money and never sum across kinds', () => {
   const lines = moneyLines(publishable(sample.items));
   const groups = moneyGroups(lines);
   assert.deepEqual(groups.map((g) => [g.id, g.lines.map((i) => i.id)]),
-                   [['building', ['S1']], ['contracts', ['S5']], ['deals', ['S2']]]);
+                   [['investment', ['S1']], ['committed', ['S5']], ['deals', ['S2']]]);
   assert.equal(moneyKind({ amount_type: 'something_new' }), 'other');
   const html = renderMoneyGroups(lines);
-  assert.match(html, /Building and equipment/);
+  assert.match(html, /<h3 class="wny-money__kind">Investment<\/h3>/);
   assert.doesNotMatch(html, /wny-money__total/, 'a one-story kind has no total line');
-  const two = renderMoneyGroups([...lines, { id: 'S9b', amount: 1e6, currency: 'USD', amount_type: 'award', stage: 'award', headline: 'h' }]);
-  assert.match(two, /Contracts total/);
-  assert.doesNotMatch(two, /Building and equipment total|Deals total/);
+  const two = renderMoneyGroups([...lines, { id: 'S9b', amount: 1e6, currency: 'USD', amount_type: 'obligated', stage: 'award', headline: 'h' }]);
+  assert.match(two, /Contracts: money committed total/);
+  assert.doesNotMatch(two, /Investment total|Deals total/);
+  const mixed = moneyGroups([{ id: 'o', amount: 1, amount_type: 'obligated' }, { id: 'a', amount: 1, amount_type: 'award' }]);
+  assert.deepEqual(mixed.map((g) => g.id), ['committed', 'awards'], 'obligated and award never share a total');
 });
 
 test('warning and info markings stay chips; plain ones fold into one sentence', () => {
@@ -233,7 +235,7 @@ test('mentions list people on published stories only, one entry per person and o
 test('the investments page lists every stated amount; totals count production only, per kind', () => {
   const lines = investmentLines(publishable(sample.items));
   assert.deepEqual(lines.map((i) => i.id).sort(), ['S1', 'S2', 'S3', 'S5', 'S8']);
-  assert.deepEqual(filterInvestments(lines, { kind: 'contracts' }).map((i) => i.id), ['S5']);
+  assert.deepEqual(filterInvestments(lines, { kind: 'committed' }).map((i) => i.id), ['S5']);
   assert.deepEqual(filterInvestments(lines, { lane: 'developing' }).map((i) => i.id), ['S3']);
   assert.deepEqual(filterInvestments(lines, { q: 'rochester' }).map((i) => i.id), ['S2', 'S5']);
   const html = renderInvestments(lines);
@@ -241,7 +243,7 @@ test('the investments page lists every stated amount; totals count production on
   assert.match(html, /ceiling \$20\.7B/);
   assert.doesNotMatch(html, /Proposed total|Grants total/, 'developing and corridor kinds have nothing to count');
   assert.equal(moneyKind({ amount_type: 'charge' }), 'charges');
-  assert.deepEqual(investmentOptions(lines).kind.map(([v]) => v), ['building', 'contracts', 'deals', 'grants', 'proposed']);
+  assert.deepEqual(investmentOptions(lines).kind.map(([v]) => v), ['investment', 'committed', 'deals', 'grants', 'proposed']);
 });
 
 test('every organisation name links: its website when known, else its story; counts are bare numbers', () => {
@@ -273,4 +275,9 @@ test('county band data covers the 21 counties in two rows, with drawable outline
     assert.ok(grow >= 0.7 && grow <= 1.8, `${name} grow ${grow}`);
   }
   assert.match(geo.source, /Census/);
+});
+
+test('stories are counted per county, linking to the newest', () => {
+  const by = storiesByCounty([{ id: 'A', county: 'Erie' }, { id: 'B', county: 'Monroe' }, { id: 'C', county: 'Erie' }, { id: 'D' }]);
+  assert.deepEqual([...by], [['Erie', { count: 2, first: 'A' }], ['Monroe', { count: 1, first: 'B' }]]);
 });

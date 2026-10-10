@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-10T16:52:50+00:00",
+  "generated_at": "2026-10-10T17:01:19+00:00",
   "source": {
     "repo": "niagaraassembly/na-research",
-    "commit": "67e81ad"
+    "commit": "8d807f0"
   },
   "items": [
     {
@@ -25,7 +25,8 @@
       "publish_status": "approved",
       "date": "2026-10-09",
       "place": "Peabody Street, Buffalo",
-      "county": null,
+      "county": "Erie",
+      "county_source": "record",
       "lng": -78.88,
       "amount": 49000000.0,
       "amount_type": "investment",
@@ -100,7 +101,8 @@
       "publish_status": "approved",
       "date": "2026-10-06",
       "place": "Rochester (buyer HQ)",
-      "county": null,
+      "county": "Monroe",
+      "county_source": "record",
       "lng": -77.61,
       "amount": 75000000.0,
       "amount_type": "transaction",
@@ -137,7 +139,8 @@
       "publish_status": "approved",
       "date": "2026-10-06",
       "place": "Salt Road, Penfield or Webster",
-      "county": null,
+      "county": "Monroe",
+      "county_source": "record",
       "lng": -77.47,
       "amount": 6000000.0,
       "amount_type": "proposed",
@@ -183,7 +186,7 @@
       "flags": [
         {
           "type": "conflict",
-          "detail": "local_job_count"
+          "detail": "jobs_lost"
         },
         {
           "type": "conflict",
@@ -199,6 +202,7 @@
       "date": "2026-09-29",
       "place": "Niagara Falls, Niagara County",
       "county": "Niagara",
+      "county_source": "record",
       "lng": -79.05,
       "amount": null,
       "amount_type": null,
@@ -254,7 +258,7 @@
       ],
       "conflicts": [
         {
-          "field": "local_job_count",
+          "field": "jobs_lost",
           "values": [
             {
               "value": "About 85 jobs across Niagara Falls and Bayport, Texas combined; no Niagara Falls-only figure",
@@ -311,6 +315,7 @@
       "date": "2026-09-28",
       "place": "Liverpool, Onondaga County",
       "county": "Onondaga",
+      "county_source": "record",
       "lng": -76.21,
       "amount": 18899971.0,
       "amount_type": "obligated",
@@ -355,7 +360,8 @@
       "publish_status": "approved",
       "date": "2026-09-28",
       "place": "Liverpool, Lithuania",
-      "county": null,
+      "county": "Onondaga",
+      "county_source": "record",
       "lng": -76.21,
       "amount": 11236734.0,
       "amount_type": "obligated",
@@ -409,6 +415,7 @@
       "date": "2026-09-28",
       "place": "Niagara Falls, Niagara County",
       "county": "Niagara",
+      "county_source": "record",
       "lng": -79.05,
       "amount": 14317.0,
       "amount_type": "obligated",
@@ -460,6 +467,7 @@
       "date": "2026-10-01",
       "place": "Syracuse, Onondaga County",
       "county": "Onondaga",
+      "county_source": "record",
       "lng": -76.15,
       "amount": 37000000.0,
       "amount_type": "award",
@@ -501,6 +509,7 @@
       "date": "2026-10-01",
       "place": "Ithaca, Tompkins County",
       "county": "Tompkins",
+      "county_source": "record",
       "lng": -76.5,
       "amount": 1350000.0,
       "amount_type": "grant",
@@ -537,7 +546,8 @@
       "publish_status": "approved",
       "date": "2026-10-02",
       "place": "Rochester, Finger Lakes",
-      "county": null,
+      "county": "Monroe",
+      "county_source": "record",
       "lng": -77.61,
       "amount": null,
       "amount_type": null,
@@ -577,6 +587,42 @@
       "entity_id": "E0144",
       "source": "PR Newswire",
       "url": "https://finance.yahoo.com/technology/articles/solstice-announces-49-million-investment-153200194.html"
+    },
+    {
+      "event_id": "IEVT-2026-000001",
+      "name": "David Sewell",
+      "role": "President and CEO",
+      "organization": "Solstice Advanced Materials",
+      "entity_id": "E0144",
+      "source": "PR Newswire",
+      "url": "https://finance.yahoo.com/technology/articles/solstice-announces-49-million-investment-153200194.html"
+    },
+    {
+      "event_id": "IEVT-2026-000001",
+      "name": "Kathy Hochul",
+      "role": "Governor of New York",
+      "organization": "State of New York",
+      "entity_id": null,
+      "source": "Governor Kathy Hochul newsroom",
+      "url": "https://www.governor.ny.gov/news/governor-hochul-announces-solstice-advanced-materials-expand-buffalo"
+    },
+    {
+      "event_id": "IEVT-2026-000004",
+      "name": "Robert Restaino",
+      "role": "Mayor of Niagara Falls",
+      "organization": "City of Niagara Falls",
+      "entity_id": null,
+      "source": "Niagara Gazette via CNHI",
+      "url": "https://www.cnhi.com/rss_feed/goodyear-will-exit-chemical-business-in-the-falls"
+    },
+    {
+      "event_id": "IEVT-2026-000009",
+      "name": "Peter McMahon",
+      "role": "Award recipient (Cornell researcher; title not stated in source)",
+      "organization": "Cornell University",
+      "entity_id": "E0034",
+      "source": "Cornell Chronicle",
+      "url": "https://news.cornell.edu/stories/2026/10/mcmahon-gets-moore-foundation-award-programmable-photonic-chips"
     }
   ],
   "entities": [
@@ -585,7 +631,7 @@
       "name": "Cornell University",
       "type": "university",
       "city": "Ithaca",
-      "website": ""
+      "website": "https://www.cornell.edu"
     },
     {
       "id": "E0144",
@@ -627,7 +673,7 @@
       "name": "Lockheed Martin Global Inc.",
       "type": "company",
       "city": "",
-      "website": ""
+      "website": "https://www.lockheedmartin.com"
     },
     {
       "id": "E0151",

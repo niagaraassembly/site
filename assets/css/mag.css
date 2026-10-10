@@ -749,3 +749,23 @@ dialog.sparks-dialog::backdrop {
 }
 /* People's names are short; keep each on one line and let the role wrap. */
 [data-wny="mentions-list"] .wny-company__name { white-space: nowrap; }
+
+/* Counties with a story in the issue stay at full strength, stitched more
+   densely, with their count; the rest fall back. The tile is a link to the
+   county's first story. */
+.county-band__tile:not(.county-band__tile--news) { color: var(--ink-soft); }
+.county-band__tile:not(.county-band__tile--news) svg { opacity: .55; }
+.county-band__tile--news .county-band__name { color: var(--ink); }
+.county-band__count { font: 700 .6875rem/1 var(--sans); margin-left: .1rem; }
+.county-band__link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+.county-band__link:hover .county-band__name,
+.county-band__link:focus-visible .county-band__name { text-decoration: underline; }
+.county-band__link:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.county-band__key { margin: -1rem 0 1.25rem; font: .6875rem/1.4 var(--sans); color: var(--ink-soft); }

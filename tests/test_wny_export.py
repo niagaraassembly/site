@@ -14,7 +14,7 @@ export = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(export)
 
 EVENT_FIELDS = ["event_id", "event_candidate_id", "entity_id", "event_type", "event_date", "published_date",
-                "headline", "summary", "amount", "currency", "amount_type", "ceiling_amount", "location",
+                "headline", "summary", "amount", "currency", "amount_type", "ceiling_amount", "location", "county",
                 "jurisdiction", "source_url", "article_id", "source_article_ids", "confidence", "public_note",
                 "publish_status", "lane", "stage", "flags", "integrated_at", "integration_run_id"]
 ENTITY_FIELDS = ["entity_id", "name", "entity_type", "hq_city", "website"]
@@ -133,6 +133,20 @@ class ExportTest(unittest.TestCase):
         self.assertEqual(export.place_for("Rochester NY (buyer HQ)"), ("Rochester (buyer HQ)", -77.61))
         self.assertEqual(export.place_for("Liverpool;Onondaga County"), ("Liverpool, Onondaga County", -76.21))
         self.assertEqual(export.place_for("Niagara Falls, NY")[0], "Niagara Falls")
+
+    def test_county_from_record_else_from_the_place(self):
+        self.assertEqual(export.county_of("Liverpool;Onondaga County"), ("Onondaga", "record"))
+        self.assertEqual(export.county_of("Peabody Street, Buffalo, NY"), ("Erie", "site_gazetteer"))
+        self.assertEqual(export.county_of("Salt Road, Penfield or Webster, NY"), ("Monroe", "site_gazetteer"),
+                         "two towns in one county still give that county")
+        self.assertEqual(export.county_of("Buffalo or Rochester"), (None, None), "towns in different counties: no guess")
+        self.assertEqual(export.county_of("Somewhere, NY"), (None, None))
+
+    def test_the_records_county_column_wins(self):
+        item = self.run_with([event("A", location="Peabody Street, Buffalo, NY", county="Erie")])["items"][0]
+        self.assertEqual((item["county"], item["county_source"]), ("Erie", "record"))
+        item = self.run_with([event("B", location="Peabody Street, Buffalo, NY")])["items"][0]
+        self.assertEqual((item["county"], item["county_source"]), ("Erie", "site_gazetteer"))
 
     def test_unknown_place_exports_without_a_mark(self):
         item = self.run_with([event("A", location="Somewhere, NY")])["items"][0]

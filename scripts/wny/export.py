@@ -58,6 +58,18 @@ PLACES = {
     "Newark": -77.10, "Geneva": -76.98, "Corning": -77.05, "Elmira": -76.81,
     "Ithaca": -76.50, "Auburn": -76.57, "Liverpool": -76.21, "Syracuse": -76.15,
 }
+# County of each known place, used only when a record names no county.
+# A one-time stopgap: na-research is asked to record county on every event,
+# and county_source on each exported item says which one supplied it.
+PLACE_COUNTY = {
+    "North Tonawanda": "Niagara", "Niagara Falls": "Niagara", "Lockport": "Niagara",
+    "Grand Island": "Erie", "Lackawanna": "Erie", "Tonawanda": "Erie", "Cheektowaga": "Erie",
+    "Amherst": "Erie", "Buffalo": "Erie", "Dunkirk": "Chautauqua", "Jamestown": "Chautauqua",
+    "Olean": "Cattaraugus", "Batavia": "Genesee", "Rochester": "Monroe", "Henrietta": "Monroe",
+    "Penfield": "Monroe", "Webster": "Monroe", "Victor": "Ontario", "Canandaigua": "Ontario",
+    "Newark": "Wayne", "Geneva": "Ontario", "Corning": "Steuben", "Elmira": "Chemung",
+    "Ithaca": "Tompkins", "Auburn": "Cayuga", "Liverpool": "Onondaga", "Syracuse": "Onondaga",
+}
 COUNTY = re.compile(r"\b([A-Z][a-z.]+(?: [A-Z][a-z]+)?) County\b")
 STATE_SUFFIX = re.compile(r"(,\s*|\s+)(NY|New York)\b", re.IGNORECASE)
 
@@ -92,9 +104,18 @@ def place_for(location: str) -> tuple[str, float | None]:
     return label.strip(" ,"), PLACES[name]
 
 
-def county_of(location: str) -> str | None:
+def county_of(location: str) -> tuple[str | None, str | None]:
+    """(county, source): the county the record names, else the county of the
+    first known place in it. A location naming places in different counties
+    gets no county rather than a guess."""
     match = COUNTY.search(location)
-    return match.group(1) if match else None
+    if match:
+        return match.group(1), "record"
+    hits = sorted((location.find(name), -len(name), name) for name in PLACE_COUNTY if name in location)
+    counties = {PLACE_COUNTY[name] for _, _, name in hits}
+    if len(counties) == 1:
+        return counties.pop(), "site_gazetteer"
+    return None, None
 
 
 DOMAIN = re.compile(r"^[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}(/\S*)?$", re.IGNORECASE)
@@ -175,6 +196,9 @@ def build(research: Path) -> dict:
         location = ev.get("location", "")
         entity = entities.get(ev.get("entity_id", ""))
         place, lng = place_for(location)
+        # The research's own county wins; the place lookup is a fallback.
+        county, county_source = ((ev["county"].strip(), "record") if ev.get("county", "").strip()
+                                 else county_of(location))
 
         # The event's own source first, then every article listed for it.
         sources, seen = [], set()
@@ -200,7 +224,8 @@ def build(research: Path) -> dict:
             "publish_status": status,
             "date": ev.get("event_date") or ev.get("published_date", ""),
             "place": place,
-            "county": county_of(location),
+            "county": county,
+            "county_source": county_source,
             "lng": lng,
             "amount": money(ev.get("amount", "")),
             "amount_type": ev.get("amount_type", "").strip() or None,

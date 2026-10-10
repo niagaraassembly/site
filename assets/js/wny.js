@@ -118,11 +118,14 @@ export function moneyLines(items) {
 
 /* Kinds of money, from na-research's amount_type. Kinds are totalled
    separately and never added together: a purchase price is not money spent
-   in the region, and a contract award is not a building. An unknown
+   in the region, and a reported award is not money committed. An unknown
    amount_type falls into "Other amounts" rather than vanishing. */
 export const MONEY_KINDS = [
-  { id: 'building', label: 'Building and equipment', types: ['investment'] },
-  { id: 'contracts', label: 'Contracts', types: ['obligated', 'award'] },
+  { id: 'investment', label: 'Investment', types: ['investment'] },
+  /* Kept apart (na-research, 2026-10-10): obligated is government money
+     committed; award is the value a company reports, e.g. SRC's $37M. */
+  { id: 'committed', label: 'Contracts: money committed', types: ['obligated'] },
+  { id: 'awards', label: 'Awards as reported', types: ['award'] },
   { id: 'deals', label: 'Deals', types: ['transaction'] },
   { id: 'grants', label: 'Grants', types: ['grant'] },
   { id: 'proposed', label: 'Proposed', types: ['proposed'] },
@@ -475,7 +478,19 @@ export function tileGrow(county) {
   return Math.min(1.8, Math.max(0.7, ratio)).toFixed(3);
 }
 
-async function mountCountyBand(root) {
+/** Stories per county, newest story first, from the items' county field. */
+export function storiesByCounty(items) {
+  const out = new Map();
+  for (const item of items) {
+    if (!item.county) continue;
+    const entry = out.get(item.county) ?? { count: 0, first: item.id };
+    entry.count += 1;
+    out.set(item.county, entry);
+  }
+  return out;
+}
+
+async function mountCountyBand(root, items = []) {
   const band = root.querySelector('[data-county-band]');
   if (!band) return;
   const src = band.getAttribute('data-county-band');
@@ -490,13 +505,18 @@ async function mountCountyBand(root) {
     return;  // the band stays hidden; nothing else depends on it
   }
   let index = 0;
+  const stories = storiesByCounty(items);
   band.innerHTML = (geo.rows ?? []).map((row) =>
     `<ul class="county-band__row">${row.map((name) => {
       const c = geo.counties?.[name];
       if (!c) return '';
-      return `<li class="county-band__tile" style="flex-grow:${tileGrow(c)}" data-county="${escapeHtml(name)}" data-seed="${index++}" title="${escapeHtml(name)} County">`
-        + `<svg viewBox="-4 -4 ${c.width + 8} ${c.height + 8}" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false"></svg>`
-        + `<span class="county-band__name">${escapeHtml(name)}</span></li>`;
+      const here = stories.get(name);
+      const label = here ? `${name} County: ${here.count} ${here.count === 1 ? 'story' : 'stories'} in this issue` : `${name} County`;
+      const inner = `<svg viewBox="-4 -4 ${c.width + 8} ${c.height + 8}" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false"></svg>`
+        + `<span class="county-band__name">${escapeHtml(name)}${here ? ` <b class="county-band__count">${here.count}</b>` : ''}</span>`;
+      return `<li class="county-band__tile${here ? ' county-band__tile--news' : ''}" style="flex-grow:${tileGrow(c)}" data-county="${escapeHtml(name)}" data-seed="${index++}" title="${escapeHtml(label)}">`
+        + (here ? `<a class="county-band__link" href="#wny-${escapeHtml(here.first)}" aria-label="${escapeHtml(label)}">${inner}</a>` : inner)
+        + '</li>';
     }).join('')}</ul>`).join('');
 
   /* Hand-drawn like the frame and the corridor line: fixed seeds so the
@@ -506,10 +526,11 @@ async function mountCountyBand(root) {
     const c = geo.counties[tile.dataset.county];
     const svg = tile.querySelector('svg');
     const d = countyPath(c);
+    const news = tile.classList.contains('county-band__tile--news');
     if (typeof rough !== 'undefined') {
       svg.appendChild(rough.svg(svg).path(d, {
-        stroke: 'currentColor', strokeWidth: 1.2, roughness: 0.6, bowing: 0.4,
-        fill: 'currentColor', fillStyle: 'hachure', hachureGap: 5, fillWeight: 0.5,
+        stroke: 'currentColor', strokeWidth: news ? 1.5 : 1.1, roughness: 0.6, bowing: 0.4,
+        fill: 'currentColor', fillStyle: 'hachure', hachureGap: news ? 2.4 : 5, fillWeight: news ? 0.8 : 0.5,
         seed: 2026 + Number(tile.dataset.seed),
       }));
     } else {
@@ -827,7 +848,7 @@ export async function mountFront(root = document) {
     return;
   }
   const items = byNewest(publishable(data.items));
-  mountCountyBand(root);
+  mountCountyBand(root, items);
   drawCorridor(root, items);
   mountTicker(root, items);
   mountSignup(root);
