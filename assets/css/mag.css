@@ -943,7 +943,8 @@ dialog.sparks-dialog::backdrop {
 .wny-cell__value { font: 700 1.5rem/1.1 var(--mono); letter-spacing: -0.02em; }
 .wny-cell__caption { font: .8125rem/1.3 var(--sans); }
 .wny-cell__detail { font: .75rem/1.3 var(--sans); color: var(--ink-soft); }
-.wny-cell--muted .wny-cell__value, .wny-cell--muted .wny-cell__caption { color: var(--ink-soft); }
+/* Not-counted cells grey their figure only; the label keeps full ink like the rest. */
+.wny-cell--muted .wny-cell__value { color: var(--ink-soft); }
 .wny-cells__note { margin: 0 0 1rem; font: .75rem/1.4 var(--sans); color: var(--ink-soft); }
 @media (max-width: 34rem) { .wny-cells { grid-template-columns: repeat(3, 1fr); } .wny-cell__value { font-size: 1.15rem; } }
 
