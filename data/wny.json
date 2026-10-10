@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-10T17:27:45+00:00",
+  "generated_at": "2026-10-10T22:44:06+00:00",
   "source": {
     "repo": "niagaraassembly/na-research",
-    "commit": "f44415d"
+    "commit": "8e08aa4"
   },
   "items": [
     {
@@ -940,7 +940,7 @@
       "coverage_start": "2026-09-28",
       "coverage_end": "2026-10-09",
       "published": "2026-10-10",
-      "summary": "Issue One covers Western New York investment and industry news from Sept. 28 to Oct. 9, 2026. Solstice Advanced Materials announced a $49M Buffalo R&D expansion and Goodyear said it will close its Niagara Falls chemical plant, while defense contracts touched Liverpool, Syracuse and Niagara Falls. Each story notes where sources disagree or details are still unconfirmed.",
+      "summary": "Issue One covers Western New York investment and industry news from Sept. 28 to Oct. 9, 2026. Solstice Advanced Materials announced a $49M Buffalo R&D expansion and Goodyear said it will close its Niagara Falls chemical plant, while defense contracts touched Liverpool, Syracuse and Niagara Falls.",
       "events": [
         "IEVT-2026-000001",
         "IEVT-2026-000002",

@@ -1,10 +1,18 @@
 {
-  "_note": "Registry of regional MAGs. The flag menus on MAG pages and the /mags/states/<slug>/ pages read this file; add a MAG here once and it appears in all of them.",
+  "_note": "Registry of regional MAGs. The flag menus on MAG pages and the /mags/states/<slug>/ pages read this file; add a MAG here once and it appears in all of them. Each MAG names its latest data file; /research/sources/ combines their sources.",
   "countries": {
-    "US": { "name": "United States", "flag": "/assets/img/flags/us.png" }
+    "US": {
+      "name": "United States",
+      "flag": "/assets/img/flags/us.png"
+    }
   },
   "states": {
-    "new-york": { "name": "New York", "country": "US", "flag": "/assets/img/flags/ny.png", "href": "/mags/states/new-york/" }
+    "new-york": {
+      "name": "New York",
+      "country": "US",
+      "flag": "/assets/img/flags/ny.png",
+      "href": "/mags/states/new-york/"
+    }
   },
   "mags": [
     {
@@ -12,7 +20,16 @@
       "name": "Western New York",
       "href": "/MAGS/WNY/",
       "state": "new-york",
-      "summary": "Reviewed news on investment, facilities, jobs and new ventures from the Niagara River to Syracuse."
+      "summary": "Reviewed news on investment, facilities, jobs and new ventures from the Niagara River to Syracuse.",
+      "data": "/data/wny.json",
+      "issues": [
+        {
+          "title": "Issue One",
+          "href": "/MAGS/WNY/issue/one/",
+          "data": "/data/wny/issue-one.json",
+          "sources": "/MAGS/WNY/issue/one/sources/"
+        }
+      ]
     }
   ]
 }

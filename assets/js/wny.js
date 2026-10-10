@@ -714,6 +714,52 @@ async function mountCountyBand(root, items = []) {
   band.hidden = false;
 }
 
+/* ---- state locator ---------------------------------------------------------
+   A small map on the title line: the state outline with the MAG's region
+   filled in red. The page names its file (data-locator), built by
+   scripts/wny/locator.py from Census outlines. */
+
+const ringsPath = (rings) => rings.map((r) => `M${r.map(([x, y]) => `${x} ${y}`).join('L')}Z`).join('');
+
+async function mountLocator(root) {
+  const el = root.querySelector('[data-locator]');
+  if (!el) return;
+  const src = el.getAttribute('data-locator');
+  if (!/^\/data\/[\w/-]+\.json$/.test(src)) return;
+  let geo;
+  try {
+    const res = await fetch(src);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    geo = await res.json();
+  } catch (err) {
+    console.error('locator failed to load', err);
+    return;
+  }
+  const svg = el.querySelector('svg');
+  svg.setAttribute('viewBox', `-2 -2 ${geo.width + 4} ${geo.height + 4}`);
+  const region = ringsPath(geo.region ?? []);
+  const state = ringsPath(geo.state ?? []);
+  const add = (d, opts, colour) => {
+    let node;
+    if (typeof rough !== 'undefined') {
+      node = rough.svg(svg).path(d, { roughness: 0.5, bowing: 0.3, seed: 1817, ...opts });
+    } else {
+      node = document.createElementNS(SVG_NS, 'path');
+      node.setAttribute('d', d);
+      node.setAttribute('fill', opts.fill ? 'currentColor' : 'none');
+      node.setAttribute('stroke', 'currentColor');
+      node.setAttribute('stroke-width', opts.strokeWidth ?? 1);
+    }
+    node.style.color = colour;
+    svg.appendChild(node);
+  };
+  /* Region first, filled and stroked in the same red so county seams vanish;
+     then the state outline on top in ink. */
+  add(region, { fill: 'currentColor', fillStyle: 'solid', stroke: 'currentColor', strokeWidth: 0.6 }, 'var(--region-red)');
+  add(state, { stroke: 'currentColor', strokeWidth: 1.1 }, 'var(--ink)');
+  el.hidden = false;
+}
+
 /* ---- corridor line ------------------------------------------------------ */
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
@@ -912,23 +958,28 @@ export function investmentOptions(lines) {
   return { kind: MONEY_KINDS.filter((k) => kinds.has(k.id)).map((k) => [k.id, k.label]), stage: base.stage, lane: base.lane };
 }
 
-/** Lines grouped by kind; each kind totals its investment-and-industry lines
-    only (other sections are listed but never counted), and kinds are never
-    added together. */
-export function renderInvestments(lines) {
+/** Every money list, by kind. Each kind ends with its own total line, always:
+    it counts investment-and-industry stories only (the data owner's rule),
+    says how many other lines it leaves out, and is never added to another
+    kind. A kind with nothing countable says so instead of showing $0. */
+export function renderInvestments(lines, { linkBase = '/MAGS/WNY/posts/' } = {}) {
   return moneyGroups(lines).map((group) => {
     const counted = group.lines.filter((i) => i.lane === 'production');
+    const left = group.lines.length - counted.length;
     const rows = group.lines.map((i) =>
       `<li class="wny-money__line" data-item="${escapeHtml(i.id)}">`
       + `<span class="wny-money__amount${toneClass(i.stage)}">${escapeHtml(formatAmount(i.amount, i.currency))}</span>`
-      + `<a class="wny-money__what" href="/MAGS/WNY/posts/#wny-${escapeHtml(i.id)}">${escapeHtml(i.headline)}</a>`
+      + `<a class="wny-money__what" href="${escapeHtml(linkBase)}#wny-${escapeHtml(i.id)}">${escapeHtml(i.headline)}</a>`
       + `<span class="wny-money__meta">${[STAGES[i.stage], words(i.amount_type), i.place,
         i.lane === 'production' ? '' : LANES.find((l) => l.id === i.lane)?.label,
         formatAmount(i.ceiling_amount, i.currency) ? `ceiling ${formatAmount(i.ceiling_amount, i.currency)}` : '']
         .filter(Boolean).map(escapeHtml).join(' · ')}</span></li>`).join('');
-    const total = counted.length > 1 || (counted.length === 1 && group.lines.length > 1)
-      ? `<p class="wny-money__line wny-money__total">${renderMoneyTotal(counted, `${group.label} total, investment and industry only`)}</p>`
-      : '';
+    const note = left ? `${left} ${left === 1 ? 'line' : 'lines'} from other sections not counted` : '';
+    const total = counted.length
+      ? `<p class="wny-money__line wny-money__total">${renderMoneyTotal(counted, `${group.label} total`)}`
+        + (note ? `<span class="wny-money__meta">${escapeHtml(note)}</span>` : '') + '</p>'
+      : `<p class="wny-money__line wny-money__total"><span class="wny-money__label">${escapeHtml(group.label)} total</span>`
+        + `<span class="wny-money__sums">Not totalled: in-development and corridor news are listed, not counted</span></p>`;
     return `<li class="wny-money__group"><h3 class="wny-money__kind">${escapeHtml(group.label)}</h3>`
       + `<ul class="wny-money__list">${rows}</ul>${total}</li>`;
   }).join('');
@@ -1094,6 +1145,7 @@ export async function mountFront(root = document) {
   const items = byNewest(publishable(data.items)).filter((i) => !members.size || members.has(i.id));
   mountIssue(root, issue);
   mountTools(root);
+  mountLocator(root);
   mountCountyBand(root, items);
   drawCorridor(root, items);
   mountTicker(root, items);
@@ -1112,9 +1164,9 @@ export async function mountFront(root = document) {
       show(section.querySelector('ul'), inLane.map(renderItem).join(''));
       show(section);
     }
-    const money = moneyLines(items);
+    const money = investmentLines(items);
     if (money.length) {
-      show(root.querySelector('[data-wny="money-list"]'), renderMoneyGroups(money));
+      show(root.querySelector('[data-wny="money-list"]'), renderInvestments(investmentLines(items), { linkBase: '' }));
       show(root.querySelector('[data-wny="money"]'));
     }
     for (const [key, html] of [['coming', renderComingUp(items)], ['jobs', renderJobs(items)], ['support', renderIncentives(items)]]) {

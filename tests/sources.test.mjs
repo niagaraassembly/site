@@ -1,0 +1,33 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { rootDomain, citations, sourcesIndex, renderSources } from '../assets/js/sources.js';
+
+test('root domains are the registrable part of a host', () => {
+  assert.equal(rootDomain('finance.yahoo.com'), 'yahoo.com');
+  assert.equal(rootDomain('www.governor.ny.gov'), 'ny.gov');
+  assert.equal(rootDomain('news.bbc.co.uk'), 'bbc.co.uk');
+  assert.equal(rootDomain('rbj.net'), 'rbj.net');
+});
+
+test('the issue’s sources come from stories, conflicts and people, grouped by domain', () => {
+  const data = JSON.parse(readFileSync(new URL('../data/wny/issue-one.json', import.meta.url)));
+  const index = sourcesIndex(citations(data));
+  const roots = index.map((r) => r.root);
+  assert.ok(roots.includes('sec.gov') && roots.includes('rbj.net'));
+  assert.equal(new Set(roots).size, roots.length, 'one row per domain');
+  for (const r of index) assert.ok(r.stories.size >= 1);
+  assert.ok(index[0].stories.size >= index.at(-1).stories.size, 'most-cited first');
+});
+
+test('rendering escapes text and never links off-site story hrefs from data', () => {
+  const index = sourcesIndex([{ url: 'https://example.com/a', publisher: '<b>P</b>', kind: 'primary', item: { id: 'X', headline: '<i>h</i>' } }]);
+  const html = renderSources(index);
+  assert.ok(!html.includes('<b>') && !html.includes('<i>'));
+  assert.match(html, /href="#wny-X"/);
+  assert.match(html, /primary source/);
+});
+
+test('non-http citations are dropped', () => {
+  assert.equal(citations({ items: [{ id: 'A', sources: [{ url: 'javascript:alert(1)' }] }] }).length, 0);
+});

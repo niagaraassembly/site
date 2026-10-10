@@ -681,8 +681,50 @@ dialog.sparks-dialog::backdrop {
 .wny-allbar .issue-list__item:first-child { border-top: 1px solid var(--rule); }
 .wny-allbar .issue-list__item:last-child { border-bottom: 0; }
 
-/* Issue sign-up: the homepage's mailing-list form, compact. */
-.wny-signup { margin: 0 0 2.5rem; max-width: 34rem; }
+/* Issue sign-up: full width, drawn box (sketch.js), pitch left and the
+   fields right. The pitch is justified and stretches to the fields' height;
+   padding is the same on every side and the space above and below matches. */
+.wny-signup {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: stretch;
+  gap: 1rem 2rem;
+  margin: 2.5rem 0;
+  padding: 1.1rem 1.25rem;
+  border: 1.4px solid var(--ink);
+}
+.sketched .wny-signup { border-color: transparent; }
+.wny-signup__pitch {
+  margin: 0;
+  max-width: none;
+  text-align: justify;
+  hyphens: auto;
+  font: 1rem/1.6 var(--sans);
+  display: flex;
+  align-items: center;
+}
+.wny-signup__fields { display: grid; gap: .6rem; }
+.wny-signup__fields > label { display: grid; gap: .2rem; margin: 0; font: .8125rem/1.3 var(--sans); }
+.wny-signup__fields input[type="email"], .wny-signup__fields input[name="name"] {
+  padding: .4rem .5rem; background: var(--field); color: var(--ink); border: 1px solid var(--rule); font: .9375rem/1.4 var(--sans);
+}
+.wny-signup__choices { margin: 0; padding: 0; border: 0; display: flex; flex-wrap: wrap; gap: .4rem; }
+.wny-signup__choices legend { padding: 0; margin-bottom: .3rem; font: .8125rem/1.3 var(--sans); }
+.wny-signup__soon { color: var(--ink-soft); font-size: .75rem; }
+/* Each kind of email has its own light tint. */
+:root { --tint-wny: #e6f0e4; --tint-ontario: #e3ecf6; --tint-na: #f6f0dc; }
+:root[data-theme="dark"] { --tint-wny: #233127; --tint-ontario: #222b36; --tint-na: #333021; }
+.wny-choice { display: inline-flex; align-items: center; gap: .35rem; padding: .25rem .55rem; border: 1px solid var(--rule); font: .8125rem/1.3 var(--sans); }
+.wny-choice--wny { background: var(--tint-wny); }
+.wny-choice--ontario { background: var(--tint-ontario); }
+.wny-choice--na { background: var(--tint-na); }
+.wny-signup__choices[disabled] .wny-choice { opacity: .8; cursor: not-allowed; }
+.wny-signup__send { display: flex; align-items: center; gap: .75rem; }
+.wny-signup__send .status { margin: 0; }
+@media (max-width: 40rem) {
+  .wny-signup { grid-template-columns: 1fr; }
+}
 
 /* A MAG's flags, top right inside the drawn frame with a little padding.
    Part of the MAG template: each MAG lists its own in its markup. Each flag
@@ -847,3 +889,34 @@ dialog.sparks-dialog::backdrop {
   .wny-lane { border: 1px solid #999; }
   .wny-item__via a[href^="http"]::after { content: " (" attr(href) ")"; font-size: .75em; word-break: break-all; }
 }
+
+/* Title line: the MAG's name left, a small state locator right. */
+:root { --region-red: #b3261e; }
+:root[data-theme="dark"] { --region-red: #e5705f; }
+.mag-titlebar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.mag-titlebar .mag-title { margin-bottom: 1.25rem; }
+.mag-locator { margin: 0 0 1.25rem; flex: none; }
+.mag-locator svg { display: block; height: 3.6rem; width: auto; overflow: visible; }
+@media (max-width: 34rem) { .mag-locator svg { height: 2.4rem; } }
+
+/* The MAG body: a sheet a little whiter than the page around it. */
+:root { --mag-sheet: #fcfbf9; }
+:root[data-theme="dark"] { --mag-sheet: #1b1c20; }
+.frame:has(.mag-kicker) { background: var(--mag-sheet); }
+
+/* Section titles outside the drawn boxes: caps, a step larger. Titles of
+   subsections and of the boxed sections keep their normal form. */
+.wny-money > h2, .wny-money > .wny-recent__head h2, .wny-companies > h2 {
+  font: 600 1.15rem/1.3 var(--sans);
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+.wny-money__total .wny-money__meta { margin-left: auto; }
+
+/* Sources tables. */
+.sources td { vertical-align: top; }
+.sources__root { font-family: var(--mono); white-space: nowrap; }
+.sources__count { font-weight: 700; margin-right: .3rem; }
+/* site.css sizes form inputs to full width; email choices are compact chips. */
+.wny-choice { white-space: nowrap; margin: 0; }
+.wny-choice input { width: auto; margin: 0; flex: none; }

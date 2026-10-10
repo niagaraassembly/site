@@ -25,7 +25,12 @@
 </details>
 </div>
 <p class="mag-kicker"><a href="/mags/">All MAGs</a></p>
+<div class="mag-titlebar">
 <h1 class="mag-title">Western New York</h1>
+<figure class="mag-locator" data-locator="/data/geo/wny-locator.json" hidden>
+<svg role="img" aria-label="Map of New York State with Western New York shaded red"></svg>
+</figure>
+</div>
 <div class="issue-line">
 <p class="issue-stamp">Issue One · 10 October 2026</p>
 <button type="button" class="wny-filters__clear" data-print>Print or save as PDF</button>
@@ -37,7 +42,7 @@
 </div>
 <p class="wny-lede" data-wny="summary" hidden></p>
 <p class="issue-intro">Reviewed news from the Niagara River to Syracuse: who is investing, building, hiring and starting up. Every story has passed Niagara Assembly’s source review, and each one carries our reading of it: how far along it is, and what is still unconfirmed.</p>
-<p class="wny-source">How this news is researched: <a href="/research/methods/news/">our methods</a>. Every approved story so far: <a href="/MAGS/WNY/posts/">all articles</a>.</p>
+<p class="wny-source">How this news is researched: <a href="/research/methods/news/">our methods</a>. <a href="sources/">Sources in this issue</a>. Every approved story so far: <a href="/MAGS/WNY/posts/">all articles</a>.</p>
 
 <figure class="corridor" aria-describedby="corridor-caption">
 <div class="corridor__plot">
@@ -67,7 +72,7 @@
 
 <section class="wny-money" data-wny="money" hidden>
 <div class="wny-recent__head"><h2>Dollar figures</h2><a href="/MAGS/WNY/investments/">All dollar figures</a></div>
-<p class="wny-lane__banner">Amounts stated in investment and industry stories, grouped by kind of money.<br>Contract ceilings are left out.</p>
+<p class="wny-lane__banner">Amounts stated in this issue’s stories, grouped by kind of money.<br>Contract ceilings are left out.<br>Each kind is totalled on its own, counting investment and industry stories only.</p>
 <ul class="wny-money__groups" data-wny="money-list" hidden></ul>
 </section>
 
@@ -79,19 +84,23 @@
 
 <section class="wny-money" data-wny="support" hidden>
 <h2>Public support</h2>
-<p class="wny-lane__banner">Tax credits and other public awards tied to these stories. Kept apart from the dollar figures and never added to them.</p>
+<p class="wny-lane__banner">Tax credits and other public awards tied to these stories. Kept apart from the dollar figures.</p>
 <ul class="wny-money__list" data-wny="support-list" hidden></ul>
 </section>
 
-<form class="wny-signup" data-wny="signup" novalidate>
-<fieldset data-sketch="box">
-<legend>Get the next issue</legend>
+<form class="wny-signup" data-wny="signup" data-sketch="box" novalidate>
+<p class="wny-signup__pitch">Get each Western New York issue by email: reviewed news on who is investing, building, hiring and starting up between the Niagara River and Syracuse, with every source and caveat attached. It’s free, and you can unsubscribe from any email.</p>
+<div class="wny-signup__fields">
 <label>Name <input name="name" required autocomplete="name"></label>
 <label>Email <input name="email" type="email" required autocomplete="email"></label>
-<button type="submit">Subscribe</button>
-<p class="fineprint">Joins the Niagara Assembly mailing list. Unsubscribe from any email.</p>
-<p class="status" role="status"></p>
+<fieldset class="wny-signup__choices" disabled aria-describedby="signup-choices-note">
+<legend>Emails to receive <span class="wny-signup__soon" id="signup-choices-note">coming soon; for now you’ll get every Niagara Assembly email</span></legend>
+<label class="wny-choice wny-choice--wny"><input type="checkbox" name="topics" value="wny" checked> Western New York</label>
+<label class="wny-choice wny-choice--ontario"><input type="checkbox" name="topics" value="ontario"> Ontario</label>
+<label class="wny-choice wny-choice--na"><input type="checkbox" name="topics" value="na"> Niagara Assembly updates</label>
 </fieldset>
+<div class="wny-signup__send"><button type="submit">Subscribe</button><p class="status" role="status"></p></div>
+</div>
 </form>
 
 <section class="wny-lane" data-wny-lane="production" data-sketch="card" hidden>

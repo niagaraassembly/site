@@ -243,7 +243,10 @@ test('the investments page lists every stated amount; totals count production on
   const html = renderInvestments(lines);
   assert.match(html, /href="\/MAGS\/WNY\/posts\/#wny-S5"/);
   assert.match(html, /ceiling \$20\.7B/);
-  assert.doesNotMatch(html, /Proposed total|Grants total/, 'developing and corridor kinds have nothing to count');
+  assert.match(html, /Proposed total<\/span><span class="wny-money__sums">Not totalled/, 'a kind with nothing countable says so');
+  assert.match(html, /Grants total<\/span><span class="wny-money__sums">Not totalled/);
+  assert.match(html, /Investment total/, 'a one-line kind still gets its total line');
+  assert.match(renderInvestments(lines, { linkBase: '' }), /href="#wny-S5"/, 'issue page links cards on the same page');
   assert.equal(moneyKind({ amount_type: 'charge' }), 'charges');
   assert.deepEqual(investmentOptions(lines).kind.map(([v]) => v), ['investment', 'committed', 'deals', 'grants', 'proposed']);
 });
