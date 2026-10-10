@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-10T17:10:22+00:00",
+  "generated_at": "2026-10-10T17:15:36+00:00",
   "source": {
     "repo": "niagaraassembly/na-research",
-    "commit": "cfd12b5"
+    "commit": "f44415d"
   },
   "items": [
     {
@@ -768,6 +768,15 @@
       "entity_id": "E0034",
       "source": "Cornell Chronicle",
       "url": "https://news.cornell.edu/stories/2026/10/mcmahon-gets-moore-foundation-award-programmable-photonic-chips"
+    },
+    {
+      "event_id": "IEVT-2026-000002",
+      "name": "Nicholas Fink",
+      "role": "President and CEO",
+      "organization": "Constellation Brands",
+      "entity_id": "E0145",
+      "source": "Rochester Business Journal",
+      "url": "https://rbj.net/2026/10/07/constellation-brands-acquires-spikedade-rochester/"
     }
   ],
   "issues": [

@@ -685,26 +685,41 @@ dialog.sparks-dialog::backdrop {
 .wny-signup { margin: 0 0 2.5rem; max-width: 34rem; }
 
 /* A MAG's flags, top right inside the drawn frame with a little padding.
-   Part of the MAG template: each MAG lists its own in its markup. A hairline
-   keeps white stripes from dissolving into the paper. */
+   Part of the MAG template: each MAG lists its own in its markup. Each flag
+   opens a small menu (data/mags.json via assets/js/magflags.js): the
+   country flag lists states with a MAG, the state flag that state's MAGs.
+   A hairline keeps white stripes from dissolving into the paper. */
 .mag-flags {
   position: absolute;
   top: 1.1rem;
   right: 1.25rem;
+  z-index: 2;
   display: flex;
   gap: .4rem;
   margin: 0;
-  max-width: none;
 }
-.mag-flags img {
-  display: block;
-  height: 1.25rem;
-  width: auto;
-  outline: 1px solid var(--rule);
+.mag-flag { position: relative; }
+.mag-flag summary { list-style: none; cursor: pointer; display: block; }
+.mag-flag summary::-webkit-details-marker { display: none; }
+.mag-flag summary:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.mag-flag img { display: block; height: 1.25rem; width: auto; outline: 1px solid var(--rule); }
+.mag-flag[open] img { outline: 1.5px solid var(--ink); }
+.mag-flag__menu {
+  position: absolute;
+  top: calc(100% + .4rem);
+  right: 0;
+  min-width: 12rem;
+  padding: .55rem .8rem .6rem;
+  background: var(--paper);
+  border: 1.4px solid var(--ink);
 }
+.mag-flag__label { margin: 0 0 .35rem; font: .6875rem/1.3 var(--sans); color: var(--ink-soft); }
+.mag-flag__menu ul { list-style: none; margin: 0; padding: 0; }
+.mag-flag__menu li { font: .9375rem/1.6 var(--sans); white-space: nowrap; }
+.mag-flag__none { color: var(--ink-soft); }
 @media (max-width: 34rem) {
   .mag-flags { top: .8rem; right: .8rem; }
-  .mag-flags img { height: 1rem; }
+  .mag-flag img { height: 1rem; }
 }
 
 /* County band: two rows of county outlines under the title, tiled edge to
@@ -791,3 +806,7 @@ dialog.sparks-dialog::backdrop {
 @media (max-width: 34rem) {
   [data-wny="coming-list"] .wny-money__line { grid-template-columns: 7.5rem minmax(0, 1fr); }
 }
+
+/* A state page's title carries its flag. */
+.mag-title--flag { display: flex; align-items: center; gap: .9rem; }
+.mag-title--flag img { height: .62em; width: auto; outline: 1px solid var(--rule); }

@@ -633,6 +633,11 @@ async function mountCountyBand(root, items = []) {
     }
     const rc = rough.svg(svg);
     const base = { roughness: 0.6, bowing: 0.4 };
+    /* Spacing is in the outline's 0-100 units, not pixels: a tile draws a
+       county about 44px tall, so one unit is about 0.44px. These values give
+       roughly 4px between lines for one colour and 5.7px per colour when
+       colours share a county, so all of them stay visible. */
+    const GAP_ONE = 9, GAP_MIXED = 13, WEIGHT = 2;
     const layer = (opts, colour) => {
       const node = rc.path(d, { ...base, ...opts });
       node.style.color = colour;
@@ -640,16 +645,15 @@ async function mountCountyBand(root, items = []) {
     };
     if (!tones.length) {
       /* No story: one light grey hatch and outline. */
-      layer({ stroke: 'currentColor', strokeWidth: 1, fill: 'currentColor', fillStyle: 'hachure',
-        hachureGap: 5, fillWeight: 0.5, seed }, 'var(--county-quiet)');
+      layer({ stroke: 'currentColor', strokeWidth: 1.6, fill: 'currentColor', fillStyle: 'hachure',
+        hachureGap: GAP_ONE, fillWeight: 1.4, seed }, 'var(--county-quiet)');
       continue;
     }
     HATCH.filter((h) => tones.includes(h.tone)).forEach((h, i) => layer({
-      /* Mixed counties get wider, heavier lines so each colour stays legible. */
       stroke: 'none', fill: 'currentColor', fillStyle: 'hachure', hachureAngle: h.angle,
-      hachureGap: tones.length > 1 ? 4.5 : 3, fillWeight: tones.length > 1 ? 1.4 : 1, seed: seed + 100 * (i + 1),
+      hachureGap: tones.length > 1 ? GAP_MIXED : GAP_ONE, fillWeight: WEIGHT, seed: seed + 100 * (i + 1),
     }, h.tone === 'news' ? 'var(--county-news)' : `var(--amount-${h.tone})`));
-    layer({ stroke: 'currentColor', strokeWidth: 1.5, fill: undefined, seed }, 'var(--ink)');
+    layer({ stroke: 'currentColor', strokeWidth: 2.4, fill: undefined, seed }, 'var(--ink)');
   }
   band.hidden = false;
 }
