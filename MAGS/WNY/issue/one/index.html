@@ -22,7 +22,7 @@
 <button type="button" class="wny-ticker__toggle wny-filters__clear" hidden>Pause</button>
 </div>
 <p class="issue-intro">Reviewed news from the Niagara River to Syracuse: who is investing, building, hiring and starting up. Every story has passed Niagara Assembly’s source review, and each one carries our reading of it: how far along it is, and what is still unconfirmed.</p>
-<p class="wny-source">Research data: <a href="https://github.com/niagaraassembly/na-research" rel="noopener">niagaraassembly/na-research</a> on GitHub.</p>
+<p class="wny-source">Research data: <a href="https://github.com/niagaraassembly/na-research" rel="noopener">niagaraassembly/na-research</a> on GitHub. Every approved story so far: <a href="/MAGS/WNY/posts/">all articles</a>.</p>
 
 <figure class="corridor" aria-describedby="corridor-caption">
 <div class="corridor__plot">
@@ -31,22 +31,18 @@
 </div>
 <div class="corridor__towns" aria-hidden="true"></div>
 <figcaption class="corridor__caption" id="corridor-caption" aria-live="polite"></figcaption>
+<p class="corridor__key">Green: completed. Yellow: announced. Hollow: in development, not yet built or confirmed.</p>
 </figure>
 
 <p class="wny-note" data-wny="empty" hidden>No approved Western New York news yet. Stories appear here after they pass review.</p>
 <p class="wny-note" data-wny="error" hidden>The news list didn’t load. Reload the page to try again.</p>
 <noscript><p class="wny-note">This page needs JavaScript to show the news.</p></noscript>
 
-<section class="wny-recent" data-wny="recent" hidden>
-<div class="wny-recent__head"><h2>Recent</h2><a href="/MAGS/WNY/posts/">All articles</a></div>
-<ul class="issue-list" data-wny="recent-list" hidden></ul>
-</section>
 
 <section class="wny-money" data-wny="money" hidden>
-<h2>Investment figures</h2>
-<p class="wny-lane__banner">Amounts stated in investment and industry stories. Contract ceilings and corridor news are left out. The total mixes kinds of money, such as building costs and purchase prices.</p>
-<ul class="wny-money__list" data-wny="money-list" hidden></ul>
-<p class="wny-money__line wny-money__total" data-wny="money-total" hidden></p>
+<h2>Dollar figures</h2>
+<p class="wny-lane__banner">Amounts stated in investment and industry stories, grouped by kind of money. Contract ceilings are left out. The kinds are not added together, because a purchase price or a contract award is not money spent building in the region.</p>
+<ul class="wny-money__groups" data-wny="money-list" hidden></ul>
 </section>
 
 <section class="wny-lane" data-wny-lane="production" data-sketch="card" hidden>

@@ -653,3 +653,15 @@ dialog.sparks-dialog::backdrop {
 /* Bylines run the full width of the card or list, not the 40rem prose cap,
    so short company names don't fold onto a second line. */
 .wny-item .issue-list__meta { max-width: none; }
+
+/* Dollar figures grouped by kind of money. Each kind has its own heading
+   and, with two or more lines, its own total; kinds are never summed. */
+.wny-money__groups { list-style: none; padding: 0; margin: 0; }
+.wny-money__group + .wny-money__group { margin-top: 1.4rem; }
+.wny-money__kind { margin: 0 0 .4rem; font: 600 .9375rem/1.3 var(--sans); }
+.wny-money__group .wny-money__list { margin: 0; }
+
+/* Plain markings, folded into one quiet sentence under the warning chips. */
+.wny-flags__plain { margin: .5rem 0 0; font: .8125rem/1.5 var(--sans); color: var(--ink-soft); }
+
+.corridor__key { margin: .25rem 0 0; font: .8125rem/1.4 var(--sans); color: var(--ink-soft); }

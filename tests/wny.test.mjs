@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import {
   LANES, STAGES, FLAGS, publishable, byNewest, flagText, moneyLines, corridorPosition, corridorMarks,
   filterItems, filterOptions, parseFilters, filterQuery, moneyTotals, moneyByStage, renderMoneyTotal, tickerLine,
+  moneyGroups, moneyKind, renderMoneyGroups,
   formatAmount, companiesInNews, renderItem, renderCompact,
 } from '../assets/js/wny.js';
 
@@ -188,4 +189,27 @@ test('the ticker line is place then headline, escaped, linking to the card', () 
   assert.match(html, /href="#wny-S1"/);
   assert.ok(!html.includes('<b>') && !html.includes('<i>'));
   assert.doesNotMatch(tickerLine({ id: 'S2', headline: 'No place' }), /wny-ticker__place/);
+});
+
+test('dollar figures group by kind of money and never sum across kinds', () => {
+  const lines = moneyLines(publishable(sample.items));
+  const groups = moneyGroups(lines);
+  assert.deepEqual(groups.map((g) => [g.id, g.lines.map((i) => i.id)]),
+                   [['building', ['S1']], ['contracts', ['S5']], ['deals', ['S2']]]);
+  assert.equal(moneyKind({ amount_type: 'something_new' }), 'other');
+  const html = renderMoneyGroups(lines);
+  assert.match(html, /Building and equipment/);
+  assert.doesNotMatch(html, /wny-money__total/, 'a one-story kind has no total line');
+  const two = renderMoneyGroups([...lines, { id: 'S9b', amount: 1e6, currency: 'USD', amount_type: 'award', stage: 'award', headline: 'h' }]);
+  assert.match(two, /Contracts total/);
+  assert.doesNotMatch(two, /Building and equipment total|Deals total/);
+});
+
+test('warning and info markings stay chips; plain ones fold into one sentence', () => {
+  const html = renderItem({ id: 'x', headline: 'h', lane: 'production', flags: [
+    { type: 'conflict', detail: 'local_job_count' }, { type: 'ceiling_not_obligation', detail: '' },
+    { type: 'secondary_source', detail: '' }] });
+  assert.match(html, /wny-flag--warn">Sources disagree on local job count/);
+  assert.match(html, /wny-flags__plain">Contract ceiling, not money committed or spent\. From a secondary listing; original notice not accessed\.</);
+  assert.doesNotMatch(html, /wny-flag--plain/);
 });

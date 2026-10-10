@@ -115,6 +115,27 @@ export function moneyLines(items) {
   return items.filter((i) => i.lane === 'production' && formatAmount(i.amount, i.currency));
 }
 
+/* Kinds of money, from na-research's amount_type. Kinds are totalled
+   separately and never added together: a purchase price is not money spent
+   in the region, and a contract award is not a building. An unknown
+   amount_type falls into "Other amounts" rather than vanishing. */
+export const MONEY_KINDS = [
+  { id: 'building', label: 'Building and equipment', types: ['investment'] },
+  { id: 'contracts', label: 'Contracts', types: ['obligated', 'award'] },
+  { id: 'deals', label: 'Deals', types: ['transaction'] },
+  { id: 'other', label: 'Other amounts', types: [] },
+];
+
+export function moneyKind(item) {
+  return (MONEY_KINDS.find((k) => k.types.includes(item.amount_type)) ?? MONEY_KINDS.at(-1)).id;
+}
+
+/** The money list grouped by kind, in MONEY_KINDS order, empty kinds left out. */
+export function moneyGroups(lines) {
+  return MONEY_KINDS.map((kind) => ({ ...kind, lines: lines.filter((i) => moneyKind(i) === kind.id) }))
+    .filter((group) => group.lines.length);
+}
+
 /* Stages whose amounts are coloured: done (green) and only announced
    (dark yellow). Every other stage stays in ink. */
 export const AMOUNT_TONES = { completed: 'done', announced: 'announced' };
@@ -205,9 +226,15 @@ function stageHtml(item) {
 
 function flagsHtml(item) {
   const flags = (item.flags ?? []).map(flagText);
-  if (!flags.length) return '';
-  return `<ul class="wny-flags">${flags.map((f) =>
-    `<li class="wny-flag wny-flag--${f.tone}">${escapeHtml(f.text)}</li>`).join('')}</ul>`;
+  const chips = flags.filter((f) => f.tone !== 'plain');
+  const plain = flags.filter((f) => f.tone === 'plain');
+  return (chips.length
+    ? `<ul class="wny-flags">${chips.map((f) =>
+      `<li class="wny-flag wny-flag--${f.tone}">${escapeHtml(f.text)}</li>`).join('')}</ul>`
+    : '')
+    + (plain.length
+      ? `<p class="wny-flags__plain">${plain.map((f) => escapeHtml(f.text.replace(/\.?$/, '.'))).join(' ')}</p>`
+      : '');
 }
 
 function conflictsHtml(item) {
@@ -275,7 +302,7 @@ export function renderMoney(items) {
 }
 
 /** One line: each stage's subtotal in its colour, then the total. */
-export function renderMoneyTotal(lines) {
+export function renderMoneyTotal(lines, label = 'Total of stated amounts') {
   const sums = moneyByStage(lines).map(({ currency, amount, parts }) => {
     const pieces = parts.map((part) =>
       `<span class="wny-money__part"><b class="wny-money__sum${toneClass(part.stage)}">${escapeHtml(formatAmount(part.amount, currency))}</b>`
@@ -283,8 +310,19 @@ export function renderMoneyTotal(lines) {
     return pieces.join(' + ')
       + (parts.length > 1 ? ` = <b class="wny-money__sum">${escapeHtml(formatAmount(amount, currency))}</b>` : '');
   });
-  return `<span class="wny-money__label">Total of stated amounts</span>`
+  return `<span class="wny-money__label">${escapeHtml(label)}</span>`
     + `<span class="wny-money__sums">${sums.join(' · ')}</span>`;
+}
+
+/** Each kind: a heading, its lines, and (for two or more) its own total. */
+export function renderMoneyGroups(lines) {
+  return moneyGroups(lines).map((group) =>
+    `<li class="wny-money__group"><h3 class="wny-money__kind">${escapeHtml(group.label)}</h3>`
+    + `<ul class="wny-money__list">${renderMoney(group.lines)}</ul>`
+    + (group.lines.length > 1
+      ? `<p class="wny-money__line wny-money__total">${renderMoneyTotal(group.lines, `${group.label} total`)}</p>`
+      : '')
+    + '</li>').join('');
 }
 
 export function renderCompanies(companies) {
@@ -407,12 +445,22 @@ function drawCorridor(root, items) {
     }
     for (const [i, m] of marks.entries()) {
       const cx = pad + m.x * span, cy = y - 14 - m.stack * 11;
-      if (rc) svg.appendChild(rc.circle(cx, cy, 9, { ...opts, seed: SEED + 50 + i, fill: 'currentColor', fillStyle: 'solid' }));
-      else {
-        const c = document.createElementNS(SVG_NS, 'circle');
-        Object.entries({ cx, cy, r: 4.5, fill: 'currentColor' }).forEach(([k, v]) => c.setAttribute(k, v));
-        svg.appendChild(c);
+      /* Same tones as the amounts; hollow when only planned. currentColor
+         plus a CSS colour on the group keeps the theme toggle working. */
+      const hollow = m.item.lane === 'developing';
+      const tone = AMOUNT_TONES[m.item.stage];
+      let node;
+      if (rc) {
+        node = rc.circle(cx, cy, 9, hollow
+          ? { ...opts, seed: SEED + 50 + i }
+          : { ...opts, seed: SEED + 50 + i, fill: 'currentColor', fillStyle: 'solid' });
+      } else {
+        node = document.createElementNS(SVG_NS, 'circle');
+        Object.entries({ cx, cy, r: 4.5, fill: hollow ? 'none' : 'currentColor', stroke: 'currentColor', 'stroke-width': 1.4 })
+          .forEach(([k, v]) => node.setAttribute(k, v));
       }
+      if (tone) node.style.color = `var(--amount-${tone})`;
+      svg.appendChild(node);
     }
   };
 
@@ -571,8 +619,7 @@ export async function mountFront(root = document) {
     }
     const money = moneyLines(items);
     if (money.length) {
-      show(root.querySelector('[data-wny="money-list"]'), renderMoney(money));
-      show(root.querySelector('[data-wny="money-total"]'), renderMoneyTotal(money));
+      show(root.querySelector('[data-wny="money-list"]'), renderMoneyGroups(money));
       show(root.querySelector('[data-wny="money"]'));
     }
     const companies = companiesInNews(items, data.entities);
