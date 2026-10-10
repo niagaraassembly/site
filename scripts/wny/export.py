@@ -48,13 +48,23 @@ def read_csv(path: Path) -> list[dict[str, str]]:
         return list(csv.DictReader(f))
 
 
+STATE_SUFFIX = re.compile(r"(,\s*|\s+)(NY|New York)\b", re.IGNORECASE)
+
+
 def place_for(location: str) -> tuple[str, float | None]:
-    """The first known place named in a location string, else the string itself."""
+    """The location as the record states it, and a longitude for the line.
+
+    The label keeps the record's own wording, minus the state, so that
+    unresolved claims survive ("Salt Road, Penfield or Webster" stays two
+    towns; "Rochester (buyer HQ)" keeps its qualifier). The longitude is the
+    first known place named, so the story still lands on the corridor.
+    """
+    label = STATE_SUFFIX.sub("", location).strip(" ,")
     hits = [(location.find(name), name) for name in PLACES if name in location]
     if not hits:
-        return location.strip(), None
+        return label, None
     _, name = min(hits, key=lambda h: (h[0], -len(h[1])))
-    return name, PLACES[name]
+    return label, PLACES[name]
 
 
 def in_new_york(location: str, entity: dict[str, str] | None) -> bool:

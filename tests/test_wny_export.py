@@ -71,7 +71,7 @@ class ExportTest(unittest.TestCase):
     def test_place_longitude_amount_and_note(self):
         item = self.run_with([event("A", "approved", "Salt Road, Penfield or Webster, NY",
                                     amount="6000000", note="Not yet approved by the town.")])["items"][0]
-        self.assertEqual(item["place"], "Penfield")
+        self.assertEqual(item["place"], "Salt Road, Penfield or Webster", "both towns are kept")
         self.assertAlmostEqual(item["lng"], -77.47)
         self.assertEqual(item["amount"], 6000000.0)
         self.assertEqual(item["note"], "Not yet approved by the town.")
@@ -79,6 +79,10 @@ class ExportTest(unittest.TestCase):
 
     def test_niagara_falls_is_not_read_as_niagara(self):
         self.assertEqual(export.place_for("Niagara Falls, NY")[0], "Niagara Falls")
+
+    def test_place_keeps_the_record_wording_without_the_state(self):
+        self.assertEqual(export.place_for("Rochester NY (buyer HQ)"), ("Rochester (buyer HQ)", -77.61))
+        self.assertEqual(export.place_for("Peabody Street, Buffalo, NY")[0], "Peabody Street, Buffalo")
 
     def test_unknown_place_exports_without_a_mark(self):
         item = self.run_with([event("A", "approved", "Somewhere, NY")])["items"][0]
