@@ -5,7 +5,7 @@ import {
   LANES, STAGES, FLAGS, publishable, byNewest, flagText, moneyLines, corridorPosition, corridorMarks,
   filterItems, filterOptions, parseFilters, filterQuery, moneyTotals, moneyByStage, renderMoneyTotal, tickerLine,
   moneyGroups, moneyKind, renderMoneyGroups, mentionsFor, renderMentions, renderCompanies,
-  countyPath, tileGrow, storiesByCounty,
+  countyPath, tileGrow, storiesByCounty, coverageText, issueFor, apDate,
   investmentLines, filterInvestments, investmentOptions, renderInvestments,
   formatAmount, companiesInNews, renderItem, renderCompact,
 } from '../assets/js/wny.js';
@@ -280,4 +280,19 @@ test('county band data covers the 21 counties in two rows, with drawable outline
 test('stories are counted per county, linking to the newest', () => {
   const by = storiesByCounty([{ id: 'A', county: 'Erie' }, { id: 'B', county: 'Monroe' }, { id: 'C', county: 'Erie' }, { id: 'D' }]);
   assert.deepEqual([...by], [['Erie', { count: 2, first: 'A' }], ['Monroe', { count: 1, first: 'B' }]]);
+});
+
+test('coverage dates read in AP style, the year once when shared', () => {
+  assert.equal(coverageText('2026-09-28', '2026-10-09'), 'Sept. 28 to Oct. 9, 2026');
+  assert.equal(coverageText('2026-12-28', '2027-01-03'), 'Dec. 28, 2026 to Jan. 3, 2027');
+  assert.equal(coverageText('', '2026-10-09'), '');
+  assert.equal(apDate('2026-10-10'), 'Oct. 10, 2026');
+  assert.equal(apDate('2026-03-05'), 'March 5, 2026');
+});
+
+test('an issue page finds its issue record', () => {
+  const data = { issues: [{ id: 'WNY-2026-001', events: ['S1'] }] };
+  assert.equal(issueFor(data, 'WNY-2026-001').events[0], 'S1');
+  assert.equal(issueFor(data, 'WNY-2099-001'), null);
+  assert.equal(issueFor(data, null), null);
 });

@@ -12,6 +12,9 @@ site data contract (na-research f31ecf6):
   flags describe an item; they never authorise it.
 - lane "excluded" is never exported. "developing" and "corridor" items also
   need a public_note, the reader-facing explainer.
+- Emitted text is the reader headline (public_headline, else the research
+  headline) and public_note. Published issues (intel/issues.csv with
+  intel/issue_events.csv) are exported with their summary and story list.
 - Emitted text is headline and public_note. The internal summary, reviewer
   notes and dossier prose are never emitted.
 - People come only from intel/event_people.csv (event_id, person_name,
@@ -233,7 +236,7 @@ def build(research: Path) -> dict:
             "currency": ev.get("currency", "") or None,
             "entity_id": ev.get("entity_id") or None,
             "entity_name": (entity or {}).get("name"),
-            "headline": ev.get("headline", ""),
+            "headline": ev.get("public_headline", "").strip() or ev.get("headline", ""),
             "note": note,
             "sources": sources,
             "conflicts": conflicts_for(ev["event_id"], flags, conflict_rows),
@@ -250,11 +253,22 @@ def build(research: Path) -> dict:
         if p.get("event_id") in exported and p.get("person_name", "").strip()
     ]
 
+    members = read_csv(intel / "issue_events.csv")
+    issues = [
+        {"id": i["issue_id"], "title": i.get("title", ""), "coverage_start": i.get("coverage_start", ""),
+         "coverage_end": i.get("coverage_end", ""), "published": i.get("published_date", ""),
+         "summary": i.get("public_summary", "").strip(),
+         "events": [m["event_id"] for m in members if m.get("issue_id") == i["issue_id"] and m.get("event_id") in exported]}
+        for i in read_csv(intel / "issues.csv")
+        if i.get("mag") == "WNY" and i.get("publish_status", "").strip() in PUBLISHABLE
+    ]
+
     return {
         "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
         "source": {"repo": "niagaraassembly/na-research", "commit": commit_of(research)},
         "items": items,
         "people": people,
+        "issues": issues,
         "entities": [
             {"id": eid, "name": e["name"], "type": e.get("entity_type", ""),
              "city": e.get("hq_city", ""), "website": website_of(e.get("website", ""))}

@@ -769,3 +769,7 @@ dialog.sparks-dialog::backdrop {
 .county-band__link:focus-visible .county-band__name { text-decoration: underline; }
 .county-band__link:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 .county-band__key { margin: -1rem 0 1.25rem; font: .6875rem/1.4 var(--sans); color: var(--ink-soft); }
+
+/* The issue's approved summary: the opening paragraph, a step larger than
+   the standing intro that follows it. */
+.wny-lede { margin: 0 0 1rem; max-width: 42rem; font: 1.125rem/1.6 var(--sans); }

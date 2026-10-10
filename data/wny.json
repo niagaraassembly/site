@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-10T17:01:19+00:00",
+  "generated_at": "2026-10-10T17:06:25+00:00",
   "source": {
     "repo": "niagaraassembly/na-research",
-    "commit": "8d807f0"
+    "commit": "cfd12b5"
   },
   "items": [
     {
@@ -34,7 +34,7 @@
       "currency": "USD",
       "entity_id": "E0144",
       "entity_name": "Solstice Advanced Materials",
-      "headline": "Solstice Advanced Materials expands Buffalo R&D facility",
+      "headline": "Solstice to invest $49M expanding Buffalo R&D center",
       "note": "Solstice will invest $49M to expand its Buffalo R&D center, adding 12 jobs, with up to $1.4M in state Excelsior tax credits. The governor's and company's announcements quote different spokespeople and name forms.",
       "sources": [
         {
@@ -110,7 +110,7 @@
       "currency": "USD",
       "entity_id": "E0145",
       "entity_name": "Constellation Brands",
-      "headline": "Constellation Brands acquires SpikedAde",
+      "headline": "Constellation Brands buys SpikedAde for $75M",
       "note": "SpikedAde production location not disclosed.",
       "sources": [
         {
@@ -148,7 +148,7 @@
       "currency": "USD",
       "entity_id": "E0147",
       "entity_name": "Wilbert's Premium Auto Parts",
-      "headline": "Wilbert Premium Auto Parts planning-board expansion application",
+      "headline": "Wilbert's seeks approval for $6M Salt Road expansion",
       "note": "Not an approved or under-construction project as of source date.",
       "sources": [
         {
@@ -210,7 +210,7 @@
       "currency": null,
       "entity_id": "E0148",
       "entity_name": "The Goodyear Tire & Rubber Company",
-      "headline": "The Goodyear Tire & Rubber Company Form 8-K: chemical facility closure plan",
+      "headline": "Goodyear to close Niagara Falls chemical plant",
       "note": "Goodyear plans to close its Niagara Falls chemical plant, with production expected to end Oct. 31, 2026. Sources differ on jobs: about 85 across two sites (SEC filing) vs. 60 local (Niagara Gazette).",
       "sources": [
         {
@@ -323,7 +323,7 @@
       "currency": "USD",
       "entity_id": "E0149",
       "entity_name": "Lockheed Martin Rotary and Mission Systems",
-      "headline": "Liverpool radar modification reported in Sept28 bulletin",
+      "headline": "Lockheed Martin's Liverpool radar work gets $18.9M contract change",
       "note": "An $18.9M change to an existing Air Force radar contract with work in Liverpool. The ~$1B figure is the contract ceiling, not new spending.",
       "sources": [
         {
@@ -369,7 +369,7 @@
       "currency": "USD",
       "entity_id": "E0150",
       "entity_name": "Lockheed Martin Global Inc.",
-      "headline": "Radar-parts modification includes Liverpool and Lithuania",
+      "headline": "$11.2M radar-parts contract splits work between Liverpool and Lithuania",
       "note": "An $11.2M radar-parts contract change with work in Liverpool and Lithuania; the Liverpool share is not disclosed.",
       "sources": [
         {
@@ -423,7 +423,7 @@
       "currency": "USD",
       "entity_id": "E0151",
       "entity_name": "Criterion Corporation",
-      "headline": "Niagara Falls base-support IDIQ reported",
+      "headline": "Niagara Air Reserve Station awards base-support contract",
       "note": "Base maintenance and logistics contract at Niagara Air Reserve Station: $38.8M ceiling, $14,317 obligated so far. Contractor identity is still being confirmed.",
       "sources": [
         {
@@ -475,7 +475,7 @@
       "currency": "USD",
       "entity_id": "E0153",
       "entity_name": "SRC, Inc.",
-      "headline": "SRC reports $37m LASS prototype contract",
+      "headline": "SRC reports $37M Air Force prototype award",
       "note": "SRC reports a $37M Air Force prototype award for its Ghost Mantis technology. No production commitment or local job count disclosed.",
       "sources": [
         {
@@ -517,7 +517,7 @@
       "currency": "USD",
       "entity_id": "E0034",
       "entity_name": "Cornell University",
-      "headline": "Cornell reports $1.35m programmable-photonics research award",
+      "headline": "Cornell's Peter McMahon receives $1.35M photonics research award",
       "note": "Research grant, not a production or hiring commitment: $1.35M over five years for programmable photonic chip research at Cornell.",
       "sources": [
         {
@@ -555,7 +555,7 @@
       "currency": null,
       "entity_id": "E0152",
       "entity_name": "Gekko Photonics",
-      "headline": "Gekko confirms Rochester office and intended regional team/supplier activity",
+      "headline": "Gekko Photonics confirms Rochester office, plans local hiring",
       "note": "Gekko Photonics says it has a Rochester office and plans local engineering hires and regional suppliers; no headcount or facility announced yet.",
       "sources": [
         {
@@ -623,6 +623,28 @@
       "entity_id": "E0034",
       "source": "Cornell Chronicle",
       "url": "https://news.cornell.edu/stories/2026/10/mcmahon-gets-moore-foundation-award-programmable-photonic-chips"
+    }
+  ],
+  "issues": [
+    {
+      "id": "WNY-2026-001",
+      "title": "Issue One",
+      "coverage_start": "2026-09-28",
+      "coverage_end": "2026-10-09",
+      "published": "2026-10-10",
+      "summary": "Issue One covers Western New York investment and industry news from Sept. 28 to Oct. 9, 2026. Solstice Advanced Materials announced a $49M Buffalo R&D expansion and Goodyear said it will close its Niagara Falls chemical plant, while defense contracts touched Liverpool, Syracuse and Niagara Falls. Each story notes where sources disagree or details are still unconfirmed.",
+      "events": [
+        "IEVT-2026-000001",
+        "IEVT-2026-000002",
+        "IEVT-2026-000003",
+        "IEVT-2026-000004",
+        "IEVT-2026-000005",
+        "IEVT-2026-000006",
+        "IEVT-2026-000007",
+        "IEVT-2026-000008",
+        "IEVT-2026-000009",
+        "IEVT-2026-000010"
+      ]
     }
   ],
   "entities": [

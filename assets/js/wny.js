@@ -838,6 +838,39 @@ function show(el, html) {
   el.hidden = false;
 }
 
+const AP_MONTHS = ['Jan.', 'Feb.', 'March', 'April', 'May', 'June', 'July', 'Aug.', 'Sept.', 'Oct.', 'Nov.', 'Dec.'];
+
+/** "Oct. 10, 2026": AP style, matching the coverage dates. */
+export function apDate(iso) {
+  const x = new Date(`${iso}T12:00:00`);
+  return Number.isNaN(x.getTime()) ? '' : `${AP_MONTHS[x.getMonth()]} ${x.getDate()}, ${x.getFullYear()}`;
+}
+
+/** "Sept. 28 to Oct. 9, 2026" (AP-style months, year once when shared). */
+export function coverageText(start, end) {
+  const d = (iso) => new Date(`${iso}T12:00:00`);
+  const a = d(start), b = d(end);
+  if (Number.isNaN(a.getTime()) || Number.isNaN(b.getTime())) return '';
+  const md = (x) => `${AP_MONTHS[x.getMonth()]} ${x.getDate()}`;
+  return a.getFullYear() === b.getFullYear()
+    ? `${md(a)} to ${md(b)}, ${b.getFullYear()}`
+    : `${md(a)}, ${a.getFullYear()} to ${md(b)}, ${b.getFullYear()}`;
+}
+
+/** The page's issue record, if it names one and the export has it. */
+export function issueFor(data, id) {
+  return id ? (data.issues ?? []).find((i) => i.id === id) ?? null : null;
+}
+
+function mountIssue(root, issue) {
+  if (!issue) return;
+  const stamp = root.querySelector('.issue-stamp');
+  const when = issue.published ? apDate(issue.published) : '';
+  const span = coverageText(issue.coverage_start, issue.coverage_end);
+  if (stamp) stamp.textContent = [issue.title, when, span ? `News from ${span}` : ''].filter(Boolean).join(' · ');
+  if (issue.summary) show(root.querySelector('[data-wny="summary"]'), escapeHtml(issue.summary));
+}
+
 export async function mountFront(root = document) {
   let data;
   try {
@@ -847,7 +880,12 @@ export async function mountFront(root = document) {
     show(root.querySelector('[data-wny="error"]'));
     return;
   }
-  const items = byNewest(publishable(data.items));
+  /* An issue page shows exactly its issue's stories when the export lists
+     them; otherwise everything in its frozen data file. */
+  const issue = issueFor(data, root.querySelector('[data-wny-issue]')?.getAttribute('data-wny-issue'));
+  const members = new Set(issue?.events ?? []);
+  const items = byNewest(publishable(data.items)).filter((i) => !members.size || members.has(i.id));
+  mountIssue(root, issue);
   mountCountyBand(root, items);
   drawCorridor(root, items);
   mountTicker(root, items);

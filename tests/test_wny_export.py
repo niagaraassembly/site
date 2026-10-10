@@ -14,7 +14,7 @@ export = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(export)
 
 EVENT_FIELDS = ["event_id", "event_candidate_id", "entity_id", "event_type", "event_date", "published_date",
-                "headline", "summary", "amount", "currency", "amount_type", "ceiling_amount", "location", "county",
+                "headline", "summary", "amount", "currency", "amount_type", "ceiling_amount", "location", "county", "public_headline",
                 "jurisdiction", "source_url", "article_id", "source_article_ids", "confidence", "public_note",
                 "publish_status", "lane", "stage", "flags", "integrated_at", "integration_run_id"]
 ENTITY_FIELDS = ["entity_id", "name", "entity_type", "hq_city", "website"]
@@ -162,6 +162,23 @@ class ExportTest(unittest.TestCase):
         self.assertEqual(export.website_of(""), "")
         self.assertEqual(export.website_of("javascript:alert(1)"), "")
         self.assertEqual(export.website_of("not a site"), "")
+
+    def test_reader_headline_wins_and_falls_back(self):
+        items = self.run_with([event("A", public_headline="Reader headline"), event("B")])["items"]
+        self.assertEqual([i["headline"] for i in items], ["Reader headline", "Headline B"])
+
+    def test_published_issues_export_with_their_exported_stories(self):
+        write(self.root / "intel" / "issues.csv",
+              ["issue_id", "mag", "title", "coverage_start", "coverage_end", "published_date", "public_summary", "publish_status"], [
+                  {"issue_id": "WNY-1", "mag": "WNY", "title": "Issue One", "coverage_start": "2026-09-28",
+                   "coverage_end": "2026-10-09", "published_date": "2026-10-10", "public_summary": "Sum.", "publish_status": "published"},
+                  {"issue_id": "WNY-2", "mag": "WNY", "title": "Issue Two", "publish_status": "not_ready"},
+                  {"issue_id": "ON-1", "mag": "ON", "title": "Other mag", "publish_status": "published"},
+              ])
+        write(self.root / "intel" / "issue_events.csv", ["issue_event_id", "issue_id", "event_id"], [
+            {"issue_id": "WNY-1", "event_id": "A"}, {"issue_id": "WNY-1", "event_id": "HELD"}])
+        data = self.run_with([event("A"), event("HELD", "not_ready")])
+        self.assertEqual([(i["id"], i["events"], i["summary"]) for i in data["issues"]], [("WNY-1", ["A"], "Sum.")])
 
     def test_changes_report_added_changed_removed(self):
         old = {"items": [{"id": "A", "v": 1}, {"id": "B", "v": 1}]}
