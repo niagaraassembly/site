@@ -34,7 +34,9 @@
           "detail": "spokesperson"
         }
       ],
-      "conflicts": []
+      "conflicts": [],
+      "amount_type": "investment",
+      "ceiling_amount": null
     },
     {
       "id": "S2",
@@ -64,7 +66,9 @@
           "detail": "production_location"
         }
       ],
-      "conflicts": []
+      "conflicts": [],
+      "amount_type": "transaction",
+      "ceiling_amount": null
     },
     {
       "id": "S3",
@@ -94,7 +98,9 @@
           "detail": "municipality"
         }
       ],
-      "conflicts": []
+      "conflicts": [],
+      "amount_type": "proposed",
+      "ceiling_amount": null
     },
     {
       "id": "S4",
@@ -128,20 +134,23 @@
       ],
       "conflicts": [
         {
-          "field": "combined_job_reductions",
-          "value": "approximately 85",
-          "unit": "jobs",
-          "source_url": "https://example.com/a",
-          "source_label": "example.com"
-        },
-        {
-          "field": "local_job_loss",
-          "value": "60",
-          "unit": "persons",
-          "source_url": "https://example.org/b",
-          "source_label": "example.org"
+          "field": "local_job_count",
+          "values": [
+            {
+              "value": "About 85 jobs across two sites",
+              "source": "Sample Filing",
+              "url": "https://example.com/a"
+            },
+            {
+              "value": "60 local jobs",
+              "source": "Sample Gazette",
+              "url": "https://example.org/b"
+            }
+          ]
         }
-      ]
+      ],
+      "amount_type": null,
+      "ceiling_amount": null
     },
     {
       "id": "S5",
@@ -150,7 +159,7 @@
       "date": "2026-09-28",
       "place": "Rochester",
       "lng": -77.6,
-      "amount": 20700000000,
+      "amount": 2000000,
       "currency": "USD",
       "entity_id": "X2",
       "entity_name": "Example Brands",
@@ -175,7 +184,9 @@
           "detail": ""
         }
       ],
-      "conflicts": []
+      "conflicts": [],
+      "amount_type": "obligated",
+      "ceiling_amount": 20700000000
     },
     {
       "id": "S6",
@@ -197,7 +208,9 @@
           "detail": ""
         }
       ],
-      "conflicts": []
+      "conflicts": [],
+      "amount_type": null,
+      "ceiling_amount": null
     },
     {
       "id": "S7",
@@ -229,7 +242,9 @@
           "detail": ""
         }
       ],
-      "conflicts": []
+      "conflicts": [],
+      "amount_type": null,
+      "ceiling_amount": null
     },
     {
       "id": "S8",
@@ -261,7 +276,9 @@
           "detail": ""
         }
       ],
-      "conflicts": []
+      "conflicts": [],
+      "amount_type": "grant",
+      "ceiling_amount": null
     },
     {
       "id": "S9",
@@ -276,7 +293,9 @@
       "stage": "announced",
       "note": "",
       "flags": [],
-      "conflicts": []
+      "conflicts": [],
+      "amount_type": null,
+      "ceiling_amount": null
     },
     {
       "id": "S10",
@@ -291,7 +310,9 @@
       "headline": "EXCLUDED sample: must never render",
       "note": "x",
       "sources": [],
-      "conflicts": []
+      "conflicts": [],
+      "amount_type": null,
+      "ceiling_amount": null
     }
   ],
   "entities": [

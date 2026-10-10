@@ -2,26 +2,31 @@
 """Export approved New York State news from na-research to data/wny.json.
 
 Reads a local checkout of niagaraassembly/na-research and never writes to it.
-Follows na-research's research/routines/WNY-NEWS-SITE-STATE-MODEL.md:
+Follows na-research's research/routines/WNY-NEWS-SITE-STATE-MODEL.md and its
+site data contract (na-research f31ecf6):
 
-- Source is intel/entity_events.csv only: rows there have already passed
-  review (decision A) and Saturday integration. Inbox candidates are never read.
+- Source is intel/ only: entity_events.csv (rows that passed review and
+  Saturday integration), entities.csv and event_conflicts.csv. Article
+  titles and outlets come from research/news/inbox/articles.csv.
 - publish_status approved/published is the editorial gate. lane, stage and
   flags describe an item; they never authorise it.
 - lane "excluded" is never exported. "developing" and "corridor" items also
   need a public_note, the reader-facing explainer.
 - Emitted text is headline and public_note. The internal summary, reviewer
   notes and dossier prose are never emitted.
+- amount is money committed or stated; ceiling_amount is a contract's maximum
+  and is kept separate so it never enters a total.
 
 The Western New York MAG admits any approved New York State record
-(atlas/GLOSSARY.md). A record is New York when its location names a known New
-York place or county, says NY / New York, or its company's state field does.
+(atlas/GLOSSARY.md): jurisdiction NY.
 
 Each run prints what changed against the previous data/wny.json and the
 na-research commit it was built from, so a weekly pull shows what is new.
+--issue NAME also writes the same data to data/wny/issue-NAME.json, the
+frozen copy an issue page reads.
 
 Usage:
-    python3 scripts/wny/export.py --research /path/to/na-research [--out data/wny.json]
+    python3 scripts/wny/export.py --research /path/to/na-research [--issue one]
 """
 
 from __future__ import annotations
@@ -37,6 +42,7 @@ from pathlib import Path
 
 PUBLISHABLE = {"approved", "published"}
 NEEDS_EXPLAINER = {"developing", "corridor"}
+SITE = Path(__file__).resolve().parents[2]
 
 # Longitudes for the front page's corridor line. A place missing here still
 # exports; it just isn't marked on the line.
@@ -49,18 +55,7 @@ PLACES = {
     "Newark": -77.10, "Geneva": -76.98, "Corning": -77.05, "Elmira": -76.81,
     "Ithaca": -76.50, "Auburn": -76.57, "Liverpool": -76.21, "Syracuse": -76.15,
 }
-NY_COUNTIES = {
-    "Albany", "Allegany", "Bronx", "Broome", "Cattaraugus", "Cayuga", "Chautauqua", "Chemung",
-    "Chenango", "Clinton", "Columbia", "Cortland", "Delaware", "Dutchess", "Erie", "Essex",
-    "Franklin", "Fulton", "Genesee", "Greene", "Hamilton", "Herkimer", "Jefferson", "Kings",
-    "Lewis", "Livingston", "Madison", "Monroe", "Montgomery", "Nassau", "New York", "Niagara",
-    "Oneida", "Onondaga", "Ontario", "Orange", "Orleans", "Oswego", "Otsego", "Putnam", "Queens",
-    "Rensselaer", "Richmond", "Rockland", "St. Lawrence", "Saratoga", "Schenectady", "Schoharie",
-    "Schuyler", "Seneca", "Steuben", "Suffolk", "Sullivan", "Tioga", "Tompkins", "Ulster",
-    "Warren", "Washington", "Wayne", "Westchester", "Wyoming", "Yates",
-}
 COUNTY = re.compile(r"\b([A-Z][a-z.]+(?: [A-Z][a-z]+)?) County\b")
-NY_PATTERN = re.compile(r"(,\s*|\s)NY\b|New York", re.IGNORECASE)
 STATE_SUFFIX = re.compile(r"(,\s*|\s+)(NY|New York)\b", re.IGNORECASE)
 
 # How a citation is weighed, from the article's type in na-research.
@@ -96,18 +91,10 @@ def place_for(location: str) -> tuple[str, float | None]:
 
 def county_of(location: str) -> str | None:
     match = COUNTY.search(location)
-    return match.group(1) if match and match.group(1) in NY_COUNTIES else None
+    return match.group(1) if match else None
 
 
-def in_new_york(location: str, entity: dict[str, str] | None) -> bool:
-    if NY_PATTERN.search(location) or county_of(location):
-        return True
-    if any(name in location for name in PLACES):
-        return True
-    return "New York" in (entity or {}).get("country_state_province", "")
-
-
-def amount_of(raw: str) -> float | None:
+def money(raw: str) -> float | None:
     try:
         value = float(raw.replace(",", ""))
     except (AttributeError, ValueError):
@@ -125,65 +112,39 @@ def flags_of(raw: str) -> list[dict[str, str]]:
     return out
 
 
-def candidate_for(ev: dict[str, str], candidates: list[dict[str, str]]) -> dict[str, str] | None:
-    """The inbox candidate an integrated event came from.
-
-    intel/entity_events.csv does not record its candidate id, so match on
-    article and headline, then on article and event type. One article can
-    hold several events (ART-2026-000022 holds three contracts), so an
-    ambiguous match returns None rather than guessing.
-    """
-    same = [c for c in candidates if c["article_id"] == ev.get("article_id") and not c.get("duplicate_of")]
-    for key, value in (("headline", ev.get("headline")), ("proposed_event_type", ev.get("event_type"))):
-        hits = [c for c in same if c.get(key) == value]
-        if len(hits) == 1:
-            return hits[0]
-    return same[0] if len(same) == 1 else None
+def cite(article: dict[str, str], url: str = "") -> dict[str, str]:
+    return {
+        "article_id": article.get("article_id", ""),
+        "title": article.get("title", ""),
+        "publisher": article.get("source_name", ""),
+        "url": url or article.get("canonical_url", "").strip(),
+        "kind": SOURCE_KIND.get(article.get("article_type", ""), "secondary"),
+    }
 
 
-# Claims recording that a value is unknown are not values to compare.
-PLACEHOLDER = re.compile(r"^(unresolved|not stated|unknown)", re.IGNORECASE)
-
-
-def source_of(locator: str) -> tuple[str, str]:
-    """(url, label) for a claim's source locator; label is the bare domain."""
-    match = re.search(r"https?://([^/\s]+)\S*", locator)
-    if not match:
-        return "", ""
-    return match.group(0), match.group(1).removeprefix("www.")
-
-
-def conflicts_for(ids: set[str], claims: list[dict[str, str]], decisions: dict[str, str]) -> list[dict]:
-    """Every sourced value from claims marked X (conflicting evidence), side by side.
+def conflicts_for(event_id: str, flags: list[dict[str, str]], rows: list[dict[str, str]]) -> list[dict]:
+    """One side-by-side table per conflict:X flag, from intel/event_conflicts.csv.
 
     Values are listed as each source states them: never averaged, picked or
-    rounded. Only the value, unit and source are emitted, never the claim's
-    uncertainty_reason or reviewer notes.
+    rounded.
     """
     out = []
-    for c in claims:
-        if c["event_candidate_id"] not in ids or decisions.get(c["claim_id"]) != "X":
+    for flag in flags:
+        if flag["type"] != "conflict" or not flag["detail"]:
             continue
-        value = (c.get("normalized_value") or c.get("proposed_value") or "").strip()
-        if not value or PLACEHOLDER.match(value):
-            continue
-        url, label = source_of(c.get("source_locator", ""))
-        out.append({"field": c["field"], "value": value, "unit": c.get("unit_or_currency", ""),
-                    "source_url": url, "source_label": label})
+        values = [{"value": r["value"], "source": r.get("source_name", ""), "url": r.get("source_url", "")}
+                  for r in rows if r["event_id"] == event_id and r["conflict_field"] == flag["detail"]]
+        if values:
+            out.append({"field": flag["detail"], "values": values})
     return out
 
 
 def build(research: Path) -> dict:
-    events = read_csv(research / "intel" / "entity_events.csv")
-    entities = {e["entity_id"]: e for e in read_csv(research / "intel" / "entities.csv")}
-    inbox = research / "research" / "news" / "inbox"
-    articles = {a["article_id"]: a for a in read_csv(inbox / "articles.csv")}
-    candidates = read_csv(inbox / "event_candidates.csv")
-    claims = read_csv(inbox / "claim_candidates.csv")
-    decisions: dict[str, str] = {}
-    for d in read_csv(research / "research" / "news" / "reviewed" / "review_decisions.csv"):
-        if d.get("record_type") == "CLAIMS":
-            decisions[d["record_id"]] = d["decision"]  # later rows supersede earlier ones
+    intel = research / "intel"
+    events = read_csv(intel / "entity_events.csv")
+    entities = {e["entity_id"]: e for e in read_csv(intel / "entities.csv")}
+    conflict_rows = read_csv(intel / "event_conflicts.csv")
+    articles = {a["article_id"]: a for a in read_csv(research / "research" / "news" / "inbox" / "articles.csv")}
 
     items, used = [], set()
     for ev in events:
@@ -194,48 +155,48 @@ def build(research: Path) -> dict:
             continue
         if lane in NEEDS_EXPLAINER and not note:
             continue
+        if ev.get("jurisdiction", "").strip() != "NY":
+            continue
         location = ev.get("location", "")
         entity = entities.get(ev.get("entity_id", ""))
-        if not in_new_york(location, entity):
-            continue
         place, lng = place_for(location)
-        article = articles.get(ev.get("article_id", ""), {})
-        url = ev.get("source_url", "").strip() or article.get("canonical_url", "").strip()
-        sources = [cite(article, url)] if url else []
-        # Duplicate reports are extra sources on this item, never separate items.
-        candidate = candidate_for(ev, candidates)
-        group = {candidate["event_candidate_id"]} if candidate else set()
-        dup_articles = [a for a in articles.values() if a.get("duplicate_of") == ev.get("article_id")]
-        for c in candidates:
-            if candidate and c.get("duplicate_of") == candidate["event_candidate_id"]:
-                group.add(c["event_candidate_id"])
-                dup_articles.append(articles.get(c["article_id"], {}))
-        seen = {s["url"] for s in sources}
-        for a in dup_articles:
-            a_url = a.get("canonical_url", "").strip()
-            if a_url and a_url not in seen:
-                sources.append(cite(a, a_url))
-                seen.add(a_url)
+
+        # The event's own source first, then every article listed for it.
+        sources, seen = [], set()
+        primary = ev.get("source_url", "").strip()
+        if primary:
+            sources.append(cite(articles.get(ev.get("article_id", ""), {}), primary))
+            seen.add(primary)
+        for aid in (a.strip() for a in ev.get("source_article_ids", "").split(";")):
+            source = cite(articles.get(aid, {"article_id": aid}))
+            if aid and source["url"] and source["url"] not in seen:
+                sources.append(source)
+                seen.add(source["url"])
+
+        flags = flags_of(ev.get("flags", ""))
         items.append({
             "id": ev["event_id"],
+            "candidate_id": ev.get("event_candidate_id") or None,
             "type": ev.get("event_type", ""),
             "lane": lane,
             "stage": ev.get("stage", "").strip() or None,
-            "flags": flags_of(ev.get("flags", "")),
+            "flags": flags,
             "review_state": "approved",  # only decision A reaches intel/entity_events.csv
             "publish_status": status,
             "date": ev.get("event_date") or ev.get("published_date", ""),
             "place": place,
             "county": county_of(location),
             "lng": lng,
-            "amount": amount_of(ev.get("amount", "")),
+            "amount": money(ev.get("amount", "")),
+            "amount_type": ev.get("amount_type", "").strip() or None,
+            "ceiling_amount": money(ev.get("ceiling_amount", "")),
             "currency": ev.get("currency", "") or None,
             "entity_id": ev.get("entity_id") or None,
             "entity_name": (entity or {}).get("name"),
             "headline": ev.get("headline", ""),
             "note": note,
             "sources": sources,
-            "conflicts": conflicts_for(group, claims, decisions),
+            "conflicts": conflicts_for(ev["event_id"], flags, conflict_rows),
         })
         if entity:
             used.add(entity["entity_id"])
@@ -249,16 +210,6 @@ def build(research: Path) -> dict:
              "city": e.get("hq_city", ""), "website": e.get("website", "")}
             for eid, e in entities.items() if eid in used
         ],
-    }
-
-
-def cite(article: dict[str, str], url: str) -> dict[str, str]:
-    return {
-        "article_id": article.get("article_id", ""),
-        "title": article.get("title", ""),
-        "publisher": article.get("source_name", ""),
-        "url": url,
-        "kind": SOURCE_KIND.get(article.get("article_type", ""), "secondary"),
     }
 
 
@@ -285,18 +236,23 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Export approved New York State news from na-research to data/wny.json.")
     parser.add_argument("--research", type=Path, required=True, help="path to an na-research checkout")
-    parser.add_argument("--out", type=Path, default=Path(__file__).resolve().parents[2] / "data" / "wny.json")
+    parser.add_argument("--out", type=Path, default=SITE / "data" / "wny.json")
+    parser.add_argument("--issue", help="also write data/wny/issue-ISSUE.json for an issue page, e.g. one")
     args = parser.parse_args(argv)
     if not (args.research / "intel" / "entity_events.csv").exists():
         print(f"error: {args.research} has no intel/entity_events.csv; is it an na-research checkout?",
               file=sys.stderr)
+        return 2
+    if args.issue and not re.fullmatch(r"[a-z0-9-]+", args.issue):
+        print("error: --issue takes lowercase letters, digits and hyphens, e.g. one", file=sys.stderr)
         return 2
     try:
         old = json.loads(args.out.read_text(encoding="utf-8"))
     except (OSError, ValueError):
         old = {}
     data = build(args.research)
-    args.out.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    text = json.dumps(data, indent=2, ensure_ascii=False) + "\n"
+    args.out.write_text(text, encoding="utf-8")
 
     was = (old.get("source") or {}).get("commit")
     now = data["source"]["commit"]
@@ -308,6 +264,11 @@ def main(argv: list[str] | None = None) -> int:
     if was and now and was != now:
         print(f"  review upstream: git -C {args.research} log --oneline {was}..{now} "
               f"-- intel/ research/news/reviewed/")
+    if args.issue:
+        issue = args.out.parent / "wny" / f"issue-{args.issue}.json"
+        issue.parent.mkdir(parents=True, exist_ok=True)
+        issue.write_text(text, encoding="utf-8")
+        print(f"  issue {args.issue}: {issue}")
     return 0
 
 

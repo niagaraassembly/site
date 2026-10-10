@@ -3,25 +3,73 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MAGs — Niagara Assembly</title>
-<meta name="description" content="Niagara Assembly magazines: START and Research.">
+<title>Western New York, Issue One — Niagara Assembly</title>
+<meta name="description" content="Western New York MAG: reviewed news on investment, facilities, jobs and new ventures from the Niagara River to Syracuse.">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('na-theme')||'light'}catch(e){document.documentElement.dataset.theme='light'}</script>
 <link rel="stylesheet" href="/assets/css/site.css">
 <link rel="stylesheet" href="/assets/css/mag.css">
 </head>
 <body>
 
-<header class="topnav" data-sitenav></header>
+<header class="topnav topnav--board" data-sitenav></header>
 
-<div class="frame" data-sketch="frame">
-<p class="mag-kicker mag-kicker--pub">Niagara Assembly MAGs</p>
-<h1>Magazines</h1>
-<p class="issue-intro">Ideas, places and source-backed investigations across the Niagara–Buffalo–Rochester corridor.</p>
-<ul class="issue-list">
-<li class="issue-list__item"><a class="issue-list__title" href="/MAGS/START/">START</a><p class="issue-list__meta">The ideas, models and places shaping what we’re building. Read Issue 1, September 2026.</p></li>
-<li class="issue-list__item"><a class="issue-list__title" href="/MAGS/WNY/">Western New York</a><p class="issue-list__meta">Reviewed news on investment, facilities, jobs and new ventures from the Niagara River to Syracuse.</p></li>
-<li class="issue-list__item"><a class="issue-list__title" href="/MAGS/RESEARCH/">Research</a><p class="issue-list__meta">Source-backed investigations of places across the corridor: articles, reports, maps and fieldwork.</p></li>
-</ul>
+<div class="frame frame--board" data-sketch="frame" data-wny-src="/data/wny/issue-one.json">
+<p class="mag-kicker"><a href="/mags/">All MAGs</a></p>
+<h1 class="mag-title">Western New York</h1>
+<p class="issue-stamp">Issue One · 10 October 2026</p>
+<p class="issue-intro">Reviewed news from the Niagara River to Syracuse: who is investing, building, hiring and starting up. Every story has passed Niagara Assembly’s source review, and each one carries our reading of it: how far along it is, and what is still unconfirmed.</p>
+<p class="wny-source">Research data: <a href="https://github.com/niagaraassembly/na-research" rel="noopener">niagaraassembly/na-research</a> on GitHub.</p>
+
+<figure class="corridor" aria-describedby="corridor-caption">
+<div class="corridor__plot">
+<svg class="corridor__line" aria-hidden="true" focusable="false"></svg>
+<div class="corridor__marks"></div>
+</div>
+<div class="corridor__towns" aria-hidden="true"></div>
+<figcaption class="corridor__caption" id="corridor-caption" aria-live="polite"></figcaption>
+</figure>
+
+<p class="wny-note" data-wny="empty" hidden>No approved Western New York news yet. Stories appear here after they pass review.</p>
+<p class="wny-note" data-wny="error" hidden>The news list didn’t load. Reload the page to try again.</p>
+<noscript><p class="wny-note">This page needs JavaScript to show the news.</p></noscript>
+
+<section class="wny-recent" data-wny="recent" hidden>
+<div class="wny-recent__head"><h2>Recent</h2><a href="/MAGS/WNY/posts/">All articles</a></div>
+<ul class="issue-list" data-wny="recent-list" hidden></ul>
+</section>
+
+<section class="wny-money" data-wny="money" hidden>
+<h2>Investment figures</h2>
+<p class="wny-lane__banner">Amounts stated in investment and industry stories. Contract ceilings and corridor news are left out. The total mixes kinds of money, such as building costs and purchase prices.</p>
+<ul class="wny-money__list" data-wny="money-list" hidden></ul>
+<p class="wny-money__line wny-money__total" data-wny="money-total" hidden></p>
+</section>
+
+<section class="wny-lane" data-wny-lane="production" data-sketch="card" hidden>
+<h2>Investment and industry</h2>
+<p class="wny-lane__banner">Direct investment, contracts and closures.</p>
+<ul class="issue-list wny-cards" hidden></ul>
+</section>
+
+<section class="wny-lane" data-wny-lane="developing" data-sketch="card" hidden>
+<h2>In development</h2>
+<p class="wny-lane__banner">Announced plans and applications: not yet built or confirmed.</p>
+<ul class="issue-list wny-cards" hidden></ul>
+</section>
+
+<section class="wny-lane" data-wny-lane="corridor" data-sketch="card" hidden>
+<h2>Corridor news</h2>
+<p class="wny-lane__banner">Regional news, not counted in production or investment totals.</p>
+<ul class="issue-list wny-cards" hidden></ul>
+</section>
+
+<section class="wny-companies" data-wny="companies" hidden>
+<h2>Who these stories are about</h2>
+<ul class="wny-company-list" data-wny="companies-list" hidden></ul>
+</section>
+
+<p class="wny-method">How this news is found, checked and approved: <a href="/research/methods/news/">our news research methods</a>.</p>
+<p class="wny-updated" data-wny="updated" hidden></p>
 </div>
 <footer class="sitefoot">
   <span>Niagara Assembly (unincorporated)</span>
@@ -47,5 +95,6 @@
 <script type="module" src="/assets/js/sitenav.js"></script>
 <script type="module" src="/assets/js/theme.js"></script>
 <script type="module" src="/assets/js/subsite.js"></script>
+<script type="module">import { mountFront } from '/assets/js/wny.js'; mountFront();</script>
 </body>
 </html>

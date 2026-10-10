@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import {
   LANES, STAGES, FLAGS, publishable, byNewest, flagText, moneyLines, corridorPosition, corridorMarks,
-  filterItems, filterOptions, parseFilters, filterQuery, moneyTotals,
+  filterItems, filterOptions, parseFilters, filterQuery, moneyTotals, moneyByStage, renderMoneyTotal,
   formatAmount, companiesInNews, renderItem, renderCompact,
 } from '../assets/js/wny.js';
 
@@ -39,17 +39,39 @@ test('flag sentences put details into words', () => {
   assert.equal(flagText({ type: 'brand_new_flag', detail: '' }).text, 'brand new flag');
 });
 
-test('the money list takes production amounts only, never ceilings', () => {
-  const ids = moneyLines(publishable(sample.items)).map((i) => i.id);
-  assert.deepEqual(ids, ['S1', 'S2']);  // S3 developing, S5 ceiling, S8 corridor
+test('the money list takes production amounts only; ceilings never enter it', () => {
+  const lines = moneyLines(publishable(sample.items));
+  assert.deepEqual(lines.map((i) => i.id), ['S1', 'S2', 'S5']);  // S3 developing, S8 corridor
+  assert.equal(lines.find((i) => i.id === 'S5').amount, 2000000, 'the obligated amount, not the 20.7B ceiling');
+});
+
+test('the total splits by stage on one line, coloured for completed and announced', () => {
+  const lines = moneyLines(publishable(sample.items));
+  assert.deepEqual(moneyByStage(lines), [{ currency: 'USD', amount: 126000000, parts: [
+    { stage: 'announced', amount: 49000000 }, { stage: 'award', amount: 2000000 }, { stage: 'completed', amount: 75000000 }] }]);
+  const html = renderMoneyTotal(lines);
+  assert.match(html, /wny-amount--announced">\$49M<\/b> announced/);
+  assert.match(html, /wny-amount--done">\$75M<\/b> completed/);
+  assert.match(html, /\$2M<\/b> contract or award/);
+  assert.match(html, /= <b class="wny-money__sum">\$126M<\/b>/);
+});
+
+test('cards colour amounts by stage and label ceilings', () => {
+  const items = publishable(sample.items);
+  assert.match(renderItem(items.find((i) => i.id === 'S2')), /wny-amount--done">\$75M/);
+  assert.match(renderItem(items.find((i) => i.id === 'S1')), /wny-amount--announced">\$49M/);
+  const s5 = renderItem(items.find((i) => i.id === 'S5'));
+  assert.match(s5, /Contract ceiling \$20\.7B/);
+  assert.doesNotMatch(s5, /wny-amount--/, 'award stage stays in ink');
 });
 
 test('conflicting values render side by side with their sources', () => {
   const html = renderItem(publishable(sample.items).find((i) => i.id === 'S4'));
-  assert.match(html, /approximately 85 jobs/);
-  assert.match(html, /60 persons/);
-  assert.match(html, /example\.com/);
-  assert.match(html, /example\.org/);
+  assert.match(html, /Sources disagree on local job count/);
+  assert.match(html, /About 85 jobs across two sites/);
+  assert.match(html, /60 local jobs/);
+  assert.match(html, /Sample Filing/);
+  assert.match(html, /Sample Gazette/);
 });
 
 test('the explainer shows under the headline; a blank one shows nothing', () => {
@@ -94,7 +116,7 @@ test('companies are counted across approved stories', () => {
 
 test('rendering escapes text and refuses script links', () => {
   const html = renderItem({ id: '"><x', headline: '<b>hi</b>', type: 'layoff', lane: 'production', note: '<s>',
-    flags: [{ type: '<u>', detail: '' }], conflicts: [{ field: 'f', value: '<q>', source_url: 'javascript:x', source_label: '<em>' }],
+    flags: [{ type: '<u>', detail: '' }], conflicts: [{ field: 'f', values: [{ value: '<q>', url: 'javascript:x', source: '<em>' }] }],
     sources: [{ url: 'javascript:alert(1)', publisher: '<i>' }] });
   for (const tag of ['<b>', '<i>', '<s>', '<u>', '<q>', '<em>', 'javascript:']) assert.ok(!html.includes(tag), tag);
   assert.ok(html.includes('<span class="issue-list__title">'), 'no safe URL means no link');
@@ -149,14 +171,14 @@ test('filter state round-trips through the URL and ignores junk', () => {
 });
 
 test('front page section headings match the lane labels', () => {
-  const html = readFileSync(new URL('../MAGS/WNY/front/index.html', import.meta.url), 'utf8');
+  const html = readFileSync(new URL('../MAGS/WNY/issue/one/index.html', import.meta.url), 'utf8');
   for (const lane of LANES) {
     assert.match(html, new RegExp(`data-wny-lane="${lane.id}"[^>]*>\\s*<h2>${lane.label}</h2>`), lane.id);
   }
 });
 
 test('the money total sums the money list, one total per currency', () => {
-  assert.deepEqual(moneyTotals(moneyLines(publishable(sample.items))), [{ currency: 'USD', amount: 124000000 }]);
+  assert.deepEqual(moneyTotals(moneyLines(publishable(sample.items))), [{ currency: 'USD', amount: 126000000 }]);
   assert.deepEqual(moneyTotals([{ amount: 5e6, currency: 'USD' }, { amount: 2e6, currency: 'CAD' }, { amount: 1e6 }]),
                    [{ currency: 'USD', amount: 6e6 }, { currency: 'CAD', amount: 2e6 }]);
 });

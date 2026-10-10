@@ -108,11 +108,18 @@ export function flagText(flag) {
   return { tone: rule.tone, text };
 }
 
-/** Figures for the money list: production items with a stated amount that is not a ceiling. */
+/** Figures for the money list: production items with a stated amount.
+    amount is money committed or stated; a contract ceiling is a separate
+    field (ceiling_amount) and never enters the list or a total. */
 export function moneyLines(items) {
-  return items.filter((i) => i.lane === 'production' && formatAmount(i.amount, i.currency)
-    && !(i.flags ?? []).some((f) => f.type === 'ceiling_not_obligation'));
+  return items.filter((i) => i.lane === 'production' && formatAmount(i.amount, i.currency));
 }
+
+/* Stages whose amounts are coloured: done (green) and only announced
+   (dark yellow). Every other stage stays in ink. */
+export const AMOUNT_TONES = { completed: 'done', announced: 'announced' };
+
+const toneClass = (stage) => (AMOUNT_TONES[stage] ? ` wny-amount--${AMOUNT_TONES[stage]}` : '');
 
 /** Sum of the money list, one total per currency (never mixed). */
 export function moneyTotals(lines) {
@@ -122,6 +129,18 @@ export function moneyTotals(lines) {
     totals.set(currency, (totals.get(currency) ?? 0) + Number(i.amount));
   }
   return [...totals].map(([currency, amount]) => ({ currency, amount }));
+}
+
+/** Each currency's total split by stage, stages in vocabulary order. */
+export function moneyByStage(lines) {
+  return moneyTotals(lines).map(({ currency, amount }) => {
+    const parts = Object.keys(STAGES).concat('').map((stage) => ({
+      stage,
+      amount: lines.filter((i) => (i.currency || 'USD') === currency && (i.stage || '') === stage)
+        .reduce((sum, i) => sum + Number(i.amount), 0),
+    })).filter((part) => part.amount > 0);
+    return { currency, amount, parts };
+  });
 }
 
 /** Position along the corridor, 0 (Niagara River) to 1 (Syracuse); null if off the line. */
@@ -192,19 +211,19 @@ function flagsHtml(item) {
 }
 
 function conflictsHtml(item) {
-  const rows = (item.conflicts ?? []).map((c) => {
-    const url = safeHttpUrl(c.source_url);
-    const source = c.source_label
-      ? (url ? `<a href="${escapeHtml(url)}" rel="noopener">${escapeHtml(c.source_label)}</a>` : escapeHtml(c.source_label))
-      : 'source not linked';
-    const value = [c.value, words(c.unit)].filter(Boolean).join(' ');
-    return `<li><span class="wny-conflict__field">${escapeHtml(words(c.field))}</span>`
-      + `<span class="wny-conflict__value">${escapeHtml(value)}</span>`
-      + `<span class="wny-conflict__source">${source}</span></li>`;
-  });
-  return rows.length
-    ? `<div class="wny-conflict"><p class="wny-conflict__head">What each source reports</p><ul>${rows.join('')}</ul></div>`
-    : '';
+  return (item.conflicts ?? []).map((c) => {
+    const rows = (c.values ?? []).map((v) => {
+      const url = safeHttpUrl(v.url);
+      const source = v.source
+        ? (url ? `<a href="${escapeHtml(url)}" rel="noopener">${escapeHtml(v.source)}</a>` : escapeHtml(v.source))
+        : 'source not named';
+      return `<li><span class="wny-conflict__value">${escapeHtml(v.value)}</span>`
+        + `<span class="wny-conflict__source">${source}</span></li>`;
+    });
+    return rows.length
+      ? `<div class="wny-conflict"><p class="wny-conflict__head">Sources disagree on ${escapeHtml(words(c.field))}</p><ul>${rows.join('')}</ul></div>`
+      : '';
+  }).join('');
 }
 
 function sourcesHtml(item) {
@@ -219,9 +238,17 @@ function sourcesHtml(item) {
 
 /** A full story card: stage, meta, headline, explainer, flags, conflicts, sources. */
 export function renderItem(item) {
-  const amount = item.lane === 'production' ? formatAmount(item.amount, item.currency) : '';
+  const amount = formatAmount(item.amount, item.currency);
+  const ceiling = formatAmount(item.ceiling_amount, item.currency);
+  const money = amount || ceiling
+    ? `<span class="wny-item__money">`
+      + (amount ? `<span class="wny-item__amount${toneClass(item.stage)}">${escapeHtml(amount)}</span>`
+        + (item.amount_type ? `<span class="wny-item__kind">${escapeHtml(words(item.amount_type))}</span>` : '') : '')
+      + (ceiling ? `<span class="wny-item__ceiling">Contract ceiling ${escapeHtml(ceiling)}</span>` : '')
+      + '</span>'
+    : '';
   return `<li class="issue-list__item wny-item" id="wny-${escapeHtml(item.id)}" data-item="${escapeHtml(item.id)}">`
-    + `<p class="wny-item__top">${stageHtml(item)}${amount ? `<span class="wny-item__amount">${escapeHtml(amount)}</span>` : ''}</p>`
+    + `<p class="wny-item__top">${stageHtml(item)}${money}</p>`
     + titleHtml(item)
     + `<p class="issue-list__meta">${metaHtml(item)}</p>`
     + (item.note ? `<p class="wny-item__note">${escapeHtml(item.note)}</p>` : '')
@@ -241,10 +268,23 @@ export function renderCompact(item) {
 export function renderMoney(items) {
   return items.map((i) =>
     `<li class="wny-money__line" data-item="${escapeHtml(i.id)}">`
-    + `<span class="wny-money__amount">${escapeHtml(formatAmount(i.amount, i.currency))}</span>`
+    + `<span class="wny-money__amount${toneClass(i.stage)}">${escapeHtml(formatAmount(i.amount, i.currency))}</span>`
     + `<a class="wny-money__what" href="#wny-${escapeHtml(i.id)}">${escapeHtml(i.headline)}</a>`
-    + `<span class="wny-money__meta">${[STAGES[i.stage], i.place].filter(Boolean).map(escapeHtml).join(' · ')}</span></li>`
+    + `<span class="wny-money__meta">${[STAGES[i.stage], words(i.amount_type), i.place].filter(Boolean).map(escapeHtml).join(' · ')}</span></li>`
   ).join('');
+}
+
+/** One line: each stage's subtotal in its colour, then the total. */
+export function renderMoneyTotal(lines) {
+  const sums = moneyByStage(lines).map(({ currency, amount, parts }) => {
+    const pieces = parts.map((part) =>
+      `<span class="wny-money__part"><b class="wny-money__sum${toneClass(part.stage)}">${escapeHtml(formatAmount(part.amount, currency))}</b>`
+      + ` ${escapeHtml((STAGES[part.stage] ?? 'other').toLowerCase())}</span>`);
+    return pieces.join(' + ')
+      + (parts.length > 1 ? ` = <b class="wny-money__sum">${escapeHtml(formatAmount(amount, currency))}</b>` : '');
+  });
+  return `<span class="wny-money__label">Total of stated amounts</span>`
+    + `<span class="wny-money__sums">${sums.join(' · ')}</span>`;
 }
 
 export function renderCompanies(companies) {
@@ -428,9 +468,11 @@ function fillSelect(select, options, value) {
    only. It is never loaded on the published site. */
 function dataUrl() {
   const local = ['localhost', '127.0.0.1'].includes(location.hostname);
-  return local && new URLSearchParams(location.search).has('sample')
-    ? '/tests/fixtures/wny-sample.json'
-    : '/data/wny.json';
+  if (local && new URLSearchParams(location.search).has('sample')) return '/tests/fixtures/wny-sample.json';
+  /* An issue page reads its frozen copy (data/wny/issue-NAME.json); other
+     pages read the latest export. Only paths under /data/ are accepted. */
+  const own = document.querySelector('[data-wny-src]')?.getAttribute('data-wny-src') ?? '';
+  return /^\/data\/[\w/-]+\.json$/.test(own) ? own : '/data/wny.json';
 }
 
 async function loadData() {
@@ -473,11 +515,7 @@ export async function mountFront(root = document) {
     const money = moneyLines(items);
     if (money.length) {
       show(root.querySelector('[data-wny="money-list"]'), renderMoney(money));
-      const total = moneyTotals(money).map((t) => formatAmount(t.amount, t.currency)).join(' + ');
-      show(root.querySelector('[data-wny="money-total"]'),
-        `<span class="wny-money__amount">${escapeHtml(total)}</span>`
-        + `<span class="wny-money__what">Total of stated amounts</span>`
-        + `<span class="wny-money__meta">${money.length} ${money.length === 1 ? 'story' : 'stories'}</span>`);
+      show(root.querySelector('[data-wny="money-total"]'), renderMoneyTotal(money));
       show(root.querySelector('[data-wny="money"]'));
     }
     const companies = companiesInNews(items, data.entities);
