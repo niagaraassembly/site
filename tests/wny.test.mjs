@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import {
   LANES, STAGES, FLAGS, publishable, byNewest, flagText, moneyLines, corridorPosition, corridorMarks,
+  filterItems, filterOptions, parseFilters, filterQuery,
   formatAmount, companiesInNews, renderItem, renderCompact,
 } from '../assets/js/wny.js';
 
@@ -110,4 +111,46 @@ test('the published data file holds only publishable records', () => {
 
 test('the sample file is marked fictional', () => {
   assert.match(sample._note, /FICTIONAL/);
+});
+
+test('search needs every word, across headline, explainer, place, company and sources', () => {
+  const items = publishable(sample.items);
+  assert.deepEqual(filterItems(items, { q: 'rochester example' }).map((i) => i.id), ['S2', 'S5']);
+  assert.deepEqual(filterItems(items, { q: 'SAMPLE TOWN record' }).map((i) => i.id), ['S3'], 'publisher, any case');
+  assert.deepEqual(filterItems(items, { q: 'ceiling' }).map((i) => i.id), ['S5'], 'flag wording is searchable');
+  assert.equal(filterItems(items, { q: 'nothing-like-this' }).length, 0);
+});
+
+test('filters combine', () => {
+  const items = publishable(sample.items);
+  assert.deepEqual(filterItems(items, { lane: 'corridor' }).map((i) => i.id), ['S7', 'S8']);
+  assert.deepEqual(filterItems(items, { flag: 'conflict', lane: 'production' }).map((i) => i.id), ['S1', 'S4']);
+  assert.deepEqual(filterItems(items, { stage: 'award', type: 'major_contract' }).map((i) => i.id), ['S5']);
+  assert.deepEqual(filterItems(items, { amount: '1', lane: 'production' }).map((i) => i.id), ['S1', 'S2', 'S5']);
+  assert.equal(filterItems(items, {}).length, items.length);
+});
+
+test('dropdowns offer only values present, labelled from the vocabulary', () => {
+  const opts = filterOptions(publishable(sample.items));
+  assert.deepEqual(opts.lane.map(([v]) => v), ['production', 'developing', 'corridor']);
+  assert.ok(opts.flag.some(([v, label]) => v === 'conflict' && label === 'Sources disagree'));
+  assert.ok(!opts.stage.some(([v]) => v === 'reported_only'), 'no item has that stage');
+  for (const type of Object.keys(FLAGS)) assert.ok(FLAGS[type].name, `${type} needs a filter name`);
+});
+
+test('filter state round-trips through the URL and ignores junk', () => {
+  const state = parseFilters('?q=goodyear&lane=production&amount=1&evil=1');
+  assert.equal(state.q, 'goodyear');
+  assert.equal(state.amount, '1');
+  assert.ok(!('evil' in state));
+  assert.equal(filterQuery(state), '?q=goodyear&lane=production&amount=1');
+  assert.equal(filterQuery(parseFilters('')), '');
+  assert.equal(parseFilters('?amount=yes').amount, '');
+});
+
+test('front page section headings match the lane labels', () => {
+  const html = readFileSync(new URL('../MAGS/WNY/front/index.html', import.meta.url), 'utf8');
+  for (const lane of LANES) {
+    assert.match(html, new RegExp(`data-wny-lane="${lane.id}"[^>]*>\\s*<h2>${lane.label}</h2>`), lane.id);
+  }
 });

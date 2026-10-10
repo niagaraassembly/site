@@ -574,3 +574,20 @@ dialog.sparks-dialog::backdrop {
 /* Reference tables inside long-form articles (e.g. /research/methods/news/):
    site.css's table.data has no bottom margin, so the next heading touched it. */
 .article table.data { margin: 0 0 1.5rem; }
+
+/* WNY all-articles search. The bar itself is the board's .filters (site.css). */
+.wny-filters { margin-bottom: 1rem; }
+.wny-filters__clear {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: .8125rem/1.4 var(--sans);
+  color: var(--ink-soft);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+.wny-filters__clear:hover { color: var(--ink); }
+.wny-filters__clear:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.wny-no-match { margin: 0 0 2rem; }
+.wny-no-match .wny-note { margin-bottom: .4rem; }

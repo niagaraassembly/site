@@ -17,9 +17,14 @@ import { escapeHtml, safeHttpUrl } from './escape.js';
 export const RECENT_LIMIT = 5;
 export const PUBLISHABLE = new Set(['approved', 'published']);
 
-/* Sections, by lane, in page order. Their headings and banners are in the
-   page's HTML; lane "excluded" has no section and never renders. */
-export const LANES = [{ id: 'production' }, { id: 'developing' }, { id: 'corridor' }];
+/* Sections, by lane, in page order. The front page's section headings must
+   match these labels (tested); lane "excluded" has no section and never
+   renders. */
+export const LANES = [
+  { id: 'production', label: 'Investment and industry' },
+  { id: 'developing', label: 'In development' },
+  { id: 'corridor', label: 'Corridor news' },
+];
 
 export const STAGES = {
   intent: 'Stated intent', application: 'Application only', announced: 'Announced',
@@ -27,17 +32,18 @@ export const STAGES = {
   completed: 'Completed', reported_only: 'Reported',
 };
 
-/* One fixed sentence per flag type. {d} is the flag's detail in words. */
+/* Flag types: a short name (filters; the methods page uses the same names)
+   and one fixed sentence (story cards). {d} is the flag's detail in words. */
 export const FLAGS = {
-  conflict: { tone: 'warn', text: 'Sources disagree on {d}' },
-  gap: { tone: 'plain', text: '{D} not disclosed' },
-  follow_up: { tone: 'plain', text: 'Being confirmed: {d}' },
-  company_reported: { tone: 'info', text: 'Company-reported; not independently confirmed' },
-  secondary_source: { tone: 'plain', text: 'From a secondary listing; original notice not accessed' },
-  ceiling_not_obligation: { tone: 'plain', text: 'Contract ceiling, not money committed or spent' },
-  identity_unresolved: { tone: 'warn', text: 'Company identity still being confirmed' },
-  research_only: { tone: 'info', text: 'Research funding, not a production or hiring commitment' },
-  not_wny_production: { tone: 'plain', text: 'Not counted in WNY production totals' },
+  conflict: { name: 'Sources disagree', tone: 'warn', text: 'Sources disagree on {d}' },
+  gap: { name: 'Not disclosed', tone: 'plain', text: '{D} not disclosed' },
+  follow_up: { name: 'Being confirmed', tone: 'plain', text: 'Being confirmed: {d}' },
+  company_reported: { name: 'Company-reported', tone: 'info', text: 'Company-reported; not independently confirmed' },
+  secondary_source: { name: 'Secondary listing', tone: 'plain', text: 'From a secondary listing; original notice not accessed' },
+  ceiling_not_obligation: { name: 'Contract ceiling', tone: 'plain', text: 'Contract ceiling, not money committed or spent' },
+  identity_unresolved: { name: 'Identity being confirmed', tone: 'warn', text: 'Company identity still being confirmed' },
+  research_only: { name: 'Research funding', tone: 'info', text: 'Research funding, not a production or hiring commitment' },
+  not_wny_production: { name: 'Not counted in production totals', tone: 'plain', text: 'Not counted in WNY production totals' },
 };
 
 const TYPE_LABELS = {
@@ -341,6 +347,71 @@ function drawCorridor(root, items) {
   document.addEventListener('focusout', () => setPointed(null));
 }
 
+/* ---- search and filters (all-articles page) ------------------------------ */
+
+export const FILTER_KEYS = ['q', 'lane', 'stage', 'type', 'flag', 'amount'];
+
+/** Filter state from a query string; unknown keys are ignored. */
+export function parseFilters(search = '') {
+  const params = new URLSearchParams(search);
+  const state = {};
+  for (const key of FILTER_KEYS) state[key] = params.get(key) ?? '';
+  state.amount = state.amount === '1' ? '1' : '';
+  return state;
+}
+
+/** Query string for a filter state, leaving out empty keys. */
+export function filterQuery(state) {
+  const params = new URLSearchParams();
+  for (const key of FILTER_KEYS) if (state[key]) params.set(key, state[key]);
+  const qs = params.toString();
+  return qs ? `?${qs}` : '';
+}
+
+/** Everything a search can match on, lowercased. */
+function haystack(item) {
+  return [
+    item.headline, item.note, item.place, item.entity_name, typeLabel(item.type), STAGES[item.stage],
+    ...(item.flags ?? []).map((f) => flagText(f).text),
+    ...(item.sources ?? []).map((src) => `${src.publisher ?? ''} ${src.title ?? ''}`),
+  ].filter(Boolean).join(' ').toLowerCase();
+}
+
+/** Items matching every active filter. Search needs every word to appear. */
+export function filterItems(items, state) {
+  const words = String(state.q ?? '').toLowerCase().split(/\s+/).filter(Boolean);
+  return items.filter((item) =>
+    (!state.lane || item.lane === state.lane)
+    && (!state.stage || item.stage === state.stage)
+    && (!state.type || item.type === state.type)
+    && (!state.flag || (item.flags ?? []).some((f) => f.type === state.flag))
+    && (!state.amount || formatAmount(item.amount, item.currency))
+    && (!words.length || words.every((w) => haystack(item).includes(w))));
+}
+
+/** Dropdown options: only values present in the items, in vocabulary order. */
+export function filterOptions(items) {
+  const has = (pick) => new Set(items.flatMap(pick));
+  const lanes = has((i) => [i.lane]);
+  const stages = has((i) => [i.stage]);
+  const types = has((i) => [i.type]);
+  const flags = has((i) => (i.flags ?? []).map((f) => f.type));
+  return {
+    lane: LANES.filter((l) => lanes.has(l.id)).map((l) => [l.id, l.label]),
+    stage: Object.keys(STAGES).filter((k) => stages.has(k)).map((k) => [k, STAGES[k]]),
+    type: Object.keys(TYPE_LABELS).filter((k) => types.has(k)).map((k) => [k, TYPE_LABELS[k]])
+      .sort((a, b) => a[1].localeCompare(b[1])),
+    flag: Object.keys(FLAGS).filter((k) => flags.has(k)).map((k) => [k, FLAGS[k].name]),
+  };
+}
+
+function fillSelect(select, options, value) {
+  if (!select) return;
+  const first = select.querySelector('option');  // the "any" option stays
+  select.replaceChildren(first, ...options.map(([v, label]) => new Option(label, v)));
+  select.value = options.some(([v]) => v === value) ? value : '';
+}
+
 /* ---- mounting ------------------------------------------------------------ */
 
 /* The fictional sample file is for previewing the design on a local server
@@ -406,6 +477,9 @@ export async function mountFront(root = document) {
 
 export async function mountAll(root = document) {
   const list = root.querySelector('[data-wny="all"]');
+  const form = root.querySelector('[data-wny="filters"]');
+  const count = root.querySelector('[data-wny="count"]');
+  const none = root.querySelector('[data-wny="no-match"]');
   let data;
   try {
     data = await loadData();
@@ -415,9 +489,68 @@ export async function mountAll(root = document) {
     return;
   }
   const items = byNewest(publishable(data.items));
-  if (!items.length) show(root.querySelector('[data-wny="empty"]'));
-  else show(list, items.map(renderItem).join(''));
   updated(root, data);
+  if (!items.length) {
+    show(root.querySelector('[data-wny="empty"]'));
+    return;
+  }
+
+  let state = parseFilters(location.search);
+  if (form) {
+    const options = filterOptions(items);
+    for (const key of ['lane', 'stage', 'type', 'flag']) fillSelect(form.elements[key], options[key], state[key]);
+    state = { ...state, ...Object.fromEntries(['lane', 'stage', 'type', 'flag'].map((k) => [k, form.elements[k].value])) };
+    form.elements.q.value = state.q;
+    form.elements.amount.checked = state.amount === '1';
+    show(form);
+  }
+
+  const render = () => {
+    const shown = filterItems(items, state);
+    list.innerHTML = shown.map(renderItem).join('');
+    list.hidden = !shown.length;
+    if (none) none.hidden = shown.length > 0;
+    if (count) {
+      const active = FILTER_KEYS.some((k) => state[k]);
+      count.textContent = active
+        ? `Showing ${shown.length} of ${items.length} ${items.length === 1 ? 'story' : 'stories'}`
+        : `${items.length} ${items.length === 1 ? 'story' : 'stories'}`;
+      count.hidden = false;
+    }
+    const clear = form?.querySelector('[data-wny="clear"]');
+    if (clear) clear.hidden = !FILTER_KEYS.some((k) => state[k]);
+    window.NASketch?.redraw();
+  };
+
+  /* Filters apply as you type. The URL keeps them, without adding a history
+     entry per keystroke, so a filtered view can be shared or bookmarked. */
+  const read = () => ({
+    q: form.elements.q.value.trim(),
+    lane: form.elements.lane.value,
+    stage: form.elements.stage.value,
+    type: form.elements.type.value,
+    flag: form.elements.flag.value,
+    amount: form.elements.amount.checked ? '1' : '',
+  });
+  const apply = () => {
+    state = read();
+    history.replaceState(null, '', `${location.pathname}${filterQuery(state)}`);
+    render();
+  };
+  form?.addEventListener('submit', (e) => e.preventDefault());
+  form?.addEventListener('input', apply);
+  form?.addEventListener('change', apply);
+  form?.querySelector('[data-wny="clear"]')?.addEventListener('click', () => {
+    form.reset();
+    apply();
+    form.elements.q.focus();
+  });
+  none?.querySelector('button')?.addEventListener('click', () => {
+    form.reset();
+    apply();
+  });
+
+  render();
 }
 
 function updated(root, data) {

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>All Western New York articles — Niagara Assembly</title>
-<meta name="description" content="Every reviewed Western New York story, newest first.">
+<meta name="description" content="Every reviewed Western New York story, newest first, with search and filters.">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('na-theme')||'light'}catch(e){document.documentElement.dataset.theme='light'}</script>
 <link rel="stylesheet" href="/assets/css/site.css">
 <link rel="stylesheet" href="/assets/css/mag.css">
@@ -19,6 +19,20 @@
 <p class="wny-note" data-wny="empty" hidden>No approved Western New York news yet. Stories appear here after they pass review.</p>
 <p class="wny-note" data-wny="error" hidden>The news list didn’t load. Reload the page to try again.</p>
 <noscript><p class="wny-note">This page needs JavaScript to show the news.</p></noscript>
+<form class="filters wny-filters" data-wny="filters" data-sketch="box" role="search" hidden>
+<input type="search" name="q" placeholder="Search stories" aria-label="Search stories">
+<select name="lane" aria-label="Section"><option value="">All sections</option></select>
+<select name="stage" aria-label="Stage"><option value="">Any stage</option></select>
+<select name="type" aria-label="Type of news"><option value="">Any type</option></select>
+<select name="flag" aria-label="Marking"><option value="">Any marking</option></select>
+<label class="check"><input type="checkbox" name="amount"> Has a stated amount</label>
+<button type="button" class="wny-filters__clear" data-wny="clear" hidden>Clear</button>
+</form>
+<p class="board__count" data-wny="count" aria-live="polite" hidden></p>
+<div class="wny-no-match" data-wny="no-match" hidden>
+<p class="wny-note">No stories match these filters.</p>
+<button type="button" class="wny-filters__clear">Clear filters</button>
+</div>
 <ul class="issue-list" data-wny="all" hidden></ul>
 <p class="wny-updated" data-wny="updated" hidden></p>
 </div>
