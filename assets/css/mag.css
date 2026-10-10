@@ -442,43 +442,111 @@ dialog.sparks-dialog::backdrop {
 .wny-recent__head a { font: .8125rem/1.4 var(--sans); color: var(--ink-soft); }
 .wny-recent__head a:hover { color: var(--ink); }
 
-/* Section boxes are drawn by sketch.js (data-sketch="card"); the plain
-   border is its fallback, as everywhere on the site. */
-.wny-groups {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
-  align-items: start;   /* each box is as tall as its stories, not its neighbour's */
-  gap: 1.5rem;
-  margin: 0 0 2.5rem;
-}
-.wny-group {
+/* Lane sections (na-research's lanes): drawn boxes, one per lane, full
+   width. sketch.js draws them (data-sketch="card"); the plain border is its
+   fallback, as everywhere on the site. */
+.wny-lane {
   position: relative;
+  margin: 0 0 1.75rem;
   padding: 1.1rem 1.25rem .4rem;
   border: 1.4px solid var(--rule);
 }
-.sketched .wny-group { border-color: transparent; }
-.wny-group h2 { margin: 0 0 .75rem; font: 700 1.15rem/1.2 var(--hand); }
-.wny-group .issue-list { margin: 0; }
-.wny-group .issue-list__item:last-child { border-bottom: 0; }
+.sketched .wny-lane { border-color: transparent; }
+.wny-lane h2 { margin: 0 0 .25rem; font: 700 1.2rem/1.2 var(--hand); }
+.wny-lane__banner { margin: 0 0 .9rem; font: .875rem/1.45 var(--sans); color: var(--ink-soft); }
+.wny-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+  column-gap: 2rem;
+  margin: 0;
+}
+.wny-cards .issue-list__item:first-child { border-top: 0; }
+.wny-cards .issue-list__item { border-bottom: 0; border-top: 1px solid var(--rule); }
+
+/* Flag tones. Two muted accents only, so a warning reads as a warning
+   without colouring the page; plain flags stay in ink. */
+:root { --flag-warn: #8a5300; --flag-info: #1d5a8c; }
+:root[data-theme="dark"] { --flag-warn: #e0a64a; --flag-info: #8cbbe6; }
 
 .wny-item.is-pointed .issue-list__title { text-decoration: underline; }
 .wny-item--compact { padding: .7rem 0; }
+.wny-item__top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0 0 .35rem;
+}
+.wny-item__top:empty { display: none; }
+.wny-stage {
+  font: .75rem/1 var(--sans);
+  padding: .2rem .45rem;
+  border: 1px solid var(--ink-soft);
+  border-radius: 3px;
+}
 .wny-item__amount {
-  margin: 0 0 .2rem;
+  margin-left: auto;
   font: 700 1.35rem/1.1 var(--mono);
   letter-spacing: -0.02em;
 }
 .wny-item .issue-list__meta { line-height: 1.4; }
 .wny-item__summary { margin: .45rem 0 0; font-size: .9375rem; line-height: 1.55; }
-/* Reviewer caveats from na-research (public_note): what is still unresolved. */
-.wny-item__note {
-  margin: .4rem 0 0;
-  padding-left: .7rem;
-  border-left: 2px solid var(--rule);
-  font: .8125rem/1.5 var(--sans);
+/* public_note: the reader explainer, straight under the headline. */
+.wny-item__note { margin: .45rem 0 0; font-size: .9375rem; line-height: 1.55; }
+
+.wny-flags { list-style: none; padding: 0; margin: .55rem 0 0; display: flex; flex-wrap: wrap; gap: .35rem; }
+.wny-flag {
+  font: .75rem/1.35 var(--sans);
+  padding: .15rem .45rem;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
   color: var(--ink-soft);
 }
+.wny-flag--warn { color: var(--flag-warn); border-color: currentColor; }
+.wny-flag--info { color: var(--flag-info); border-color: currentColor; }
+
+/* Conflicting claims: every sourced value side by side, never merged. */
+.wny-conflict { margin: .6rem 0 0; padding-left: .7rem; border-left: 2px solid var(--flag-warn); }
+.wny-conflict__head { margin: 0 0 .2rem; font: 600 .8125rem/1.4 var(--sans); }
+.wny-conflict ul { list-style: none; padding: 0; margin: 0; }
+.wny-conflict li {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) auto;
+  gap: .75rem;
+  font: .8125rem/1.5 var(--sans);
+}
+.wny-conflict__field { color: var(--ink-soft); }
+.wny-conflict__value { font-family: var(--mono); }
+.wny-conflict__source a { color: var(--ink-soft); }
 .wny-item__via { margin: .3rem 0 0; font: .75rem/1.4 var(--sans); color: var(--ink-soft); }
+
+/* Investment figures: one stated amount per line, never summed. */
+.wny-money { margin: 0 0 2.5rem; }
+.wny-money h2 { margin-bottom: .25rem; }
+.wny-money__list { list-style: none; padding: 0; margin: 0; }
+.wny-money__line {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: baseline;
+  padding: .5rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+.wny-money__line:first-child { border-top: 1px solid var(--rule); }
+.wny-money__amount { font: 700 1.1rem/1.2 var(--mono); }
+.wny-money__what { font-weight: 600; text-decoration: none; }
+.wny-money__what:hover, .wny-money__line.is-pointed .wny-money__what { text-decoration: underline; }
+.wny-money__meta { font: .75rem/1.4 var(--sans); color: var(--ink-soft); white-space: nowrap; }
+@media (max-width: 34rem) {
+  .wny-money__line { grid-template-columns: 5.5rem minmax(0, 1fr); }
+  .wny-money__meta { grid-column: 2; white-space: normal; }
+  .wny-conflict li { grid-template-columns: 1fr auto; }
+  .wny-conflict__field { grid-column: 1 / -1; }
+}
+
+.wny-source { margin: -1.5rem 0 2.5rem; font: .875rem/1.45 var(--sans); color: var(--ink-soft); }
+.wny-source a { color: var(--ink-soft); }
+.wny-method { font: .875rem/1.45 var(--sans); margin: 0 0 .5rem; }
 
 .wny-companies { margin: 0 0 2rem; }
 .wny-company-list {
@@ -499,6 +567,10 @@ dialog.sparks-dialog::backdrop {
 .wny-company__name { font-weight: 600; }
 .wny-company__name a { text-decoration: none; }
 .wny-company__name a:hover { text-decoration: underline; }
-.wny-company__meta { font: .75rem/1.6 var(--mono); color: var(--ink-soft); white-space: nowrap; }
+.wny-company__meta { font: .75rem/1.6 var(--mono); color: var(--ink-soft); text-align: right; min-width: 0; }  /* wraps: some cities are long ("unresolved Penfield or Webster") */
 
 .wny-updated { font: .75rem/1.4 var(--sans); color: var(--ink-soft); margin: 0; }
+
+/* Reference tables inside long-form articles (e.g. /research/methods/news/):
+   site.css's table.data has no bottom margin, so the next heading touched it. */
+.article table.data { margin: 0 0 1.5rem; }

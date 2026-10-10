@@ -1,14 +1,15 @@
 /* Western New York MAG — front page and all-articles list.
  *
  * data/wny.json is exported from niagaraassembly/na-research by
- * scripts/wny/export.py. The export admits only records that passed review
- * (publish_status approved or published). This module checks again before
- * rendering, so a hand-edited or stale file still cannot surface a record
- * that has not been approved.
+ * scripts/wny/export.py, following na-research's
+ * research/routines/WNY-NEWS-SITE-STATE-MODEL.md. Every item, tag and
+ * explainer comes from that file. This module adds only fixed wording keyed
+ * by the controlled vocabularies (lanes, stages, flag types), as the state
+ * model specifies.
  *
- * WNY is defined in atlas/GLOSSARY.md. For now the MAG admits any approved
- * New York State record; the corridor line shows only those that fall
- * between the Niagara River and Syracuse.
+ * publish_status is the editorial gate: only approved or published items
+ * render, checked here as well as in the export. lane "excluded" never
+ * renders.
  */
 
 import { escapeHtml, safeHttpUrl } from './escape.js';
@@ -16,21 +17,28 @@ import { escapeHtml, safeHttpUrl } from './escape.js';
 export const RECENT_LIMIT = 5;
 export const PUBLISHABLE = new Set(['approved', 'published']);
 
-/* na-research's controlled event types (research/news/schema/
-   controlled-values.json), grouped into the front page's sections. A type
-   missing here falls into "Other news" rather than vanishing. */
-export const GROUPS = [
-  { id: 'investment', label: 'Investment and deals', types: [
-    'capital_investment', 'equipment_investment', 'funding_round', 'grant_or_incentive',
-    'acquisition', 'divestiture', 'ownership_change', 'major_contract', 'production_partnership'] },
-  { id: 'facilities', label: 'Facilities', types: [
-    'facility_opening', 'facility_expansion', 'facility_closure', 'manufacturing_capacity'] },
-  { id: 'jobs', label: 'Jobs', types: [
-    'workforce_expansion', 'layoff', 'bankruptcy_or_restructuring'] },
-  { id: 'ventures', label: 'New ventures', types: [
-    'startup_formation', 'research_commercialization', 'product_or_process_launch', 'certification'] },
-  { id: 'other', label: 'Other news', types: ['other_material_update'] },
-];
+/* Sections, by lane, in page order. Their headings and banners are in the
+   page's HTML; lane "excluded" has no section and never renders. */
+export const LANES = [{ id: 'production' }, { id: 'developing' }, { id: 'corridor' }];
+
+export const STAGES = {
+  intent: 'Stated intent', application: 'Application only', announced: 'Announced',
+  approved_plan: 'Plan approved', award: 'Contract or award', under_way: 'Under way',
+  completed: 'Completed', reported_only: 'Reported',
+};
+
+/* One fixed sentence per flag type. {d} is the flag's detail in words. */
+export const FLAGS = {
+  conflict: { tone: 'warn', text: 'Sources disagree on {d}' },
+  gap: { tone: 'plain', text: '{D} not disclosed' },
+  follow_up: { tone: 'plain', text: 'Being confirmed: {d}' },
+  company_reported: { tone: 'info', text: 'Company-reported; not independently confirmed' },
+  secondary_source: { tone: 'plain', text: 'From a secondary listing; original notice not accessed' },
+  ceiling_not_obligation: { tone: 'plain', text: 'Contract ceiling, not money committed or spent' },
+  identity_unresolved: { tone: 'warn', text: 'Company identity still being confirmed' },
+  research_only: { tone: 'info', text: 'Research funding, not a production or hiring commitment' },
+  not_wny_production: { tone: 'plain', text: 'Not counted in WNY production totals' },
+};
 
 const TYPE_LABELS = {
   capital_investment: 'Capital investment', equipment_investment: 'Equipment',
@@ -43,6 +51,8 @@ const TYPE_LABELS = {
   research_commercialization: 'Commercialization', product_or_process_launch: 'Launch',
   certification: 'Certification', other_material_update: 'Update',
 };
+
+const SOURCE_KINDS = { primary: 'primary source', company: 'company source', secondary: 'news report' };
 
 /* The corridor runs from the Niagara River to Syracuse, west to east.
    Longitudes are the line's ends; towns are the ticks drawn on it.
@@ -58,16 +68,19 @@ export const CORRIDOR = {
   ],
 };
 
-export function groupFor(type) {
-  return (GROUPS.find((g) => g.types.includes(type)) ?? GROUPS.at(-1)).id;
-}
+export const words = (snake) => String(snake ?? '').replace(/_/g, ' ').trim();
 
 export function typeLabel(type) {
   return TYPE_LABELS[type] ?? 'Update';
 }
 
+export function laneOf(item) {
+  return LANES.some((l) => l.id === item.lane) ? item.lane : null;
+}
+
+/** Approved or published, in a known lane. Anything else stays off the page. */
 export function publishable(items) {
-  return (items ?? []).filter((item) => PUBLISHABLE.has(item.publish_status));
+  return (items ?? []).filter((item) => PUBLISHABLE.has(item.publish_status) && laneOf(item));
 }
 
 /** Newest first; items sharing a date keep their order in the data. */
@@ -76,6 +89,23 @@ export function byNewest(items) {
     .map((item, index) => ({ item, index }))
     .sort((a, b) => String(b.item.date ?? '').localeCompare(String(a.item.date ?? '')) || a.index - b.index)
     .map(({ item }) => item);
+}
+
+/** The reader's sentence for one flag; unknown types fall back to their own words. */
+export function flagText(flag) {
+  const rule = FLAGS[flag.type];
+  const d = words(flag.detail);
+  if (!rule) return { tone: 'plain', text: words(flag.type) };
+  const text = rule.text
+    .replace('{d}', d)
+    .replace('{D}', d.charAt(0).toUpperCase() + d.slice(1));
+  return { tone: rule.tone, text };
+}
+
+/** Figures for the money list: production items with a stated amount that is not a ceiling. */
+export function moneyLines(items) {
+  return items.filter((i) => i.lane === 'production' && formatAmount(i.amount, i.currency)
+    && !(i.flags ?? []).some((f) => f.type === 'ceiling_not_obligation'));
 }
 
 /** Position along the corridor, 0 (Niagara River) to 1 (Syracuse); null if off the line. */
@@ -116,27 +146,89 @@ export function companiesInNews(items, entities) {
     .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
 }
 
-export function renderItem(item, { showType = true, showAmount = false, compact = false } = {}) {
-  const source = (item.sources ?? []).map((s) => ({ ...s, url: safeHttpUrl(s.url) })).find((s) => s.url);
-  const amount = showAmount ? formatAmount(item.amount, item.currency) : '';
-  const title = source
+/* ---- rendering ------------------------------------------------------------ */
+
+const firstSource = (item) =>
+  (item.sources ?? []).map((s) => ({ ...s, url: safeHttpUrl(s.url) })).find((s) => s.url);
+
+function titleHtml(item) {
+  const source = firstSource(item);
+  return source
     ? `<a class="issue-list__title" href="${escapeHtml(source.url)}" rel="noopener">${escapeHtml(item.headline)}</a>`
     : `<span class="issue-list__title">${escapeHtml(item.headline)}</span>`;
-  const meta = [showType ? typeLabel(item.type) : '', formatDate(item.date), item.place, item.entity_name]
+}
+
+function metaHtml(item) {
+  return [typeLabel(item.type), formatDate(item.date), item.place, item.entity_name]
     .filter(Boolean).map(escapeHtml).join(' · ');
-  const via = source?.publisher ? `<p class="wny-item__via">Source: ${escapeHtml(source.publisher)}</p>` : '';
-  if (compact) {
-    return `<li class="issue-list__item wny-item wny-item--compact" data-item="${escapeHtml(item.id)}">`
-      + title + `<p class="issue-list__meta">${meta}</p></li>`;
-  }
+}
+
+function stageHtml(item) {
+  const label = STAGES[item.stage];
+  return label ? `<span class="wny-stage">${escapeHtml(label)}</span>` : '';
+}
+
+function flagsHtml(item) {
+  const flags = (item.flags ?? []).map(flagText);
+  if (!flags.length) return '';
+  return `<ul class="wny-flags">${flags.map((f) =>
+    `<li class="wny-flag wny-flag--${f.tone}">${escapeHtml(f.text)}</li>`).join('')}</ul>`;
+}
+
+function conflictsHtml(item) {
+  const rows = (item.conflicts ?? []).map((c) => {
+    const url = safeHttpUrl(c.source_url);
+    const source = c.source_label
+      ? (url ? `<a href="${escapeHtml(url)}" rel="noopener">${escapeHtml(c.source_label)}</a>` : escapeHtml(c.source_label))
+      : 'source not linked';
+    const value = [c.value, words(c.unit)].filter(Boolean).join(' ');
+    return `<li><span class="wny-conflict__field">${escapeHtml(words(c.field))}</span>`
+      + `<span class="wny-conflict__value">${escapeHtml(value)}</span>`
+      + `<span class="wny-conflict__source">${source}</span></li>`;
+  });
+  return rows.length
+    ? `<div class="wny-conflict"><p class="wny-conflict__head">What each source reports</p><ul>${rows.join('')}</ul></div>`
+    : '';
+}
+
+function sourcesHtml(item) {
+  const links = (item.sources ?? []).map((s) => {
+    const url = safeHttpUrl(s.url);
+    const name = s.publisher || s.title || 'Source';
+    const kind = SOURCE_KINDS[s.kind] ? ` (${SOURCE_KINDS[s.kind]})` : '';
+    return (url ? `<a href="${escapeHtml(url)}" rel="noopener">${escapeHtml(name)}</a>` : escapeHtml(name)) + escapeHtml(kind);
+  });
+  return links.length ? `<p class="wny-item__via">${links.length > 1 ? 'Sources' : 'Source'}: ${links.join('; ')}</p>` : '';
+}
+
+/** A full story card: stage, meta, headline, explainer, flags, conflicts, sources. */
+export function renderItem(item) {
+  const amount = item.lane === 'production' ? formatAmount(item.amount, item.currency) : '';
   return `<li class="issue-list__item wny-item" id="wny-${escapeHtml(item.id)}" data-item="${escapeHtml(item.id)}">`
-    + (amount ? `<p class="wny-item__amount">${escapeHtml(amount)}</p>` : '')
-    + title
-    + `<p class="issue-list__meta">${meta}</p>`
-    + (item.summary ? `<p class="wny-item__summary">${escapeHtml(item.summary)}</p>` : '')
-    + (item.note ? `<p class="wny-item__note">Note: ${escapeHtml(item.note)}</p>` : '')
-    + via
+    + `<p class="wny-item__top">${stageHtml(item)}${amount ? `<span class="wny-item__amount">${escapeHtml(amount)}</span>` : ''}</p>`
+    + titleHtml(item)
+    + `<p class="issue-list__meta">${metaHtml(item)}</p>`
+    + (item.note ? `<p class="wny-item__note">${escapeHtml(item.note)}</p>` : '')
+    + flagsHtml(item)
+    + conflictsHtml(item)
+    + sourcesHtml(item)
     + '</li>';
+}
+
+/** A one-line index entry, for Recent. No id, so it never duplicates the full card's. */
+export function renderCompact(item) {
+  return `<li class="issue-list__item wny-item wny-item--compact" data-item="${escapeHtml(item.id)}">`
+    + titleHtml(item)
+    + `<p class="issue-list__meta">${[STAGES[item.stage] ? escapeHtml(STAGES[item.stage]) : '', metaHtml(item)].filter(Boolean).join(' · ')}</p></li>`;
+}
+
+export function renderMoney(items) {
+  return items.map((i) =>
+    `<li class="wny-money__line" data-item="${escapeHtml(i.id)}">`
+    + `<span class="wny-money__amount">${escapeHtml(formatAmount(i.amount, i.currency))}</span>`
+    + `<a class="wny-money__what" href="#wny-${escapeHtml(i.id)}">${escapeHtml(i.headline)}</a>`
+    + `<span class="wny-money__meta">${[STAGES[i.stage], i.place].filter(Boolean).map(escapeHtml).join(' · ')}</span></li>`
+  ).join('');
 }
 
 export function renderCompanies(companies) {
@@ -178,12 +270,15 @@ function drawCorridor(root, items) {
   const defaultCaption = marks.length
     ? `${marks.length} approved ${marks.length === 1 ? 'story' : 'stories'} between the Niagara River and Syracuse.`
     : items.length ? 'None of the approved stories fall between the Niagara River and Syracuse.' : '';
+  const tallest = Math.max(0, ...marks.map((m) => m.stack));
+  const h = 64 + tallest * 11;
 
   const draw = () => {
     const w = svg.clientWidth || 600;
-    const h = 64, y = 30, pad = 8;
+    const y = h - 34, pad = 8;
     const span = w - pad * 2;
     svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+    svg.style.height = `${h}px`;
     while (svg.firstChild) svg.removeChild(svg.firstChild);
     const rc = typeof rough !== 'undefined' ? rough.svg(svg) : null;
     const opts = { stroke: 'currentColor', strokeWidth: 1.4, roughness: 0.7, bowing: 0.45, seed: SEED };
@@ -233,7 +328,7 @@ function drawCorridor(root, items) {
 
   /* Mark and story highlight each other; the caption names what is pointed at. */
   const byId = new Map(items.map((i) => [i.id, i]));
-  const setActive = (id) => {
+  const setPointed = (id) => {
     document.querySelectorAll('[data-item].is-pointed').forEach((el) => el.classList.remove('is-pointed'));
     if (!id) { if (caption) caption.textContent = defaultCaption; return; }
     document.querySelectorAll(`[data-item="${CSS.escape(id)}"]`).forEach((el) => el.classList.add('is-pointed'));
@@ -241,9 +336,9 @@ function drawCorridor(root, items) {
     if (caption && item) caption.textContent = `${item.place}: ${item.headline}`;
   };
   const target = (e) => e.target.closest?.('[data-item]')?.dataset.item;
-  document.addEventListener('pointerover', (e) => setActive(target(e)));
-  document.addEventListener('focusin', (e) => setActive(target(e)));
-  document.addEventListener('focusout', () => setActive(null));
+  document.addEventListener('pointerover', (e) => setPointed(target(e)));
+  document.addEventListener('focusin', (e) => setPointed(target(e)));
+  document.addEventListener('focusout', () => setPointed(null));
 }
 
 /* ---- mounting ------------------------------------------------------------ */
@@ -286,14 +381,18 @@ export async function mountFront(root = document) {
   } else {
     show(root.querySelector('[data-wny="recent"]'));
     show(root.querySelector('[data-wny="recent-list"]'),
-      items.slice(0, RECENT_LIMIT).map((i) => renderItem(i, { compact: true })).join(''));
-    for (const group of GROUPS) {
-      const section = root.querySelector(`[data-wny-group="${group.id}"]`);
-      const inGroup = items.filter((i) => groupFor(i.type) === group.id);
-      if (!section || !inGroup.length) continue;
-      show(section.querySelector('ul'), inGroup.map((i) =>
-        renderItem(i, { showAmount: group.id === 'investment' })).join(''));
+      items.slice(0, RECENT_LIMIT).map(renderCompact).join(''));
+    for (const lane of LANES) {
+      const section = root.querySelector(`[data-wny-lane="${lane.id}"]`);
+      const inLane = items.filter((i) => i.lane === lane.id);
+      if (!section || !inLane.length) continue;
+      show(section.querySelector('ul'), inLane.map(renderItem).join(''));
       show(section);
+    }
+    const money = moneyLines(items);
+    if (money.length) {
+      show(root.querySelector('[data-wny="money-list"]'), renderMoney(money));
+      show(root.querySelector('[data-wny="money"]'));
     }
     const companies = companiesInNews(items, data.entities);
     if (companies.length) {
@@ -317,7 +416,7 @@ export async function mountAll(root = document) {
   }
   const items = byNewest(publishable(data.items));
   if (!items.length) show(root.querySelector('[data-wny="empty"]'));
-  else show(list, items.map((i) => renderItem(i, { showAmount: groupFor(i.type) === 'investment' })).join(''));
+  else show(list, items.map(renderItem).join(''));
   updated(root, data);
 }
 

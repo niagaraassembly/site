@@ -16,7 +16,8 @@
 <div class="frame frame--board" data-sketch="frame">
 <p class="mag-kicker"><a href="/mags/">All MAGs</a></p>
 <h1 class="mag-title">Western New York</h1>
-<p class="issue-intro">Reviewed news from the Niagara River to Syracuse: who is investing, building, hiring and starting up. Every story here has passed Niagara Assembly’s source review.</p>
+<p class="issue-intro">Reviewed news from the Niagara River to Syracuse: who is investing, building, hiring and starting up. Every story has passed Niagara Assembly’s source review, and each one carries our reading of it: how far along it is, and what is still unconfirmed.</p>
+<p class="wny-source">Research data: <a href="https://github.com/niagaraassembly/na-research" rel="noopener">niagaraassembly/na-research</a> on GitHub.</p>
 
 <figure class="corridor" aria-describedby="corridor-caption">
 <div class="corridor__plot">
@@ -36,34 +37,36 @@
 <ul class="issue-list" data-wny="recent-list" hidden></ul>
 </section>
 
-<div class="wny-groups">
-<section class="wny-group" data-wny-group="investment" data-sketch="card" hidden>
-<h2>Investment and deals</h2>
-<ul class="issue-list" hidden></ul>
+<section class="wny-money" data-wny="money" hidden>
+<h2>Investment figures</h2>
+<p class="wny-lane__banner">Amounts stated in investment and industry stories. Contract ceilings and corridor news are left out, and the figures are not added together.</p>
+<ul class="wny-money__list" data-wny="money-list" hidden></ul>
 </section>
-<section class="wny-group" data-wny-group="facilities" data-sketch="card" hidden>
-<h2>Facilities</h2>
-<ul class="issue-list" hidden></ul>
+
+<section class="wny-lane" data-wny-lane="production" data-sketch="card" hidden>
+<h2>Investment and industry</h2>
+<p class="wny-lane__banner">Direct investment, contracts and closures.</p>
+<ul class="issue-list wny-cards" hidden></ul>
 </section>
-<section class="wny-group" data-wny-group="jobs" data-sketch="card" hidden>
-<h2>Jobs</h2>
-<ul class="issue-list" hidden></ul>
+
+<section class="wny-lane" data-wny-lane="developing" data-sketch="card" hidden>
+<h2>In development</h2>
+<p class="wny-lane__banner">Announced plans and applications: not yet built or confirmed.</p>
+<ul class="issue-list wny-cards" hidden></ul>
 </section>
-<section class="wny-group" data-wny-group="ventures" data-sketch="card" hidden>
-<h2>New ventures</h2>
-<ul class="issue-list" hidden></ul>
+
+<section class="wny-lane" data-wny-lane="corridor" data-sketch="card" hidden>
+<h2>Corridor news</h2>
+<p class="wny-lane__banner">Regional news, not counted in production or investment totals.</p>
+<ul class="issue-list wny-cards" hidden></ul>
 </section>
-<section class="wny-group" data-wny-group="other" data-sketch="card" hidden>
-<h2>Other news</h2>
-<ul class="issue-list" hidden></ul>
-</section>
-</div>
 
 <section class="wny-companies" data-wny="companies" hidden>
 <h2>Companies in the news</h2>
 <ul class="wny-company-list" data-wny="companies-list" hidden></ul>
 </section>
 
+<p class="wny-method">How this news is found, checked and approved: <a href="/research/methods/news/">our news research methods</a>.</p>
 <p class="wny-updated" data-wny="updated" hidden></p>
 </div>
 <footer class="sitefoot">

@@ -1,9 +1,508 @@
 {
-  "generated_at": "2026-10-10T15:13:26+00:00",
+  "generated_at": "2026-10-10T15:45:32+00:00",
   "source": {
     "repo": "niagaraassembly/na-research",
-    "commit": "907bb3b"
+    "commit": "3095263"
   },
-  "items": [],
-  "entities": []
+  "items": [
+    {
+      "id": "IEVT-2026-000001",
+      "type": "facility_expansion",
+      "lane": "production",
+      "stage": "announced",
+      "flags": [
+        {
+          "type": "conflict",
+          "detail": "spokesperson"
+        },
+        {
+          "type": "conflict",
+          "detail": "legal_name"
+        }
+      ],
+      "review_state": "approved",
+      "publish_status": "approved",
+      "date": "2026-10-09",
+      "place": "Peabody Street, Buffalo",
+      "county": null,
+      "lng": -78.88,
+      "amount": 49000000.0,
+      "currency": "USD",
+      "entity_id": "E0144",
+      "entity_name": "Solstice Advanced Materials",
+      "headline": "Solstice Advanced Materials expands Buffalo R&D facility",
+      "note": "",
+      "sources": [
+        {
+          "article_id": "ART-2026-000027",
+          "title": "Governor Hochul Announces Solstice Advanced Materials to Expand in Buffalo",
+          "publisher": "Governor Kathy Hochul newsroom",
+          "url": "https://www.governor.ny.gov/news/governor-hochul-announces-solstice-advanced-materials-expand-buffalo",
+          "kind": "primary"
+        },
+        {
+          "article_id": "ART-2026-000028",
+          "title": "Solstice Announces $49 Million Investment to Expand Research and Development Capabilities in Buffalo, New York",
+          "publisher": "PR Newswire",
+          "url": "https://finance.yahoo.com/technology/articles/solstice-announces-49-million-investment-153200194.html",
+          "kind": "company"
+        }
+      ],
+      "conflicts": []
+    },
+    {
+      "id": "IEVT-2026-000002",
+      "type": "acquisition",
+      "lane": "production",
+      "stage": "completed",
+      "flags": [
+        {
+          "type": "gap",
+          "detail": "production_location"
+        }
+      ],
+      "review_state": "approved",
+      "publish_status": "approved",
+      "date": "2026-10-06",
+      "place": "Rochester (buyer HQ)",
+      "county": null,
+      "lng": -77.61,
+      "amount": 75000000.0,
+      "currency": "USD",
+      "entity_id": "E0145",
+      "entity_name": "Constellation Brands",
+      "headline": "Constellation Brands acquires SpikedAde",
+      "note": "SpikedAde production location not disclosed.",
+      "sources": [
+        {
+          "article_id": "ART-2026-000026",
+          "title": "Constellation Brands acquires SpikedAde for $75M",
+          "publisher": "Rochester Business Journal",
+          "url": "https://rbj.net/2026/10/07/constellation-brands-acquires-spikedade-rochester/",
+          "kind": "secondary"
+        }
+      ],
+      "conflicts": []
+    },
+    {
+      "id": "IEVT-2026-000003",
+      "type": "facility_expansion",
+      "lane": "developing",
+      "stage": "application",
+      "flags": [
+        {
+          "type": "conflict",
+          "detail": "municipality"
+        }
+      ],
+      "review_state": "approved",
+      "publish_status": "approved",
+      "date": "2026-10-06",
+      "place": "Salt Road, Penfield or Webster",
+      "county": null,
+      "lng": -77.47,
+      "amount": 6000000.0,
+      "currency": "USD",
+      "entity_id": "E0147",
+      "entity_name": "Wilbert's Premium Auto Parts",
+      "headline": "Wilbert Premium Auto Parts planning-board expansion application",
+      "note": "Not an approved or under-construction project as of source date.",
+      "sources": [
+        {
+          "article_id": "ART-2026-000025",
+          "title": "Wilbert’s plans expansion of auto parts facility in Penfield",
+          "publisher": "Rochester Business Journal",
+          "url": "https://rbj.net/2026/10/06/wilberts-expands-auto-parts-facility-penfield",
+          "kind": "secondary"
+        }
+      ],
+      "conflicts": []
+    },
+    {
+      "id": "IEVT-2026-000004",
+      "type": "facility_closure",
+      "lane": "production",
+      "stage": "approved_plan",
+      "flags": [
+        {
+          "type": "conflict",
+          "detail": "local_job_count"
+        },
+        {
+          "type": "conflict",
+          "detail": "other_site"
+        },
+        {
+          "type": "gap",
+          "detail": "warn_notice"
+        }
+      ],
+      "review_state": "approved",
+      "publish_status": "approved",
+      "date": "2026-09-29",
+      "place": "Niagara Falls, Niagara County",
+      "county": "Niagara",
+      "lng": -79.05,
+      "amount": null,
+      "currency": null,
+      "entity_id": "E0148",
+      "entity_name": "The Goodyear Tire & Rubber Company",
+      "headline": "The Goodyear Tire & Rubber Company Form 8-K: chemical facility closure plan",
+      "note": "Goodyear plans to close its Niagara Falls chemical plant, with production expected to end Oct. 31, 2026. Sources differ on jobs: about 85 across two sites (SEC filing) vs. 60 local (Niagara Gazette).",
+      "sources": [
+        {
+          "article_id": "ART-2026-000007",
+          "title": "The Goodyear Tire & Rubber Company Form 8-K: chemical facility closure plan",
+          "publisher": "SEC EDGAR / Goodyear",
+          "url": "https://www.sec.gov/Archives/edgar/data/42582/000162828026064270/gt-20260929.htm",
+          "kind": "primary"
+        },
+        {
+          "article_id": "ART-2026-000018",
+          "title": "Goodyear will exit chemical business in the Falls",
+          "publisher": "Niagara Gazette via CNHI",
+          "url": "https://www.cnhi.com/rss_feed/goodyear-will-exit-chemical-business-in-the-falls",
+          "kind": "secondary"
+        }
+      ],
+      "conflicts": [
+        {
+          "field": "combined_job_reductions",
+          "value": "approximately 85",
+          "unit": "jobs",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/42582/000162828026064270/gt-20260929.htm#",
+          "source_label": "sec.gov"
+        },
+        {
+          "field": "combined_job_reductions",
+          "value": "85",
+          "unit": "jobs",
+          "source_url": "https://www.btpm.org/local/2026-10-02/goodyears-niagara-falls-chemical-plant-to-close#",
+          "source_label": "btpm.org"
+        },
+        {
+          "field": "local_job_loss",
+          "value": "60",
+          "unit": "persons",
+          "source_url": "https://www.cnhi.com/rss_feed/goodyear-will-exit-chemical-business-in-the-falls/",
+          "source_label": "cnhi.com"
+        },
+        {
+          "field": "other_site_name",
+          "value": "Pasadena, Texas",
+          "unit": "",
+          "source_url": "https://www.cnhi.com/rss_feed/goodyear-will-exit-chemical-business-in-the-falls/",
+          "source_label": "cnhi.com"
+        }
+      ]
+    },
+    {
+      "id": "IEVT-2026-000005",
+      "type": "major_contract",
+      "lane": "production",
+      "stage": "award",
+      "flags": [
+        {
+          "type": "ceiling_not_obligation",
+          "detail": ""
+        },
+        {
+          "type": "secondary_source",
+          "detail": ""
+        }
+      ],
+      "review_state": "approved",
+      "publish_status": "approved",
+      "date": "2026-09-28",
+      "place": "Liverpool, Onondaga County",
+      "county": "Onondaga",
+      "lng": -76.21,
+      "amount": null,
+      "currency": null,
+      "entity_id": "E0149",
+      "entity_name": "Lockheed Martin Rotary and Mission Systems",
+      "headline": "Liverpool radar modification reported in Sept28 bulletin",
+      "note": "An $18.9M change to an existing Air Force radar contract with work in Liverpool. The ~$1B figure is the contract ceiling, not new spending.",
+      "sources": [
+        {
+          "article_id": "ART-2026-000022",
+          "title": "Contracts for Sept. 28, 2026",
+          "publisher": "Forth / War.gov mirror",
+          "url": "https://www.forth.news/lists/dod/CfWYYiypPGyjdvtXbEB1x",
+          "kind": "secondary"
+        }
+      ],
+      "conflicts": []
+    },
+    {
+      "id": "IEVT-2026-000006",
+      "type": "major_contract",
+      "lane": "production",
+      "stage": "award",
+      "flags": [
+        {
+          "type": "gap",
+          "detail": "regional_share"
+        },
+        {
+          "type": "ceiling_not_obligation",
+          "detail": ""
+        },
+        {
+          "type": "secondary_source",
+          "detail": ""
+        }
+      ],
+      "review_state": "approved",
+      "publish_status": "approved",
+      "date": "2026-09-28",
+      "place": "Liverpool, Lithuania",
+      "county": null,
+      "lng": -76.21,
+      "amount": null,
+      "currency": null,
+      "entity_id": "E0150",
+      "entity_name": "Lockheed Martin Global Inc.",
+      "headline": "Radar-parts modification includes Liverpool and Lithuania",
+      "note": "An $11.2M radar-parts contract change with work in Liverpool and Lithuania; the Liverpool share is not disclosed.",
+      "sources": [
+        {
+          "article_id": "ART-2026-000022",
+          "title": "Contracts for Sept. 28, 2026",
+          "publisher": "Forth / War.gov mirror",
+          "url": "https://www.forth.news/lists/dod/CfWYYiypPGyjdvtXbEB1x",
+          "kind": "secondary"
+        }
+      ],
+      "conflicts": []
+    },
+    {
+      "id": "IEVT-2026-000007",
+      "type": "major_contract",
+      "lane": "corridor",
+      "stage": "award",
+      "flags": [
+        {
+          "type": "identity_unresolved",
+          "detail": ""
+        },
+        {
+          "type": "follow_up",
+          "detail": "contractor_identity"
+        },
+        {
+          "type": "ceiling_not_obligation",
+          "detail": ""
+        },
+        {
+          "type": "secondary_source",
+          "detail": ""
+        },
+        {
+          "type": "not_wny_production",
+          "detail": ""
+        }
+      ],
+      "review_state": "approved",
+      "publish_status": "approved",
+      "date": "2026-09-28",
+      "place": "Niagara Falls, Niagara County",
+      "county": "Niagara",
+      "lng": -79.05,
+      "amount": null,
+      "currency": null,
+      "entity_id": "E0151",
+      "entity_name": "Criterion Corporation",
+      "headline": "Niagara Falls base-support IDIQ reported",
+      "note": "Base maintenance and logistics contract at Niagara Air Reserve Station: $38.8M ceiling, $14,317 obligated so far. Contractor identity is still being confirmed.",
+      "sources": [
+        {
+          "article_id": "ART-2026-000022",
+          "title": "Contracts for Sept. 28, 2026",
+          "publisher": "Forth / War.gov mirror",
+          "url": "https://www.forth.news/lists/dod/CfWYYiypPGyjdvtXbEB1x",
+          "kind": "secondary"
+        }
+      ],
+      "conflicts": []
+    },
+    {
+      "id": "IEVT-2026-000008",
+      "type": "major_contract",
+      "lane": "production",
+      "stage": "award",
+      "flags": [
+        {
+          "type": "company_reported",
+          "detail": ""
+        }
+      ],
+      "review_state": "approved",
+      "publish_status": "approved",
+      "date": "2026-10-01",
+      "place": "Syracuse, Onondaga County",
+      "county": "Onondaga",
+      "lng": -76.15,
+      "amount": null,
+      "currency": null,
+      "entity_id": "E0153",
+      "entity_name": "SRC, Inc.",
+      "headline": "SRC reports $37m LASS prototype contract",
+      "note": "SRC reports a $37M Air Force prototype award for its Ghost Mantis technology. No production commitment or local job count disclosed.",
+      "sources": [
+        {
+          "article_id": "ART-2026-000029",
+          "title": "SRC's Ghost Mantis Technology Selected for U.S. Air Force LASS Prototype OTA",
+          "publisher": "SRC, Inc.",
+          "url": "https://www.srcinc.com/news-and-events/press/2026/20261001-contract-airforce-lass-ghost-mantis-gen3.html",
+          "kind": "secondary"
+        }
+      ],
+      "conflicts": []
+    },
+    {
+      "id": "IEVT-2026-000009",
+      "type": "grant_or_incentive",
+      "lane": "corridor",
+      "stage": "award",
+      "flags": [
+        {
+          "type": "research_only",
+          "detail": ""
+        },
+        {
+          "type": "not_wny_production",
+          "detail": ""
+        }
+      ],
+      "review_state": "approved",
+      "publish_status": "approved",
+      "date": "2026-10-01",
+      "place": "Ithaca, Tompkins County",
+      "county": "Tompkins",
+      "lng": -76.5,
+      "amount": null,
+      "currency": null,
+      "entity_id": "E0034",
+      "entity_name": "Cornell University",
+      "headline": "Cornell reports $1.35m programmable-photonics research award",
+      "note": "Research grant, not a production or hiring commitment: $1.35M over five years for programmable photonic chip research at Cornell.",
+      "sources": [
+        {
+          "article_id": "ART-2026-000030",
+          "title": "McMahon gets Moore Foundation award for programmable photonic chips",
+          "publisher": "Cornell Chronicle",
+          "url": "https://news.cornell.edu/stories/2026/10/mcmahon-gets-moore-foundation-award-programmable-photonic-chips",
+          "kind": "secondary"
+        }
+      ],
+      "conflicts": []
+    },
+    {
+      "id": "IEVT-2026-000010",
+      "type": "other_material_update",
+      "lane": "developing",
+      "stage": "intent",
+      "flags": [
+        {
+          "type": "company_reported",
+          "detail": ""
+        }
+      ],
+      "review_state": "approved",
+      "publish_status": "approved",
+      "date": "2026-10-02",
+      "place": "Rochester, Finger Lakes",
+      "county": null,
+      "lng": -77.61,
+      "amount": null,
+      "currency": null,
+      "entity_id": "E0152",
+      "entity_name": "Gekko Photonics",
+      "headline": "Gekko confirms Rochester office and intended regional team/supplier activity",
+      "note": "Gekko Photonics says it has a Rochester office and plans local engineering hires and regional suppliers; no headcount or facility announced yet.",
+      "sources": [
+        {
+          "article_id": "ART-2026-000031",
+          "title": "Gekko Photonics wins the Company of the Year award at Luminate NY 2026",
+          "publisher": "Gekko Photonics",
+          "url": "https://gekkophotonics.com/en/gekko-photonics-company-of-the-year",
+          "kind": "secondary"
+        }
+      ],
+      "conflicts": []
+    }
+  ],
+  "entities": [
+    {
+      "id": "E0034",
+      "name": "Cornell University",
+      "type": "university",
+      "city": "Ithaca",
+      "website": ""
+    },
+    {
+      "id": "E0144",
+      "name": "Solstice Advanced Materials",
+      "type": "company",
+      "city": "Morris Plains",
+      "website": "solstice.com"
+    },
+    {
+      "id": "E0145",
+      "name": "Constellation Brands",
+      "type": "company",
+      "city": "Rochester",
+      "website": "constellationbrands.com"
+    },
+    {
+      "id": "E0147",
+      "name": "Wilbert's Premium Auto Parts",
+      "type": "company",
+      "city": "unresolved Penfield or Webster",
+      "website": "wilberts.com"
+    },
+    {
+      "id": "E0148",
+      "name": "The Goodyear Tire & Rubber Company",
+      "type": "company",
+      "city": "Akron, Ohio",
+      "website": "https://www.goodyear.com"
+    },
+    {
+      "id": "E0149",
+      "name": "Lockheed Martin Rotary and Mission Systems",
+      "type": "business division",
+      "city": "",
+      "website": "https://www.lockheedmartin.com"
+    },
+    {
+      "id": "E0150",
+      "name": "Lockheed Martin Global Inc.",
+      "type": "company",
+      "city": "",
+      "website": ""
+    },
+    {
+      "id": "E0151",
+      "name": "Criterion Corporation",
+      "type": "company",
+      "city": "",
+      "website": "https://www.criterioncorporation.com"
+    },
+    {
+      "id": "E0152",
+      "name": "Gekko Photonics",
+      "type": "company",
+      "city": "Wroclaw, Poland",
+      "website": "https://gekkophotonics.com"
+    },
+    {
+      "id": "E0153",
+      "name": "SRC, Inc.",
+      "type": "company",
+      "city": "Syracuse",
+      "website": "https://www.srcinc.com"
+    }
+  ]
 }
