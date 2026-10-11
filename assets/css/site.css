@@ -38,7 +38,22 @@
   --field:    #fefdfb;   /* form fields: a step lighter than the page, short of white */
   --sheet:    #fcfbf9;   /* the drawn box's inside: a little whiter than the page around it */
 
-  --measure: 46rem;
+  /* Three page widths, widest first. See docs/design-system.md.
+     Each grows with the screen between a floor and a cap, so a larger
+     screen gets a little more page and a lot more margin; below the floor
+     the page simply fills the screen inside the body's side padding.
+       --w-home  the homepage
+       --w-mag   magazine fronts, issues and their listings
+       --w-page  menu pages (Services, Goods, Places...) and articles; the
+                 narrowest, so its margins can hold notes and engagement blocks
+     --measure and --board are the names the stylesheets use; they point at
+     the page and magazine widths. */
+  --w-home: 72rem;
+  --w-mag:  clamp(52rem, 36rem + 30vw, 64rem);
+  --w-page: clamp(44rem, 30rem + 25vw, 52rem);
+  --measure: var(--w-page);
+  --board:   var(--w-mag);
+  --gutter:  clamp(1.25rem, 3vw, 2.5rem);   /* body side padding */
   --edge:    0.5rem;   /* how far the nav and footer sit inside the box's lines */
 
   /* Icons centre on their own box; text sits on a baseline with descender
@@ -46,7 +61,6 @@
      optical centre is above the line box's and an icon centred on the line
      box reads low. Measured against the cap-height midpoint at 12px. */
   --icon-lift: 0.5px;
-  --board:   62rem;   /* the board is denser and earns more width */
 
   /* Prose is a system sans, per the reference's neutrality. The hand face
      is confined to interactive chrome so the drawn frame and the drawn
@@ -78,7 +92,7 @@
 
 body {
   margin: 0;
-  padding: 2.5rem 1.25rem 4rem;
+  padding: 2.5rem var(--gutter) 4rem;
   background: var(--paper);
   color: var(--ink);
   font: 1rem/1.65 var(--sans);
@@ -99,7 +113,7 @@ body {
   min-height: 2.6rem;
 }
 
-.topnav--board { max-width: var(--board); }
+.topnav--board, .topnav--mag { max-width: var(--board); }
 
 .topnav__bar {
   display: flex;
@@ -365,7 +379,7 @@ body {
   padding: 3rem 2.5rem;
   border: 1.4px solid var(--ink);
 }
-.frame--board { max-width: var(--board); padding: 2rem 2rem 3rem; }
+.frame--board, .frame--mag { max-width: var(--board); padding: 2rem 2rem 3rem; }
 .sketched .frame { border-color: transparent; }
 
 .sketch-svg { position: absolute; pointer-events: none; overflow: visible; }
@@ -635,7 +649,8 @@ a.cta:hover { background: var(--ink); color: var(--paper); }
   margin-left: 1.5rem;
   width: min(14.5rem, calc((100vw - var(--measure)) / 2 - 3.5rem));
 }
-.frame--board > .appspanel--side {
+.frame--board > .appspanel--side,
+.frame--mag > .appspanel--side {
   width: min(14.5rem, calc((100vw - var(--board)) / 2 - 3.5rem));
 }
 
@@ -676,7 +691,8 @@ a.cta:hover { background: var(--ink); color: var(--paper); }
   font: .75rem/1.5 var(--sans);
   color: var(--ink-soft);
 }
-.topnav--board ~ .sitefoot { max-width: var(--board); }
+.topnav--board ~ .sitefoot, .topnav--mag ~ .sitefoot,
+body:has(.frame--board, .frame--mag) .sitefoot { max-width: var(--board); }
 
 .sitefoot a:has(svg) { position: relative; top: calc(-1 * var(--icon-lift)); }
 .sitefoot a { color: var(--ink-soft); text-decoration: none; }
@@ -694,7 +710,7 @@ a.cta:hover { background: var(--ink); color: var(--paper); }
   body { padding: 1.25rem .55rem 2.5rem; }
 
   .frame { padding: 1.4rem .9rem; }
-  .frame--board { padding: 1.1rem .7rem 1.8rem; }
+  .frame--board, .frame--mag { padding: 1.1rem .7rem 1.8rem; }
 
   fieldset { padding: 1rem .75rem; margin-bottom: 1.25rem; }
 
@@ -757,7 +773,9 @@ h2.subsite-nav__label {
 }
 .margin-item img { display: block; max-width: 100%; height: auto; margin: 0 0 .4rem; }
 
-@media (min-width: 69rem) {
+/* 72rem is where the page width leaves 12rem of margin on each side:
+   (V - (30rem + 25vw)) / 2 >= 12rem. subsite.js measures the same room. */
+@media (min-width: 72rem) {
   .subsite-nav {
     position: absolute;
     right: 100%;
@@ -782,13 +800,13 @@ h2.subsite-nav__label {
 /* Keep navigation inside the same horizontal inset as page content.
    The border remains outside the inset, including after sketch.js draws it. */
 body { --content-inset: 2.5rem; }
-body:has(.frame--board) { --content-inset: 2rem; }
+body:has(.frame--board, .frame--mag) { --content-inset: 2rem; }
 .topnav { padding-inline: calc(var(--content-inset) + 1.4px); }
 @media (max-width: 40rem) {
   body { --content-inset: .9rem; }
-  body:has(.frame--board) { --content-inset: .7rem; }
+  body:has(.frame--board, .frame--mag) { --content-inset: .7rem; }
 }
 
 /* Wide frames must share their width with the header, even when the page
    does not explicitly add topnav--board to its shared navigation. */
-body:has(.frame--board) .topnav { max-width: var(--board); }
+body:has(.frame--board, .frame--mag) .topnav { max-width: var(--board); }

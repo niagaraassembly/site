@@ -14,6 +14,8 @@
  * schema.
  */
 
+import { frameHasMargin } from './margin.js';
+
 const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
 const leaf = (base, label) => ({ label, path: `${base}${slug(label)}/` });
@@ -249,18 +251,19 @@ function build(header) {
   }
 
   const frame = document.querySelector('.frame');
-  /* The margin beside the frame is (viewport - frame) / 2. These widths are
-     where that margin first fits a usable panel; the board's frame is wider. */
-  const wide = window.matchMedia(
-    frame && frame.classList.contains('frame--board') ? '(min-width: 87rem)' : '(min-width: 69rem)');
+  /* Into the margin beside the frame when that margin is wide enough,
+     measured from the frame itself because page widths follow the screen. */
+  let side = null;
   const place = () => {
-    const side = Boolean(frame) && wide.matches;
+    const fits = frameHasMargin(frame);
+    if (fits === side) return;
+    side = fits;
     panel.classList.toggle('appspanel--side', side);
     panel.classList.toggle('appspanel--inline', !side);
     if (side) frame.append(panel); else header.after(panel);
   };
   place();
-  wide.addEventListener('change', place);
+  window.addEventListener('resize', place);
 
   const setApps = (open) => {
     panel.hidden = !open;

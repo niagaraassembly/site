@@ -344,7 +344,7 @@ The form-approval Action already in this repository (`.github/workflows/approve-
 | Landing pages at `/site/<region-slug>/` | No `/site/` routes exist. The top bar is `assets/js/sitenav.js`. |
 | A shared place hierarchy with stable ids | `/places/` is a list of presence pages (Hamilton, Fort Erie, GB, WNY, Dunkirk NY, Rochester, Erie PA). Atlas geography terms live in `atlas/GLOSSARY.md`. |
 | A reader glossary, one definition per region, shown in the margin | `atlas/GLOSSARY.md` defines jurisdictions for the atlas (Niagara Region, Niagara Peninsula, study area). It is not that reader glossary. |
-| Side navigation, centre article, anchored margin items | The page is one centred column (`.frame`, `--measure: 46rem` in `assets/css/site.css`). On a wide viewport the Apps panel hangs in the right margin (`.appspanel--side`). Narrower viewports pull that panel above the frame. |
+| Side navigation, centre article, anchored margin items | The page is one centred column (`.frame`, page width `--measure` in `assets/css/site.css`; see `docs/design-system.md`). On a wide viewport the Apps panel hangs in the right margin (`.appspanel--side`). Narrower viewports pull that panel above the frame. |
 | Editorial status `draft` / `published` / `superseded` | Intake approval writes `data/*.json` through `scripts/approve_request.py`. Magazine drafts under `MAGS/START/Issue 1/` are Markdown with a title and a date in the heading, and no front matter. |
 
 ---

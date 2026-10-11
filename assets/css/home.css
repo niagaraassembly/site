@@ -1,5 +1,5 @@
 /* Homepage only: shared site styles and current theme remain authoritative. */
-.home-page { --measure: 72rem; }
+.home-page { --measure: var(--w-home); }
 .home { padding: 3rem; }
 .home-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
 .home-statement { display: flex; flex-direction: column; }

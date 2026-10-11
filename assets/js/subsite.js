@@ -7,6 +7,8 @@
  * inline. If this file fails to run, the notes remain in the article.
  */
 
+import { frameHasMargin } from './margin.js';
+
 export function selectedType(search) {
   return new URLSearchParams(search).get('type') || '';
 }
@@ -88,8 +90,7 @@ function placeMargins() {
     item.classList.remove('margin-item--side');
     item.style.top = '';
   }
-  const wide = window.matchMedia('(min-width: 69rem)').matches;
-  if (!wide || !frame || items.length === 0) return;
+  if (!frameHasMargin(frame) || items.length === 0) return;
 
   const frameTop = frame.getBoundingClientRect().top + window.scrollY;
   const naturals = items.map((item) => item.getBoundingClientRect().top + window.scrollY - frameTop);
@@ -117,7 +118,6 @@ function start() {
   run();
   window.addEventListener('load', run);
   window.addEventListener('resize', run);
-  window.matchMedia('(min-width: 69rem)').addEventListener('change', run);
 }
 
 if (typeof document !== 'undefined') start();
