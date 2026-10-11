@@ -52,6 +52,8 @@ const p = (html, style = '') =>
 const small = (html, style = '') => p(html, `font-size:13px;line-height:1.5;color:${C.soft};${style}`);
 const h2 = (text) =>
   `<h2 style="margin:36px 0 6px;padding-top:14px;border-top:1px solid ${C.ink};font:700 20px/1.25 ${SANS};color:${C.ink};">${text}</h2>`;
+/* The first row is padded from the top: the Text only template puts the body
+   right against its top edge. */
 const row = (html, pad = '0') => `<tr><td style="padding:${pad};">${html}</td></tr>`;
 const storyHref = (item) => `${ISSUE_URL}#wny-${item.id}`;
 
@@ -212,7 +214,7 @@ const close = [
 /* ---- assemble ------------------------------------------------------------- */
 
 const body = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;margin:0 auto;">`
-  + row(opening) + row(figures) + row(stories) + row(close) + '</table>';
+  + row(opening, '28px 0 0') + row(figures) + row(stories) + row(close) + '</table>';
 
 const subject = 'Western New York MAG, Issue One (@niagaraassembly)';
 const previewText = 'Solstice’s $49M Buffalo R&D expansion, Goodyear’s Niagara Falls closure, and defense contracts from Liverpool to Niagara Falls.';
