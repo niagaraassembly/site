@@ -10,47 +10,115 @@
      external script runs too late to prevent it. -->
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('na-theme')||'light'}catch(e){document.documentElement.dataset.theme='light'}</script>
 <link rel="stylesheet" href="assets/css/site.css">
+<link rel="stylesheet" href="assets/css/home.css">
 </head>
-<body>
+<body class="home-page">
 
 <header class="topnav" data-sitenav></header>
 
-<div class="frame" data-sketch="frame">
+<main class="frame home" data-sketch="frame">
 
+<div class="home-map-stage">
+<figure class="home-corridor" id="home-map-simple" aria-label="Hamilton to Syracuse corridor"><div class="home-corridor-scroll" tabindex="0" role="region" aria-label="Hamilton to Syracuse corridor diagram; scroll horizontally on small screens">
+<svg class="home-corridor-map" viewBox="-100 -25 1350 365" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="home-route-title home-route-desc">
+<title id="home-route-title">Hamilton to Syracuse</title><desc id="home-route-desc">A schematic corridor with branches from Hamilton to Burlington and Brantford, continuing through Grimsby, Beamsville, St. Catharines, Niagara Falls in Ontario and Niagara Falls in New York, Fort Erie, Buffalo, Batavia and Rochester. Two endpoint circles mark the two Niagara Falls cities, joined by the paired thin lines of the Rainbow Bridge. Paired lines between Fort Erie and Buffalo indicate the Peace Bridge. Short northward branches lead to Niagara-on-the-Lake and Youngstown. A southwest branch from Buffalo passes Dunkirk, New York, and ends at Erie, Pennsylvania, beneath Hamilton; north–south distances are compressed. Blue shapes suggest Lake Ontario north of the route and Lake Erie west of Buffalo, with Dunkirk and Erie along its southern edge. Slim blue shapes below Rochester and Syracuse suggest the Finger Lakes. A small east–west lake northeast of Syracuse represents Oneida Lake. The line dips gently toward Buffalo before rising toward Rochester and continuing to Syracuse. Not to scale.</desc>
 
-  
-
-  <p><b>Niagara Assembly creates and improves industrial workspaces for entrepreneurs, using a network of local hubs to expand education and training opportunities for its regional Membership. NA runs events and exhibits, organizes workshops and courses, and pioneers tools to accelerate the continental economy.</b></p> 
-  <p><b>The design and development of industrial products and processes in the Niagara peninsula is our common goal. Assembling something great takes a world of inputs and we believe the Niagara Falls area from Brantford, Ontario to Rochester, New York is where everything can came together.</b></p>
-  <p>Help us launch with a <a href="https://membership.niagaraassembly.com/founding-purchase">Founding Membership</a>.</p>
-  <p><a href="#join">Join the mailing list or become a Member</a>.</p>
-  <p>Read our "<a href="/call-for-infrastructures">Call for Infrastructures</a>".</p>
-  <p>Join the <a href="https://discord.gg/kxacHHRmBC">Discord</a>.</p>
-  <p><i>As we grow the Membership and support self-organizing within the region, we are testing out
-  product and service ideas that can make us profitable and have major impact — from electronics specialist training, to
-  real estate and logistics systems, to Integrated Production
-  Environments using <a href="https://theia-ide.org/">Theia</a>, to new forms of entrepreneur support.</i></p>
-
-  <p>Learn more about the company <a href="company/">here</a>. Partnership or investment opportunities?</p>
-
-  <p><a href="mailto:office@niagaraassembly.com">office@niagaraassembly.com</a></p>
-
-  <h2>How can you get involved?</h2>
-
-  <ul class="plain">
-    <li>Host a standup, a talk, a demo or a workshop.</li>
-    <li>Share news about new projects, hiring, expansions or investment.</li>
-    <li>Offer space — office, industrial, retail, yard or warehouse.</li>
-    <li>List tools others can use, or find the ones you need.</li>
-    <li>Register as an expert to lead training or workshops in the region.</li>
-  </ul>
-
-  <p><a href="board/">See what's on the board</a> or post something.</p></br>
-
+<defs><filter id="home-ontario-soft" x="-10%" y="-20%" width="120%" height="140%"><feGaussianBlur stdDeviation="1.8"/></filter></defs>
+<path class="home-corridor-lake" d="M45 44 L128 -80 L1193 -80 C1190 -69 1200 -63 1198 -54 C1195 -48 1188 -45 1191 -37 C1194 -30 1205 -27 1202 -20 C1199 -15 1203 -12 1200 -14
+C1198 -2 1205 6 1193 15 C1183 23 1165 29 1151 24
+C1146 20 1141 19 1138 22 L1135 29 L1132 23
+C1116 26 1096 32 1081 33 C1076 32 1072 30 1069 34
+C1067 38 1070 47 1065 48 C1061 46 1063 36 1058 36
+C1048 37 1041 38 1038 42 C1034 46 1037 59 1030 61
+C1022 60 1026 46 1021 43 C1002 41 973 43 953 45
+C934 47 918 43 910 46 C908 49 913 59 907 62
+C900 61 905 49 899 46 C889 45 880 47 866 46
+L861 50 L858 46 C845 44 830 44 820 43
+C815 44 817 51 811 52 C805 50 811 44 804 43
+C754 36 711 31 666 32 C602 33 545 26 490 31
+C477 36 475 55 458 59 C431 62 404 56 385 54
+C292 44 176 41 45 44 Z" fill="var(--lake-wash)" fill-opacity=".94" filter="url(#home-ontario-soft)" aria-hidden="true"/>
+<defs><filter id="home-erie-soft" x="-10%" y="-20%" width="120%" height="140%"><feGaussianBlur stdDeviation="2"/></filter></defs>
+<path class="home-corridor-lake" d="M-240 182 C-180 183 -129 186 -99 191
+C-77 196 -38 219 24 214 C-3 208 -30 195 -46 187
+C-12 177 46 169 88 173 C104 174 111 180 121 184
+C128 187 130 181 126 175 C143 168 164 165 185 166
+C207 167 221 174 241 173 C264 169 281 162 302 162
+L311 167 L321 162 C345 158 373 155 398 157
+C422 160 439 155 455 157 C470 158 474 162 483 163
+L489 169 L494 164 C514 166 535 170 547 177 C553 180 554 184 549 188
+C547 195 536 204 528 208 C523 209 518 207 514 211 C504 220 490 226 481 227 L476 223 C471 228 465 234 456 237 C442 243 431 246 420 249 C415 250 415 257 409 256 C393 260 378 263 365 267 C250 283 144 292 45 292 L-240 310 Z" fill="var(--lake-wash)" fill-opacity=".92" filter="url(#home-erie-soft)" aria-hidden="true"/>
+<path class="home-corridor-river" d="M500 30 C507 49 511 65 520 82 C526 106 542 133 552 155 C552 168 551 175 547 182" fill="none" stroke="var(--lake-wash)" stroke-width="17" filter="url(#home-ontario-soft)" aria-hidden="true"/>
+<path class="home-corridor-oneida" transform="rotate(8 1243 49)" d="M1204 49 C1210 46 1214 41 1221 41 C1225 42 1228 38 1234 37 C1244 35 1257 36 1267 39 L1274 35 C1279 35 1281 40 1279 44 C1283 48 1280 52 1275 53 C1267 55 1262 59 1253 58 L1249 55 L1244 59 C1237 61 1231 58 1226 58 L1222 54 C1215 55 1209 53 1204 51 Z" fill="var(--lake-wash)" fill-opacity=".94" aria-hidden="true"/>
+<g class="home-corridor-finger-lakes" fill="var(--lake-wash)" fill-opacity=".94" aria-hidden="true">
+<path d="M890 164 C886 175 886 193 890 207 C895 202 896 180 894 166 Z"><title>Conesus Lake</title></path>
+<path d="M910 176 C906 189 906 204 910 216 C914 212 915 188 913 177 Z"><title>Hemlock Lake</title></path>
+<path d="M926 174 C923 183 923 196 926 204 C929 199 930 183 929 175 Z"><title>Canadice Lake</title></path>
+<path d="M942 168 C938 178 939 192 942 200 C947 197 948 178 946 169 Z"><title>Honeoye Lake</title></path>
+<path d="M963 154 C955 164 955 179 958 190 C962 202 962 220 967 230 C972 222 970 204 967 190 C964 177 972 160 968 155 Z"><title>Canandaigua Lake</title></path>
+<path d="M988 179 C990 189 995 204 1000 212 C1002 225 996 244 998 258 C1004 253 1008 231 1007 214 C1008 205 1014 193 1013 184 L1009 182 C1007 193 1004 202 1003 205 C999 199 994 184 992 178 Z"><title>Keuka Lake</title></path>
+<path d="M1031 143 C1025 155 1025 179 1027 198 C1028 220 1027 246 1032 263 C1038 255 1039 230 1037 209 C1036 190 1041 159 1037 145 Z"><title>Seneca Lake</title></path>
+<path d="M1074 143 C1069 158 1069 179 1065 199 C1062 220 1066 244 1073 272 C1078 270 1076 246 1073 227 C1070 208 1076 188 1077 170 C1079 155 1081 145 1074 143 Z"><title>Cayuga Lake</title></path>
+<path d="M1104 153 C1099 164 1097 179 1100 191 C1102 202 1104 211 1109 218 C1112 207 1107 189 1107 180 C1108 166 1110 156 1104 153 Z"><title>Owasco Lake</title></path>
+<path d="M1134 143 C1129 161 1127 181 1129 201 C1130 211 1132 222 1136 230 C1139 217 1135 201 1137 182 C1139 165 1140 147 1134 143 Z"><title>Skaneateles Lake</title></path>
+<path d="M1159 160 C1154 168 1153 182 1157 193 C1161 201 1166 199 1166 191 C1163 181 1167 169 1163 162 Z"><title>Otisco Lake</title></path>
+</g>
+<path class="home-corridor-route" d="M45 49 C130 47 200 52 265 57 S430 68 503 77 M537 87 C540 111 555 138 570 155 C585 119 660 97 735 88 C785 70 820 47 855 46 C870 59 884 81 905 88 C931 96 952 91 978 98 C1007 107 1030 111 1057 105 C1084 99 1102 101 1126 91 C1150 82 1175 82 1200 68"/>
+<path class="home-corridor-border" d="M520 30 L520 58"/>
+<path class="home-corridor-route" d="M45 49 L64 14 M45 49 L-55 85"/>
+<g class="home-corridor-stop"><circle cx="64" cy="14" r="4"/><text x="47" y="12" text-anchor="end">Burlington</text></g>
+<g class="home-corridor-stop"><circle cx="-55" cy="85" r="4"/><text x="-55" y="114" text-anchor="middle">Brantford</text></g>
+<g class="home-corridor-stop"><circle cx="45" cy="49" r="4"/><text x="45" y="78" text-anchor="middle">Hamilton</text></g>
+<g class="home-corridor-stop"><circle cx="155" cy="52" r="4"/><text x="155" y="34" text-anchor="middle">Grimsby</text></g>
+<g class="home-corridor-stop"><circle cx="245" cy="55" r="4"/><text x="245" y="84" text-anchor="middle">Beamsville</text></g>
+<g class="home-corridor-stop"><circle cx="385" cy="66" r="4"/><text x="385" y="95" text-anchor="middle">St. Catharines</text></g>
+<path class="home-corridor-route" d="M503 77 L480 39 M537 87 L560 39"/>
+<path class="home-corridor-route" d="M570 155 C571 173 561 187 548 197 C536 208 525 210 514 219 C498 229 483 230 470 239 C451 250 438 251 420 258 C401 265 381 265 365 269 C250 285 144 294 45 294"/>
+<g class="home-corridor-stop"><circle cx="480" cy="39" r="4"/><text x="475" y="29" text-anchor="end">Niagara-on-the-Lake</text></g>
+<g class="home-corridor-stop"><circle cx="560" cy="39" r="4"/><text x="565" y="29" text-anchor="start">Youngstown</text></g>
+<g class="home-corridor-stop"><circle cx="365" cy="269" r="4"/><text x="365" y="298" text-anchor="middle">Dunkirk, NY</text></g>
+<g class="home-corridor-stop"><circle cx="45" cy="294" r="4"/><text x="45" y="323" text-anchor="middle">Erie, PA</text></g>
+<path class="home-corridor-route" d="M503 77 C504 105 524 131 535 155"/>
+<g class="home-corridor-stop"><circle cx="535" cy="155" r="4"/><text x="518" y="163" text-anchor="end">Fort Erie</text></g>
+<g class="home-corridor-bridge" transform="translate(520 82) rotate(16.39)"><title>Rainbow Bridge</title><path d="M-14 -2 L14 -2 M-14 2 L14 2"/></g>
+<g class="home-corridor-bridge"><title>Peace Bridge</title><path d="M539 153 L566 153 M539 157 L566 157"/></g>
+<g class="home-corridor-stop home-corridor-falls"><title>Niagara Falls, Ontario · Niagara Falls, New York</title><circle cx="503" cy="77" r="4"/><circle cx="537" cy="87" r="4"/><text class="home-corridor-side" x="245" y="124" text-anchor="middle">Ontario</text><text class="home-corridor-side" x="855" y="130" text-anchor="middle">New York</text><text x="556" y="89" text-anchor="start">Niagara Falls</text></g>
+<g class="home-corridor-stop"><circle cx="570" cy="155" r="4"/><text x="587" y="163" text-anchor="start">Buffalo</text></g>
+<g class="home-corridor-stop"><circle cx="735" cy="88" r="4"/><text x="735" y="117" text-anchor="middle">Batavia</text></g>
+<g class="home-corridor-stop"><circle cx="855" cy="46" r="4"/><text x="843" y="85" text-anchor="end">Rochester</text></g>
+<g class="home-corridor-stop"><circle cx="1200" cy="68" r="4"/><text x="1200" y="97" text-anchor="middle">Syracuse</text></g>
+</svg></div></figure>
+<figure class="home-corridor home-region-detailed" id="home-map-detailed" hidden aria-label="Detailed regional sketch">
+<div class="home-region-scroll" tabindex="0" role="region" aria-label="Detailed regional map; scroll horizontally to explore">
+<a href="/sketches/region/" aria-label="Open the detailed regional sketch with zoom controls"><img id="home-region-image" src="/sketches/region/region-map.svg" width="3600" height="1192" alt="Detailed regional sketch with 106 places and selected road connections, from Hamilton and Niagara through Buffalo to Rochester and Syracuse, south to Erie and the Finger Lakes."></a>
+</div><figcaption><a href="/sketches/region/">Explore the full regional sketch ↗</a></figcaption>
+</figure>
+<div class="home-map-controls"><button class="home-map-flip" id="home-map-flip" type="button" hidden aria-label="Show detailed regional map" title="Show detailed regional map" aria-pressed="false" aria-controls="home-map-simple home-map-detailed">
+<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-4-4M19 16H5l4 4"/></svg>
+</button></div>
+</div>
+<span class="home-map-status" id="home-map-status" role="status"></span>
+<div class="home-intro"><div class="home-statement"><p><b>Niagara Assembly creates and improves industrial workspaces for entrepreneurs, using a network of local hubs to expand education and training opportunities for its regional Membership. NA runs events and exhibits, organizes workshops and courses, and pioneers tools and publications to accelerate regional economies.</b></p><div class="home-links"><a href="/company/">About the Assembly ↗</a><a href="https://membership.niagaraassembly.com/founding-purchase">Founding Membership ↗</a></div></div><div class="home-statement"><p><b>The design and development of industrial products and processes in the Niagara peninsula is our common goal. Assembling something great takes a world of inputs and we believe the Niagara Falls area from Brantford, Ontario to Rochester, New York is where everything can came together. Check out a mag for regional news.</b></p><div class="home-links"><a href="/call-for-infrastructures/">Call for Infrastructures ↗</a><a href="/places/">Explore the corridor ↗</a></div></div></div>
+<nav class="home-index" aria-label="On this page"><a href="#magazines">Magazines</a><a href="#services">Services</a><a href="#electronics">Electronics</a><a href="#places">Places</a><a href="#join">Subscribe</a><a href="#post">Post to the board</a></nav>
+<section class="home-section" id="magazines"><div class="home-heading"><h2>Magazines</h2><a href="/mags/">All magazines ↗</a></div><p>Ideas, places and source-backed investigations across the corridor.</p><div class="home-magazines">
+<a class="home-mag home-mag--lead" href="/MAGS/WNY/"><span class="home-kicker">Investment · Facilities · Jobs</span><h3>Western<br>New York</h3><p>Follow the industrial news from the Niagara River to Syracuse.</p><span class="home-read">Read WNY ↗</span></a>
+<a class="home-mag" href="/MAGS/START/"><span class="home-kicker">Ideas · Models · People</span><h3>START</h3><p>The ideas, models and places shaping what we’re building.</p><span class="home-read">Read START ↗</span></a>
+<a class="home-mag" href="/MAGS/RESEARCH/"><span class="home-kicker">Reports · Maps · Fieldwork</span><h3>Research</h3><p>Source-backed investigations of places across the corridor.</p><span class="home-read">Explore Research ↗</span></a></div></section>
+<section class="home-section" id="services"><div class="home-heading"><h2>Services</h2><a href="/services/">Explore services ↗</a></div><p>Spaces, skills and tools for the people building things. Explore what we’re developing and where you can take part.</p><div class="home-services"><a class="home-service" href="/services/spaces/"><h3>Spaces <span aria-hidden="true">↗</span></h3><p>Somewhere to work, meet, store, sell and run things.</p></a><a class="home-service" href="/services/training/"><h3>Training <span aria-hidden="true">↗</span></h3><p>Electronics, manufacturing, Linux, robotics and AI.</p></a><a class="home-service" href="/services/events/"><h3>Events <span aria-hidden="true">↗</span></h3><p>Gatherings to learn, show, meet and make.</p></a><a class="home-service" href="/services/tools/"><h3>Tools <span aria-hidden="true">↗</span></h3><p>The Board, HeavyMap and shared software for industry.</p></a><a class="home-service" href="/services/news/"><h3>News <span aria-hidden="true">↗</span></h3><p>Industrial growth and the people who build things.</p></a><a class="home-service" href="/services/grow/"><h3>Grow <span aria-hidden="true">↗</span></h3><p>An early-stage practice for founders developing their plans.</p></a></div></section><section class="home-section home-electronics" id="electronics" aria-labelledby="electronics-title">
+<div class="home-heading"><h2 id="electronics-title">Electronics</h2><a href="/services/training/electronics/">Explore electronics training ↗</a></div>
+<p class="home-electronics-lead">From the first solder joint to a product ready to build. The linchpin industry.</p>
+<p>Electronics brings design, skilled hands and manufacturing together. We’re starting with introductory training under <a href="/services/training/clark/">Clark</a>, built around the IPC standards the industry already works to: a few well-chosen courses, with the wider education that helps people understand what happens beyond the bench.</p>
+<div class="home-electronics-topics"><div><h3>Build it well</h3><p>Soldering methods, assembly inspection, cable and wire harness work. Our planned starting points are J-STD-001, IPC-A-610 and IPC/WHMA-A-620, depending on what people here need.</p></div><div><h3>See the whole industry</h3><p>Follow a design through fabrication, assembly and test. Explore components, supply chains, contract manufacturers, alongside the history and emerging technologies shaping the work.</p></div></div>
+<h3>Call for Assistance</h3>
+<p>We want to build this with certified trainers, established providers, manufacturers, colleges and the makers who will use it. Interested in learning, teaching or hosting? <span class="home-training-contact">Help shape what comes first. Send email to <a href="mailto:training@niagaraassembly.com">training@niagaraassembly.com</a>.</span></p>
+<p class="fineprint">Training is in planning. Dates, venues and prices have not been announced. IPC courses will require certified trainers; additional Clark courses carry no IPC credential.</p>
+<div class="home-links"><a href="/services/training/electronics/">See the training plans ↗</a><a href="#join">Express your interest ↗</a></div>
+</section><section class="home-section" id="places"><div class="home-heading"><h2>Places</h2><a href="/places/">All places ↗</a></div><p>Beginning in Hamilton and growing outward: places where we have a presence, and where we want to build relationships.</p><div class="home-places"><a href="/places/hamilton/">Hamilton <span aria-hidden="true">↗</span></a><a href="/places/fort-erie/">Fort Erie <span aria-hidden="true">↗</span></a><a href="/places/gb/">Greater Buffalo <span aria-hidden="true">↗</span></a><a href="/places/wny/">Western New York <span aria-hidden="true">↗</span></a><a href="/places/dunkirk-ny/">Dunkirk, NY <span aria-hidden="true">↗</span></a><a href="/places/rochester/">Rochester <span aria-hidden="true">↗</span></a><a href="/places/erie-pa/">Erie, PA <span aria-hidden="true">↗</span></a></div></section>
   <!-- Join ------------------------------------------------------------ -->
   <form id="join-form" novalidate>
-    <fieldset id="join" data-sketch="box">
-      <legend>Mailing List + Membership</legend>
+    <fieldset id="join" class="home-subscribe">
+      <legend>Subscribe + Membership</legend>
+      <p>Stay in touch with the Assembly, our work and the region.</p>
       <label>Name <input name="name" required autocomplete="name"></label>
       <label>Email <input name="email" type="email" required autocomplete="email"></label>
 
@@ -85,10 +153,11 @@
     </fieldset>
   </form>
 
-  <!-- Post to the board ------------------------------------------------ -->
+  <section class="home-section home-board" aria-label="Post to the Board">
+  <details class="home-expand" id="post"><summary>Post to the Board <a class="home-board-link" href="/board/">VIEW THE BOARD</a><span class="home-board-description">Events, news, spaces, tools, experts and shows. Share an offer, a request or something underway.</span></summary><div class="home-expand-body">
   <form id="board-form" novalidate>
     <fieldset id="register" data-sketch="box">
-      <legend id="post">Post to the board</legend>
+      <legend>Your posting</legend>
 
       <label>Section
         <select name="category" id="board-category"></select></label>
@@ -141,8 +210,9 @@
       <p class="status" id="board-status" role="status"></p>
     </fieldset>
   </form>
-
-</div>
+</div></details></section>
+<details class="home-expand home-more"><summary>Build with the Assembly</summary><div class="home-expand-body"><p><b>Bring something you want to build, something you know, or a place where people can work together.</b> The Assembly grows through people making useful things happen across the region: a workshop, a shared tool, a new product, a space brought into use.</p><p>Host a talk or demo. Help shape a course, share your expertise, or tell us what you want to learn. Introduce a manufacturer, offer a bench or room, or help build the open source software that connects the work.</p><p><a href="/assembly/">Explore the Assembly</a>, <a href="#post">make a posting on the Board</a>, or <a href="https://discord.gg/kxacHHRmBC">join us on Discord</a>. If you have an idea that doesn’t fit a box, we’d like to hear it.</p><p>For partnerships and investment, write to <a href="mailto:office@niagaraassembly.com">office@niagaraassembly.com</a>.</p></div></details>
+</main>
 
 <footer class="sitefoot">
   <span>Niagara Assembly (unincorporated)</span>
@@ -413,5 +483,6 @@
   wire('board-form', 'board-status', BOARD_MAP, BOARD_ACTION, validateBoard,
        "Thank you — that's been sent. Posts appear on the board once reviewed.");
 </script>
+<script type="module" src="/assets/js/home-map.js"></script>
 </body>
 </html>

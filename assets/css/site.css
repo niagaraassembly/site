@@ -778,3 +778,17 @@ h2.subsite-nav__label {
   max-width: none;
   background: var(--paper);
 }
+
+/* Keep navigation inside the same horizontal inset as page content.
+   The border remains outside the inset, including after sketch.js draws it. */
+body { --content-inset: 2.5rem; }
+body:has(.frame--board) { --content-inset: 2rem; }
+.topnav { padding-inline: calc(var(--content-inset) + 1.4px); }
+@media (max-width: 40rem) {
+  body { --content-inset: .9rem; }
+  body:has(.frame--board) { --content-inset: .7rem; }
+}
+
+/* Wide frames must share their width with the header, even when the page
+   does not explicitly add topnav--board to its shared navigation. */
+body:has(.frame--board) .topnav { max-width: var(--board); }

@@ -1,0 +1,312 @@
+[
+  {
+    "name": "US 219 corridor",
+    "class": "major",
+    "places": [
+      "Buffalo",
+      "West Seneca",
+      "Orchard Park",
+      "Springville",
+      "Ellicottville",
+      "Salamanca"
+    ]
+  },
+  {
+    "name": "403",
+    "class": "major",
+    "places": [
+      "Paris",
+      "Brantford",
+      "Ancaster",
+      "Hamilton",
+      "Burlington"
+    ]
+  },
+  {
+    "name": "QEW",
+    "class": "major",
+    "places": [
+      "Oakville",
+      "Burlington",
+      "Hamilton",
+      "Stoney Creek",
+      "Grimsby",
+      "Beamsville",
+      "Vineland",
+      "Jordan",
+      "St. Catharines",
+      "Niagara Falls, ON",
+      "Fort Erie"
+    ]
+  },
+  {
+    "name": "406",
+    "class": "major",
+    "places": [
+      "St. Catharines",
+      "Thorold",
+      "Welland"
+    ]
+  },
+  {
+    "name": "3",
+    "class": "secondary",
+    "places": [
+      "Simcoe",
+      "Hagersville",
+      "Cayuga",
+      "Dunnville",
+      "Wainfleet",
+      "Port Colborne",
+      "Fort Erie"
+    ]
+  },
+  {
+    "name": "6",
+    "class": "secondary",
+    "places": [
+      "Guelph",
+      "Hamilton",
+      "Caledonia",
+      "Hagersville",
+      "Port Dover"
+    ]
+  },
+  {
+    "name": "Niagara Parkway",
+    "class": "local",
+    "places": [
+      "Niagara-on-the-Lake",
+      "Queenston",
+      "Niagara Falls, ON",
+      "Fort Erie"
+    ]
+  },
+  {
+    "name": "I-190",
+    "class": "major",
+    "places": [
+      "Lewiston",
+      "Niagara Falls, NY",
+      "Grand Island",
+      "Buffalo"
+    ]
+  },
+  {
+    "name": "I-90",
+    "class": "major",
+    "places": [
+      "Erie",
+      "North East",
+      "Westfield",
+      "Fredonia",
+      "Silver Creek",
+      "Angola",
+      "Hamburg",
+      "Cheektowaga",
+      "Clarence",
+      "Akron",
+      "Batavia",
+      "Victor",
+      "Waterloo",
+      "Seneca Falls",
+      "Baldwinsville",
+      "Syracuse"
+    ]
+  },
+  {
+    "name": "NY 104",
+    "class": "secondary",
+    "places": [
+      "Lewiston",
+      "Lockport",
+      "Medina",
+      "Albion",
+      "Brockport",
+      "Rochester",
+      "Sodus",
+      "Wolcott",
+      "Oswego"
+    ]
+  },
+  {
+    "name": "US 20",
+    "class": "secondary",
+    "places": [
+      "Hamburg",
+      "East Aurora",
+      "Warsaw",
+      "Geneseo",
+      "Avon",
+      "Canandaigua",
+      "Geneva",
+      "Auburn",
+      "Skaneateles",
+      "Cazenovia"
+    ]
+  },
+  {
+    "name": "I-390",
+    "class": "major",
+    "places": [
+      "Rochester",
+      "Avon",
+      "Geneseo",
+      "Dansville",
+      "Bath"
+    ]
+  },
+  {
+    "name": "I-86",
+    "class": "major",
+    "places": [
+      "Erie",
+      "Jamestown",
+      "Salamanca",
+      "Olean",
+      "Hornell",
+      "Bath",
+      "Corning",
+      "Elmira"
+    ]
+  },
+  {
+    "name": "I-81",
+    "class": "major",
+    "places": [
+      "Brewerton",
+      "Syracuse",
+      "Cortland"
+    ]
+  },
+  {
+    "name": "NY 14",
+    "class": "secondary",
+    "places": [
+      "Lyons",
+      "Geneva",
+      "Watkins Glen",
+      "Elmira"
+    ]
+  },
+  {
+    "name": "NY 60",
+    "class": "secondary",
+    "places": [
+      "Dunkirk",
+      "Fredonia",
+      "Jamestown"
+    ]
+  },
+  {
+    "name": "Regional links",
+    "class": "local",
+    "places": [
+      "Cambridge",
+      "Paris",
+      "Brantford",
+      "Caledonia",
+      "Cayuga"
+    ]
+  },
+  {
+    "name": "Regional links",
+    "class": "local",
+    "places": [
+      "Waterloo, ON",
+      "Kitchener",
+      "Cambridge",
+      "Guelph",
+      "Milton",
+      "Oakville"
+    ]
+  },
+  {
+    "name": "Regional links",
+    "class": "local",
+    "places": [
+      "Welland",
+      "Fonthill",
+      "Vineland"
+    ]
+  },
+  {
+    "name": "Regional links",
+    "class": "local",
+    "places": [
+      "Port Colborne",
+      "Crystal Beach",
+      "Fort Erie"
+    ]
+  },
+  {
+    "name": "Regional links",
+    "class": "local",
+    "places": [
+      "Rochester",
+      "Fairport",
+      "Victor",
+      "Canandaigua",
+      "Penn Yan"
+    ]
+  },
+  {
+    "name": "Regional links",
+    "class": "local",
+    "places": [
+      "Canandaigua",
+      "Naples",
+      "Dansville"
+    ]
+  },
+  {
+    "name": "Regional links",
+    "class": "local",
+    "places": [
+      "Seneca Falls",
+      "Ithaca",
+      "Cortland"
+    ]
+  },
+  {
+    "name": "Regional links",
+    "class": "local",
+    "places": [
+      "Batavia",
+      "Warsaw",
+      "Ellicottville",
+      "Salamanca"
+    ]
+  },
+  {
+    "name": "Regional links",
+    "class": "local",
+    "places": [
+      "Westfield",
+      "Chautauqua",
+      "Jamestown"
+    ]
+  },
+  {
+    "name": "Regional links",
+    "class": "local",
+    "places": [
+      "Newark",
+      "Lyons",
+      "Wolcott",
+      "Fulton",
+      "Oswego"
+    ]
+  },
+  {
+    "name": "Regional links",
+    "class": "local",
+    "places": [
+      "North Tonawanda",
+      "Tonawanda",
+      "Buffalo",
+      "Williamsville",
+      "Clarence"
+    ]
+  }
+]

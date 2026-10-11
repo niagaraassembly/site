@@ -1,0 +1,172 @@
+/* Homepage only: shared site styles and current theme remain authoritative. */
+.home-page { --measure: 72rem; }
+.home { padding: 3rem; }
+.home-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+.home-statement { display: flex; flex-direction: column; }
+.home-statement > p { margin: 0; font-size: 1.15rem; line-height: 1.65; }
+.home-links { margin-top: auto; padding-top: 2rem; padding-bottom: 1.5rem; display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; font-size: .9rem; }
+.home-index { display: flex; gap: 1rem 2rem; flex-wrap: wrap; padding: 1rem 0; border-block: 1px solid var(--rule); font-family: var(--hand); }
+.home-section { margin-top: 3.5rem; }
+.home-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
+.home-heading h2 { font-size: 1.6rem; text-transform: uppercase; letter-spacing: .06em; margin: 0; }
+.home-heading > a { font-size: .85rem; }
+.home-magazines { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
+.home-mag { display: flex; flex-direction: column; padding: 1.5rem; border: 1px solid var(--rule); color: var(--ink); text-decoration: none; }
+.home-mag--lead { background: var(--ink); color: var(--paper); }
+.home-kicker { font: .7rem/1.6 var(--mono); text-transform: uppercase; letter-spacing: .05em; }
+.home-mag h3 { font-size: 2rem; line-height: 1.1; margin: 2rem 0 1rem; }
+.home-mag--lead h3 { font-size: 2.6rem; }
+.home-mag p { font-size: .95rem; }
+.home-read { padding-top: 2rem; margin-top: auto; font-family: var(--hand); text-decoration: underline; }
+.home-services { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0 2rem; }
+.home-service { color: var(--ink); text-decoration: none; border-top: 1px solid var(--rule); padding: 1rem 0; }
+.home-service h3 { margin: 0; font-size: 1.35rem; text-decoration: underline; text-underline-offset: .2em; }
+.home-service h3 span { float: right; }
+.home-service p { color: var(--ink-soft); font-size: .95rem; margin: .75rem 0; }
+.home-places { display: flex; flex-wrap: wrap; gap: .75rem; padding-block: 1rem; }
+.home-places a { padding: .6rem 1rem; border: 1px solid var(--rule); font-family: var(--hand); }
+.home-subscribe { background: #e9e9e9; padding: 2rem; margin-top: 3.5rem; }
+:root[data-theme="dark"] .home-subscribe { background: #292929; }
+.home-subscribe legend { font-size: 1.35rem; }
+.home-subscribe label, .home-subscribe .fineprint { max-width: 42rem; }
+.home-expand { border-block: 1px solid var(--rule); margin-top: 1.5rem; }
+.home-expand summary { cursor: pointer; padding: 1.2rem .5rem; font-size: 1.15rem; font-weight: 700; }
+.home-expand-hint { float: right; font-size: .85rem; font-weight: 400; color: var(--ink-soft); }
+.home-expand[open] .home-expand-hint { display: none; }
+.home-expand-body { padding: .5rem 1rem 1.5rem; }
+.home-expand fieldset { margin: 0; }
+.home-more { margin-top: 2rem; }
+.home a:hover { text-decoration-thickness: 2px; }
+.home a:focus-visible, .home summary:focus-visible { outline: 2px solid var(--ink); outline-offset: 5px; }
+@media (max-width: 52rem) { .home { padding: 2rem 1.5rem; } .home-magazines { grid-template-columns: 1fr 1fr; } .home-mag--lead { grid-column: 1 / -1; } .home-services { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 36rem) { .home-intro, .home-magazines, .home-services { grid-template-columns: 1fr; } .home-intro { gap: 1.5rem; } .home-mag--lead { grid-column: auto; } .home-heading { flex-wrap: wrap; } .home-subscribe { padding: 1rem; } .home-expand-body { padding-inline: 0; } .home-expand-hint { float: none; margin-left: 1rem; } }
+
+/* Homepage review refinements. */
+.home-subscribe .reveal { max-width: 42rem; }
+.home-board-description { display: block; max-width: 48rem; margin-top: .5rem; font: 400 .85rem/1.6 var(--sans); color: var(--ink-soft); }
+.home-electronics { border-block: 1px solid var(--rule); padding-block: 2rem; }
+.home-electronics-lead { font-size: 1.6rem; line-height: 1.35; font-weight: 700; max-width: 30rem; }
+.home-electronics-topics { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+.home-electronics-topics h3 { font-family: var(--hand); font-size: 1.3rem; margin-bottom: .5rem; }
+.home-electronics-topics p { margin-top: 0; }
+@media (max-width: 44rem) { .home-intro, .home-electronics-topics { grid-template-columns: 1fr; } .home-intro { gap: 1.5rem; } }
+
+/* Muted electronics wash, inset from the section rules. */
+.home-electronics { background: linear-gradient(to bottom, transparent 0 .65rem, #dcebd7 .65rem calc(100% - .65rem), transparent calc(100% - .65rem)); padding-inline: 1.25rem; }
+:root[data-theme="dark"] .home-electronics { background: linear-gradient(to bottom, transparent 0 .65rem, #25382a .65rem calc(100% - .65rem), transparent calc(100% - .65rem)); }
+.home-board-link { float: right; font: 700 .95rem/1.6 var(--sans); }
+@media (max-width: 36rem) { .home-board-link { float: none; display: inline-block; margin-left: .75rem; } }
+
+/* Homepage has a wider inset than the standard document. */
+.home-page { --content-inset: 3rem; }
+@media (max-width: 52rem) { .home-page { --content-inset: 1.5rem; } }
+
+.home-training-contact { display: block; white-space: nowrap; overflow-x: auto; max-width: 100%; }
+
+/* A shallow corridor banner, in the magazine's line-and-marker idiom. */
+.home-corridor { margin: -.5rem 0 2.5rem; color: var(--ink); }
+.home-corridor-scroll { overflow-x: auto; padding-block: .5rem; }
+.home-corridor-scroll:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.home-corridor-map { display: block; width: 100%; min-width: 46rem; height: auto; }
+.home-corridor-route { fill: none; stroke: currentColor; stroke-width: 1.4; vector-effect: non-scaling-stroke; }
+.home-corridor-border { fill: none; stroke: var(--rule); stroke-width: 1; stroke-dasharray: 3 5; }
+.home-corridor-stop circle { fill: var(--sheet); stroke: currentColor; stroke-width: 1.5; }
+.home-corridor-stop text { fill: currentColor; font: 17px var(--hand); }
+.home-corridor-region { fill: var(--ink-soft); font: 11px var(--mono); letter-spacing: 2px; }
+.home-corridor figcaption { color: var(--ink-soft); font: .7rem/1.5 var(--mono); letter-spacing: .02em; }
+@media (max-width: 44rem) { .home-corridor { margin-bottom: 2rem; } }
+
+.home-corridor-stop .home-corridor-side { font: 700 13px var(--mono); fill: var(--ink-soft); }
+
+/* Lake-like wash touches the frame edge and clears above the route. */
+.home {
+  --lake-wash: #dcecf5;
+  background: var(--sheet);
+}
+:root[data-theme="dark"] .home { --lake-wash: #213340; }
+
+.home-corridor-bridge path { fill: none; stroke: currentColor; stroke-width: .7; vector-effect: non-scaling-stroke; }
+
+/* The eastern shore bends away from Syracuse, independently of the
+   Hamilton shoreline and the Niagara/Rochester lake wash. */
+
+.home > :not(.sketch-svg) { position: relative; z-index: 1; }
+
+/* Let the Lake Erie wash reach the inner frame edge while the route
+   retains its existing content alignment. */
+.home-corridor-scroll {
+  margin-inline: calc(-1 * var(--content-inset));
+  padding-inline: var(--content-inset);
+}
+.home-corridor-map { overflow: visible; }
+
+/* Carry the drawn lake to the frame top; the former gradient is removed. */
+.home-page { --home-top-inset: 3rem; }
+.home-corridor { margin-top: calc(-1 * var(--home-top-inset)); }
+.home-corridor-scroll { padding-top: var(--home-top-inset); }
+@media (max-width: 52rem) { .home-page { --home-top-inset: 2rem; } }
+
+/* Switch between the original corridor and the larger regional sketch. */
+.home .home-map-flip {
+  position: absolute;
+  top: .8rem;
+  left: .8rem;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  padding: .35rem;
+  color: var(--ink);
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  border-radius: .4rem;
+  cursor: pointer;
+}
+.home .home-map-flip[hidden], .home-corridor[hidden] { display: none; }
+.home-map-flip:hover { border-color: var(--ink); }
+.home-map-flip:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.home-map-flip[aria-pressed="true"] { background: var(--field); border-color: var(--ink); }
+.home-region-scroll { overflow-x: auto; margin-inline: calc(-1 * var(--content-inset)); }
+.home-region-scroll img { display: block; width: 100%; min-width: 65rem; height: auto; }
+.home-region-scroll:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.home-region-detailed figcaption { text-align: right; margin-top: .6rem; }
+.home-map-status { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+
+/* Keep both drawings and their controls inside the drawn frame. */
+.home .home-region-detailed { margin-top: 0; }
+.home-region-scroll { margin-inline: 0; }
+.home-region-scroll img { width: 100%; min-width: 58rem; }
+.home-corridor { margin-bottom: .75rem; }
+.home-map-controls { display: flex; align-items: center; margin-bottom: 1.5rem; }
+.home .home-map-controls .home-map-flip { position: static; flex: none; }
+
+/* A shared, stable stage lets the detailed view use the frame width
+   while keeping the flip control in exactly the same place. */
+.home-map-stage {
+  height: clamp(18rem, 36vw, 26rem);
+  margin-top: calc(-1 * var(--home-top-inset));
+  margin-inline: calc(.5rem - var(--content-inset));
+  margin-bottom: 1.5rem;
+}
+.home-map-stage .home-corridor {
+  position: absolute;
+  inset: 0 0 auto;
+  margin: 0;
+}
+.home-map-stage .home-corridor-scroll {
+  margin-inline: 0;
+  padding-inline: calc(var(--content-inset) - .5rem);
+}
+.home-map-stage .home-region-detailed { padding-top: .75rem; }
+.home-map-stage .home-region-scroll { margin: 0; }
+.home-map-stage .home-region-scroll img { min-width: 0; width: 100%; height: auto; }
+.home-map-stage .home-region-detailed figcaption { padding-inline: 1rem; }
+.home-map-stage .home-map-controls {
+  position: absolute;
+  bottom: .25rem;
+  left: calc(var(--content-inset) - .5rem);
+  margin: 0;
+  z-index: 3;
+}
+@media (max-width: 52rem) { .home-map-stage { height: clamp(18rem, 44vw, 24rem); } }
