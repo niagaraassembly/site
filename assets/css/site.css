@@ -36,6 +36,7 @@
   --paper:    #f7f6f3;
   --rule:     #c9c6bf;
   --field:    #fefdfb;   /* form fields: a step lighter than the page, short of white */
+  --sheet:    #fcfbf9;   /* the drawn box's inside: a little whiter than the page around it */
 
   --measure: 46rem;
   --edge:    0.5rem;   /* how far the nav and footer sit inside the box's lines */
@@ -70,6 +71,7 @@
   --paper:    #16171a;
   --rule:     #3a3c40;
   --field:    #1d1e22;   /* dark mirror: a step lighter than the page */
+  --sheet:    #1b1c20;   /* dark mirror of the sheet */
 }
 
 * { box-sizing: border-box; }
@@ -357,6 +359,7 @@ body {
 /* Position is relative so sketch.js can absolutely position its SVG. */
 .frame {
   position: relative;
+  background: var(--sheet);
   max-width: var(--measure);
   margin: 0 auto;
   padding: 3rem 2.5rem;

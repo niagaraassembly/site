@@ -899,10 +899,7 @@ dialog.sparks-dialog::backdrop {
 .mag-locator svg { display: block; height: 3.6rem; width: auto; overflow: visible; }
 @media (max-width: 34rem) { .mag-locator svg { height: 2.4rem; } }
 
-/* The MAG body: a sheet a little whiter than the page around it. */
-:root { --mag-sheet: #fcfbf9; }
-:root[data-theme="dark"] { --mag-sheet: #1b1c20; }
-.frame:has(.mag-kicker) { background: var(--mag-sheet); }
+/* The whiter sheet inside the frame is now site-wide (--sheet, site.css). */
 
 /* Section titles outside the drawn boxes: caps, a step larger. Titles of
    subsections and of the boxed sections keep their normal form. */
