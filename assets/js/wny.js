@@ -59,7 +59,7 @@ const TYPE_LABELS = {
   certification: 'Certification', other_material_update: 'Update',
 };
 
-const SOURCE_KINDS = { primary: 'primary source', company: 'company source', secondary: 'news report' };
+export const SOURCE_KINDS = { primary: 'primary source', company: 'company source', secondary: 'news report' };
 
 /* The corridor runs from the Niagara River to Syracuse, west to east.
    Longitudes are the line's ends; towns are the ticks drawn on it.
@@ -188,7 +188,7 @@ export function formatAmount(amount, currency) {
   return `${symbol}${Number.isInteger(value) ? value : value.toFixed(1).replace(/\.0$/, '')}${suffix}`;
 }
 
-function formatDate(iso) {
+export function formatDate(iso) {
   const d = new Date(`${iso}T12:00:00`);
   return Number.isNaN(d.getTime())
     ? ''
@@ -212,7 +212,7 @@ export function companiesInNews(items, entities) {
 
 /* ---- rendering ------------------------------------------------------------ */
 
-const firstSource = (item) =>
+export const firstSource = (item) =>
   (item.sources ?? []).map((s) => ({ ...s, url: safeHttpUrl(s.url) })).find((s) => s.url);
 
 function titleHtml(item) {
@@ -328,7 +328,7 @@ export function renderDistricts(chambers, allArticles = '/MAGS/WNY/posts/') {
       `<a href="${escapeHtml(allArticles)}?district=${encodeURIComponent(d.key)}">${escapeHtml(d.name.replace(/^(Senate|Assembly) /, ''))}</a>`).join(' · ')}</span></li>`).join('');
 }
 
-function incentiveText(inc, currency) {
+export function incentiveText(inc, currency) {
   return [formatAmount(inc.amount, currency), words(inc.type), inc.program ? `(${inc.program})` : '']
     .filter(Boolean).join(' ');
 }
