@@ -5,3 +5,8 @@ __pycache__/
 *.png
 # ...but site images under assets/img/ are real assets and must be committed
 !assets/img/**/*.png
+
+# Published regional sketch downloads
+!sketches/region/region.png
+!sketches/region/region-map-6000.png
+!sketches/region/region-simple-6000.png
