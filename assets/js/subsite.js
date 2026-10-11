@@ -96,16 +96,9 @@ function placeMargins() {
   const naturals = items.map((item) => item.getBoundingClientRect().top + window.scrollY - frameTop);
   for (const item of items) item.classList.add('margin-item--side');
 
-  const panel = document.querySelector('.appspanel--side');
-  let floor = 0;
-  if (panel) {
-    const rect = panel.getBoundingClientRect();
-    floor = rect.bottom + window.scrollY - frameTop + 16;
-  }
   let cursor = 0;
   items.forEach((item, index) => {
-    let top = Math.max(naturals[index], cursor);
-    if (top < floor && naturals[index] < floor) top = Math.max(top, floor);
+    const top = Math.max(naturals[index], cursor);
     item.style.top = `${top}px`;
     cursor = top + item.offsetHeight + 12;
   });

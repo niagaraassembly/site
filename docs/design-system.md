@@ -12,7 +12,7 @@ stale.
 | `assets/css/mag.css` | Magazines: issue fronts, cards, money, county band, sign-up, sources |
 | `assets/js/sketch.js` | The hand-drawn (Rough.js) frame and boxes |
 | `assets/js/margin.js` | When side blocks move into the margins |
-| `assets/js/sitenav.js` | The one site menu, rendered into every page |
+| `assets/js/sitenav.js` | The one site menu and header icons, rendered into every page |
 
 ## Principles
 
@@ -75,15 +75,14 @@ notes and engagement blocks beside the text.
 - On a wide screen these move into the margins:
   - **margin notes** (`.margin-item` becomes `.margin-item--side`, placed by
     `subsite.js`, which keeps each note level with its paragraph)
-  - the **Apps panel** (`.appspanel--side`)
   - a subsite's **section nav** (`.subsite-nav`)
 - The rule is one number: a block goes into the margin when at least
   **12rem** is free on each side of the frame, measured from the frame as
   drawn (`assets/js/margin.js`). On a page-width frame that happens at a
   72rem (1152px) screen. The `.subsite-nav` media query in `site.css` uses
   the same figure; change both together.
-- Below that width, notes sit in the text, and the Apps panel shows as a
-  compact strip above the frame.
+- Below that width, notes sit in the text, and the section nav stacks above
+  the article.
 - A side block's width is `min(14.5rem, the margin less 3.5rem)`.
 
 New kinds of margin block should reuse `.margin-item` and `frameHasMargin()`
@@ -190,3 +189,14 @@ Copy an existing page of the same width. The skeleton is:
 - **The menu:** add the page to `NAV` in `sitenav.js`.
   `tests/sitenav.test.mjs` checks every menu path has a page with the plain
   shared header.
+
+## Header
+
+- The header (`sitenav.js`) holds:
+  - on the left: the logo (house on inner pages) and the "Niagara Assembly
+    Inc." wordmark, whose words open the menus
+  - on the right: the GitHub, X, LinkedIn and Discord icons and the theme
+    toggle
+- The List, Updates and Apps links were removed on 2026-10-11.
+- The left side sits 1rem inside the frame's line, closer than the content.
+  The right side keeps the content's inset (`--content-inset`).

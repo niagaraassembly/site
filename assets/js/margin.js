@@ -1,5 +1,6 @@
 /* Whether the empty margin beside the drawn frame is wide enough to hold a
- * side block (the Apps panel, a subsite's margin notes).
+ * side block (a subsite's margin notes, and any later notes or engagement
+ * blocks).
  *
  * The page widths grow with the screen (see --w-page and --w-mag in
  * site.css), so a fixed viewport breakpoint would drift from the frame. This
