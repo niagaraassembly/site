@@ -29,6 +29,10 @@ const root = path.resolve(dir, '../../../../..');
 const SITE = 'https://niagaraassembly.com';
 const ISSUE_URL = `${SITE}/MAGS/WNY/issue/one/`;
 const IMG = `${SITE}/MAGS/WNY/issue/one/email/`;
+/* Kit broadcasts cannot carry attachments, so the PDF edition is linked. */
+const PDF_URL = `${SITE}/MAGS/WNY/issue/one/pdf/wny-issue-one.pdf`;
+const pdfBytes = fs.statSync(path.join(dir, '../pdf/wny-issue-one.pdf')).size;
+const pdfSize = `${Math.round(pdfBytes / 1024)} KB`;
 
 const data = JSON.parse(fs.readFileSync(path.join(root, 'data/wny/issue-one.json'), 'utf8'));
 const issue = w.issueFor(data, 'WNY-2026-001');
@@ -73,7 +77,8 @@ const opening = [
   small(`Stories by county: ${[...counties].map(([name, c]) => `${esc(name)} <b style="color:${C.ink};">${c.count}</b>`).join(' · ')}. <span style="color:${C.done};font-weight:700;">Green</span>: completed. <span style="color:${C.announced};font-weight:700;">Yellow</span>: announced. Grey: other news.`, 'margin-bottom:20px;'),
   p(esc(issue.summary), 'font-size:18px;line-height:1.5;'),
   p('Reviewed news from the Niagara River to Syracuse: who is investing, building, hiring and starting up. Every story has passed Niagara Assembly’s source review, and each one carries our reading of it: how far along it is, and what is still unconfirmed.'),
-  `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:6px 0 22px;"><tr><td style="background:${C.ink};border-radius:3px;"><a href="${ISSUE_URL}" style="display:inline-block;padding:11px 20px;font:700 15px/1 ${SANS};color:#ffffff;text-decoration:none;">Read Issue One online</a></td></tr></table>`,
+  `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:6px 0 22px;"><tr><td style="background:${C.ink};border-radius:3px;"><a href="${ISSUE_URL}" style="display:inline-block;padding:11px 20px;font:700 15px/1 ${SANS};color:#ffffff;text-decoration:none;white-space:nowrap;">Read Issue One online</a></td>`
+    + `<td style="padding-left:18px;font:15px/1.3 ${SANS};">${link(PDF_URL, 'Download the PDF')} <span style="font-size:12px;color:${C.soft};">(${pdfSize})</span></td></tr></table>`,
   `<img src="${IMG}corridor.png" width="600" alt="Where this issue's stories sit between Buffalo, Rochester and Syracuse." style="display:block;width:100%;max-width:600px;height:auto;border:0;margin:0 0 4px;">`,
   small('Story locations from the Niagara River to Syracuse. Green: completed. Yellow: announced. Hollow: in development, not yet built or confirmed.'),
 ].join('');
