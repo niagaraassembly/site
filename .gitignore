@@ -10,3 +10,6 @@ __pycache__/
 !sketches/region/region.png
 !sketches/region/region-map-6000.png
 !sketches/region/region-simple-6000.png
+
+# Images hosted for email editions (referenced by absolute URL in Kit broadcasts)
+!MAGS/**/email/*.png
