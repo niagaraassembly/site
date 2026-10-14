@@ -1,0 +1,54 @@
+{
+  "_note": "Regional news desks only. IDs use country-subdivision-region; company magazines are separate.",
+  "countries": {
+    "US": {
+      "name": "United States",
+      "flag": "/assets/img/flags/us.png"
+    },
+    "CA": {
+      "name": "Canada"
+    }
+  },
+  "states": {
+    "us-ny": {
+      "name": "New York",
+      "country": "US",
+      "href": "/desks/us/ny/",
+      "flag": "/assets/img/flags/ny.png"
+    },
+    "ca-on": {
+      "name": "Ontario",
+      "country": "CA",
+      "href": "/desks/ca/on/"
+    }
+  },
+  "desks": [
+    {
+      "id": "us-ny-western-new-york",
+      "name": "Western New York",
+      "href": "/desks/us/ny/western-new-york/",
+      "state": "us-ny",
+      "summary": "Reviewed news on investment, facilities, jobs and new ventures from the Niagara River to Syracuse.",
+      "data": "/data/wny.json",
+      "issues": [
+        {
+          "title": "Issue One",
+          "href": "/desks/us/ny/western-new-york/issue/one/",
+          "data": "/data/wny/issue-one.json",
+          "sources": "/desks/us/ny/western-new-york/issue/one/sources/",
+          "date": "2026-10-10"
+        }
+      ],
+      "country": "US"
+    },
+    {
+      "id": "ca-on-niagara-brant",
+      "name": "Niagara\u2013Brant",
+      "href": "/desks/ca/on/niagara-brant/",
+      "state": "ca-on",
+      "country": "CA",
+      "summary": "Industrial economies across the Niagara Peninsula, Hamilton and Brantford.",
+      "data": null
+    }
+  ]
+}

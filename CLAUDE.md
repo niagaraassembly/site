@@ -1,5 +1,11 @@
 # Niagara Assembly — working rules
 
+**How the site works:** [`docs/MECHANICS.md`](docs/MECHANICS.md) indexes every
+moving part (menu, desks registry, Records, Reader, image index, board form,
+generated data and the scripts that rebuild it). **Generated copy** is saved
+under [`copy/`](copy/README.md) by page. **Website backlog:** Linear project
+"Website" — create, update and close issues for website work there.
+
 ## Raw logging is mandatory
 
 **Set 2026-08-23. Applies to all analysis and all coding, always.**

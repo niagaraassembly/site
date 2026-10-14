@@ -178,7 +178,7 @@ test('filter state round-trips through the URL and ignores junk', () => {
 });
 
 test('front page section headings match the lane labels', () => {
-  const html = readFileSync(new URL('../MAGS/WNY/issue/one/index.html', import.meta.url), 'utf8');
+  const html = readFileSync(new URL('../desks/us/ny/western-new-york/issue/one/index.html', import.meta.url), 'utf8');
   for (const lane of LANES) {
     assert.match(html, new RegExp(`data-wny-lane="${lane.id}"[^>]*>\\s*<h2>${lane.label}</h2>`), lane.id);
   }
@@ -243,7 +243,7 @@ test('the investments page lists every stated amount; totals count production on
   assert.deepEqual(filterInvestments(lines, { lane: 'developing' }).map((i) => i.id), ['S3']);
   assert.deepEqual(filterInvestments(lines, { q: 'rochester' }).map((i) => i.id), ['S2', 'S5']);
   const html = renderInvestments(lines);
-  assert.match(html, /href="\/MAGS\/WNY\/posts\/#wny-S5"/);
+  assert.match(html, /href="\/desks\/us\/ny\/western-new-york\/posts\/#wny-S5"/);
   assert.match(html, /ceiling \$20\.7B/);
   assert.match(html, /Proposed total<\/span><span class="wny-money__sums">Not totalled/, 'a kind with nothing countable says so');
   assert.match(html, /Grants total<\/span><span class="wny-money__sums">Not totalled/);
@@ -359,7 +359,7 @@ test('who-list groups by home region; unknown stays its own group', () => {
 });
 
 test('a story link points at its card', () => {
-  assert.equal(storyUrl('https://x.org/MAGS/WNY/issue/one/#old', 'wny-IEVT-1'), 'https://x.org/MAGS/WNY/issue/one/#wny-IEVT-1');
+  assert.equal(storyUrl('https://x.org/desks/us/ny/western-new-york/issue/one/#old', 'wny-IEVT-1'), 'https://x.org/desks/us/ny/western-new-york/issue/one/#wny-IEVT-1');
 });
 
 test('money cells: one per kind, counted sums, muted when nothing counts', () => {
@@ -415,7 +415,7 @@ test('by district groups stories per chamber in number order, linking the distri
   assert.deepEqual(chambers[0].districts.map((d) => [d.name, d.items.map((i) => i.id)]), [['NY-25', ['C']], ['NY-26', ['A', 'B']]]);
   assert.deepEqual(chambers[1].districts.map((d) => d.name), ['Senate 61', 'Senate 62', 'Senate 63']);
   const html = renderDistricts(chambers);
-  assert.match(html, /<span class="wny-districts__chamber">Congress<\/span><span class="wny-districts__names"><a href="\/MAGS\/WNY\/posts\/\?district=congress%3A25">NY-25<\/a> · <a href="\/MAGS\/WNY\/posts\/\?district=congress%3A26">NY-26<\/a>/);
+  assert.match(html, /<span class="wny-districts__chamber">Congress<\/span><span class="wny-districts__names"><a href="\/desks\/us\/ny\/western-new-york\/posts\/\?district=congress%3A25">NY-25<\/a> · <a href="\/desks\/us\/ny\/western-new-york\/posts\/\?district=congress%3A26">NY-26<\/a>/);
   assert.match(html, />State Senate<\/span><span class="wny-districts__names"><a [^>]*senate%3A61">61<\/a> · /, 'numbers only under a chamber label');
   assert.doesNotMatch(html, /#wny-A/, 'no story lists');
 });

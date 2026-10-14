@@ -71,6 +71,15 @@
 
 <div class="frame frame--board" data-sketch="frame">
 
+  <!-- Posting: the same form as the homepage, opened in place. -->
+  <details class="board-post" id="post">
+    <summary class="board-post__bar">
+      <span class="board-post__title">Post to the Board</span>
+      <span class="board-post__hint">Share an event, news, a space, a tool, your expertise or a show.</span>
+    </summary>
+    <div class="board-post__body" data-board-form></div>
+  </details>
+
   <nav
     class="nav"
     id="nav"
@@ -147,7 +156,7 @@
 
 
   <p>
-    <a href="../#post">Post to the board</a>
+    <a href="#post" data-open-post>Post to the board</a>
   </p>
 
 </div>
@@ -217,6 +226,24 @@
 
 
 <script type="module">
+
+  import { mountBoardForm } from '../assets/js/board-form.js';
+
+  /* The posting form is built the first time the bar is opened, starting
+     on the section being browsed. A link to #post opens it. */
+  const post = document.getElementById('post');
+  let mounted = false;
+  post.addEventListener('toggle', () => {
+    if (!post.open || mounted) return;
+    mounted = true;
+    mountBoardForm(post.querySelector('[data-board-form]'),
+                   { category: new URLSearchParams(location.search).get('category') });
+  });
+  const openPost = () => { post.open = true; post.scrollIntoView({ block: 'start' }); };
+  if (location.hash === '#post') openPost();
+  for (const a of document.querySelectorAll('[data-open-post]')) {
+    a.addEventListener('click', (e) => { e.preventDefault(); openPost(); });
+  }
 
   import {
     navHtml,

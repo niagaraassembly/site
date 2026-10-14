@@ -236,6 +236,33 @@ body {
   text-decoration: underline;
 }
 
+/* Records: a destination beside the menus, boxed like a register tab so it
+   reads as a place to go rather than another menu word. */
+.topnav__links a.topnav__records {
+  padding: .35rem .6rem;
+  border: 1px solid var(--rule);
+  font: 600 .8125rem/1 var(--sans);
+  letter-spacing: .01em;
+  color: var(--ink);
+}
+.topnav__links a.topnav__records:hover { border-color: var(--ink); text-decoration: none; }
+.topnav__links a.topnav__records[aria-current="page"] { border-color: var(--ink); background: var(--field); }
+
+.topnav__reader {
+  display: grid;
+  place-items: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  margin-left: .1rem;
+  padding: 0;
+  border: 1px solid var(--rule);
+  background: none;
+  color: var(--ink);
+  cursor: pointer;
+}
+.topnav__reader:hover { border-color: var(--ink); }
+.topnav__reader:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
 /* Social icons ------------------------------------------------------- */
 /* The icons are inline SVGs, so give them explicit dimensions rather than
    relying on the browser's SVG intrinsic sizing. They inherit currentColor
@@ -321,7 +348,7 @@ body {
     grid-template-columns: auto 1fr auto;
     grid-template-areas:
       "logo words social"
-      ".    hint  hint"
+      ".    hint  records"
       ".    rows  rows";
     column-gap: .9rem;
     row-gap: .35rem;
@@ -331,6 +358,7 @@ body {
   .topnav__logo   { grid-area: logo; }
   .topnav__words  { grid-area: words; gap: .5rem; }
   .topnav__social { grid-area: social; gap: .6rem; }
+  .topnav__links a.topnav__records { grid-area: records; justify-self: end; padding: .25rem .5rem; }
   .topnav__hint   { grid-area: hint; margin: 0; padding: 0; }
   .topnav__rows   { grid-area: rows; padding: .2rem 0 0; }
   /* Scales with the screen so the wordmark always fits beside the icons. */
@@ -385,6 +413,29 @@ ul.plain li::before { content: '- '; color: var(--ink-soft); }
 /* Board chrome ------------------------------------------------------- */
 /* One power bar, one subnav beneath it, then a persistent filter bar that
    is separate from both. Each is its own drawn box. */
+
+/* Board posting bar: full width above the sections, opening the shared
+   posting form (assets/js/board-form.js) in place. */
+.board-post { margin-bottom: 1.25rem; border: 1px solid var(--ink); background: var(--field); }
+.board-post__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .25rem 1rem;
+  padding: .9rem 1.1rem;
+  list-style: none;
+  cursor: pointer;
+}
+.board-post__bar::-webkit-details-marker { display: none; }
+.board-post__title { font: 700 1.1rem/1.2 var(--sans); }
+.board-post__title::before { content: "+"; display: inline-block; width: 1.1rem; font-weight: 400; }
+.board-post[open] .board-post__title::before { content: "\2212"; }
+.board-post__hint { font-size: .85rem; color: var(--ink-soft); }
+.board-post__bar:hover .board-post__title { text-decoration: underline; text-underline-offset: .2em; }
+.board-post__bar:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.board-post[open] .board-post__bar { border-bottom: 1px solid var(--rule); }
+.board-post__body { padding: 1rem 1.1rem 1.25rem; }
+.board-post__body fieldset { margin: 0; }
 
 .nav {
   position: relative;
@@ -739,3 +790,22 @@ body { --nav-inset-start: 1rem; }
 /* Wide frames must share their width with the header, even when the page
    does not explicitly add topnav--board to its shared navigation. */
 body:has(.frame--board, .frame--mag) .topnav { max-width: var(--board); }
+
+/* A button that opens the Reader on a piece or an issue
+   (data-reader-open; see assets/js/reader.js). */
+.issue-reader__open {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .4rem .75rem;
+  border: 1px solid var(--ink);
+  background: var(--field);
+  color: var(--ink);
+  font: 600 .85rem/1.1 var(--sans);
+  cursor: pointer;
+}
+.issue-reader__open:hover { background: var(--ink); color: var(--paper); }
+.issue-reader__open:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.issue-reader { margin: 0 0 1.25rem; }
+.start-current__more { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem 1.25rem; }
+.issue-line__actions { display: inline-flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; margin-left: auto; }

@@ -1,0 +1,988 @@
+/* Niagara Assembly — regional desk publication styles (START and future MAGS).
+ *
+ * Loaded in addition to site.css on all MAGS pages. Keeps magazine
+ * chrome isolated so site.css stays clean.
+ */
+
+/* Kicker: the small label above the article or issue h1.
+   Links back to the issue index or mag index. */
+.mag-kicker {
+  font: .75rem/1 var(--mono);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 0 0 .6rem;
+}
+.mag-kicker a { color: inherit; text-decoration: none; }
+.mag-kicker a:hover { color: var(--ink); text-decoration: underline; }
+.mag-kicker__sep { margin: 0 .35em; opacity: .5; }
+
+/* Pull h1 and date together; the 2rem gap site.css puts under h1 is too
+   wide between the title and its dateline. */
+.article h1 { margin-bottom: .5rem; }
+
+.mag-date {
+  font: .8125rem/1 var(--sans);
+  color: var(--ink-soft);
+  margin: 0 0 2.25rem;
+}
+
+/* Issue stamp: Vol. / No. / date on the issue index. */
+.issue-stamp {
+  font: .75rem/1 var(--mono);
+  color: var(--ink-soft);
+  letter-spacing: .06em;
+  margin: 0 0 2.5rem;
+}
+
+/* Publication title in the kicker on issue index pages: slightly
+   larger and bolder than the small article-page kicker. */
+.mag-kicker--pub {
+  font-size: .9rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+}
+
+/* Article body: slightly more room for long-form reading. */
+.article p { line-height: 1.75; }
+.article ol,
+.article ul:not(.plain) { max-width: 40rem; line-height: 1.65; padding-left: 1.25rem; margin: 0 0 1.15em; }
+
+/* Footer navigation: back to issue / prev / next. */
+.mag-foot {
+  margin-top: 2.5rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem 2rem;
+  font: .8125rem/1.4 var(--sans);
+  color: var(--ink-soft);
+}
+.mag-foot a { color: var(--ink-soft); text-decoration: none; }
+.mag-foot a:hover { color: var(--ink); text-decoration: underline; }
+.mag-foot__next { margin-left: auto; }
+
+/* Issue index --------------------------------------------------------- */
+
+.issue-intro { margin: 0 0 2.5rem; max-width: 40rem; }
+
+.issue-list { list-style: none; padding: 0; margin: 0 0 2.5rem; }
+.issue-list__item {
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+.issue-list__item:first-child { border-top: 1px solid var(--rule); }
+.issue-list__title {
+  font: 600 1.05rem/1.3 var(--sans);
+  text-decoration: none;
+  color: var(--ink);
+  display: block;
+}
+.issue-list__title:hover { text-decoration: underline; }
+.issue-list__meta {
+  font: .75rem/1 var(--mono);
+  color: var(--ink-soft);
+  margin-top: .3rem;
+}
+
+/* Sparks -------------------------------------------------------------- */
+
+.sparks-intro { margin: 0 0 2rem; max-width: 40rem; }
+
+.sparks-list { list-style: none; padding: 0; margin: 0; }
+.spark {
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+.sparks-list li:first-child .spark { padding-top: 0; }
+.spark__headline {
+  font: 700 .9375rem/1.3 var(--sans);
+  margin: 0 0 .25rem;
+}
+.spark__meta {
+  font: .75rem/1 var(--mono);
+  letter-spacing: .05em;
+  color: var(--ink-soft);
+  margin: 0 0 .55rem;
+}
+
+/* Article figures ----------------------------------------------------- */
+
+.article figure {
+  margin: 2rem 0;
+}
+.article figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.article figcaption {
+  margin-top: .5rem;
+  font: .75rem/1.5 var(--sans);
+  color: var(--ink-soft);
+}
+
+.spark__body {
+  font: .875rem/1.6 var(--sans);
+  margin: 0 0 .4rem;
+  max-width: 38rem;
+  color: var(--ink-soft);
+}
+.spark__sources {
+  font: .75rem/1.5 var(--mono);
+  margin: 0;
+}
+.spark__sources a { color: var(--ink-soft); }
+.spark__sources a:hover { color: var(--ink); }
+.spark__sources__sep { margin: 0 .5em; opacity: .5; }
+
+/* Sparks table button (on issue index) -------------------------------- */
+
+.sparks-open-btn {
+  display: inline;
+  padding: .3rem .7rem;
+  border: 1.4px solid var(--rule);
+  background: none;
+  color: var(--ink-soft);
+  font: .8125rem/1 var(--sans);
+  cursor: pointer;
+  vertical-align: baseline;
+}
+.sparks-open-btn:hover { border-color: var(--ink); color: var(--ink); }
+
+/* Sparks modal dialog ------------------------------------------------- */
+
+dialog.sparks-dialog {
+  padding: 0;
+  border: 1.4px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+  width: min(76rem, 94vw);
+  max-width: none;
+  max-height: 85vh;
+  overflow: hidden;
+}
+dialog.sparks-dialog[open] {
+  display: flex;
+  flex-direction: column;
+}
+dialog.sparks-dialog::backdrop {
+  background: rgba(23, 24, 26, 0.5);
+}
+.sparks-dialog__head {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .7rem 1.25rem;
+  border-bottom: 1px solid var(--rule);
+  background: var(--paper);
+}
+.sparks-dialog__title {
+  font: 700 .875rem/1 var(--sans);
+}
+.sparks-dialog__close {
+  background: none;
+  border: none;
+  padding: .25rem .45rem;
+  font: 1.15rem/1 var(--sans);
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.sparks-dialog__close:hover { color: var(--ink); }
+.sparks-dialog__body {
+  overflow: auto;
+  padding: 1rem 1.25rem 1.5rem;
+  flex: 1;
+}
+/* Company column wraps; other columns stay on one line. */
+.sparks-dialog__body table.data td { white-space: nowrap; }
+.sparks-dialog__body table.data td:nth-child(2) { white-space: normal; min-width: 13rem; }
+.sparks-dialog__body table.data td:last-child  { white-space: normal; min-width: 12rem; }
+
+/* Scroll offset so topnav doesn't cover anchored spark entries. */
+.sparks-list li[id] { scroll-margin-top: 5rem; }
+
+/* Sparks map ---------------------------------------------------------- */
+
+.sparks-map-figure {
+  position: relative;
+  margin: 1.5rem 0 2rem;
+  border: 1.4px solid var(--rule);
+}
+.sparks-map-small {
+  width: 100%;
+  height: 260px;
+}
+.sparks-map-large {
+  width: 100%;
+  height: 65vh;
+}
+.sparks-map-figure figcaption {
+  padding: .4rem .6rem;
+  font: .6875rem/1.4 var(--sans);
+  color: var(--ink-soft);
+  border-top: 1px solid var(--rule);
+}
+
+/* Expand button sits inside the map, bottom-right corner. z-index keeps it
+   above Leaflet's own layers but the Leaflet attribution stays visible. */
+.sparks-map-expand {
+  position: absolute;
+  bottom: 2rem;  /* above the figcaption */
+  right: .5rem;
+  z-index: 1000;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  background: var(--paper);
+  border: 1.4px solid var(--rule);
+  color: var(--ink-soft);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sparks-map-expand:hover { border-color: var(--ink); color: var(--ink); }
+
+/* Map dialog body has no padding so the map fills edge to edge. */
+.sparks-dialog__body--map { padding: 0; }
+
+/* Dark mode: invert the OSM tile layer so it reads on the dark paper.
+   Markers live in a separate pane and are unaffected by this filter. */
+:root[data-theme="dark"] .leaflet-tile-pane {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+/* Sparks filter field ------------------------------------------------- */
+
+.sparks-tabs {
+  display: flex;
+  gap: .4rem;
+  margin: 1.5rem 0 .9rem;
+}
+.sparks-tab {
+  background: none;
+  border: 1.4px solid var(--rule);
+  padding: .3rem .85rem;
+  font: .8125rem/1 var(--sans);
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.sparks-tab:hover { border-color: var(--ink); color: var(--ink); }
+.sparks-tab.is-active {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.sparks-filter {
+  margin: 0 0 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.sparks-filter__input {
+  font: .875rem/1.4 var(--sans);
+  color: var(--ink);
+  background: var(--paper);
+  border: 1.4px solid var(--rule);
+  padding: .4rem .65rem;
+  width: 100%;
+  max-width: 22rem;
+}
+.sparks-filter__input:focus { outline: none; border-color: var(--ink); }
+.sparks-filter__count {
+  font: .75rem/1 var(--mono);
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+/* Reader launchers on issue lists -------------------------------------
+   The arrow beside a title opens that piece in the site-wide Reader
+   (assets/js/reader.js), on every screen size. */
+
+.issue-list__title-row {
+  display: flex;
+  align-items: baseline;
+  gap: .6rem;
+}
+.issue-list__title-row .issue-list__title { flex: 1; }
+
+.issue-list__arrow {
+  background: none;
+  border: none;
+  padding: 0 .1rem;
+  font: .85rem/1 var(--sans);
+  color: var(--ink-soft);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.issue-list__arrow:hover { color: var(--ink); }
+
+
+/* Publication title on a MAG's own index (e.g. Research): heavier and
+   larger than the default h1, since it stands without a subtitle. */
+.mag-title {
+  font: 700 clamp(2.4rem, 8vw, 3.4rem)/1.05 var(--sans);
+  letter-spacing: -0.025em;
+  margin: 0 0 1.25rem;
+}
+
+/* "All posts" link under a shortened list. */
+.issue-list__more {
+  font: .8125rem/1.4 var(--sans);
+  margin: -1.5rem 0 2.5rem;
+}
+.issue-list__more a { color: var(--ink-soft); }
+.issue-list__more a:hover { color: var(--ink); }
+
+/* Sections on a Research place page: articles, reports, maps, activities. */
+.place-section { margin: 0 0 2.5rem; }
+.place-section h2 { margin-top: 0; }
+.place-section__empty {
+  font: .8125rem/1.4 var(--sans);
+  color: var(--ink-soft);
+}
+
+/* Western New York front ---------------------------------------------- */
+
+/* The corridor line: Niagara River to Syracuse, drawn west to east, with
+   a mark for each approved story placed by longitude. The drawing is SVG
+   (assets/js/wny.js); marks and town names are HTML laid over it so they
+   can take focus and wrap like text. Strokes use currentColor, so the
+   theme toggle recolours the line without a redraw. */
+.corridor { margin: 0 0 2.75rem; color: var(--ink); }
+.corridor__plot { position: relative; }
+.corridor__line { display: block; width: 100%; height: 64px; overflow: visible; }
+.corridor__marks { position: absolute; inset: 0; }
+.corridor__mark {
+  position: absolute;
+  width: 22px; height: 22px;
+  margin: 0 0 -11px -11px;
+  border-radius: 50%;
+}
+.corridor__mark:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
+.corridor__mark.is-pointed { box-shadow: 0 0 0 2px var(--paper), 0 0 0 3.5px var(--ink); }
+.corridor__towns {
+  position: relative;
+  height: 1.1rem;
+  margin: 0 8px;
+  font: 1rem/1 var(--hand);
+  color: var(--ink-soft);
+}
+.corridor__towns span { position: absolute; transform: translateX(-50%); white-space: nowrap; }
+.corridor__towns span:last-child { transform: translateX(-100%); }
+.corridor__caption {
+  margin: .9rem 0 0;
+  min-height: 1.4em;
+  font: .875rem/1.4 var(--sans);
+  color: var(--ink-soft);
+}
+@media (max-width: 34rem) {
+  .corridor__towns { font-size: .875rem; }
+}
+
+.wny-note { color: var(--ink-soft); }
+
+.wny-recent { margin: 0 0 2.5rem; }
+.wny-recent__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.wny-recent__head h2 { margin: 0 0 .75rem; }
+.wny-recent__head a { font: .8125rem/1.4 var(--sans); color: var(--ink-soft); }
+.wny-recent__head a:hover { color: var(--ink); }
+
+/* Lane sections (na-research's lanes): drawn boxes, one per lane, full
+   width. sketch.js draws them (data-sketch="card"); the plain border is its
+   fallback, as everywhere on the site. */
+.wny-lane {
+  position: relative;
+  margin: 0 0 1.75rem;
+  padding: 1.1rem 1.25rem .4rem;
+  border: 1.4px solid var(--rule);
+}
+.sketched .wny-lane { border-color: transparent; }
+.wny-lane h2 { margin: 0 0 .25rem; font: 700 1.2rem/1.2 var(--hand); }
+.wny-lane__banner { margin: 0 0 .9rem; font: .875rem/1.45 var(--sans); color: var(--ink-soft); }
+.wny-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+  column-gap: 2rem;
+  margin: 0;
+}
+/* Every card opens with the same rule, so cards in a row line up. */
+.wny-cards .issue-list__item { border-bottom: 0; border-top: 1px solid var(--rule); }
+
+/* Flag tones. Two muted accents only, so a warning reads as a warning
+   without colouring the page; plain flags stay in ink. */
+:root { --flag-warn: #8a5300; --flag-info: #1d5a8c; }
+:root[data-theme="dark"] { --flag-warn: #e0a64a; --flag-info: #8cbbe6; }
+
+/* Amount tones by stage: completed money in dark green, announced money in
+   dark yellow. Both hold 4.5:1 on the paper in each theme. */
+:root { --amount-done: #1f6b34; --amount-announced: #7a6200; }
+:root[data-theme="dark"] { --amount-done: #7fcf93; --amount-announced: #e3c65a; }
+.wny-amount--done { color: var(--amount-done); }
+.wny-amount--announced { color: var(--amount-announced); }
+
+.wny-item.is-pointed .issue-list__title { text-decoration: underline; }
+.wny-item--compact { padding: .7rem 0; }
+.wny-item__top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0 0 .35rem;
+}
+.wny-item__top:empty { display: none; }
+.wny-stage {
+  font: .75rem/1 var(--sans);
+  padding: .2rem .45rem;
+  border: 1px solid var(--ink-soft);
+  border-radius: 3px;
+}
+.wny-item__money {
+  margin-left: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: baseline;
+  gap: .1rem .5rem;
+  text-align: right;
+}
+.wny-item__amount { font: 700 1.35rem/1.1 var(--mono); letter-spacing: -0.02em; }
+.wny-item__kind,
+.wny-item__ceiling { font: .75rem/1.3 var(--sans); color: var(--ink-soft); }
+.wny-item__ceiling { flex-basis: 100%; }
+.wny-item .issue-list__meta { line-height: 1.4; }
+.wny-item__summary { margin: .45rem 0 0; font-size: .9375rem; line-height: 1.55; }
+/* public_note: the reader explainer, straight under the headline. */
+.wny-item__note { margin: .45rem 0 0; font-size: .9375rem; line-height: 1.55; }
+
+.wny-flags { list-style: none; padding: 0; margin: .55rem 0 0; display: flex; flex-wrap: wrap; gap: .35rem; }
+.wny-flag {
+  font: .75rem/1.35 var(--sans);
+  padding: .15rem .45rem;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  color: var(--ink-soft);
+}
+.wny-flag--warn { color: var(--flag-warn); border-color: currentColor; }
+.wny-flag--info { color: var(--flag-info); border-color: currentColor; }
+
+/* Conflicting claims: every sourced value side by side, never merged. */
+.wny-conflict { margin: .6rem 0 0; padding-left: .7rem; border-left: 2px solid var(--flag-warn); }
+.wny-conflict__head { margin: 0 0 .2rem; font: 600 .8125rem/1.4 var(--sans); }
+.wny-conflict ul { list-style: none; padding: 0; margin: 0; }
+.wny-conflict li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: .75rem;
+  font: .8125rem/1.5 var(--sans);
+}
+.wny-conflict__source a { color: var(--ink-soft); }
+.wny-item__via { margin: .3rem 0 0; font: .75rem/1.4 var(--sans); color: var(--ink-soft); }
+
+/* Investment figures: one stated amount per line, never summed. */
+.wny-money { margin: 0 0 2.5rem; }
+.wny-money h2 { margin-bottom: .25rem; }
+.wny-money__list { list-style: none; padding: 0; margin: 0; }
+.wny-money__line {
+  display: grid;
+  /* The details column is capped and wraps, so it can never run over the
+     headline (it did, at 46rem, when it was nowrap). */
+  grid-template-columns: 6.5rem minmax(0, 1fr) minmax(0, 20rem);
+  gap: 1rem;
+  align-items: baseline;
+  padding: .5rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+.wny-money__line:first-child { border-top: 1px solid var(--rule); }
+.wny-money__amount { font: 700 1.1rem/1.2 var(--mono); }
+/* The total: a double rule above, as a ledger closes a column. */
+/* The total: a double rule above, as a ledger closes a column. One line
+   of stage subtotals, each in its tone, then the sum. It is a <p>, so
+   site.css's 40rem prose cap is lifted. */
+.wny-money__total {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .25rem 1rem;
+  margin: 0;
+  max-width: none;
+  border-bottom: 0;
+  border-top: 3px double var(--ink);
+}
+.wny-money__label { font: .875rem/1.4 var(--sans); color: var(--ink-soft); }
+.wny-money__sums { font: .9375rem/1.5 var(--sans); }
+.wny-money__sum { font: 700 1.1rem/1.2 var(--mono); }
+.wny-money__part { white-space: nowrap; }
+.wny-money__what { font-weight: 600; text-decoration: none; }
+.wny-money__what:hover, .wny-money__line.is-pointed .wny-money__what { text-decoration: underline; }
+.wny-money__meta { font: .75rem/1.4 var(--sans); color: var(--ink-soft); text-align: right; }
+@media (max-width: 34rem) {
+  .wny-money__line { grid-template-columns: 5.5rem minmax(0, 1fr); }
+  .wny-money__meta { grid-column: 2; white-space: normal; }
+  .wny-conflict li { grid-template-columns: 1fr; gap: 0; }
+  .wny-conflict__source { margin-bottom: .3rem; }
+}
+
+.wny-source { margin: -1.5rem 0 2.5rem; font: .875rem/1.45 var(--sans); color: var(--ink-soft); }
+.wny-source a { color: var(--ink-soft); }
+.wny-method { font: .875rem/1.45 var(--sans); margin: 0 0 .5rem; }
+
+.wny-companies { margin: 0 0 2rem; }
+.wny-company-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  columns: 2 16rem;
+  column-gap: 2rem;
+}
+.wny-company {
+  break-inside: avoid;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .45rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+.wny-company__name { font-weight: 600; }
+.wny-company__name a { text-underline-offset: 2px; }
+.wny-company__meta { font: .75rem/1.6 var(--mono); color: var(--ink-soft); text-align: right; min-width: 0; }  /* wraps: some cities are long ("unresolved Penfield or Webster") */
+
+.wny-updated { font: .75rem/1.4 var(--sans); color: var(--ink-soft); margin: 0; }
+
+/* Reference tables inside long-form articles (e.g. /research/methods/news/):
+   site.css's table.data has no bottom margin, so the next heading touched it. */
+.article table.data { margin: 0 0 1.5rem; }
+
+/* WNY all-articles search. The bar itself is the board's .filters (site.css). */
+.wny-filters { margin-bottom: 1rem; }
+.wny-filters__clear {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: .8125rem/1.4 var(--sans);
+  color: var(--ink-soft);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+.wny-filters__clear:hover { color: var(--ink); }
+.wny-filters__clear:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.wny-no-match { margin: 0 0 2rem; }
+.wny-no-match .wny-note { margin-bottom: .4rem; }
+
+/* Headline ticker: one full-width line under the issue stamp, between two
+   rules. Text only; the item swaps in place (no sliding), and the line is
+   cut with an ellipsis rather than wrapping. */
+.wny-ticker {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin: -1.25rem 0 2rem;
+  padding: .55rem 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+.wny-ticker__line {
+  flex: 1;
+  min-width: 0;
+  max-width: none;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font: .9375rem/1.4 var(--sans);
+}
+.wny-ticker__item { text-decoration: none; }
+.wny-ticker__item:hover, .wny-ticker__item:focus-visible { text-decoration: underline; }
+.wny-ticker__place { color: var(--ink-soft); }
+.wny-ticker__toggle { flex: none; }
+
+/* Bylines run the full width of the card or list, not the 40rem prose cap,
+   so short company names don't fold onto a second line. */
+.wny-item .issue-list__meta { max-width: none; }
+
+/* Dollar figures grouped by kind of money. Each kind has its own heading
+   and, with two or more lines, its own total; kinds are never summed. */
+.wny-money__groups { list-style: none; padding: 0; margin: 0; }
+.wny-money__group + .wny-money__group { margin-top: 1.4rem; }
+.wny-money__kind { margin: 0 0 .4rem; font: 600 .9375rem/1.3 var(--sans); }
+.wny-money__group .wny-money__list { margin: 0; }
+
+/* Plain markings, folded into one quiet sentence under the warning chips. */
+.wny-flags__plain { margin: .5rem 0 0; font: .8125rem/1.5 var(--sans); color: var(--ink-soft); }
+
+.corridor__key { margin: .2rem 0 0; font: .6875rem/1.4 var(--sans); color: var(--ink-soft); }
+
+/* "All articles in this issue": a full-width bar under the corridor line
+   that opens in place to the issue's one-line index. */
+.wny-allbar { margin: -1.25rem 0 2.5rem; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+.wny-allbar summary {
+  padding: .6rem 0;
+  font: 600 .9375rem/1.4 var(--sans);
+  cursor: pointer;
+}
+.wny-allbar summary:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.wny-allbar__count { font-weight: 400; color: var(--ink-soft); margin-left: .35rem; }
+.wny-allbar .issue-list { margin: 0 0 .5rem; }
+.wny-allbar .issue-list__item:first-child { border-top: 1px solid var(--rule); }
+.wny-allbar .issue-list__item:last-child { border-bottom: 0; }
+
+/* Issue sign-up: full width, drawn box (sketch.js), pitch left and the
+   fields right. The pitch is justified and stretches to the fields' height;
+   padding is the same on every side and the space above and below matches. */
+.wny-signup {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: stretch;
+  gap: 1rem 2rem;
+  margin: 2.5rem 0;
+  padding: 1.1rem 1.25rem;
+  border: 1.4px solid var(--ink);
+}
+.sketched .wny-signup { border-color: transparent; }
+/* The pitch: lead line above, explanation below, as two stacked blocks
+   (a column, not a row, so the lead can never sit beside the text). */
+.wny-signup__pitch {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: .5rem;
+  margin: 0;
+}
+.wny-signup__fields { display: grid; gap: .6rem; }
+.wny-signup__fields > label { display: grid; gap: .2rem; margin: 0; font: .8125rem/1.3 var(--sans); }
+.wny-signup__fields input[type="email"], .wny-signup__fields input[name="name"] {
+  padding: .4rem .5rem; background: var(--field); color: var(--ink); border: 1px solid var(--rule); font: .9375rem/1.4 var(--sans);
+}
+.wny-signup__choices { margin: 0; padding: 0; border: 0; display: flex; flex-wrap: wrap; gap: .4rem; }
+.wny-signup__choices legend { padding: 0; margin-bottom: .3rem; font: .8125rem/1.3 var(--sans); }
+.wny-signup__soon { color: var(--ink-soft); font-size: .75rem; }
+/* Each kind of email has its own light tint. */
+:root { --tint-wny: #e6f0e4; --tint-ontario: #e3ecf6; --tint-na: #f6f0dc; }
+:root[data-theme="dark"] { --tint-wny: #233127; --tint-ontario: #222b36; --tint-na: #333021; }
+.wny-choice { display: inline-flex; align-items: center; gap: .35rem; padding: .25rem .55rem; border: 1px solid var(--rule); font: .8125rem/1.3 var(--sans); }
+.wny-choice--wny { background: var(--tint-wny); }
+.wny-choice--ontario { background: var(--tint-ontario); }
+.wny-choice--na { background: var(--tint-na); }
+.wny-signup__choices[disabled] .wny-choice { opacity: .8; cursor: not-allowed; }
+.wny-signup__send { display: flex; align-items: center; gap: .75rem; }
+.wny-signup__send .status { margin: 0; }
+@media (max-width: 40rem) {
+  .wny-signup { grid-template-columns: 1fr; }
+}
+
+/* A MAG's flags, top right inside the drawn frame with a little padding.
+   Part of the MAG template: each MAG lists its own in its markup. Each flag
+   opens a small menu (data/desks.json via assets/js/deskflags.js): the
+   country flag lists states with a MAG, the state flag that state's MAGs.
+   A hairline keeps white stripes from dissolving into the paper. */
+.mag-flags {
+  position: absolute;
+  top: 1.1rem;
+  right: 1.25rem;
+  z-index: 2;
+  display: flex;
+  gap: .4rem;
+  margin: 0;
+}
+.mag-flag { position: relative; }
+.mag-flag summary { list-style: none; cursor: pointer; display: block; }
+.mag-flag summary::-webkit-details-marker { display: none; }
+.mag-flag summary:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.mag-flag img { display: block; height: 1.25rem; width: auto; outline: 1px solid var(--rule); }
+.mag-flag[open] img { outline: 1.5px solid var(--ink); }
+.mag-flag__menu {
+  position: absolute;
+  top: calc(100% + .4rem);
+  right: 0;
+  min-width: 12rem;
+  padding: .55rem .8rem .6rem;
+  background: var(--paper);
+  border: 1.4px solid var(--ink);
+}
+.mag-flag__label { margin: 0 0 .35rem; font: .6875rem/1.3 var(--sans); color: var(--ink-soft); }
+.mag-flag__menu ul { list-style: none; margin: 0; padding: 0; }
+.mag-flag__menu li { font: .9375rem/1.6 var(--sans); white-space: nowrap; }
+.mag-flag__none { color: var(--ink-soft); }
+@media (max-width: 34rem) {
+  .mag-flags { top: .8rem; right: .8rem; }
+  .mag-flag img { height: 1rem; }
+}
+
+/* County band: two rows of county outlines under the title, tiled edge to
+   edge like a quilt. Hairlines between tiles are the seams; each tile's
+   width follows its county's proportions so the rows always fill. */
+.county-band {
+  margin: 0 0 1.25rem;
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--ink);
+  color: var(--ink);
+}
+.county-band__row { display: flex; list-style: none; margin: 0; padding: 0; }
+.county-band__tile {
+  flex-basis: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: .35rem .2rem .25rem;
+  border-right: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+.county-band__tile svg { display: block; width: 100%; height: 2.75rem; overflow: visible; }
+.county-band__name {
+  margin-top: .2rem;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: .6875rem/1.2 var(--hand);
+  color: var(--ink-soft);
+}
+/* On phones the names would be cut to a few letters, so the quilt shows
+   shapes only; each tile keeps its name as a title and for screen readers. */
+@media (max-width: 34rem) {
+  .county-band__tile { padding: .3rem .15rem; }
+  .county-band__tile svg { height: 1.9rem; }
+  .county-band__name {
+    position: absolute; width: 1px; height: 1px; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+  }
+}
+/* People's names are short; keep each on one line and let the role wrap. */
+[data-wny="mentions-list"] .wny-company__name { white-space: nowrap; }
+
+/* Counties with a story in the issue stay at full strength, stitched more
+   densely, with their count; the rest fall back. The tile is a link to the
+   county's first story. */
+/* Hatch colours: amounts' green and yellow come from --amount-*; other news
+   is dark grey; counties without a story get one light grey hatch. */
+:root { --county-news: #4b4d52; --county-quiet: #b9b6ae; }
+:root[data-theme="dark"] { --county-news: #c4c1ba; --county-quiet: #55575c; }
+.county-band__tile:not(.county-band__tile--news) .county-band__name { color: var(--ink-soft); }
+.county-band__tile--news .county-band__name { color: var(--ink); }
+.county-band__count { font: 700 .6875rem/1 var(--sans); margin-left: .1rem; }
+.county-band__link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+.county-band__link:hover .county-band__name,
+.county-band__link:focus-visible .county-band__name { text-decoration: underline; }
+.county-band__link:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+/* The issue's approved summary: the opening paragraph, a step larger than
+   the standing intro that follows it. */
+.wny-lede { margin: 0 0 1rem; max-width: 42rem; font: 1.125rem/1.6 var(--sans); }
+
+/* Story facts: jobs, public support, next step, stage history. */
+.wny-facts {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: .15rem .75rem;
+  margin: .55rem 0 0;
+  font: .8125rem/1.45 var(--sans);
+}
+.wny-facts dt { color: var(--ink-soft); }
+.wny-facts dd { margin: 0; }
+.wny-coming__date { font: 700 .875rem/1.3 var(--mono); white-space: nowrap; }
+[data-wny="coming-list"] .wny-money__line { grid-template-columns: 9rem minmax(0, 1fr) minmax(0, 20rem); }
+@media (max-width: 34rem) {
+  [data-wny="coming-list"] .wny-money__line { grid-template-columns: 7.5rem minmax(0, 1fr); }
+}
+
+/* A state page's title carries its flag. */
+.mag-title--flag { display: flex; align-items: center; gap: .9rem; }
+.mag-title--flag img { height: .62em; width: auto; outline: 1px solid var(--rule); }
+
+/* The issue line sits right under the title, above the county band. */
+/* The issue line and the print button share one row: stamp left, button right. */
+.issue-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .25rem 1rem;
+  margin: -.6rem 0 1rem;
+}
+.issue-line .issue-stamp { margin: 0; }
+.issue-line [data-print] { margin-left: auto; }  /* stays right when it wraps on phones */
+.county-band { margin-top: 0; }
+.county-band + .wny-ticker { margin-top: 0; }
+
+/* "Who these stories are about", grouped by where each is based. */
+.wny-company-groups { list-style: none; padding: 0; margin: 0; }
+.wny-company-group + .wny-company-group { margin-top: 1.2rem; }
+
+.wny-item__tools { margin: .35rem 0 0; }
+
+/* Print and PDF: the issue as a plain single-column document. Navigation,
+   menus, sign-up, ticker controls and the interactive bar are dropped;
+   stories print one per column and stay whole; source links show their
+   address so a printed copy can still be checked. */
+@media print {
+  .topnav, .sitefoot, .mag-flag__menu, .wny-ticker, .wny-allbar, .wny-signup,
+  .wny-item__tools, [data-print], .corridor__marks, .wny-filters, .wny-recent__head a { display: none !important; }
+  body { padding: 0; background: #fff; }
+  .frame { max-width: none; border: 0; padding: 0; }
+  .sketch-svg { display: none; }
+  .wny-cards { display: block; }
+  .wny-lane, .wny-item, .wny-money__group, .wny-company-group { break-inside: avoid; }
+  .wny-lane { border: 1px solid #999; }
+  .wny-item__via a[href^="http"]::after { content: " (" attr(href) ")"; font-size: .75em; word-break: break-all; }
+}
+
+/* Title line: the MAG's name left, a small state locator right. */
+:root { --region-red: #b3261e; }
+:root[data-theme="dark"] { --region-red: #e5705f; }
+.mag-titlebar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.mag-titlebar .mag-title { margin-bottom: 1.25rem; }
+.mag-locator { margin: 0 0 1.25rem; flex: none; }
+.mag-locator svg { display: block; height: 3.6rem; width: auto; overflow: visible; }
+@media (max-width: 34rem) { .mag-locator svg { height: 2.4rem; } }
+
+/* The whiter sheet inside the frame is now site-wide (--sheet, site.css). */
+
+/* Section titles outside the drawn boxes: caps, a step larger. Titles of
+   subsections and of the boxed sections keep their normal form. */
+.wny-money > h2, .wny-money > .wny-recent__head h2, .wny-companies > h2 {
+  font: 600 1.15rem/1.3 var(--sans);
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+.wny-money__total .wny-money__meta { margin-left: auto; }
+
+/* Sources tables. */
+.sources td { vertical-align: top; }
+.sources__root { font-family: var(--mono); white-space: nowrap; }
+.sources__count { font-weight: 700; margin-right: .3rem; }
+/* site.css sizes form inputs to full width; email choices are compact chips. */
+.wny-choice { white-space: nowrap; margin: 0; }
+.wny-choice input { width: auto; margin: 0; flex: none; }
+
+/* Money at a glance: a single row of cells, one per kind, figures on top
+   and what they are below; muted cells are listed but not counted. */
+.wny-cells {
+  list-style: none;
+  margin: .4rem 0 .35rem;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--ink);
+}
+.wny-cell {
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+  padding: .6rem .7rem .55rem;
+  border-right: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+.wny-cell__value { font: 700 1.5rem/1.1 var(--mono); letter-spacing: -0.02em; }
+.wny-cell__caption { font: .8125rem/1.3 var(--sans); }
+.wny-cell__detail { font: .75rem/1.3 var(--sans); color: var(--ink-soft); }
+/* Not-counted cells grey their figure only; the label keeps full ink like the rest. */
+.wny-cell--muted .wny-cell__value { color: var(--ink-soft); }
+.wny-cells__note { margin: 0 0 1rem; font: .75rem/1.4 var(--sans); color: var(--ink-soft); }
+@media (max-width: 34rem) { .wny-cells { grid-template-columns: repeat(3, 1fr); } .wny-cell__value { font-size: 1.15rem; } }
+
+/* The one equation: money tied to work in the region. */
+.wny-eq { margin: 0 0 1.4rem; }
+.wny-eq__title { margin: 0 0 .15rem; font: 600 .875rem/1.4 var(--sans); }
+.wny-eq__line { margin: 0; max-width: none; font: 1.05rem/1.6 var(--mono); }
+.wny-eq__term { font-weight: 700; text-decoration: none; }
+.wny-eq__term:hover { text-decoration: underline; }
+.wny-eq__kind { font: .875rem/1.4 var(--sans); color: var(--ink-soft); }
+.wny-eq__total { font-size: 1.15rem; }
+.wny-eq__note { margin: .2rem 0 0; font: .75rem/1.4 var(--sans); color: var(--ink-soft); }
+
+/* Combined sources page: one table per coverage group. */
+.sources__group { margin: 2rem 0 .6rem; }
+.sources__n { font: .8125rem/1 var(--mono); color: var(--ink-soft); margin-left: .35rem; letter-spacing: 0; text-transform: none; }
+.sources__note { color: var(--ink-soft); font-size: .8125rem; }
+.wny-eq__plus { margin: 0; font: .875rem/1.5 var(--sans); color: var(--ink-soft); }
+
+/* By district: one line per chamber, district names linked. */
+.wny-districts { list-style: none; padding: 0; margin: 0; }
+.wny-districts__row {
+  display: grid;
+  grid-template-columns: 8rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: .5rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+.wny-districts__row:first-child { border-top: 1px solid var(--rule); }
+.wny-districts__chamber { font: 600 .875rem/1.5 var(--sans); }
+.wny-districts__names { font: .9375rem/1.6 var(--mono); }
+@media (max-width: 34rem) { .wny-districts__row { grid-template-columns: 1fr; gap: .1rem; } }
+.wny-signup__lead { margin: 0; max-width: none; font: 700 1.55rem/1.25 var(--sans); letter-spacing: -0.01em; }
+.wny-signup__text { margin: 0; max-width: none; font: 1.3rem/1.45 var(--sans); text-align: justify; hyphens: auto; }
+@media (max-width: 34rem) { .wny-signup__lead { font-size: 1.3rem; } .wny-signup__text { font-size: 1.1rem; } }
+/* A card's top row (stage, amount) spans the card, past the 40rem prose cap. */
+.wny-item__top { max-width: none; }
+
+/* The issue byline doubles as the issue picker. "Issue One" keeps the
+   stamp's mono face and size, but sits in a hairline box with a chevron so
+   it reads as a control; the date after it stays plain byline text. */
+.issue-byline { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem; }
+.issue-menu { position: relative; }
+.issue-menu summary {
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  padding: .35rem .5rem .35rem .6rem;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  color: var(--ink);
+  font: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+}
+.issue-menu summary::-webkit-details-marker { display: none; }
+.issue-menu summary:hover { border-color: var(--ink); }
+.issue-menu summary:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.issue-menu[open] summary { border-color: var(--ink); background: var(--field); }
+.issue-menu__chevron { transition: transform .15s ease; }
+.issue-menu[open] .issue-menu__chevron { transform: rotate(180deg); }
+.issue-menu__panel {
+  position: absolute;
+  top: calc(100% + .35rem);
+  left: 0;
+  z-index: 20;
+  min-width: 16rem;
+  padding: .75rem;
+  background: var(--paper);
+  border: 1.4px solid var(--ink);
+}
+.issue-menu ul { list-style: none; margin: 0; padding: 0; }
+.issue-menu li a {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .5rem .25rem;
+  font: .95rem/1.3 var(--sans);
+  letter-spacing: 0;
+  color: var(--ink);
+  text-decoration: none;
+}
+.issue-menu li a:hover span:first-child, .issue-menu li a:focus-visible span:first-child { text-decoration: underline; }
+.issue-menu li a[aria-current] span:first-child { font-weight: 700; }
+.issue-menu__date { color: var(--ink-soft); font-size: .8rem; white-space: nowrap; }
+.issue-menu__more { border-top: 1px solid var(--rule); margin-top: .35rem; padding-top: .2rem; }
+@media (prefers-reduced-motion: reduce) { .issue-menu__chevron { transition: none; } }
+@media (max-width: 30rem) { .issue-menu__panel { min-width: min(16rem, calc(100vw - 3rem)); } }

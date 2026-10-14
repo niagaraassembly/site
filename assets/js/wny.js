@@ -321,7 +321,7 @@ export function storiesByDistrict(items) {
 
 /** One line per chamber: the districts active in the issue, each linking to
     All articles filtered to that district. */
-export function renderDistricts(chambers, allArticles = '/MAGS/WNY/posts/') {
+export function renderDistricts(chambers, allArticles = '/desks/us/ny/western-new-york/posts/') {
   return chambers.map((c) =>
     `<li class="wny-districts__row"><span class="wny-districts__chamber">${escapeHtml(c.label)}</span>`
     + `<span class="wny-districts__names">${c.districts.map((d) =>
@@ -1083,7 +1083,7 @@ export function renderRegionEquation(eq) {
     it counts investment-and-industry stories only (the data owner's rule),
     says how many other lines it leaves out, and is never added to another
     kind. A kind with nothing countable says so instead of showing $0. */
-export function renderInvestments(lines, { linkBase = '/MAGS/WNY/posts/' } = {}) {
+export function renderInvestments(lines, { linkBase = '/desks/us/ny/western-new-york/posts/' } = {}) {
   return moneyGroups(lines).map((group) => {
     const counted = group.lines.filter((i) => i.lane === 'production');
     const left = group.lines.length - counted.length;
@@ -1246,7 +1246,12 @@ function mountIssue(root, issue) {
   const stamp = root.querySelector('.issue-stamp');
   const when = issue.published ? apDate(issue.published) : '';
   const span = coverageText(issue.coverage_start, issue.coverage_end);
-  if (stamp) stamp.textContent = [issue.title, when, span ? `News from ${span}` : ''].filter(Boolean).join(' · ');
+  const details = [when, span ? `News from ${span}` : ''].filter(Boolean);
+  /* When the issue title is the issue picker, only the text after it is
+     rewritten; the picker itself is filled from data/desks.json. */
+  const rest = stamp?.querySelector('.issue-byline__rest');
+  if (rest) rest.textContent = details.length ? `· ${details.join(' · ')}` : '';
+  else if (stamp) stamp.textContent = [issue.title, ...details].join(' · ');
   if (issue.summary) show(root.querySelector('[data-wny="summary"]'), escapeHtml(issue.summary));
 }
 

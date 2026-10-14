@@ -8,6 +8,7 @@
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('na-theme')||'light'}catch(e){document.documentElement.dataset.theme='light'}</script>
 <link rel="stylesheet" href="/assets/css/site.css">
 <link rel="stylesheet" href="/assets/css/mag.css">
+<link rel="stylesheet" href="/assets/css/research.css">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/assets/img/favicon-32.png" type="image/png">
 <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
@@ -16,16 +17,31 @@
 
 <header class="topnav" data-sitenav></header>
 
-<div class="frame frame--mag" data-sketch="frame">
-<p class="mag-kicker"><a href="/mags/">All MAGs</a></p>
-<h1 class="mag-title">Research</h1>
-<p class="issue-intro">Source-backed investigations of places across the corridor. Each study starts from public records and grows into articles, reports, maps and time on the ground. We report what the records say and mark what is still unknown.</p>
-<h2>Recent</h2>
-<ul class="issue-list" data-research="recent"></ul>
-<noscript><p class="place-section__empty">This list needs JavaScript.</p></noscript>
-<p class="issue-list__more"><a href="posts/">All posts →</a></p>
-<h2>Places</h2>
-<ul class="issue-list" data-research="places"></ul>
+<div class="frame frame--mag research-landing" data-sketch="frame">
+<p class="mag-kicker"><a href="/mags/">Magazines</a></p>
+<figure class="research-map"><img src="/assets/img/home/mag-research.jpg" alt="Relief map of Lakes Erie and Ontario with the Niagara River between them" width="1400" height="700"><figcaption>Lakes Erie and Ontario. <a href="/images/?section=Homepage&amp;article=Magazines%3A%20Research">Tom Patterson, public domain</a></figcaption></figure>
+<header class="research-mast"><h1 class="research-mast__title">Research</h1><p class="research-mast__byline">Source-backed investigations of places across the corridors.</p><p class="research-mast__lede">We report what the records say and mark what is still unknown. Every figure carries its source and the date it was retrieved.</p></header>
+<section class="research-method" aria-labelledby="research-method-title"><h2 id="research-method-title">How a study grows</h2><ol class="research-method__steps">
+<li><b>Records</b><span>Parcels, permits, filings and public datasets, retrieved on a stated date.</span></li>
+<li><b>Articles</b><span>Briefings that say what the records show and what they cannot.</span></li>
+<li><b>Reports and maps</b><span>The full inventory, with every numbered property kept.</span></li>
+<li><b>On the ground</b><span>Walks, visits and conversations that test the desk work.</span></li>
+</ol></section>
+<section class="research-studies" aria-labelledby="research-studies-title"><h2 id="research-studies-title">Studies</h2>
+<article class="research-study" data-sketch="box">
+<header class="research-study__head"><h3><a href="/MAGS/RESEARCH/places/pierce-arrow-hertel/">Pierce-Arrow / Hertel</a></h3><p class="research-study__where">Buffalo, New York</p></header>
+<p>Buffalo’s Hertel Avenue industrial corridor and the residential streets around it.</p>
+<p class="research-study__status">Desk research and fieldwork plans. On-the-ground reporting is not yet complete.</p>
+<dl class="research-study__figures"><div><dt>Parcels in the study area</dt><dd>2,939</dd></div><div><dt>Residential-class</dt><dd>2,357</dd></div><div><dt>Industrial-class</dt><dd>106</dd></div><div><dt>Numbered properties</dt><dd>48</dd></div></dl>
+<p class="research-study__source">City of Buffalo 2026–2027 parcels, retrieved 8 October 2026. Tax classes do not establish present occupancy, zoning or the number of businesses.</p>
+<div class="research-study__cols">
+<div><h4>Articles</h4><ul class="research-study__list"><li><a href="/MAGS/RESEARCH/industrial/">Hertel: a working industrial corridor</a><button type="button" class="issue-list__arrow" data-reader-open="/MAGS/RESEARCH/industrial/" aria-label="Read in the Reader">&rarr;</button></li><li><a href="/MAGS/RESEARCH/residential/">Living beside Hertel’s industrial corridor</a><button type="button" class="issue-list__arrow" data-reader-open="/MAGS/RESEARCH/residential/" aria-label="Read in the Reader">&rarr;</button></li></ul></div>
+<div><h4>Reports and maps</h4><ul class="research-study__list"><li><a href="/MAGS/RESEARCH/reports/Hertel-Industrial-Companies-Report.pdf">Industrial companies report</a> <span>PDF, 26 pages</span></li><li><a href="/MAGS/RESEARCH/reports/Hertel-Residential-Areas-Report.pdf">Residential areas report</a> <span>PDF, 8 pages</span></li><li><a href="/MAGS/RESEARCH/reports/Hertel-Parcel-Land-Use-Map.pdf">Parcel and land-use map</a> <span>PDF, 2 pages</span></li></ul></div>
+<div><h4>On the ground</h4><ul class="research-study__list"><li>Hertel Walking Study <span>9 October 2026, Buffalo</span></li></ul></div>
+</div>
+</article>
+</section>
+<section class="research-more"><p><button type="button" class="issue-reader__open" data-reader-open="/MAGS/RESEARCH/industrial/">Read Research in the Reader</button> <a href="posts/">All posts ↗</a></p><h2>Every place</h2><ul class="issue-list" data-research="places"></ul><noscript><p class="place-section__empty">This list needs JavaScript.</p></noscript></section>
 </div>
 <footer class="sitefoot">
   <span>Niagara Assembly (unincorporated)</span>

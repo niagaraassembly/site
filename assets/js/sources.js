@@ -7,8 +7,8 @@
  * /research/sources/ (data-sources-registry) lists every source the research
  * draws on, from na-research's approved public source registry (exported to
  * data/sources.json), grouped by each source's most specific coverage. Each
- * row links the published stories that cite it, from every MAG's latest data
- * in data/mags.json.
+ * row links the published stories that cite it, from every desk's latest data
+ * in data/desks.json.
  */
 
 import { escapeHtml, safeHttpUrl } from './escape.js';
@@ -208,11 +208,11 @@ async function json(path) {
   return res.json();
 }
 
-/** Published stories citing each root domain, across every MAG's latest data. */
+/** Published stories citing each root domain, across every desk's latest data. */
 async function citedIndex() {
   const out = new Map();
-  const mags = await json('/data/mags.json');
-  for (const mag of mags.mags ?? []) {
+  const mags = await json('/data/desks.json');
+  for (const mag of mags.desks ?? []) {
     if (!mag.data) continue;
     for (const c of citations(await json(mag.data))) {
       const root = rootDomain(new URL(c.url).hostname);

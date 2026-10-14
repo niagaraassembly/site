@@ -170,3 +170,4 @@
   z-index: 3;
 }
 @media (max-width: 52rem) { .home-map-stage { height: clamp(18rem, 44vw, 24rem); } }
+.home-magazines--publications{grid-template-columns:repeat(2,minmax(0,1fr))}.home-places-group{margin-top:1.5rem;border:1px solid var(--ink);padding:1rem 1.25rem}.home-places-group legend{font:700 .95rem/1 var(--hand);padding:0 .4rem}.home-places-group .home-places{margin:0;gap:.5rem 2rem}.home-places-group .home-places a{padding:.75rem 0;border:0}@media(max-width:36rem){.home-magazines--publications{grid-template-columns:1fr}}

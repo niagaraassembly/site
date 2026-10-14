@@ -1,0 +1,157 @@
+/* Homepage blocks added 2026-10-13: the stacked intro with its vision
+   column, Tools, magazine card backgrounds and the NA* band. Loaded after
+   home.css and desks.css, which stay authoritative for everything else. */
+
+/* ---- Intro: two statements stacked left, the vision on the right -------- */
+.home-intro__lead { display: flex; flex-direction: column; gap: .25rem; }
+.home-intro__lead .home-links { padding-top: 1rem; padding-bottom: 1rem; }
+.home-statement--quiet > p { font-weight: 400; color: var(--ink-soft); }
+.home-vision > p { font-weight: 400; }
+.home-vision > p + p { margin-top: 1rem; }
+
+/* ---- Tools: wide strips of industrial texture ---------------------------- */
+.home-tools {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.home-tool {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  aspect-ratio: 16 / 7;
+  min-width: 0;
+  padding: 1rem 1.25rem;
+  color: #fff;
+  text-decoration: none;
+  background: var(--tool-tone);
+}
+.home-tool img {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* A scrim in each tool's own colour keeps white text legible on bright
+   textures without greying them all to the same dark card. */
+.home-tool::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(to top, color-mix(in srgb, var(--tool-tone) 92%, transparent) 0 30%, transparent 85%);
+}
+.home-tool--board    { --tool-tone: #5a2408; }
+.home-tool--heavymap { --tool-tone: #0f2647; }
+.home-tool--theia    { --tool-tone: #0b3a26; }
+.home-tool h3 { margin: 0; font-size: 1.5rem; line-height: 1.1; text-decoration: underline; text-underline-offset: .18em; text-decoration-thickness: 1px; }
+.home-tool p { margin: .35rem 0 0; font-size: .85rem; line-height: 1.45; max-width: 30ch; color: #fffc; }
+.home-tool:hover h3 { text-decoration-thickness: 2px; }
+/* Board is a panel, not one link: its title and each section word are
+   separate links, so the whole tile is not clickable. */
+.home-tool h3 a { color: inherit; text-decoration: inherit; }
+.home-tool h3 a::after { content: ""; position: absolute; inset: 0; z-index: -1; }
+.home-tool__words { display: flex; flex-wrap: wrap; gap: .1rem .65rem; margin: .45rem 0 0; padding: 0; list-style: none; position: relative; }
+.home-tool__words a { color: #fff; font-size: .85rem; text-underline-offset: .2em; }
+.home-tool__words a:hover { text-decoration-thickness: 2px; }
+.home-tool a:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.home-tool:focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; }
+
+/* ---- Magazine cards: START in a photograph, Research on a map ----------- */
+.home-mag--start, .home-mag--research { position: relative; isolation: isolate; overflow: hidden; }
+.home-mag__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.home-mag--start::before, .home-mag--research::before { content: ""; position: absolute; inset: 0; z-index: -1; }
+.home-mag--start { color: #fff; border-color: transparent; }
+.home-mag--start::before { background: linear-gradient(100deg, #101418e8 0 45%, #10141870 100%); }
+.home-mag--start .home-read { color: #fff; }
+/* The map stays a map: paper fades in from the text side and leaves the
+   lakes readable on the right. */
+.home-mag--research .home-mag__bg { object-position: 70% 50%; }
+.home-mag--research p { max-width: 24ch; }
+.home-mag--research::before { background: linear-gradient(100deg, var(--sheet) 0 46%, color-mix(in srgb, var(--sheet) 60%, transparent) 72%, color-mix(in srgb, var(--sheet) 10%, transparent) 100%); }
+:root[data-theme="dark"] .home-mag--research .home-mag__bg { filter: saturate(.7) brightness(.75); }
+.home-mag--start:focus-visible, .home-mag--research:focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; }
+
+/* ---- NA*: a film still, letterboxed ------------------------------------ */
+.home-nastar {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  grid-column: 1 / -1;
+  margin-top: 2.5rem;
+  min-height: 30rem;
+  display: flex;
+  align-items: flex-end;
+  color: #f2f0ea;
+  background: #000;
+  /* The bars are part of the frame, not the photograph: 2.39:1 framing
+     on a wide screen, thinner on a phone where height is scarce. */
+  --bar: clamp(1.25rem, 4vw, 2.75rem);
+  padding-block: var(--bar);
+}
+.home-nastar__still {
+  position: absolute;
+  inset: var(--bar) 0;
+  z-index: -2;
+  width: 100%;
+  height: calc(100% - 2 * var(--bar));
+  object-fit: cover;
+  object-position: 50% 60%;
+  filter: saturate(.55) contrast(1.05);
+}
+.home-nastar::before {
+  content: "";
+  position: absolute;
+  inset: var(--bar) 0;
+  z-index: -1;
+  background: linear-gradient(90deg, #000d 0 32%, #0006 62%, #0001 100%);
+}
+.home-nastar__body { padding: 2rem clamp(1.25rem, 4vw, 3rem); max-width: 40rem; }
+.home-nastar h3 { margin: 0; font-size: clamp(3.5rem, 9vw, 6.5rem); line-height: .9; letter-spacing: -.02em; }
+.home-nastar h3 a { color: inherit; text-decoration: none; }
+.home-nastar h3 a:hover, .home-nastar h3 a:focus-visible { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: .12em; }
+/* Set like a subtitle: the hand face, centred on its own line in film,
+   left here so it reads with the title. */
+.home-nastar__byline { margin: .75rem 0 0; font: 1.2rem/1.4 var(--hand); color: #f5e9b8; }
+.home-nastar__links { display: flex; flex-wrap: wrap; gap: .4rem 1.25rem; margin: 1.25rem 0 0; padding: 0; list-style: none; }
+.home-nastar__links a { color: #fff; font-weight: 700; text-underline-offset: .2em; }
+.home-nastar__text.home-nastar__pitch { margin-top: .75rem; font-weight: 700; color: #fff; }
+.home-nastar__pitch a { color: #f5e9b8; }
+.home-nastar__text { margin: 1.25rem 0 0; font-size: .95rem; line-height: 1.65; color: #e6e3dc; }
+.home-nastar a:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+.home-nastar__credit { position: absolute; right: .75rem; bottom: calc(var(--bar) / 2); transform: translateY(50%); font-size: .7rem; }
+.home-nastar__credit a { color: #a9a59c; }
+
+@media (max-width: 52rem) {
+  .home-tools { grid-template-columns: 1fr 1fr; }
+  .home-tool--theia { grid-column: 1 / -1; aspect-ratio: 32 / 7; }
+}
+@media (max-width: 36rem) {
+  .home-tools { grid-template-columns: 1fr; }
+  .home-tool, .home-tool--theia { aspect-ratio: auto; min-height: 8.5rem; grid-column: auto; }
+  .home-nastar { min-height: 0; display: block; }
+  /* On a phone the still sits above the words instead of under them, so
+     the text never has to fight the photograph for contrast. */
+  .home-nastar__still { position: static; display: block; height: 13rem; }
+  .home-nastar::before { display: none; }
+  .home-nastar h3 { margin-top: 1.25rem; }
+  .home-nastar__body { padding: 0 1.25rem 1.5rem; }
+}
+
+/* ---- Places: a shallower frame with the names centred ------------------ */
+.home-places-group { padding: .25rem 1rem .5rem; }
+.home-places-group .home-places { justify-content: center; gap: .25rem 1.75rem; padding-block: .5rem; }
+.home-places-group .home-places a { padding: .35rem 0; }

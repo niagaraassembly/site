@@ -13,3 +13,6 @@ __pycache__/
 
 # Images hosted for email editions (referenced by absolute URL in Kit broadcasts)
 !MAGS/**/email/*.png
+
+# Regional desk email edition graphics
+!desks/**/email/*.png

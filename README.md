@@ -21,6 +21,8 @@ python3 -m unittest tests/test_approve_request.py
 credentials exist — see [docs/SETUP.md](docs/SETUP.md) for the ordered
 runbook that wires it up.
 
+How the site's parts fit together, and what to rebuild after a change: [docs/MECHANICS.md](docs/MECHANICS.md).
+
 Regional subsites — how a region is profiled, addressed, and read — are specified in [docs/architecture/subsites.md](docs/architecture/subsites.md).
 
 Greater Niagara, the first subsite, is at `/site/greater-niagara/`. HeavyMap, the second, is at `/site/heavymap/`. After editing a piece or a subsite definition, rebuild, then serve:

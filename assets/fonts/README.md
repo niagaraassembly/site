@@ -9,8 +9,19 @@ the page it was downloaded from.
 |---|---|---|---|
 | `comic-neue-latin-400-normal.woff2` | Comic Neue 400 | SIL OFL 1.1 — © 2014 The Comic Neue Project Authors | `@fontsource/comic-neue@5` |
 | `comic-neue-latin-700-normal.woff2` | Comic Neue 700 | SIL OFL 1.1 — same | `@fontsource/comic-neue@5` |
+| `ibm-plex-sans-latin-400-normal.woff2` | IBM Plex Sans 400 | SIL OFL 1.1 — © 2018 IBM Corp. | `@fontsource/ibm-plex-sans@5.1.0` |
+| `ibm-plex-sans-latin-600-normal.woff2` | IBM Plex Sans 600 | SIL OFL 1.1 — © 2018 IBM Corp. | `@fontsource/ibm-plex-sans@5.1.0` |
+| `ibm-plex-serif-latin-600-normal.woff2` | IBM Plex Serif 600 | SIL OFL 1.1 — © 2020 IBM Corp. | `@fontsource/ibm-plex-serif@5.1.0` |
+| `ibm-plex-mono-latin-400-normal.woff2` | IBM Plex Mono 400 | SIL OFL 1.1 — © 2017 IBM Corp. | `@fontsource/ibm-plex-mono@5.1.0` |
 
 Latin subset only.
+
+IBM Plex (added 2026-10-14) is used only by the Records pages
+(`assets/css/records.css`), where a business face signals a reference
+record rather than the site's informal voice. In the Plex subsets name ID 13
+(licence description) is stripped; ID 0 (copyright) and ID 14 (licence URL,
+`http://scripts.sil.org/OFL`) were read from the binaries. Full text:
+`LICENSE-IBMPlex-OFL.txt`.
 
 ## Why this is self-hosted rather than a font stack
 

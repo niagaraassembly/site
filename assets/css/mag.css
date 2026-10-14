@@ -299,9 +299,9 @@ dialog.sparks-dialog::backdrop {
   white-space: nowrap;
 }
 
-/* Reading panel ---------------------------------------------------------
-   Desktop-only slide-in panel. The arrow button on the issue list opens
-   the article in a fixed right-hand panel; body shifts left to make room. */
+/* Reader launchers on issue lists -------------------------------------
+   The arrow beside a title opens that piece in the site-wide Reader
+   (assets/js/reader.js), on every screen size. */
 
 .issue-list__title-row {
   display: flex;
@@ -321,51 +321,6 @@ dialog.sparks-dialog::backdrop {
 }
 .issue-list__arrow:hover { color: var(--ink); }
 
-.read-panel {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 42vw;
-  height: 100vh;
-  background: var(--paper);
-  border-left: 1px solid var(--rule);
-  overflow-y: auto;
-  padding: 1.25rem 2rem 3rem;
-  box-sizing: border-box;
-  transform: translateX(100%);
-  transition: transform .35s ease;
-  z-index: 200;
-}
-.read-panel.is-open { transform: translateX(0); }
-
-.read-panel__head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 1.25rem;
-}
-.read-panel__close {
-  background: none;
-  border: none;
-  padding: .25rem .4rem;
-  font: 1.2rem/1 var(--sans);
-  color: var(--ink-soft);
-  cursor: pointer;
-  flex-shrink: 0;
-}
-.read-panel__close:hover { color: var(--ink); }
-
-/* Mobile: hide panel controls entirely. */
-@media (max-width: 51.99em) {
-  .issue-list__arrow,
-  .read-panel { display: none; }
-}
-
-/* Desktop: enable the panel and shift body content left when open. */
-@media (min-width: 52em) {
-  body { transition: padding-right .35s ease; }
-  body.panel-open { padding-right: 42vw; }
-}
 
 /* Publication title on a MAG's own index (e.g. Research): heavier and
    larger than the default h1, since it stands without a subtitle. */
@@ -728,7 +683,7 @@ dialog.sparks-dialog::backdrop {
 
 /* A MAG's flags, top right inside the drawn frame with a little padding.
    Part of the MAG template: each MAG lists its own in its markup. Each flag
-   opens a small menu (data/mags.json via assets/js/magflags.js): the
+   opens a small menu (data/desks.json via assets/js/deskflags.js): the
    country flag lists states with a MAG, the state flag that state's MAGs.
    A hairline keeps white stripes from dissolving into the paper. */
 .mag-flags {

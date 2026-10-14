@@ -22,41 +22,42 @@
   <h1>Issue 1 &mdash; September 2026</h1>
   <p class="issue-stamp">Vol. 1 &middot; No. 1 &middot; Sep 2026</p>
 
+  <p class="issue-reader"><button type="button" class="issue-reader__open" data-reader-open="/MAGS/START/issue-1-09-26/a-pivot-from-paton/">Reader</button></p>
   <p class="issue-intro">Five articles on what we&rsquo;re building, why, and where we see it going. Two corridor briefs &mdash; Ontario and Western New York &mdash; reading the investment pattern across both sides. And Sparks: thirty-one investments and initiatives tracked across the Niagara&ndash;Buffalo&ndash;Rochester corridor in a two-month window.</p>
 
   <ul class="issue-list">
     <li class="issue-list__item">
       <div class="issue-list__title-row">
         <a class="issue-list__title" href="a-pivot-from-paton/">A Pivot from Paton</a>
-        <button type="button" class="issue-list__arrow" data-src="a-pivot-from-paton/" aria-label="Open article in side panel">&rarr;</button>
+        <button type="button" class="issue-list__arrow" data-reader-open="/MAGS/START/issue-1-09-26/a-pivot-from-paton/" aria-label="Read in the Reader">&rarr;</button>
       </div>
       <p class="issue-list__meta">Sep 30, 2026</p>
     </li>
     <li class="issue-list__item">
       <div class="issue-list__title-row">
         <a class="issue-list__title" href="a-model-that-makes-money/">A model that makes money.</a>
-        <button type="button" class="issue-list__arrow" data-src="a-model-that-makes-money/" aria-label="Open article in side panel">&rarr;</button>
+        <button type="button" class="issue-list__arrow" data-reader-open="/MAGS/START/issue-1-09-26/a-model-that-makes-money/" aria-label="Read in the Reader">&rarr;</button>
       </div>
       <p class="issue-list__meta">Sep 24, 2026</p>
     </li>
     <li class="issue-list__item">
       <div class="issue-list__title-row">
         <a class="issue-list__title" href="a-network-that-serves-a-purpose/">A network that serves a purpose.</a>
-        <button type="button" class="issue-list__arrow" data-src="a-network-that-serves-a-purpose/" aria-label="Open article in side panel">&rarr;</button>
+        <button type="button" class="issue-list__arrow" data-reader-open="/MAGS/START/issue-1-09-26/a-network-that-serves-a-purpose/" aria-label="Read in the Reader">&rarr;</button>
       </div>
       <p class="issue-list__meta">Sep 24, 2026</p>
     </li>
     <li class="issue-list__item">
       <div class="issue-list__title-row">
         <a class="issue-list__title" href="a-view-beyond-our-borders/">A view beyond our borders.</a>
-        <button type="button" class="issue-list__arrow" data-src="a-view-beyond-our-borders/" aria-label="Open article in side panel">&rarr;</button>
+        <button type="button" class="issue-list__arrow" data-reader-open="/MAGS/START/issue-1-09-26/a-view-beyond-our-borders/" aria-label="Read in the Reader">&rarr;</button>
       </div>
       <p class="issue-list__meta">Sep 24, 2026</p>
     </li>
     <li class="issue-list__item">
       <div class="issue-list__title-row">
         <a class="issue-list__title" href="an-open-home-for-hardware/">An open home for hardware.</a>
-        <button type="button" class="issue-list__arrow" data-src="an-open-home-for-hardware/" aria-label="Open article in side panel">&rarr;</button>
+        <button type="button" class="issue-list__arrow" data-reader-open="/MAGS/START/issue-1-09-26/an-open-home-for-hardware/" aria-label="Read in the Reader">&rarr;</button>
       </div>
       <p class="issue-list__meta">Sep 26, 2026</p>
     </li>
@@ -67,14 +68,14 @@
     <li class="issue-list__item">
       <div class="issue-list__title-row">
         <a class="issue-list__title" href="ontario-corridor-brief/">Ontario Corridor Brief</a>
-        <button type="button" class="issue-list__arrow" data-src="ontario-corridor-brief/" aria-label="Open article in side panel">&rarr;</button>
+        <button type="button" class="issue-list__arrow" data-reader-open="/MAGS/START/issue-1-09-26/ontario-corridor-brief/" aria-label="Read in the Reader">&rarr;</button>
       </div>
       <p class="issue-list__meta">Sep 27, 2026</p>
     </li>
     <li class="issue-list__item">
       <div class="issue-list__title-row">
         <a class="issue-list__title" href="wny-corridor-brief/">Western New York Brief</a>
-        <button type="button" class="issue-list__arrow" data-src="wny-corridor-brief/" aria-label="Open article in side panel">&rarr;</button>
+        <button type="button" class="issue-list__arrow" data-reader-open="/MAGS/START/issue-1-09-26/wny-corridor-brief/" aria-label="Read in the Reader">&rarr;</button>
       </div>
       <p class="issue-list__meta">Sep 27, 2026</p>
     </li>
@@ -82,13 +83,6 @@
 
 </div>
 
-<div id="read-panel" class="read-panel">
-  <div class="read-panel__head">
-    <p class="mag-kicker">START <span class="mag-kicker__sep">&middot;</span> Issue 1</p>
-    <button type="button" class="read-panel__close" id="read-panel-close" aria-label="Close panel">&times;</button>
-  </div>
-  <div class="article" id="read-panel-body"></div>
-</div>
 
 <dialog class="sparks-dialog" id="sparks-table" aria-label="Sparks — START Issue 1 full table">
   <div class="sparks-dialog__head">
@@ -342,54 +336,6 @@
   dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
 }());
 
-(function () {
-  var panel   = document.getElementById('read-panel');
-  var panelBd = document.getElementById('read-panel-body');
-  var close   = document.getElementById('read-panel-close');
-  var btns    = document.querySelectorAll('.issue-list__arrow[data-src]');
-  if (!panel || !btns.length) return;
-
-  var cache = {};      // url → fetched innerHTML
-  var activeBtn = null;
-
-  function openPanel(btn) {
-    var url = btn.dataset.src;
-    activeBtn = btn;
-    document.body.classList.add('panel-open');
-    panel.classList.add('is-open');
-    if (cache[url]) {
-      panelBd.innerHTML = cache[url];
-      return;
-    }
-    panelBd.innerHTML = '';
-    fetch(url)
-      .then(function (r) { return r.text(); })
-      .then(function (html) {
-        var doc = new DOMParser().parseFromString(html, 'text/html');
-        var art = doc.querySelector('.article');
-        if (art) { cache[url] = art.innerHTML; panelBd.innerHTML = art.innerHTML; }
-      });
-  }
-
-  function closePanel() {
-    document.body.classList.remove('panel-open');
-    panel.classList.remove('is-open');
-    activeBtn = null;
-  }
-
-  btns.forEach(function (btn) {
-    btn.addEventListener('click', function () { openPanel(btn); });
-  });
-  close.addEventListener('click', closePanel);
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') closePanel();
-  });
-  document.addEventListener('click', function (e) {
-    if (panel.classList.contains('is-open') && !panel.contains(e.target) && e.target !== activeBtn) {
-      closePanel();
-    }
-  });
-}());
 </script>
 
 <footer class="sitefoot">

@@ -1,0 +1,96 @@
+/* The Reader panel (assets/js/reader.js). Loaded by the Reader itself the
+   first time it opens, so it is self-contained: it does not rely on
+   mag.css being on the page, and it looks the same over all three page
+   widths. On wide screens it is a column on the right with the page dimmed
+   behind; on phones it is the whole screen. */
+
+.reader { position: fixed; inset: 0; z-index: 100; }
+.reader[hidden] { display: none; }
+.reader__scrim { position: absolute; inset: 0; background: color-mix(in srgb, var(--ink) 35%, transparent); }
+:root.reader-open { overflow: hidden; }
+
+.reader__panel {
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: min(44rem, 100vw);
+  display: flex;
+  flex-direction: column;
+  background: var(--sheet);
+  color: var(--ink);
+  border-left: 1.4px solid var(--ink);
+}
+
+.reader__head { flex: none; border-bottom: 1px solid var(--rule); background: var(--paper); }
+.reader__bar { display: flex; align-items: center; gap: .75rem; padding: .7rem 1.25rem; }
+.reader__bar--nav { padding-top: 0; justify-content: space-between; }
+.reader__brand { margin: 0; font: 1.25rem/1 var(--hand); }
+.reader__pub { margin: 0 0 0 auto; }
+.reader__pub select { font-size: .85rem; padding: .3rem .4rem; max-width: 13rem; }
+.reader__close { width: 2.1rem; height: 2.1rem; padding: 0; border: 1px solid var(--rule); background: none; color: var(--ink); font-size: 1.3rem; line-height: 1; cursor: pointer; }
+.reader__close:hover { border-color: var(--ink); }
+.reader__step {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .4rem .7rem;
+  border: 1px solid var(--ink);
+  background: var(--field);
+  color: var(--ink);
+  font: 600 .85rem/1 var(--sans);
+  cursor: pointer;
+}
+.reader__step:disabled { border-color: var(--rule); color: var(--ink-soft); cursor: default; }
+.reader__step:not(:disabled):hover { background: var(--ink); color: var(--paper); }
+.reader__pos { margin: 0; font: .95rem/1 var(--hand); color: var(--ink-soft); text-align: center; }
+.reader :is(button, select, a, [tabindex]):focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+.reader__scroll { flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: 1.5rem 1.25rem 2.5rem; }
+.reader__from { max-width: 36rem; margin: 0 auto .5rem; font: 1rem var(--hand); color: var(--ink-soft); }
+.reader__body { max-width: 36rem; margin: 0 auto; outline: none; }
+
+/* Reading type: generous size and leading, short lines. */
+.reader__body { font-size: 1.075rem; line-height: 1.72; }
+.reader__body h1 { margin: 0 0 .5rem; font-size: clamp(1.6rem, 5vw, 2.1rem); line-height: 1.15; letter-spacing: -.01em; }
+.reader__body h2 { margin: 2rem 0 .5rem; font-size: 1.25rem; line-height: 1.3; }
+.reader__body p { margin: 0 0 1.05em; }
+.reader__body .mag-date { font-size: .85rem; color: var(--ink-soft); margin-bottom: 1.5rem; }
+.reader__body :is(ul, ol) { padding-left: 1.25rem; margin: 0 0 1.05em; }
+.reader__body blockquote { margin: 1.5rem 0; padding-left: 1rem; border-left: 3px solid var(--ink); font-weight: 600; }
+.reader__body figure { margin: 1.5rem 0; }
+.reader__body img { display: block; max-width: 100%; height: auto; }
+.reader__body figcaption { margin-top: .5rem; font-size: .8rem; color: var(--ink-soft); line-height: 1.5; }
+.reader__body .tablewrap { overflow-x: auto; }
+.reader__body table { font-size: .85rem; }
+.reader__body aside, .reader__body .margin-item { display: block; margin: 1rem 0; padding: .75rem 1rem; border-left: 2px solid var(--rule); font-size: .9rem; }
+.reader__loading { color: var(--ink-soft); font-family: var(--hand); }
+.reader-lede { font-size: 1.15rem; }
+.reader-story { padding-top: .25rem; border-top: 1px solid var(--rule); margin-top: 1.75rem; }
+.reader-story h2 { margin-top: 1rem; }
+.reader-story__facts { font-size: .9rem; color: var(--ink-soft); text-transform: none; }
+.reader-story__next { font-size: .9rem; }
+.reader-story__sources summary { cursor: pointer; font-size: .9rem; }
+.reader-story__sources ul { font-size: .85rem; line-height: 1.5; }
+.reader-note { margin-top: 2rem !important; font-size: .9rem; color: var(--ink-soft); }
+
+.reader__foot { flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1.25rem; padding: .7rem 1.25rem; border-top: 1px solid var(--rule); background: var(--paper); font-size: .85rem; }
+.reader__showread { display: inline-flex; align-items: center; gap: .35rem; margin: 0; }
+.reader__showread input { width: auto; margin: 0; }
+.reader__mark { padding: 0; border: 0; background: none; color: var(--ink); text-decoration: underline; text-underline-offset: .2em; cursor: pointer; font-size: .85rem; }
+.reader__mark[hidden], .reader__full[hidden] { display: none; }
+.reader__full { margin-left: auto; }
+
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+@media (max-width: 48rem) {
+  .reader__panel { border-left: 0; }
+  .reader__bar { padding: .6rem .9rem; }
+  .reader__step span { display: none; }
+  .reader__step { padding: .45rem .6rem; }
+  .reader__scroll { padding: 1.1rem 1rem 2rem; }
+  .reader__body { font-size: 1.06rem; }
+  .reader__foot { padding: .6rem .9rem; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .reader:not([hidden]) .reader__panel { animation: reader-in .18s ease-out; }
+  @keyframes reader-in { from { transform: translateX(2rem); opacity: .4; } }
+}

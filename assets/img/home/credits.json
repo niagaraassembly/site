@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Gray car driving on a rainy day through a blurred windshield.jpg",
+    "local": "/assets/img/home/na-star.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Gray_car_driving_on_a_rainy_day_through_a_blurred_windshield.jpg",
+    "artist": "Shixart1985",
+    "license": "CC BY 2.0",
+    "license_url": "https://creativecommons.org/licenses/by/2.0",
+    "original_url": "https://upload.wikimedia.org/wikipedia/commons/8/88/Gray_car_driving_on_a_rainy_day_through_a_blurred_windshield.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "date": "2023-03-10 15:18:59",
+    "region": "NA*",
+    "changes": "Resized JPEG; displayed with a dark overlay and letterbox bars."
+  },
+  {
+    "title": "Wirbler und Staubsack.JPG",
+    "local": "/assets/img/home/tool-board.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Wirbler_und_Staubsack.JPG",
+    "artist": "H005",
+    "license": "Public domain",
+    "license_url": "https://commons.wikimedia.org/wiki/File:Wirbler_und_Staubsack.JPG",
+    "original_url": "https://upload.wikimedia.org/wikipedia/commons/c/c5/Wirbler_und_Staubsack.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "date": "2009-10-15",
+    "region": "Tools: Board",
+    "changes": "Cropped and resized JPEG; displayed with a dark overlay."
+  },
+  {
+    "title": "Pale navy blue corrugated slightly scuffed rusty seamless metal texture.jpg",
+    "local": "/assets/img/home/tool-heavymap.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Pale_navy_blue_corrugated_slightly_scuffed_rusty_seamless_metal_texture.jpg",
+    "artist": "Sisters.seamless",
+    "license": "CC0",
+    "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "original_url": "https://upload.wikimedia.org/wikipedia/commons/8/8d/Pale_navy_blue_corrugated_slightly_scuffed_rusty_seamless_metal_texture.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "date": "2020-06-25",
+    "region": "Tools: HeavyMap",
+    "changes": "Cropped and resized JPEG; displayed with a dark overlay."
+  },
+  {
+    "title": "Green circuit board II (2389301870).jpg",
+    "local": "/assets/img/home/tool-theia.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Green_circuit_board_II_(2389301870).jpg",
+    "artist": "Peter Shanks from Hobart, Australia",
+    "license": "CC BY 2.0",
+    "license_url": "https://creativecommons.org/licenses/by/2.0",
+    "original_url": "https://upload.wikimedia.org/wikipedia/commons/4/43/Green_circuit_board_II_%282389301870%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "date": "2008-04-05 10:01",
+    "region": "Tools: Theia",
+    "changes": "Cropped and resized JPEG; displayed with a dark overlay."
+  },
+  {
+    "title": "HamiltonNorthEndIndustrialA.JPG",
+    "local": "/assets/img/home/mag-start.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:HamiltonNorthEndIndustrialA.JPG",
+    "artist": "Rick Cordeiro",
+    "license": "Public domain",
+    "license_url": "https://commons.wikimedia.org/wiki/File:HamiltonNorthEndIndustrialA.JPG",
+    "original_url": "https://upload.wikimedia.org/wikipedia/commons/e/ea/HamiltonNorthEndIndustrialA.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "date": "2007-06",
+    "region": "Magazines: START",
+    "changes": "Cropped and resized JPEG; displayed with a dark overlay."
+  },
+  {
+    "title": "Physical Features of North America map by Tom Patterson v. 1.01, feet.jpg",
+    "local": "/assets/img/home/mag-research.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Physical_Features_of_North_America_map_by_Tom_Patterson_v._1.01,_feet.jpg",
+    "artist": "Tom Patterson",
+    "license": "Public domain",
+    "license_url": "https://commons.wikimedia.org/wiki/File:Physical_Features_of_North_America_map_by_Tom_Patterson_v._1.01,_feet.jpg",
+    "original_url": "https://upload.wikimedia.org/wikipedia/commons/8/89/Physical_Features_of_North_America_map_by_Tom_Patterson_v._1.01%2C_feet.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "date": "2021-03-09 01:14:29",
+    "region": "Magazines: Research",
+    "changes": "Cropped to Lakes Erie and Ontario; resized JPEG; displayed with a light overlay."
+  }
+]

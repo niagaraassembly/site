@@ -1,0 +1,170 @@
+/* Records: the register at /records/ and each desk's Dollar Figures page.
+ *
+ * The rest of the site speaks in a hand-drawn, informal voice. The register
+ * deliberately does not: a reference record should read as reliable and
+ * permanent. IBM Plex (self-hosted, OFL; see assets/fonts/README.md) carries
+ * that, with Serif for titles and names, Sans for fields and controls, and
+ * Mono only for record IDs. Figures use tabular numerals throughout so
+ * counts line up.
+ */
+
+@font-face { font-family: 'IBM Plex Sans'; src: url('../fonts/ibm-plex-sans-latin-400-normal.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'IBM Plex Sans'; src: url('../fonts/ibm-plex-sans-latin-600-normal.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: 'IBM Plex Serif'; src: url('../fonts/ibm-plex-serif-latin-600-normal.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: 'IBM Plex Mono'; src: url('../fonts/ibm-plex-mono-latin-400-normal.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+
+.records {
+  --reg-sans: 'IBM Plex Sans', var(--sans);
+  --reg-serif: 'IBM Plex Serif', Georgia, serif;
+  --reg-mono: 'IBM Plex Mono', var(--mono);
+  /* Registry navy marks structure: the tab rail, the filter panel's top
+     edge, the current tab. Ink and paper stay the site's own. */
+  --reg-navy: #1f3a5a;
+  --reg-tint: #edf1f4;
+  font-family: var(--reg-sans);
+  font-variant-numeric: tabular-nums;
+}
+:root[data-theme="dark"] .records { --reg-navy: #9db6d3; --reg-tint: #1e252d; }
+
+/* Controls inherit the register face instead of the site's. */
+.records :is(input, select, button, legend, label) { font-family: var(--reg-sans); }
+
+/* ---- Heading ------------------------------------------------------------ */
+.records-head { margin-bottom: 2rem; }
+.records-crumb { margin: 0 0 1rem; font-size: .85rem; color: var(--ink-soft); }
+.records-head h1 {
+  margin: 0 0 .75rem;
+  font: 600 clamp(2.3rem, 4.5vw, 3.25rem)/1.05 var(--reg-serif);
+  letter-spacing: -.012em;
+}
+.records-lede { max-width: 62ch; margin: 0 0 1rem; font-size: 1.05rem; line-height: 1.6; }
+.records-stamp { margin: 0; padding-left: .7rem; border-left: 3px solid var(--reg-navy); font-size: .82rem; color: var(--ink-soft); }
+.records-stamp:empty { display: none; }
+
+/* ---- Record-type tabs: each one states how many records it holds -------- */
+.records-tabs {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  border-top: 2px solid var(--reg-navy);
+  border-bottom: 1px solid var(--rule);
+}
+.records-tab {
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+  padding: .8rem .85rem .85rem;
+  border-right: 1px solid var(--rule);
+  color: var(--ink-soft);
+  text-decoration: none;
+}
+.records-tab:last-child { border-right: 0; }
+.records-tab__label { font-size: .8rem; font-weight: 600; line-height: 1.2; }
+.records-tab__count { font: 600 1.55rem/1 var(--reg-sans); color: var(--ink); }
+.records-tab:hover .records-tab__label { color: var(--ink); text-decoration: underline; text-underline-offset: .2em; }
+.records-tab[aria-current="page"] { background: var(--reg-tint); color: var(--ink); box-shadow: inset 0 3px 0 var(--reg-navy); }
+.records-tab:focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; }
+
+/* ---- Filter panel --------------------------------------------------------- */
+.records-filters {
+  margin: 1.5rem 0 0;
+  padding: 0 1.1rem 1rem;
+  background: var(--reg-tint);
+  border: 1px solid var(--rule);
+  border-top: 2px solid var(--reg-navy);
+}
+.records-filters__bar { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding: .75rem 0 .6rem; border-bottom: 1px solid var(--rule); }
+.records-filters__bar h2 { margin: 0; font: 600 .95rem/1.2 var(--reg-sans); }
+.records-filters__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr));
+  gap: .9rem 1rem;
+  margin-top: .9rem;
+  align-items: end;
+}
+.records-filters__grid[hidden] { display: none; }
+.records-filters__facets { padding-top: .9rem; border-top: 1px dashed var(--rule); }
+.records-filters label { display: flex; flex-direction: column; gap: .35rem; margin: 0; font-size: .75rem; font-weight: 600; color: var(--ink-soft); }
+.records-filters label[hidden] { display: none; }
+.records-filters :is(input[type="search"], input[type="date"], select) {
+  width: 100%;
+  min-width: 0;
+  padding: .45rem .5rem;
+  font-size: .9rem;
+  font-weight: 400;
+  color: var(--ink);
+  background: var(--field);
+  border: 1px solid var(--rule);
+  border-radius: 0;
+}
+.records-filters :is(input, select):focus-visible { outline: 2px solid var(--reg-navy); outline-offset: 0; border-color: var(--reg-navy); }
+.records-filters select:disabled { opacity: .55; cursor: not-allowed; }
+.records-filters__search { grid-column: span 2; }
+.records-quarters { display: flex; flex-wrap: wrap; gap: .25rem .9rem; margin: 0; padding: 0; border: 0; min-width: 0; }
+.records-quarters legend { padding: 0; margin-bottom: .35rem; font-size: .75rem; font-weight: 600; color: var(--ink-soft); }
+.records-quarters label { flex-direction: row; align-items: center; gap: .3rem; font-size: .9rem; font-weight: 400; color: var(--ink); }
+.records-quarters input { width: auto; margin: 0; }
+.records-filters__note { margin: .9rem 0 0; font-size: .78rem; line-height: 1.5; color: var(--ink-soft); max-width: 70ch; }
+.records-linkbutton { padding: 0; border: 0; background: none; color: var(--ink); font-size: .82rem; text-decoration: underline; text-underline-offset: .2em; cursor: pointer; }
+.records-linkbutton:hover { text-decoration-thickness: 2px; }
+.records-linkbutton:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+/* ---- Results line: the count is the most important number on the page -- */
+.records-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .5rem 1.5rem;
+  margin: 2rem 0 0;
+  padding-bottom: .6rem;
+  border-bottom: 2px solid var(--ink);
+}
+.records-summary p { margin: 0; }
+.records-summary__count { font-size: 1rem; }
+.records-summary__count strong { font: 600 2rem/1 var(--reg-serif); margin-right: .2rem; }
+.records-summary__count span { color: var(--ink-soft); }
+.records-summary__scope { display: flex; flex-wrap: wrap; gap: .35rem; }
+.records-summary__scope span { padding: .2rem .5rem; border: 1px solid var(--rule); background: var(--field); font-size: .78rem; }
+
+/* ---- Regions and entries ------------------------------------------------- */
+.records-region { margin-top: 2rem; }
+.records-region__head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding-bottom: .45rem; border-bottom: 1px solid var(--rule); }
+.records-region__head h2 { margin: 0; font: 600 1.35rem/1.2 var(--reg-serif); }
+.records-region__head p { margin: 0; font-size: .85rem; color: var(--ink-soft); }
+
+.rec { display: grid; grid-template-columns: 7rem minmax(0, 1fr); gap: 1.25rem; padding: 1.1rem 0; border-bottom: 1px solid var(--rule); }
+.rec__id { margin: .3rem 0 0; font: .74rem/1.3 var(--reg-mono); color: var(--ink-soft); overflow-wrap: anywhere; }
+.rec__name { margin: 0 0 .6rem; font: 600 1.15rem/1.3 var(--reg-serif); }
+.rec__fields { display: grid; grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr)); gap: .6rem 1.25rem; margin: 0; }
+.rec__fields div { min-width: 0; }
+.rec__fields dt { font-size: .72rem; font-weight: 600; color: var(--ink-soft); }
+.rec__fields dd { margin: .1rem 0 0; font-size: .92rem; }
+.rec__links { display: flex; flex-wrap: wrap; gap: .3rem 1.1rem; margin: .7rem 0 0; font-size: .85rem; }
+
+.records-caption { margin: 1rem 0 .25rem; font-weight: 600; }
+.records-currency { margin: 1.5rem 0 .6rem; font: 600 .85rem/1.2 var(--reg-sans); color: var(--ink-soft); }
+.records-note { margin: .6rem 0 0; font-size: .8rem; color: var(--ink-soft); max-width: 72ch; }
+.records-empty { margin: 1.25rem 0; color: var(--ink-soft); }
+
+/* The shared news cards and money cells keep their own styles but take the
+   register face. */
+.records :is(.wny-cards, .wny-cells, .wny-money__groups),
+.records :is(.wny-cards, .wny-cells, .wny-money__groups) * { font-family: var(--reg-sans); }
+.records :is(.wny-cell__value, .wny-money__amount) { font-weight: 600; font-variant-numeric: tabular-nums; }
+
+@media (max-width: 48rem) {
+  .records-tabs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .records-tab:nth-child(3n) { border-right: 0; }
+  .records-tab:nth-child(-n+3) { border-bottom: 1px solid var(--rule); }
+}
+@media (max-width: 34rem) {
+  .records-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .records-tab:nth-child(3n) { border-right: 1px solid var(--rule); }
+  .records-tab:nth-child(2n) { border-right: 0; }
+  .records-tab:nth-child(-n+4) { border-bottom: 1px solid var(--rule); }
+  .records-filters { padding-inline: .8rem; }
+  .records-filters__grid { grid-template-columns: 1fr 1fr; }
+  .records-filters__search, .records-quarters { grid-column: 1 / -1; }
+  .rec { grid-template-columns: 1fr; gap: .25rem; }
+  .rec__id { margin: 0; }
+}

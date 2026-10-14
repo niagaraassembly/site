@@ -1,0 +1,62 @@
+/* START landing (/MAGS/START/). The masthead is the one loud thing: the
+   title set as large as the column allows, over a heavy rule, like a
+   publication's flag. Everything under it stays plain and readable.
+   Written as a template: a future magazine landing can reuse these
+   classes with its own masthead, issue and journey. */
+
+.start-mast { margin: .5rem 0 2.5rem; padding-bottom: 1.1rem; border-bottom: 5px solid var(--ink); }
+.start-mast__title {
+  margin: 0;
+  font: 800 clamp(4.5rem, 17vw, 10.5rem)/.82 var(--sans);
+  letter-spacing: -.045em;
+}
+.start-mast__byline { margin: 1rem 0 0; font: 1.45rem/1.3 var(--hand); }
+.start-mast__beat { margin: .35rem 0 0; color: var(--ink-soft); }
+
+.start-grid { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 3rem; }
+
+.start-label { margin: 0 0 .25rem; font: 1rem var(--hand); color: var(--ink-soft); }
+.start-current h2 { margin: 0 0 .75rem; font-size: 1.75rem; line-height: 1.15; }
+.start-current h2 a { color: var(--ink); }
+.start-current__intro { margin: 0 0 1.5rem; font-size: 1.05rem; line-height: 1.6; }
+
+.start-toc { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--ink); }
+.start-toc__item { padding: .9rem 0; border-bottom: 1px solid var(--rule); }
+.start-toc__title { font-size: 1.15rem; font-weight: 700; color: var(--ink); text-underline-offset: .18em; }
+.start-toc__dek { margin: .25rem 0 0; line-height: 1.5; }
+.start-toc__meta { margin: .2rem 0 0; font-size: .85rem; color: var(--ink-soft); }
+.start-current__more { margin: 1rem 0 0; font-weight: 700; }
+
+/* The journey: dated steps on one line, the next step left hollow. */
+.start-journey h2 { margin: 0 0 1rem; font-size: 1.25rem; }
+.start-journey__list { list-style: none; margin: 0; padding: 0 0 0 1.1rem; border-left: 2px solid var(--ink); }
+.start-journey__step { position: relative; padding: 0 0 1.25rem; }
+.start-journey__step::before {
+  content: "";
+  position: absolute;
+  left: calc(-1.1rem - 6px);
+  top: .3rem;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+.start-journey__step:last-child { padding-bottom: 0; }
+.start-journey__step:last-child::before { background: var(--sheet); border: 2px solid var(--ink); width: 6px; height: 6px; }
+.start-journey__when { margin: 0; font: 700 .85rem/1.3 var(--sans); }
+.start-journey__what { margin: .2rem 0 0; font-size: .95rem; line-height: 1.55; }
+.start-journey__what a { white-space: nowrap; }
+
+.start-pictures, .start-archive { margin-top: 3rem; padding-top: 1.25rem; border-top: 1px solid var(--rule); }
+.start-pictures h2, .start-archive h2 { margin: 0; font-size: 1.25rem; }
+.start-archive .issue-list { margin-top: 1rem; }
+
+@media (max-width: 52rem) {
+  .start-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+}
+@media (max-width: 36rem) {
+  .start-mast { margin-bottom: 2rem; border-bottom-width: 4px; }
+  .start-mast__byline { font-size: 1.25rem; }
+  .start-current h2 { font-size: 1.5rem; }
+  .start-toc__title { font-size: 1.1rem; }
+}

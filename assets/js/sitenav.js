@@ -30,18 +30,23 @@ export const NAV = [
       node('/services/', 'Training', ['Clark', 'Electronics', 'Manufacturing', 'Linux', 'Robotics', 'AI']),
       node('/services/', 'Events',   ['Meetups', 'Talks', 'Tours', 'Workshops', 'Launches', 'Demos']),
       node('/services/', 'Tools',    ['Board', 'HeavyMap', 'Environments', 'Gage']),
-      /* Labels are plural; the Sector and Solo URLs predate that and stay put. */
+      /* News opens on the two kinds of publication. Sectors and Solos keep
+         their pages but left the menu on 2026-10-13. */
       { label: 'News', path: '/services/news/', items: [
-        { label: 'Starts', path: '/MAGS/START/' },
-        { label: 'Sectors', path: '/services/news/sector/' },
-        { label: 'Solos', path: '/services/news/solo/' },
-        { label: 'MAGS', path: '/mags/' }
+        { label: 'Desks', path: '/desks/', items: [
+          { label: 'Western New York', path: '/desks/us/ny/western-new-york/' },
+          { label: 'Niagara–Brant', path: '/desks/ca/on/niagara-brant/' }
+        ] },
+        { label: 'Magazines', path: '/mags/', items: [
+          { label: 'START', path: '/MAGS/START/' },
+          { label: 'Research', path: '/MAGS/RESEARCH/' }
+        ] }
       ] },
       node('/services/', 'Grow',     ['Local', 'Site', 'Building', 'Market', 'Product']),
-      node('/services/', 'NA*',      ['Interviews', 'Profiles', 'Edits'])
+      node('/services/', 'NA*',      ['Interviews', 'Profiles', 'Short Films', 'Edits', 'Exhibits'])
     ] },
     node('/', 'Goods',  ['Retail']),
-    node('/', 'Places', ['Hamilton', 'Fort Erie', 'GB', 'WNY', 'Dunkirk, NY', 'Rochester', 'Erie, PA'])
+    node('/', 'Places', ['Hamilton', 'St. Catharines', 'Niagara Falls', 'Fort Erie', 'GB', 'WNY', 'Dunkirk, NY', 'Rochester', 'Erie, PA'])
   ] },
   { word: 'Assembly', items: [
     node('/assembly/', 'Membership',
@@ -71,6 +76,7 @@ const ALIASES = {
 };
 
 const HOME = '/';
+export const RECORDS = '/records/';
 
 const normalise = (pathname) => {
   let p = pathname.replace(/index\.html$/, '');
@@ -160,6 +166,8 @@ const ICONS = {
   linkedin: '<svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>',
   /* Roof-and-body as one closed shape so the fill (a faint ink tint, set in
      CSS) stays inside the outline; the door is stroke only. */
+  /* An open book: the Reader. */
+  reader: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.5C10 5 7 4.6 3.5 5v13c3.5-.4 6.5 0 8.5 1.5 2-1.5 5-1.9 8.5-1.5V5C17 4.6 14 5 12 6.5Zm0 0v13"/></svg>',
   house: '<svg viewBox="0 0 24 24" aria-hidden="true"><path class="house__body" d="M12 3.2 2.6 11.4h2.9v8.6h13v-8.6h2.9Z"/><path class="house__door" d="M10 20v-5.2h4V20"/></svg>'
 };
 
@@ -208,15 +216,22 @@ function build(header) {
     return b;
   });
 
+  /* Records is a destination of its own rather than a menu branch: the
+     register sits beside the wordmark menus, ahead of the icons. */
+  const onRecords = current.startsWith(RECORDS);
+  const records = el('a', { class: 'topnav__records', href: RECORDS, ...(onRecords ? { 'aria-current': 'page' } : {}) }, 'Records');
+
   /* The icons and theme toggle, at the right of the bar. */
-  const links = el('nav', { class: 'topnav__links', 'aria-label': 'Site links' },
+  const links = el('nav', { class: 'topnav__links', 'aria-label': 'Site links' }, records,
     el('span', { class: 'topnav__social' },
       iconLink('https://github.com/niagaraassembly', 'Niagara Assembly on GitHub', ICONS.github),
       iconLink('https://x.com/niagaraassembly', 'Niagara Assembly on X', ICONS.x),
       iconLink('https://linkedin.com/company/niagara-assembly', 'Niagara Assembly on LinkedIn', ICONS.linkedin),
       iconLink('https://discord.gg/kxacHHRmBC', 'Niagara Assembly on Discord', ICONS.discord),
       el('button', { type: 'button', class: 'themetoggle', 'data-theme-toggle': '',
-                     'aria-label': 'Switch between light and dark' })));
+                     'aria-label': 'Switch between light and dark' }),
+      el('button', { type: 'button', class: 'topnav__reader', 'data-reader-open': '',
+                     'aria-label': 'Open the Reader', title: 'Reader', html: ICONS.reader })));
 
   const rows = el('div', { class: 'topnav__rows', id: 'topnav-rows' });
   /* Arrows are decoration pointing at the wordmark above; hide them from
@@ -266,7 +281,21 @@ function build(header) {
   sync();
 }
 
+/* The Reader loads on first use. Any element with data-reader-open opens
+   it: the header icon (empty value: carry on reading) or a launcher naming
+   a piece by its URL. See assets/js/reader.js. */
+function listenForReader() {
+  document.addEventListener('click', (event) => {
+    const trigger = event.target.closest('[data-reader-open]');
+    if (!trigger) return;
+    event.preventDefault();
+    import('/assets/js/reader.js').then((m) => m.openReader(trigger.dataset.readerOpen, trigger))
+      .catch((error) => { console.error('Reader failed to load', error); });
+  });
+}
+
 if (typeof document !== 'undefined') {
   const header = document.querySelector('[data-sitenav]');
   if (header) build(header);
+  listenForReader();
 }

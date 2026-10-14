@@ -13,6 +13,12 @@ stale.
 | `assets/js/sketch.js` | The hand-drawn (Rough.js) frame and boxes |
 | `assets/js/margin.js` | When side blocks move into the margins |
 | `assets/js/sitenav.js` | The one site menu and header icons, rendered into every page |
+| `assets/css/home-blocks.css` | Homepage blocks added 2026-10-13/14: vision column, Tools, magazine card backgrounds, NA* band, Places frame |
+| `assets/css/records.css` | Records: the one place the site uses a business face (IBM Plex) instead of its informal voice |
+| `assets/css/start.css`, `research.css` | Magazine landing templates |
+| `assets/css/images.css`, `reader.css` | Image index and the Reader |
+
+How the parts work (data, scripts, what to rebuild): [`MECHANICS.md`](MECHANICS.md).
 
 ## Principles
 
@@ -195,8 +201,8 @@ Copy an existing page of the same width. The skeleton is:
 - The header (`sitenav.js`) holds:
   - on the left: the logo (house on inner pages) and the "Niagara Assembly
     Inc." wordmark, whose words open the menus
-  - on the right: the GitHub, X, LinkedIn and Discord icons and the theme
-    toggle
+  - on the right: the **Records** link, the GitHub, X, LinkedIn and Discord
+    icons, the theme toggle and the **Reader** icon (2026-10-14)
 - The List, Updates and Apps links were removed on 2026-10-11.
 - The left side sits 1rem inside the frame's line, closer than the content.
   The right side keeps the content's inset (`--content-inset`).

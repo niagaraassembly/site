@@ -101,7 +101,7 @@ async function check(kit) {
 
 async function draft(kit, opts) {
   const dirArg = opts._[1];
-  if (!dirArg) throw new Error('draft needs an edition directory, e.g. MAGS/WNY/issue/one/email');
+  if (!dirArg) throw new Error('draft needs an edition directory, e.g. desks/us/ny/western-new-york/issue/one/email');
   if (!opts.tag) throw new Error('draft needs --tag <tag-name>, e.g. --tag na-list');
   const dir = path.resolve(dirArg);
   const content = fs.readFileSync(path.join(dir, 'email.html'), 'utf8');
