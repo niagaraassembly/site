@@ -43,9 +43,10 @@ Create these Kit tags before deployment:
 
 ## Placeholders
 
-The `niagaraassembly` GitHub org and the `site` repo do not exist yet, so
-`REPO = 'niagaraassembly/site'` in both scripts is a best-effort
-placeholder — update it once the real repo exists. Likewise the Google
+Form issues go to the private `niagaraassembly/crm` repo, so `_shared.gs`
+sets `REPO = 'niagaraassembly/crm'` (matching where live join, board and
+opensource issues land). Check the deployed copy in each Sheet's Apps Script
+editor says the same. Likewise the Google
 Forms themselves don't exist yet, so the form question names each script
 maps from (`Name`, `Email`, `City / Town / Township`, `Trade / Expertise`,
 `Comment` for Endorse; `Name`, `Email`, `What`, `When`, `Where`, `Contact`,
