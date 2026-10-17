@@ -1,0 +1,10 @@
+{
+  "install": "bash scripts/cloud-install.sh",
+  "start": "bash scripts/cloud-start.sh",
+  "terminals": [
+    {
+      "name": "site",
+      "command": "python3 -m http.server 8019"
+    }
+  ]
+}
