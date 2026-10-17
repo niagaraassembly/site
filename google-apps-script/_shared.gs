@@ -10,12 +10,12 @@
  * "_shared" > paste > Save.
  *
  * Script Properties required in every project:
- *   GITHUB_TOKEN  — fine-grained PAT, Issues: write on niagaraassembly/site
+ *   GITHUB_TOKEN  — fine-grained PAT, Issues: write on niagaraassembly/crm
  *   KIT_API_KEY   — Kit v4 API key
  *   KIT_FORM_ID   — the double-opt-in form new subscribers are added through
  */
 
-var REPO = 'niagaraassembly/site';
+var REPO = 'niagaraassembly/crm';
 var MAX_TEXT = 2500;
 
 /** Reads a form response by its QUESTION TITLE. A mistyped title yields an
