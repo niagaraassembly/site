@@ -83,3 +83,9 @@ Prefer documentary / inventory / scaffold PRs. Do not start a greenfield commerc
 - [ ] No secrets in diff
 - [ ] Blockers written to Linear (not only agent logs)
 - [ ] Human can merge or reject with clear evidence
+
+## Cursor Cloud specific instructions
+
+- Environment E2 (web): `.cursor/environment.json` runs `scripts/cloud-install.sh` (node/python check, subsite rebuild; no npm deps) and opens a `site` terminal serving `python3 -m http.server 8019`.
+- Tests: `node --test tests/*.test.mjs`, `python3 -m unittest discover -s tests -p 'test_*.py'`. As of 2026-10-16, 8 node and 4 Python tests fail on master; check master before attributing a failure to your change.
+- Skills: `.agents/skills/na-web-publish`, `.agents/skills/untrusted-web-text`.
