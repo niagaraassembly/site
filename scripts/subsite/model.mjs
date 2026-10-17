@@ -13,7 +13,7 @@ const FIELDS = new Set([
   'title', 'summary', 'date', 'updated', 'author', 'type', 'bucket', 'topic',
   'subcategory', 'places', 'entities', 'tags', 'ingredients', 'status',
   'supersededBy', 'sources', 'licence', 'dataset', 'geography', 'period',
-  'units', 'comparable', 'explore', 'theme', 'content_id', 'author_kind',
+  'units', 'comparable', 'explore', 'theme', 'content_id', 'author_kind', 'featured',
 ]);
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
@@ -67,18 +67,27 @@ export function loadCorpus(root) {
     .filter((name) => name.endsWith('.json'))
     .sort()
     .map((name) => readJson(root, path.join('content/subsites', name)));
-  const pieceDir = path.join(root, 'content/pieces');
-  const pieces = fs.readdirSync(pieceDir)
-    .filter((name) => name.endsWith('.md'))
-    .sort()
-    .map((name) => loadPiece(root, name));
+  const pieces = listMarkdown(root, 'content/pieces');
+  const tracked = listMarkdown(root, 'content/posts/items');
+  const all = [...pieces, ...tracked];
+  const errors = [];
+  const seenSlugs = new Set();
+  for (const piece of all) {
+    if (seenSlugs.has(piece.slug)) errors.push(`duplicate piece slug ${piece.slug}`);
+    seenSlugs.add(piece.slug);
+  }
+  errors.push(...trackingErrors(
+    tracked,
+    readCsv(root, 'content/posts/created.csv'),
+    readCsv(root, 'content/posts/index.csv'),
+    readCsv(root, 'content/posts/ideas.csv'),
+  ));
 
   const corpus = {
-    root, geo, topics: topicsDoc.topics, glossary: glossaryDoc.terms, subsites, pieces,
+    root, geo, topics: topicsDoc.topics, glossary: glossaryDoc.terms, subsites, pieces: all,
   };
-  const errors = [];
   for (const subsite of subsites) errors.push(...validateSubsite(subsite));
-  for (const piece of pieces) errors.push(...validatePiece(piece, corpus));
+  for (const piece of all) errors.push(...validatePiece(piece, corpus));
   if (errors.length) {
     const error = new Error(errors.join('\n'));
     error.errors = errors;
@@ -91,18 +100,129 @@ function readJson(root, rel) {
   return JSON.parse(fs.readFileSync(path.join(root, rel), 'utf8'));
 }
 
-function loadPiece(root, name) {
-  const slug = name.slice(0, -3);
-  const text = fs.readFileSync(path.join(root, 'content/pieces', name), 'utf8');
+function listMarkdown(root, relDir) {
+  const dir = path.join(root, relDir);
+  if (!fs.existsSync(dir)) return [];
+  return fs.readdirSync(dir)
+    .filter((name) => name.endsWith('.md'))
+    .sort()
+    .map((name) => loadMarkdown(root, `${relDir}/${name}`));
+}
+
+function loadMarkdown(root, rel) {
+  const slug = path.posix.basename(rel, '.md');
+  const text = fs.readFileSync(path.join(root, rel), 'utf8');
   let parsed;
   try {
     parsed = splitDocument(text);
   } catch (error) {
-    const wrapped = new Error(`${name}: ${error.message}`);
+    const wrapped = new Error(`${rel}: ${error.message}`);
     wrapped.errors = [wrapped.message];
     throw wrapped;
   }
-  return { slug, file: name, data: parsed.data, body: parsed.body };
+  return { slug, file: rel, data: parsed.data, body: parsed.body };
+}
+
+function readCsv(root, rel) {
+  const text = fs.readFileSync(path.join(root, rel), 'utf8');
+  return parseCsv(text);
+}
+
+/** Minimal CSV reader. Quoted fields may contain commas. */
+export function parseCsv(text) {
+  const src = String(text).replace(/^\uFEFF/, '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  const rows = [];
+  let row = [];
+  let cell = '';
+  let quoted = false;
+  for (let i = 0; i < src.length; i++) {
+    const ch = src[i];
+    if (quoted) {
+      if (ch === '"') {
+        if (src[i + 1] === '"') { cell += '"'; i += 1; }
+        else quoted = false;
+      } else cell += ch;
+    } else if (ch === '"') quoted = true;
+    else if (ch === ',') { row.push(cell); cell = ''; }
+    else if (ch === '\n') { row.push(cell); rows.push(row); row = []; cell = ''; }
+    else cell += ch;
+  }
+  if (cell !== '' || row.length) { row.push(cell); rows.push(row); }
+  const filled = rows.filter((item) => item.some((value) => value !== ''));
+  if (filled.length === 0) return [];
+  const [header, ...body] = filled;
+  return body.map((values) => Object.fromEntries(header.map((key, index) => [key, values[index] ?? ''])));
+}
+
+/**
+ * Item files in content/posts/items/ are the piece source.
+ * created.csv and index.csv must name the same file and the same status.
+ * A draft stays withheld. published_url is set only when status is published.
+ */
+export function trackingErrors(items, created, index, ideas) {
+  const errors = [];
+  const byId = new Map();
+  for (const item of items) {
+    const id = item.data.content_id;
+    if (!id) {
+      errors.push(`${item.file}: tracked item needs content_id`);
+      continue;
+    }
+    if (byId.has(id)) errors.push(`${item.file}: duplicate content_id ${id}`);
+    byId.set(id, item);
+  }
+  const createdBy = rowsById(created, 'content_id', 'created.csv', errors);
+  const indexBy = rowsById(index, 'content_id', 'index.csv', errors);
+  const ideaIds = new Set((ideas ?? []).map((row) => row.idea_id));
+  const ids = new Set([...byId.keys(), ...createdBy.keys(), ...indexBy.keys()]);
+  for (const id of [...ids].sort()) {
+    const item = byId.get(id);
+    const createdRow = createdBy.get(id);
+    const indexRow = indexBy.get(id);
+    if (!item) errors.push(`${id}: listed in the tracker but has no item file`);
+    if (!createdRow) errors.push(`${id}: missing from created.csv`);
+    if (!indexRow) errors.push(`${id}: missing from index.csv`);
+    if (!item || !createdRow || !indexRow) continue;
+    if (createdRow.file_path !== item.file) {
+      errors.push(`${id}: created.csv file_path is ${createdRow.file_path}, item is ${item.file}`);
+    }
+    if (indexRow.file_path !== item.file) {
+      errors.push(`${id}: index.csv file_path is ${indexRow.file_path}, item is ${item.file}`);
+    }
+    if (createdRow.idea_id && !ideaIds.has(createdRow.idea_id)) {
+      errors.push(`${id}: idea_id ${createdRow.idea_id} is not in ideas.csv`);
+    }
+    const status = item.data.status;
+    if (createdRow.status !== status) {
+      errors.push(`${id}: created.csv status ${createdRow.status} does not match front matter ${status}`);
+    }
+    if (indexRow.status !== status) {
+      errors.push(`${id}: index.csv status ${indexRow.status} does not match front matter ${status}`);
+    }
+    const url = canonicalPath(item.slug);
+    if (status === 'published') {
+      if (indexRow.published_url !== url) errors.push(`${id}: published_url must be ${url}`);
+      if (!DATE.test(createdRow.published_date || '')) errors.push(`${id}: published_date must be YYYY-MM-DD`);
+    } else {
+      if (indexRow.published_url) errors.push(`${id}: published_url must be blank while status is ${status}`);
+      if (createdRow.published_date) errors.push(`${id}: published_date must be blank while status is ${status}`);
+    }
+  }
+  return errors;
+}
+
+function rowsById(rows, key, label, errors) {
+  const map = new Map();
+  for (const row of rows ?? []) {
+    const id = row[key];
+    if (!id) {
+      errors.push(`${label}: a row is missing ${key}`);
+      continue;
+    }
+    if (map.has(id)) errors.push(`${label}: duplicate ${key} ${id}`);
+    map.set(id, row);
+  }
+  return map;
 }
 
 function validateSubsite(subsite) {
@@ -151,6 +271,9 @@ export function validatePiece(piece, corpus) {
   }
   if (data.author_kind !== undefined && data.author_kind !== 'agent' && data.author_kind !== 'human') {
     fail('author_kind must be agent or human');
+  }
+  if (data.featured !== undefined && typeof data.featured !== 'boolean') {
+    fail('featured must be true or false');
   }
   if (data.date && !DATE.test(data.date)) fail('date must be YYYY-MM-DD');
   if (data.updated && !DATE.test(data.updated)) fail('updated must be YYYY-MM-DD');
