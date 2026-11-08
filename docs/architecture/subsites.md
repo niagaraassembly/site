@@ -208,9 +208,12 @@ Each margin item is anchored to a spot in the text, and each has a kind. On a na
 A subsite landing page, in order:
 
 1. What the subject is, and why it matters.
-2. Latest updates.
-3. A few featured pieces.
-4. Entry points into that subsite’s navigation: the default six sections and topics, or the groups that subsite defines.
+2. Latest updates (`type: update` only).
+3. Recent: every published piece for that subsite, newest `date` first.
+4. Featured: only pieces whose front matter says `featured: true`. It is not the first few pieces.
+5. Entry points into that subsite’s navigation: the default six sections and topics, or the groups that subsite defines.
+
+An empty list is one sentence. The build does not invent a sample piece.
 
 Every piece shows its status, its type, and its last-updated date. A data page says what the data is, where it came from, and how fresh it is. Updates form a running timeline.
 
@@ -423,3 +426,15 @@ Methods (`/site/greater-niagara/methods/`) lists every piece whose `bucket` is `
 `bucket: overviews` remains a valid value for a piece that still uses an Overviews section, including HeavyMap. Greater Niagara does not emit `/site/greater-niagara/overviews/` or the four stage paths.
 
 HeavyMap does not set `nav`. Its sidebar stays Sections and Topics, including Gathering, Processing, Packaging, and Publishing as separate links.
+
+---
+
+## 13. Tracked pieces
+
+Recorded 2026-10-03. HeavyMap pieces written for the content tracker live in `content/posts/items/`. That file is the piece. The build reads it with `content/pieces/`. It does not copy the file into `content/pieces/`.
+
+`content/posts/created.csv` and `content/posts/index.csv` must name the same path and the same `status` as the front matter. While `status` is `draft`, `published_url` and `published_date` stay blank, and the build writes no page. A missing page is how a draft 404s. Setting `status: published` in the front matter, both CSVs, `published_date`, and `published_url` (`/pieces/<slug>/`) is what publishes it. The steps are in [content/posts/README.md](../../content/posts/README.md).
+
+`featured: true` is a separate choice. Recent lists a published piece either way. Featured lists it only when that field is true.
+
+Greater Niagara uses the same landing sections. Its sidebar is unchanged.

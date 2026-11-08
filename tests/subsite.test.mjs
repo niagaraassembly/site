@@ -5,7 +5,7 @@ import path from 'node:path';
 import { splitDocument } from '../scripts/subsite/frontmatter.mjs';
 import { renderBody } from '../scripts/subsite/markdown.mjs';
 import {
-  canCompare, canonicalPath, depthOf, loadCorpus, pieceInSubsite, placeInRegion, publicPieces, validatePiece,
+  canCompare, canonicalPath, depthOf, loadCorpus, pieceInSubsite, placeInRegion, publicPieces, trackingErrors,
 } from '../scripts/subsite/model.mjs';
 import { pages } from '../scripts/subsite/render.mjs';
 import { pieceVisible, selectedStage, selectedType, stageVisible } from '../assets/js/subsite.js';
@@ -65,8 +65,9 @@ test('a town in New York is inside Greater Niagara and Canada is not', () => {
 
 test('every example is a draft and none are published', () => {
   const corpus = loadCorpus(root);
-  assert.equal(corpus.pieces.length, 19);
-  for (const piece of corpus.pieces) {
+  const examples = corpus.pieces.filter((piece) => !piece.data.content_id);
+  assert.equal(examples.length, 19);
+  for (const piece of examples) {
     assert.equal(piece.data.status, 'draft', piece.file);
     assert.match(piece.data.title, /^Example:/);
   }
@@ -271,30 +272,81 @@ test('the subsite name is not the retired slug', () => {
   assert.deepEqual(hits, []);
 });
 
-test('content posts stay out of the build and the five drafts validate', () => {
+test('tracked drafts stay off the site until status is published', () => {
   const corpus = loadCorpus(root);
-  assert.equal(corpus.pieces.some((piece) => piece.data.content_id), false);
-  const planned = pages(corpus);
-  const html = planned.map((item) => item.html).join('\n');
-  assert.doesNotMatch(html, /HM-0001|licence_clearance|retain-and-mask/);
-
-  const dir = path.join(root, 'content/posts/items');
-  const names = fs.readdirSync(dir).filter((name) => name.endsWith('.md')).sort();
-  assert.equal(names.length, 5);
-  for (const name of names) {
-    const parsed = splitDocument(fs.readFileSync(path.join(dir, name), 'utf8'));
-    const slug = name.slice(0, -3);
-    const errors = validatePiece({
-      slug,
-      file: name,
-      data: parsed.data,
-      body: parsed.body,
-    }, corpus);
-    assert.deepEqual(errors, [], errors.join('\n'));
-    assert.equal(parsed.data.status, 'draft');
-    assert.equal(parsed.data.author_kind, 'agent');
-    assert.match(parsed.data.content_id, /^HM-000[1-5]$/);
-    assert.equal(parsed.data.type === 'post' || parsed.data.type === 'article', false);
-    assert.deepEqual(parsed.data.places, ['region:heavymap']);
+  const tracked = corpus.pieces.filter((piece) => piece.data.content_id);
+  assert.deepEqual(tracked.map((piece) => piece.data.content_id), ['HM-0001', 'HM-0002', 'HM-0003', 'HM-0004', 'HM-0005']);
+  for (const piece of tracked) {
+    assert.equal(piece.data.status, 'draft');
+    assert.equal(piece.data.author_kind, 'agent');
   }
+  const planned = pages(corpus);
+  const joined = planned.map((item) => item.html).join('\n');
+  assert.doesNotMatch(joined, /Claim and refusal contract|licence_clearance|retain-and-mask/);
+  assert.equal(planned.some((item) => item.path.startsWith('pieces/hm-')), false);
+  for (const slug of ['heavymap', 'greater-niagara']) {
+    const landing = planned.find((item) => item.path === `site/${slug}/index.html`).html;
+    assert.match(landing, /<h2>Recent<\/h2>/);
+    assert.match(landing, /No published pieces yet/);
+    assert.match(landing, /No featured pieces yet/);
+    const nav = landing.slice(landing.indexOf('<nav class="subsite-nav"'), landing.indexOf('</nav>') + 6);
+    assert.doesNotMatch(nav, /Claim and refusal contract/);
+  }
+
+  const claim = tracked.find((piece) => piece.data.content_id === 'HM-0001');
+  const older = {
+    slug: 'older-heavymap-note',
+    file: 'older-heavymap-note.md',
+    body: 'A published note used only in this test.',
+    data: {
+      ...claim.data,
+      content_id: 'HM-0099',
+      title: 'Older HeavyMap note',
+      type: 'summary',
+      bucket: 'gathering',
+      subcategory: 'recon-and-source-registry',
+      date: '2026-09-01',
+      updated: '2026-09-01',
+      status: 'published',
+      featured: true,
+    },
+  };
+  const published = {
+    ...claim,
+    data: { ...claim.data, status: 'published' },
+  };
+  const stillDraft = tracked.find((piece) => piece.data.content_id === 'HM-0002');
+  const rendered = pages({ ...corpus, pieces: [published, older, stillDraft] });
+
+  const piecePage = rendered.find((item) => item.path === 'pieces/hm-0001-claim-refusal-contract/index.html');
+  assert.ok(piecePage);
+  assert.match(piecePage.html, /rel="canonical" href="\/pieces\/hm-0001-claim-refusal-contract\/"/);
+  assert.equal(rendered.find((item) => item.path === 'pieces/hm-0002-licence-triage-inventory/index.html'), undefined);
+
+  const heavy = rendered.find((item) => item.path === 'site/heavymap/index.html').html;
+  const recent = heavy.slice(heavy.indexOf('<h2>Recent</h2>'), heavy.indexOf('<h2>Featured</h2>'));
+  const featured = heavy.slice(heavy.indexOf('<h2>Featured</h2>'), heavy.indexOf('<h2>Start here</h2>'));
+  assert.match(recent, /Claim and refusal contract/);
+  assert.match(recent, /Older HeavyMap note/);
+  assert.ok(recent.indexOf('Claim and refusal contract') < recent.indexOf('Older HeavyMap note'));
+  assert.doesNotMatch(recent, /Licence triage across the dataset inventory/);
+  assert.match(featured, /Older HeavyMap note/);
+  assert.doesNotMatch(featured, /Claim and refusal contract/);
+
+  const section = rendered.find((item) => item.path === 'site/heavymap/claims-and-refusals/index.html').html;
+  assert.match(section, /href="\/pieces\/hm-0001-claim-refusal-contract\/"/);
+  assert.doesNotMatch(section, /Licence triage across the dataset inventory/);
+  const gathering = rendered.find((item) => item.path === 'site/heavymap/gathering/recon-and-source-registry/index.html').html;
+  assert.match(gathering, /Older HeavyMap note/);
+
+  const niagara = rendered.find((item) => item.path === 'site/greater-niagara/index.html').html;
+  assert.doesNotMatch(niagara, /Claim and refusal contract|Older HeavyMap note/);
+
+  const mismatch = trackingErrors(
+    [{ ...published, data: { ...published.data, status: 'published' } }],
+    [{ content_id: 'HM-0001', idea_id: 'HM-0001', file_path: published.file, status: 'draft', published_date: '' }],
+    [{ content_id: 'HM-0001', file_path: published.file, status: 'draft', published_url: '' }],
+    [{ idea_id: 'HM-0001' }],
+  );
+  assert.ok(mismatch.some((line) => line.includes('does not match front matter')));
 });
